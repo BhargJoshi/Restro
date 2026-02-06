@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Rialto</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  font-family: 'Inter', sans-serif;
+  background: url("https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=1920") center/cover no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  padding: 20px; /* Prevents card touching edges on mobile */
+}
+
+body::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.65);
+  backdrop-filter: blur(4px);
+}
+
+/* Main Wrapper */
+.container {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Brand Name */
+.brand-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 72px;
+  color: #fff;
+  letter-spacing: 3px;
+  margin-bottom: 40px;
+}
+
+/* Card */
+.card {
+  width: 100%;
+  max-width: 450px; /* Responsive cap */
+  background: #f7f7f7;
+  border-radius: 28px;
+  padding: 45px 35px;
+  box-shadow: 0 25px 60px rgba(0,0,0,0.45);
+  transition: transform 0.4s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card h2 {
+  margin-bottom: 35px;
+  color: #111;
+  font-weight: 500;
+}
+
+/* Options */
+.option {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 18px;
+  margin-bottom: 18px;
+  border-radius: 16px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.25s ease;
+  text-align: left; /* Ensures text stays left-aligned in centered container */
+}
+
+.option:hover {
+  border: 2px solid rgba(255, 204, 0, 0.6);
+  background: rgba(255, 204, 0, 0.08);
+}
+
+.option.selected {
+  border: 2px solid #ffcc00;
+  background: rgba(255, 204, 0, 0.15);
+  transform: scale(1.02);
+}
+
+.icon-box {
+  flex-shrink: 0; /* Prevents icon from squishing on small screens */
+  width: 48px;
+  height: 48px;
+  background: #ffffff;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.option:hover .icon-box {
+  transform: scale(1.12);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+}
+
+.icon-box svg {
+  width: 24px;
+  height: 24px;
+  stroke: #111;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
+
+.option-text h3 {
+  font-size: 16px;
+  color: #111;
+}
+
+.option-text p {
+  font-size: 13px;
+  color: #555;
+}
+
+/* Button */
+.btn {
+  width: 100%;
+  padding: 16px;
+  border-radius: 40px;
+  border: none;
+  margin-top: 15px;
+  font-size: 16px;
+  font-weight: 500;
+  background: #ccc;
+  color: #555;
+  cursor: not-allowed;
+  transition: all 0.3s ease;
+}
+
+.btn.active {
+  background: #ffcc00;
+  color: #111;
+  cursor: pointer;
+  box-shadow: 0 8px 22px rgba(255, 204, 0, 0.4);
+}
+
+.btn.active:hover {
+  transform: scale(1.04);
+}
+
+/* Hours */
+.hours {
+  position: absolute;
+  bottom: 6%;
+  color: #fff;
+  font-size: 14px;
+  opacity: 0.75;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 480px) {
+  .brand-name {
+    font-size: 48px;
+    margin-bottom: 25px;
+  }
+  
+  .card {
+    padding: 30px 20px;
+  }
+  
+  .card h2 {
+    font-size: 20px;
+    margin-bottom: 25px;
+  }
+
+  .hours {
+    position: relative;
+    margin-top: 20px;
+    bottom: auto;
+    padding-bottom: 20px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="brand-name">RIALTO</div>
+
+  <div class="card">
+    <h2>How would you like to order?</h2>
+
+    <div class="option" data-type="dinein">
+      <div class="icon-box">
+        <svg viewBox="0 0 24 24">
+          <path d="M18 8c0 3.31-2.69 6-6 6M18 8V3M14 8V3M22 8V3M18 21v-7"/>
+          <path d="M2 15c0 3.87 3.13 7 7 7s7-3.13 7-7-3.13-7-7-7-7 3.13-7 7zM9 8V2"/>
+        </svg>
+      </div>
+      <div class="option-text">
+        <h3>Dine In</h3>
+        <p>Enjoy at our restaurant</p>
+      </div>
+    </div>
+
+    <div class="option" data-type="takeaway">
+      <div class="icon-box">
+        <svg viewBox="0 0 24 24">
+          <path d="M6 7h12l-1 14H7L6 7z"/>
+          <path d="M9 7V5a3 3 0 016 0v2"/>
+        </svg>
+      </div>
+      <div class="option-text">
+        <h3>Takeaway</h3>
+        <p>Pick up your order</p>
+      </div>
+    </div>
+
+    <div class="option" data-type="room">
+      <div class="icon-box">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 3a5 5 0 00-5 5v3l-2 3h14l-2-3V8a5 5 0 00-5-5z"/>
+          <path d="M10 18a2 2 0 004 0"/>
+        </svg>
+      </div>
+      <div class="option-text">
+        <h3>Room Service</h3>
+        <p>Delivered to your room</p>
+      </div>
+    </div>
+
+    <button class="btn" id="viewMenuBtn">View Menu →</button>
+  </div>
+
+</div>
+
+<div class="hours">
+  Open daily from 12:00 PM to 11:00 PM
+</div>
+
+<script>
+const options = document.querySelectorAll(".option");
+const btn = document.getElementById("viewMenuBtn");
+
+let selected = null;
+
+options.forEach(option => {
+  option.addEventListener("click", () => {
+    options.forEach(o => o.classList.remove("selected"));
+    option.classList.add("selected");
+    selected = option.dataset.type;
+
+    btn.classList.add("active");
+  });
+});
+
+btn.addEventListener("click", () => {
+  if(selected){
+    alert("Opening menu for: " + selected);
+  }
+});
+</script>
+
+</body>
+</html>
