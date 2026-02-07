@@ -8,11 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
 
 <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
   min-height: 100vh;
@@ -66,7 +62,6 @@ body::before {
   font-weight: 500;
 }
 
-/* --- 3D OPTION BUTTONS --- */
 .option {
   display: flex;
   align-items: center;
@@ -76,30 +71,25 @@ body::before {
   border-radius: 16px;
   cursor: pointer;
   text-align: left;
-  
-  /* 3D Structure */
   background: #ffffff;
   border: 1px solid #e0e0e0;
   position: relative;
   top: 0;
-  /* The bottom shadow creates the 3D 'thickness' */
   box-shadow: 0 6px 0px #d6d6d6, 0 8px 15px rgba(0,0,0,0.1);
   transition: all 0.1s ease;
-  -webkit-tap-highlight-color: transparent; /* Removes blue flash on mobile */
+  -webkit-tap-highlight-color: transparent;
 }
 
-/* Tactile "Pressed" Effect */
 .option:active {
   top: 4px;
   box-shadow: 0 2px 0px #d6d6d6, 0 4px 8px rgba(0,0,0,0.1);
 }
 
-/* Selected State: Turns Yellow */
 .option.selected {
   background: #ffcc00;
   border-color: #e6b800;
   box-shadow: 0 6px 0px #cc9900, 0 8px 20px rgba(255, 204, 0, 0.3);
-  top: -2px; /* Slight lift when selected */
+  top: -2px;
 }
 
 .option.selected:active {
@@ -132,17 +122,9 @@ body::before {
   fill: none;
 }
 
-.option-text h3 {
-  font-size: 16px;
-  color: #111;
-}
+.option-text h3 { font-size: 16px; color: #111; }
+.option-text p { font-size: 13px; color: #555; }
 
-.option-text p {
-  font-size: 13px;
-  color: #555;
-}
-
-/* --- MAIN ACTION BUTTON --- */
 .btn {
   width: 100%;
   padding: 18px;
@@ -255,9 +237,11 @@ options.forEach(option => {
   });
 });
 
+// --- NAVIGATION LOGIC ---
 btn.addEventListener("click", () => {
-  if(selected){
-    alert("Opening menu for: " + selected);
+  if (selected) {
+    // Redirects the browser to your menu page
+    window.location.href = "menu.html";
   }
 });
 </script>
