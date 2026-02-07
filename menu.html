@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Rialto Menu - Professional</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary: #ffcc00;
+  --primary-dark: #cc9900;
+  --bg-light: #f7f7f7;
+  --text-dark: #111;
+  --shadow-3d: 0 6px 0px #d6d6d6, 0 8px 15px rgba(0,0,0,0.1);
+  --shadow-active: 0 2px 0px #d6d6d6, 0 4px 8px rgba(0,0,0,0.1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #111;
+  color: var(--text-dark);
+  height: 100vh;
+  display: flex;
+  overflow: hidden;
+}
+
+/* --- SIDEBAR WITH TEXT --- */
+.sidebar {
+  width: 100px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 20px;
+  border-right: 1px solid rgba(255,255,255,0.1);
+}
+
+.nav-item {
+  width: 80px;
+  padding: 12px 5px;
+  margin-bottom: 20px;
+  background: #fff;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 0px #333;
+  transition: all 0.2s ease;
+}
+
+.nav-item span { font-size: 24px; margin-bottom: 4px; }
+.nav-item label { font-size: 10px; font-weight: 700; text-transform: uppercase; cursor: pointer; }
+
+.nav-item.active {
+  background: var(--primary);
+  box-shadow: 0 4px 0px var(--primary-dark);
+  transform: translateY(2px);
+}
+
+/* --- HERO & CONTENT AREA --- */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-light);
+  border-top-left-radius: 30px;
+}
+
+.hero-section {
+  background: var(--primary);
+  padding: 40px 25px;
+  border-bottom-left-radius: 40px;
+  box-shadow: 0 10px 30px rgba(255, 204, 0, 0.2);
+}
+
+.hero-section h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 32px;
+  color: #111;
+}
+
+.menu-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+.items-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 25px;
+  padding-bottom: 100px;
+}
+
+/* --- 3D CARD & NOTIFICATION BADGE --- */
+.food-card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 12px;
+  text-align: center;
+  box-shadow: var(--shadow-3d);
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #ff3b30;
+  color: white;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: none; /* Shown via JS */
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  border: 3px solid #fff;
+  z-index: 10;
+}
+
+.food-card img {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 15px;
+  margin-bottom: 10px;
+}
+
+.food-card h4 { font-size: 15px; margin-bottom: 4px; }
+.price { font-weight: 700; color: #666; margin-bottom: 12px; display: block; }
+
+/* --- CONTROLS LOGIC --- */
+.add-initial {
+  width: 100%;
+  padding: 10px;
+  background: #111;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #000;
+}
+
+.qty-controls {
+  display: none; /* Shown after Add click */
+  align-items: center;
+  justify-content: space-between;
+  background: #f0f0f0;
+  border-radius: 30px;
+  padding: 4px;
+}
+
+.btn-qty {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: #fff;
+  font-weight: 700;
+  box-shadow: 0 2px 0 #ccc;
+  cursor: pointer;
+}
+
+/* --- CART POPUP --- */
+.cart-trigger {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  width: 70px;
+  height: 70px;
+  background: var(--primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 20px rgba(255,204,0,0.4), 0 6px 0px var(--primary-dark);
+  cursor: pointer;
+  z-index: 100;
+  font-size: 24px;
+}
+
+.cart-popup {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: none;
+  justify-content: center;
+  align-items: flex-end;
+  z-index: 200;
+}
+
+.cart-content {
+  width: 100%;
+  max-width: 500px;
+  background: #fff;
+  border-top-left-radius: 30px;
+  border-top-right-radius: 30px;
+  padding: 30px;
+}
+
+.cart-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.pay-btn {
+  width: 100%;
+  padding: 18px;
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 15px;
+  font-size: 18px;
+  font-weight: 700;
+  box-shadow: 0 6px 0px #1e7e34;
+  margin-top: 20px;
+}
+
+.pay-btn:active { transform: translateY(4px); box-shadow: 0 2px 0px #1e7e34; }
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="nav-item active" onclick="showSection('starters', this)">
+    <span>🥗</span><label>Starters</label>
+  </div>
+  <div class="nav-item" onclick="showSection('main', this)">
+    <span>🍝</span><label>Mains</label>
+  </div>
+  <div class="nav-item" onclick="showSection('apps', this)">
+    <span>🍟</span><label>Sides</label>
+  </div>
+  <div class="nav-item" onclick="showSection('desserts', this)">
+    <span>🍰</span><label>Sweets</label>
+  </div>
+</div>
+
+<div class="main-content">
+  <div class="hero-section">
+    <h1 id="section-name">Starters</h1>
+  </div>
+  
+  <div class="menu-container">
+    <div class="items-grid" id="menu-grid"></div>
+  </div>
+</div>
+
+<div class="cart-trigger" onclick="toggleCart()">
+  🛒 <div class="badge" id="cart-total-badge" style="display:none; top:0; right:0;">0</div>
+</div>
+
+<div class="cart-popup" id="cart-popup">
+  <div class="cart-content">
+    <h3>Your Selection</h3>
+    <div id="cart-items-list" style="margin-top: 20px; max-height: 300px; overflow-y: auto;"></div>
+    
+    <div style="background: #f9f9f9; padding: 15px; border-radius: 15px; margin-top: 15px;">
+      <div style="display: flex; justify-content: space-between;"><span>Tax (10%)</span><span id="cart-tax">$0.00</span></div>
+      <div style="display: flex; justify-content: space-between; font-weight: 800; font-size: 22px; margin-top: 5px;">
+        <span>Total</span><span id="cart-total-price">$0.00</span>
+      </div>
+    </div>
+    
+    <button class="pay-btn" onclick="processPayment()">Pay & Select Table →</button>
+    <button onclick="toggleCart()" style="width:100%; background:none; border:none; margin-top:15px; color:#999; font-weight:600;">Back to Menu</button>
+  </div>
+</div>
+
+<script>
+const menuData = {
+  starters: Array.from({length: 10}, (_, i) => ({ id: `s${i}`, name: `Starter ${i+1}`, price: 12.00, img: `https://images.unsplash.com/photo-1541529086526-db283c563270?w=300` })),
+  main: Array.from({length: 10}, (_, i) => ({ id: `m${i}`, name: `Main Dish ${i+1}`, price: 24.50, img: `https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300` })),
+  apps: Array.from({length: 10}, (_, i) => ({ id: `a${i}`, name: `Appetizer ${i+1}`, price: 9.00, img: `https://images.unsplash.com/photo-1534422298391-e4f8c170db0a?w=300` })),
+  desserts: Array.from({length: 10}, (_, i) => ({ id: `d${i}`, name: `Dessert ${i+1}`, price: 11.00, img: `https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?w=300` }))
+};
+
+let cart = {};
+
+function showSection(section, el) {
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('section-name').innerText = el.querySelector('label').innerText;
+  
+  const grid = document.getElementById('menu-grid');
+  grid.innerHTML = '';
+  
+  menuData[section].forEach(item => {
+    const qty = cart[item.id]?.qty || 0;
+    grid.innerHTML += `
+      <div class="food-card" id="card-${item.id}">
+        <div class="badge" id="badge-${item.id}" style="display: ${qty > 0 ? 'flex' : 'none'}">${qty}</div>
+        <img src="${item.img}" alt="${item.name}">
+        <h4>${item.name}</h4>
+        <span class="price">$${item.price.toFixed(2)}</span>
+        
+        <button class="add-initial" id="add-init-${item.id}" 
+                style="display: ${qty > 0 ? 'none' : 'block'}"
+                onclick="handleFirstAdd('${item.id}', '${item.name}', ${item.price})">ADD</button>
+        
+        <div class="qty-controls" id="ctrl-${item.id}" style="display: ${qty > 0 ? 'flex' : 'none'}">
+          <button class="btn-qty" onclick="updateQty('${item.id}', -1)">-</button>
+          <span style="font-weight:700" id="qty-text-${item.id}">${qty}</span>
+          <button class="btn-qty" onclick="updateQty('${item.id}', 1)">+</button>
+        </div>
+      </div>
+    `;
+  });
+}
+
+function handleFirstAdd(id, name, price) {
+  cart[id] = { name, price, qty: 1 };
+  document.getElementById(`add-init-${id}`).style.display = 'none';
+  document.getElementById(`ctrl-${id}`).style.display = 'flex';
+  document.getElementById(`badge-${id}`).style.display = 'flex';
+  document.getElementById(`badge-${id}`).innerText = 1;
+  document.getElementById(`qty-text-${id}`).innerText = 1;
+  updateGlobalUI();
+}
+
+function updateQty(id, change) {
+  if (!cart[id]) return;
+  cart[id].qty += change;
+  
+  if (cart[id].qty <= 0) {
+    delete cart[id];
+    if(document.getElementById(`add-init-${id}`)) {
+        document.getElementById(`add-init-${id}`).style.display = 'block';
+        document.getElementById(`ctrl-${id}`).style.display = 'none';
+        document.getElementById(`badge-${id}`).style.display = 'none';
+    }
+  } else {
+    if(document.getElementById(`qty-text-${id}`)) {
+        document.getElementById(`qty-text-${id}`).innerText = cart[id].qty;
+        document.getElementById(`badge-${id}`).innerText = cart[id].qty;
+    }
+  }
+  updateGlobalUI();
+}
+
+function updateGlobalUI() {
+  let subtotal = 0;
+  let totalItems = 0;
+  const list = document.getElementById('cart-items-list');
+  list.innerHTML = '';
+  
+  Object.keys(cart).forEach(id => {
+    const item = cart[id];
+    subtotal += item.price * item.qty;
+    totalItems += item.qty;
+    
+    list.innerHTML += `
+      <div class="cart-row">
+        <div><strong>${item.name}</strong><br><small>$${item.price.toFixed(2)}</small></div>
+        <div class="qty-controls" style="display:flex; width: 100px;">
+          <button class="btn-qty" onclick="updateQty('${id}', -1)">-</button>
+          <span>${item.qty}</span>
+          <button class="btn-qty" onclick="updateQty('${id}', 1)">+</button>
+        </div>
+      </div>
+    `;
+  });
+
+  const tax = subtotal * 0.1;
+  document.getElementById('cart-tax').innerText = `$${tax.toFixed(2)}`;
+  document.getElementById('cart-total-price').innerText = `$${(subtotal + tax).toFixed(2)}`;
+  
+  const mainBadge = document.getElementById('cart-total-badge');
+  mainBadge.innerText = totalItems;
+  mainBadge.style.display = totalItems > 0 ? 'flex' : 'none';
+}
+
+function toggleCart() {
+  const p = document.getElementById('cart-popup');
+  p.style.display = (p.style.display === 'flex') ? 'none' : 'flex';
+  updateGlobalUI(); // Refresh list in case quantities changed on main page
+}
+
+function processPayment() {
+  alert("Redirecting to Table Selection & Payment...");
+}
+
+// Boot
+showSection('starters', document.querySelector('.nav-item'));
+</script>
+</body>
+</html>
