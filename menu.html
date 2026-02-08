@@ -14,7 +14,6 @@
   --surface: #ffffff;
 }
 
-/* --- RESET & BASE --- */
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
 body {
@@ -23,34 +22,48 @@ body {
   color: var(--text-dark);
   height: 100vh;
   display: flex;
-  overflow: hidden; /* Prevents whole-page bounce on mobile */
+  overflow: hidden;
 }
 
-/* --- LEFT SIDEBAR (FIXED WIDTH) --- */
+/* --- SIDEBAR WITH SLIDING INDICATOR --- */
 .sidebar {
-  width: 85px; /* Compact width for phone screens */
+  width: 85px;
   background: #1a1a1a;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding-top: 15px;
+  position: relative; /* Needed for indicator positioning */
   overflow-y: auto;
   border-right: 1px solid rgba(255,255,255,0.05);
+}
+
+/* The "Cool" Sliding Box */
+.nav-indicator {
+  position: absolute;
+  left: 10px;
+  width: 65px;
+  height: 70px;
+  background: var(--primary);
+  border-radius: 12px;
+  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); /* Bouncy slide effect */
+  z-index: 1;
 }
 
 .nav-item {
   width: 65px;
   height: 70px;
   margin-bottom: 12px;
-  background: rgba(255,255,255,0.05);
   border-radius: 12px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.2s ease;
-  color: #fff;
+  position: relative;
+  z-index: 2; /* Sits above the indicator */
+  transition: color 0.3s ease;
+  color: rgba(255,255,255,0.6);
   flex-shrink: 0;
 }
 
@@ -58,40 +71,43 @@ body {
 .nav-item label { font-size: 9px; font-weight: 700; text-transform: uppercase; text-align: center; }
 
 .nav-item.active {
-  background: var(--primary);
   color: #000;
-  box-shadow: 0 4px 12px rgba(255, 204, 0, 0.3);
 }
 
-/* --- MAIN CONTENT (RIGHT SIDE) --- */
+/* --- MAIN CONTENT & YELLOW HERO TITLE --- */
 .main-content {
   flex: 1;
   display: flex;
   flex-direction: column;
   background: var(--bg-light);
-  border-top-left-radius: 25px; /* Curved edge for modern look */
+  border-top-left-radius: 25px;
   overflow: hidden;
 }
 
 .hero-header {
-  padding: 20px;
+  padding: 15px 20px;
   background: #fff;
-  border-bottom: 1px solid #eee;
 }
 
-.hero-header h1 {
+/* Requested Yellow Hero Title */
+#section-name {
   font-family: 'Playfair Display', serif;
-  font-size: 22px;
+  font-size: 20px;
+  background: var(--primary);
+  color: #000;
+  display: inline-block;
+  padding: 5px 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(255, 204, 0, 0.2);
 }
 
 .menu-container {
   flex: 1;
-  overflow-y: auto; /* Independent scroll for items */
+  overflow-y: auto;
   padding: 12px;
-  padding-bottom: 100px; /* Space for the floating cart */
+  padding-bottom: 100px;
 }
 
-/* 2-COLUMN GRID OPTIMIZED FOR PHONES */
 .items-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -169,16 +185,16 @@ body {
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
-/* --- FLOATING CART (BLINKIT STYLE) --- */
+/* --- FLOATING CART --- */
 .cart-bar {
   position: fixed;
   bottom: 15px;
-  left: 100px; /* Offset from sidebar */
+  left: 100px;
   right: 15px;
   background: #28a745;
   height: 50px;
   border-radius: 12px;
-  display: none; /* JS toggles this */
+  display: none;
   align-items: center;
   justify-content: space-between;
   padding: 0 15px;
@@ -188,7 +204,6 @@ body {
   z-index: 1000;
 }
 
-/* --- CART POPUP --- */
 .cart-popup {
   position: fixed;
   inset: 0;
@@ -233,7 +248,9 @@ body {
 </head>
 <body>
 
-<div class="sidebar">
+<div class="sidebar" id="sidebar">
+  <div class="nav-indicator" id="nav-indicator"></div>
+  
   <div class="nav-item active" onclick="showSection('starters', this)">
     <span>🥗</span><label>Starters</label>
   </div>
@@ -270,22 +287,16 @@ body {
         <button onclick="toggleCart()" style="background:none; border:none; color:#999; font-size:20px">✕</button>
     </div>
     <div id="cart-items-list"></div>
-    
     <div style="background: #f9f9f9; padding: 15px; border-radius: 12px; margin-top: 15px;">
-      <div style="display: flex; justify-content: space-between; font-size: 14px">
-        <span>Subtotal</span><span id="cart-subtotal">$0.00</span>
-      </div>
-      <div style="display: flex; justify-content: space-between; font-weight: 800; font-size: 20px; margin-top: 5px;">
-        <span>Total (inc. tax)</span><span id="cart-total-price">$0.00</span>
+      <div style="display: flex; justify-content: space-between; font-weight: 800; font-size: 20px;">
+        <span>Total</span><span id="cart-total-price">$0.00</span>
       </div>
     </div>
-    
     <button class="pay-btn" onclick="processPayment()">Place Order</button>
   </div>
 </div>
 
 <script>
-// Logic remains robust while the UI handles the "Zepto-style" layout
 const menuData = {
   starters: Array.from({length: 10}, (_, i) => ({ id: `s${i}`, name: `Appetizer ${i+1}`, price: 12.00, img: `https://images.unsplash.com/photo-1541529086526-db283c563270?w=300` })),
   main: Array.from({length: 10}, (_, i) => ({ id: `m${i}`, name: `Main Dish ${i+1}`, price: 24.50, img: `https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300` })),
@@ -296,13 +307,20 @@ const menuData = {
 let cart = {};
 
 function showSection(section, el) {
+  // 1. Handle the sliding indicator animation
+  const indicator = document.getElementById('nav-indicator');
+  indicator.style.top = el.offsetTop + 'px';
+  
+  // 2. Active Class management
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   el.classList.add('active');
+  
+  // 3. Update Hero Title
   document.getElementById('section-name').innerText = el.querySelector('label').innerText;
   
+  // 4. Update Grid
   const grid = document.getElementById('menu-grid');
   grid.innerHTML = '';
-  
   menuData[section].forEach(item => {
     const qty = cart[item.id]?.qty || 0;
     grid.innerHTML += `
@@ -311,11 +329,7 @@ function showSection(section, el) {
         <img src="${item.img}" alt="${item.name}">
         <h4>${item.name}</h4>
         <span class="price">$${item.price.toFixed(2)}</span>
-        
-        <button class="add-initial" id="add-init-${item.id}" 
-                style="display: ${qty > 0 ? 'none' : 'block'}"
-                onclick="handleFirstAdd('${item.id}', '${item.name}', ${item.price})">ADD</button>
-        
+        <button class="add-initial" id="add-init-${item.id}" style="display: ${qty > 0 ? 'none' : 'block'}" onclick="handleFirstAdd('${item.id}', '${item.name}', ${item.price})">ADD</button>
         <div class="qty-controls" id="ctrl-${item.id}" style="display: ${qty > 0 ? 'flex' : 'none'}">
           <button class="btn-qty" onclick="updateQty('${item.id}', -1)">-</button>
           <span style="font-weight:700" id="qty-text-${item.id}">${qty}</span>
@@ -326,6 +340,7 @@ function showSection(section, el) {
   });
 }
 
+// Logic for adding/updating cart remains consistent for stability
 function handleFirstAdd(id, name, price) {
   cart[id] = { name, price, qty: 1 };
   document.getElementById(`add-init-${id}`).style.display = 'none';
@@ -340,7 +355,6 @@ function handleFirstAdd(id, name, price) {
 function updateQty(id, change) {
   if (!cart[id]) return;
   cart[id].qty += change;
-  
   if (cart[id].qty <= 0) {
     delete cart[id];
     if(document.getElementById(`add-init-${id}`)) {
@@ -362,37 +376,18 @@ function updateGlobalUI() {
   let totalItems = 0;
   const list = document.getElementById('cart-items-list');
   list.innerHTML = '';
-  
   Object.keys(cart).forEach(id => {
     const item = cart[id];
     subtotal += item.price * item.qty;
     totalItems += item.qty;
-    
-    list.innerHTML += `
-      <div class="cart-row">
-        <div><strong>${item.name}</strong><br><small>$${item.price.toFixed(2)}</small></div>
-        <div class="qty-controls" style="display:flex; width: 90px;">
-          <button class="btn-qty" onclick="updateQty('${id}', -1)">-</button>
-          <span>${item.qty}</span>
-          <button class="btn-qty" onclick="updateQty('${id}', 1)">+</button>
-        </div>
-      </div>
-    `;
+    list.innerHTML += `<div class="cart-row"><div><strong>${item.name}</strong><br><small>$${item.price.toFixed(2)}</small></div><div class="qty-controls" style="display:flex; width: 90px;"><button class="btn-qty" onclick="updateQty('${id}', -1)">-</button><span>${item.qty}</span><button class="btn-qty" onclick="updateQty('${id}', 1)">+</button></div></div>`;
   });
-
-  const tax = subtotal * 0.1;
-  document.getElementById('cart-subtotal').innerText = `$${subtotal.toFixed(2)}`;
-  document.getElementById('cart-total-price').innerText = `$${(subtotal + tax).toFixed(2)}`;
-  
+  document.getElementById('cart-total-price').innerText = `$${(subtotal * 1.1).toFixed(2)}`;
   const bar = document.getElementById('cart-bar');
-  const barQty = document.getElementById('cart-item-count');
-  
   if(totalItems > 0) {
       bar.style.display = 'flex';
-      barQty.innerText = `${totalItems} Item${totalItems > 1 ? 's' : ''}`;
-  } else {
-      bar.style.display = 'none';
-  }
+      document.getElementById('cart-item-count').innerText = `${totalItems} Item${totalItems > 1 ? 's' : ''}`;
+  } else { bar.style.display = 'none'; }
 }
 
 function toggleCart() {
@@ -400,12 +395,13 @@ function toggleCart() {
   p.style.display = (p.style.display === 'flex') ? 'none' : 'flex';
 }
 
-function processPayment() {
-  alert("Redirecting to checkout...");
-}
+function processPayment() { alert("Redirecting to checkout..."); }
 
-// Initialize
-showSection('starters', document.querySelector('.nav-item'));
+// Set the initial position of the indicator on boot
+window.onload = () => {
+  const firstItem = document.querySelector('.nav-item.active');
+  showSection('starters', firstItem);
+};
 </script>
 </body>
 </html>
