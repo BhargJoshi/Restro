@@ -9,190 +9,181 @@
 
 <style>
   :root {
-    --primary-color: #ffcc00;
-    --primary-dark: #cc9900;
-    --bg-light: #f8f9fa;
-    --text-main: #111111;
-    --text-muted: #666666;
-    --safe-area-bottom: env(safe-area-inset-bottom);
+    --primary-yellow: #ffcc00; /* [cite: 10] */
+    --primary-dark: #cc9900;   /* [cite: 10] */
+    --card-bg: #f7f7f7;        /*  */
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
   body {
-    font-family: 'Inter', sans-serif;
-    background-color: var(--bg-light);
-    color: var(--text-main);
-    line-height: 1.5;
-    overflow-x: hidden;
-    /* Background remains for laptop/large screens */
-    background: url("https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=1920") center/cover no-repeat fixed;
+    font-family: 'Inter', sans-serif; /* [cite: 2] */
+    background: url("https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=1920") center/cover no-repeat fixed; /* [cite: 2] */
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
   }
 
-  /* Overlay for desktop visibility */
+  /* Blurred Background Overlay */
   body::before {
     content: "";
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.4);
-    backdrop-filter: blur(8px);
+    background: rgba(0,0,0,0.65); /*  */
+    backdrop-filter: blur(4px);    /*  */
     z-index: 0;
   }
 
-  /* Main Wrapper: Acts as the "Phone Screen" on desktop */
+  /* App Container: Centered on laptop, full on mobile */
   .app-shell {
     position: relative;
-    z-index: 1;
+    z-index: 2; /* [cite: 4] */
     width: 100%;
-    max-width: 480px; /* Standard high-end mobile width */
+    max-width: 480px;
     min-height: 100vh;
-    margin: 0 auto;
-    background: #ffffff;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 0 40px rgba(0,0,0,0.2);
+    padding: 20px; /*  */
   }
 
-  /* Header Section */
+  /* Hero Section */
   .header {
-    padding: 40px 24px 20px;
-    background: linear-gradient(to bottom, #ffffff, #fcfcfc);
+    text-align: center;
+    padding: 40px 0;
   }
 
   .brand-name {
-    font-family: 'Playfair Display', serif;
-    font-size: 32px;
-    letter-spacing: 2px;
-    color: var(--text-main);
-    margin-bottom: 8px;
+    font-family: 'Playfair Display', serif; /* [cite: 5] */
+    font-size: 64px; /* [cite: 5] */
+    color: #fff;     /* [cite: 5] */
+    letter-spacing: 3px; /* [cite: 5] */
+    text-shadow: 0 4px 10px rgba(0,0,0,0.3);
   }
 
-  .welcome-text {
-    font-size: 14px;
-    color: var(--text-muted);
-    font-weight: 500;
-  }
-
-  /* Content Area */
-  .main-content {
+  /* The Main White Card */
+  .card {
+    background: var(--card-bg); /*  */
+    border-radius: 28px;        /*  */
+    padding: 35px 25px;         /*  */
+    box-shadow: 0 25px 60px rgba(0,0,0,0.45); /*  */
     flex: 1;
-    padding: 0 20px 100px; /* Bottom padding for the sticky button */
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 100px; /* Space for sticky button */
   }
 
-  .section-title {
-    font-size: 22px;
-    font-weight: 600;
-    margin: 20px 0 24px;
-    padding-left: 4px;
+  .card h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-weight: 500;
+    color: #111; /* [cite: 7] */
   }
 
-  /* Mobile-first Options (Zepto Style) */
+  /* Dining Options */
   .option {
     display: flex;
     align-items: center;
-    gap: 16px;
-    padding: 20px;
-    margin-bottom: 16px;
-    background: #ffffff;
-    border: 2px solid #f0f0f0;
-    border-radius: 20px;
+    gap: 18px; /* [cite: 8] */
+    padding: 18px;
+    margin-bottom: 20px;
+    border-radius: 16px; /* [cite: 8] */
     cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    background: #ffffff; /* [cite: 8] */
+    border: 1px solid #e0e0e0; /* [cite: 8] */
+    position: relative;
+    top: 0;
+    box-shadow: 0 6px 0px #d6d6d6, 0 8px 15px rgba(0,0,0,0.1); /* [cite: 8] */
+    transition: all 0.1s ease; /* [cite: 9] */
   }
 
+  /* Press Effect */
   .option:active {
-    transform: scale(0.97);
+    top: 4px; /* [cite: 9] */
+    box-shadow: 0 2px 0px #d6d6d6, 0 4px 8px rgba(0,0,0,0.1); /* [cite: 9] */
   }
 
+  /* Selected State */
   .option.selected {
-    border-color: var(--primary-color);
-    background: #fffef5;
-    box-shadow: 0 8px 20px rgba(255, 204, 0, 0.15);
+    background: var(--primary-yellow); /* [cite: 10] */
+    border-color: #e6b800;             /* [cite: 10] */
+    box-shadow: 0 6px 0px var(--primary-dark), 0 8px 20px rgba(255, 204, 0, 0.3); /* [cite: 10] */
+    top: -2px; /* [cite: 11] */
   }
 
   .icon-box {
-    width: 56px;
-    height: 56px;
-    background: #f7f7f7;
-    border-radius: 16px;
+    width: 48px;
+    height: 48px;
+    background: #f0f0f0; /* [cite: 13] */
+    border-radius: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background 0.2s;
+    flex-shrink: 0;
   }
 
-  .option.selected .icon-box {
-    background: var(--primary-color);
-  }
+  .option.selected .icon-box { background: rgba(255, 255, 255, 0.6); }
 
   .icon-box svg {
-    width: 28px;
-    height: 28px;
-    stroke: #333;
+    width: 24px;
+    height: 24px;
+    stroke: #111; /* [cite: 14] */
     stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
     fill: none;
   }
 
-  .option-text h3 { font-size: 17px; font-weight: 600; margin-bottom: 2px; }
-  .option-text p { font-size: 13px; color: var(--text-muted); }
+  .option-text h3 { font-size: 16px; color: #111; }
+  .option-text p { font-size: 13px; color: #555; } /* [cite: 15] */
 
-  /* Bottom Fixed Action Bar (Blinkit Style) */
+  /* Sticky Action Button (Zepto Style) */
   .footer-action {
     position: fixed;
     bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
     width: 100%;
     max-width: 480px;
-    background: #ffffff;
-    padding: 16px 20px calc(16px + var(--safe-area-bottom));
-    border-top: 1px solid #eeeeee;
+    padding: 20px;
+    background: linear-gradient(transparent, rgba(0,0,0,0.4));
     z-index: 10;
   }
 
   .btn {
     width: 100%;
-    height: 58px;
-    background: #e0e0e0;
-    color: #999;
+    padding: 20px;
+    border-radius: 40px; /* [cite: 16] */
     border: none;
-    border-radius: 18px;
-    font-size: 17px;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
+    font-size: 18px;
+    font-weight: 700;
+    background: #e0e0e0; /* [cite: 16] */
+    color: #999;        /* [cite: 16] */
     cursor: not-allowed;
+    box-shadow: 0 4px 0px #bcbcbc; /* [cite: 16] */
+    position: relative;
+    top: 0;
     transition: all 0.3s ease;
   }
 
   .btn.active {
-    background: var(--primary-color);
-    color: #000;
+    background: var(--primary-yellow); /* [cite: 18] */
+    color: #111;                       /* [cite: 18] */
     cursor: pointer;
-    box-shadow: 0 4px 15px rgba(255, 204, 0, 0.3);
+    box-shadow: 0 6px 0px var(--primary-dark), 0 10px 20px rgba(255, 204, 0, 0.4); /* [cite: 18] */
   }
 
-  .hours-info {
+  .btn.active:active {
+    top: 4px; /* [cite: 18] */
+    box-shadow: 0 2px 0px var(--primary-dark);
+  }
+
+  .hours {
     text-align: center;
-    font-size: 12px;
-    color: var(--text-muted);
-    margin-top: 12px;
-    letter-spacing: 0.5px;
+    color: #fff;
+    font-size: 13px;
+    opacity: 0.8;
+    margin-top: 20px;
   }
 
-  /* Smooth transition for selection */
-  .option.selected .icon-box svg {
-    stroke: #000;
-  }
-
-  /* Desktop optimization: Hide blur if viewport is small */
   @media (max-width: 480px) {
-    body::before { display: none; }
-    .app-shell { box-shadow: none; }
+    .brand-name { font-size: 48px; } /* [cite: 20] */
+    .app-shell { padding: 15px; }
   }
 </style>
 </head>
@@ -202,11 +193,10 @@
 <div class="app-shell">
   <header class="header">
     <div class="brand-name">RIALTO</div>
-    <div class="welcome-text">Premium Dining Experience</div>
   </header>
 
-  <main class="main-content">
-    <h2 class="section-title">How would you like to order?</h2>
+  <main class="card">
+    <h2>Select Order Mode</h2>
 
     <div class="option" data-type="dinein">
       <div class="icon-box">
@@ -214,7 +204,7 @@
       </div>
       <div class="option-text">
         <h3>Dine In</h3>
-        <p>Enjoy the ambiance at our table</p>
+        <p>Enjoy at our restaurant</p>
       </div>
     </div>
 
@@ -224,7 +214,7 @@
       </div>
       <div class="option-text">
         <h3>Takeaway</h3>
-        <p>Swift pickup from our counter</p>
+        <p>Pick up your order</p>
       </div>
     </div>
 
@@ -234,21 +224,16 @@
       </div>
       <div class="option-text">
         <h3>Room Service</h3>
-        <p>Delivered straight to your door</p>
+        <p>Delivered to your room</p>
       </div>
     </div>
 
-    <div class="hours-info">
-      OPEN DAILY: 12:00 PM - 11:00 PM
-    </div>
+    <div class="hours">Open daily: 12:00 PM - 11:00 PM</div>
   </main>
 
-  <div class="footer-action">
-    <button class="btn" id="viewMenuBtn">
-      View Menu 
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-    </button>
-  </div>
+  <footer class="footer-action">
+    <button class="btn" id="viewMenuBtn">View Menu →</button>
+  </footer>
 </div>
 
 <script>
@@ -258,9 +243,9 @@ let selected = null;
 
 options.forEach(option => {
   option.addEventListener("click", () => {
-    // Premium Haptic Feedback
+    // Haptic Feedback [cite: 25]
     if (window.navigator && window.navigator.vibrate) {
-      window.navigator.vibrate(20);
+      window.navigator.vibrate(15);
     }
 
     options.forEach(o => o.classList.remove("selected"));
@@ -268,17 +253,12 @@ options.forEach(option => {
     selected = option.dataset.type;
 
     btn.classList.add("active");
-    btn.innerHTML = `View Menu (${option.querySelector('h3').innerText}) <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>`;
   });
 });
 
 btn.addEventListener("click", () => {
   if (selected) {
-    // Add a small delay for the click animation to finish
-    btn.style.transform = "scale(0.95)";
-    setTimeout(() => {
-      window.location.href = "menu.html";
-    }, 150);
+    window.location.href = "menu.html"; // [cite: 26]
   }
 });
 </script>
