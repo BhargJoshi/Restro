@@ -33,12 +33,11 @@ body {
   flex-direction: column;
   align-items: center;
   padding-top: 15px;
-  position: relative; /* Needed for indicator positioning */
+  position: relative;
   overflow-y: auto;
-  border-right: 1px solid rgba(255,255,255,0.05);
+  border-right: 1px solid rgba(255,255,255,0.1);
 }
 
-/* The "Cool" Sliding Box */
 .nav-indicator {
   position: absolute;
   left: 10px;
@@ -46,7 +45,7 @@ body {
   height: 70px;
   background: var(--primary);
   border-radius: 12px;
-  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); /* Bouncy slide effect */
+  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   z-index: 1;
 }
 
@@ -61,20 +60,18 @@ body {
   justify-content: center;
   cursor: pointer;
   position: relative;
-  z-index: 2; /* Sits above the indicator */
+  z-index: 2;
   transition: color 0.3s ease;
   color: rgba(255,255,255,0.6);
   flex-shrink: 0;
 }
 
 .nav-item span { font-size: 22px; margin-bottom: 4px; }
-.nav-item label { font-size: 9px; font-weight: 700; text-transform: uppercase; text-align: center; }
+.nav-item label { font-size: 9px; font-weight: 700; text-transform: uppercase; text-align: center; pointer-events: none; }
 
-.nav-item.active {
-  color: #000;
-}
+.nav-item.active { color: #000; }
 
-/* --- MAIN CONTENT & YELLOW HERO TITLE --- */
+/* --- MAIN CONTENT & HERO --- */
 .main-content {
   flex: 1;
   display: flex;
@@ -84,12 +81,8 @@ body {
   overflow: hidden;
 }
 
-.hero-header {
-  padding: 15px 20px;
-  background: #fff;
-}
+.hero-header { padding: 15px 20px; background: #fff; border-bottom: 1px solid #eee; }
 
-/* Requested Yellow Hero Title */
 #section-name {
   font-family: 'Playfair Display', serif;
   font-size: 20px;
@@ -154,7 +147,7 @@ body {
 .food-card h4 { font-size: 13px; line-height: 1.2; margin-bottom: 4px; height: 32px; overflow: hidden; }
 .price { font-weight: 700; color: #555; font-size: 14px; margin-bottom: 8px; }
 
-/* --- BUTTONS --- */
+/* --- CONTROLS --- */
 .add-initial {
   width: 100%;
   padding: 8px;
@@ -250,7 +243,6 @@ body {
 
 <div class="sidebar" id="sidebar">
   <div class="nav-indicator" id="nav-indicator"></div>
-  
   <div class="nav-item active" onclick="showSection('starters', this)">
     <span>🥗</span><label>Starters</label>
   </div>
@@ -269,7 +261,6 @@ body {
   <div class="hero-header">
     <h1 id="section-name">Starters</h1>
   </div>
-  
   <div class="menu-container">
     <div class="items-grid" id="menu-grid"></div>
   </div>
@@ -298,27 +289,30 @@ body {
 
 <script>
 const menuData = {
-  starters: Array.from({length: 10}, (_, i) => ({ id: `s${i}`, name: `Appetizer ${i+1}`, price: 12.00, img: `https://images.unsplash.com/photo-1541529086526-db283c563270?w=300` })),
-  main: Array.from({length: 10}, (_, i) => ({ id: `m${i}`, name: `Main Dish ${i+1}`, price: 24.50, img: `https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300` })),
-  apps: Array.from({length: 10}, (_, i) => ({ id: `a${i}`, name: `Side Item ${i+1}`, price: 9.00, img: `https://images.unsplash.com/photo-1534422298391-e4f8c170db0a?w=300` })),
+  starters: Array.from({length: 10}, (_, i) => ({ id: `s${i}`, name: `Starter ${i+1}`, price: 12.00, img: `https://images.unsplash.com/photo-1541529086526-db283c563270?w=300` })),
+  main: Array.from({length: 10}, (_, i) => ({ id: `m${i}`, name: `Main ${i+1}`, price: 24.50, img: `https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300` })),
+  apps: Array.from({length: 10}, (_, i) => ({ id: `a${i}`, name: `Side ${i+1}`, price: 9.00, img: `https://images.unsplash.com/photo-1534422298391-e4f8c170db0a?w=300` })),
   desserts: Array.from({length: 10}, (_, i) => ({ id: `d${i}`, name: `Dessert ${i+1}`, price: 11.00, img: `https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?w=300` }))
 };
 
 let cart = {};
 
+// Haptic Feedback function
+function triggerHaptic() {
+  if ("vibrate" in navigator) {
+    navigator.vibrate(10); // Subtle 10ms pulse
+  }
+}
+
 function showSection(section, el) {
-  // 1. Handle the sliding indicator animation
+  triggerHaptic();
   const indicator = document.getElementById('nav-indicator');
   indicator.style.top = el.offsetTop + 'px';
   
-  // 2. Active Class management
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   el.classList.add('active');
-  
-  // 3. Update Hero Title
   document.getElementById('section-name').innerText = el.querySelector('label').innerText;
   
-  // 4. Update Grid
   const grid = document.getElementById('menu-grid');
   grid.innerHTML = '';
   menuData[section].forEach(item => {
@@ -340,8 +334,8 @@ function showSection(section, el) {
   });
 }
 
-// Logic for adding/updating cart remains consistent for stability
 function handleFirstAdd(id, name, price) {
+  triggerHaptic();
   cart[id] = { name, price, qty: 1 };
   document.getElementById(`add-init-${id}`).style.display = 'none';
   document.getElementById(`ctrl-${id}`).style.display = 'flex';
@@ -353,6 +347,7 @@ function handleFirstAdd(id, name, price) {
 }
 
 function updateQty(id, change) {
+  triggerHaptic();
   if (!cart[id]) return;
   cart[id].qty += change;
   if (cart[id].qty <= 0) {
@@ -390,18 +385,10 @@ function updateGlobalUI() {
   } else { bar.style.display = 'none'; }
 }
 
-function toggleCart() {
-  const p = document.getElementById('cart-popup');
-  p.style.display = (p.style.display === 'flex') ? 'none' : 'flex';
-}
+function toggleCart() { triggerHaptic(); const p = document.getElementById('cart-popup'); p.style.display = (p.style.display === 'flex') ? 'none' : 'flex'; }
+function processPayment() { triggerHaptic(); alert("Redirecting to checkout..."); }
 
-function processPayment() { alert("Redirecting to checkout..."); }
-
-// Set the initial position of the indicator on boot
-window.onload = () => {
-  const firstItem = document.querySelector('.nav-item.active');
-  showSection('starters', firstItem);
-};
+window.onload = () => { showSection('starters', document.querySelector('.nav-item')); };
 </script>
 </body>
 </html>
