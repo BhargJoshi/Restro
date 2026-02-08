@@ -2,182 +2,211 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <title>Rialto</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --primary-color: #ffcc00;
+    --primary-dark: #cc9900;
+    --bg-light: #f8f9fa;
+    --text-main: #111111;
+    --text-muted: #666666;
+    --safe-area-bottom: env(safe-area-inset-bottom);
+  }
 
-body {
-  min-height: 100vh;
-  font-family: 'Inter', sans-serif;
-  background: url("https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=1920") center/cover no-repeat;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  padding: 20px;
-}
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-body::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: rgba(0,0,0,0.65);
-  backdrop-filter: blur(4px);
-}
+  body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.5;
+    overflow-x: hidden;
+    /* Background remains for laptop/large screens */
+    background: url("https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=1920") center/cover no-repeat fixed;
+  }
 
-.container {
-  position: relative;
-  z-index: 2;
-  text-align: center;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
+  /* Overlay for desktop visibility */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(8px);
+    z-index: 0;
+  }
 
-.brand-name {
-  font-family: 'Playfair Display', serif;
-  font-size: 72px;
-  color: #fff;
-  letter-spacing: 3px;
-  margin-bottom: 40px;
-}
+  /* Main Wrapper: Acts as the "Phone Screen" on desktop */
+  .app-shell {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 480px; /* Standard high-end mobile width */
+    min-height: 100vh;
+    margin: 0 auto;
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0 40px rgba(0,0,0,0.2);
+  }
 
-.card {
-  width: 100%;
-  max-width: 450px;
-  background: #f7f7f7;
-  border-radius: 28px;
-  padding: 45px 35px;
-  box-shadow: 0 25px 60px rgba(0,0,0,0.45);
-}
+  /* Header Section */
+  .header {
+    padding: 40px 24px 20px;
+    background: linear-gradient(to bottom, #ffffff, #fcfcfc);
+  }
 
-.card h2 {
-  margin-bottom: 35px;
-  color: #111;
-  font-weight: 500;
-}
+  .brand-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    letter-spacing: 2px;
+    color: var(--text-main);
+    margin-bottom: 8px;
+  }
 
-.option {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  padding: 18px;
-  margin-bottom: 22px;
-  border-radius: 16px;
-  cursor: pointer;
-  text-align: left;
-  background: #ffffff;
-  border: 1px solid #e0e0e0;
-  position: relative;
-  top: 0;
-  box-shadow: 0 6px 0px #d6d6d6, 0 8px 15px rgba(0,0,0,0.1);
-  transition: all 0.1s ease;
-  -webkit-tap-highlight-color: transparent;
-}
+  .welcome-text {
+    font-size: 14px;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
 
-.option:active {
-  top: 4px;
-  box-shadow: 0 2px 0px #d6d6d6, 0 4px 8px rgba(0,0,0,0.1);
-}
+  /* Content Area */
+  .main-content {
+    flex: 1;
+    padding: 0 20px 100px; /* Bottom padding for the sticky button */
+  }
 
-.option.selected {
-  background: #ffcc00;
-  border-color: #e6b800;
-  box-shadow: 0 6px 0px #cc9900, 0 8px 20px rgba(255, 204, 0, 0.3);
-  top: -2px;
-}
+  .section-title {
+    font-size: 22px;
+    font-weight: 600;
+    margin: 20px 0 24px;
+    padding-left: 4px;
+  }
 
-.option.selected:active {
-  top: 2px;
-  box-shadow: 0 2px 0px #cc9900, 0 4px 10px rgba(255, 204, 0, 0.3);
-}
+  /* Mobile-first Options (Zepto Style) */
+  .option {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px;
+    margin-bottom: 16px;
+    background: #ffffff;
+    border: 2px solid #f0f0f0;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
 
-.icon-box {
-  flex-shrink: 0;
-  width: 48px;
-  height: 48px;
-  background: #f0f0f0;
-  border-radius: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+  .option:active {
+    transform: scale(0.97);
+  }
 
-.option.selected .icon-box {
-  background: rgba(255, 255, 255, 0.6);
-}
+  .option.selected {
+    border-color: var(--primary-color);
+    background: #fffef5;
+    box-shadow: 0 8px 20px rgba(255, 204, 0, 0.15);
+  }
 
-.icon-box svg {
-  width: 24px;
-  height: 24px;
-  stroke: #111;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  fill: none;
-}
+  .icon-box {
+    width: 56px;
+    height: 56px;
+    background: #f7f7f7;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+  }
 
-.option-text h3 { font-size: 16px; color: #111; }
-.option-text p { font-size: 13px; color: #555; }
+  .option.selected .icon-box {
+    background: var(--primary-color);
+  }
 
-.btn {
-  width: 100%;
-  padding: 18px;
-  border-radius: 40px;
-  border: none;
-  margin-top: 10px;
-  font-size: 16px;
-  font-weight: 600;
-  background: #e0e0e0;
-  color: #999;
-  cursor: not-allowed;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 0px #bcbcbc;
-  position: relative;
-  top: 0;
-}
+  .icon-box svg {
+    width: 28px;
+    height: 28px;
+    stroke: #333;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+  }
 
-.btn.active {
-  background: #ffcc00;
-  color: #111;
-  cursor: pointer;
-  box-shadow: 0 6px 0px #cc9900, 0 10px 20px rgba(255, 204, 0, 0.4);
-}
+  .option-text h3 { font-size: 17px; font-weight: 600; margin-bottom: 2px; }
+  .option-text p { font-size: 13px; color: var(--text-muted); }
 
-.btn.active:active {
-  top: 4px;
-  box-shadow: 0 2px 0px #cc9900;
-}
+  /* Bottom Fixed Action Bar (Blinkit Style) */
+  .footer-action {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 480px;
+    background: #ffffff;
+    padding: 16px 20px calc(16px + var(--safe-area-bottom));
+    border-top: 1px solid #eeeeee;
+    z-index: 10;
+  }
 
-.hours {
-  position: absolute;
-  bottom: 6%;
-  color: #fff;
-  font-size: 14px;
-  opacity: 0.75;
-}
+  .btn {
+    width: 100%;
+    height: 58px;
+    background: #e0e0e0;
+    color: #999;
+    border: none;
+    border-radius: 18px;
+    font-size: 17px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: not-allowed;
+    transition: all 0.3s ease;
+  }
 
-@media (max-width: 480px) {
-  .brand-name { font-size: 48px; margin-bottom: 25px; }
-  .card { padding: 30px 20px; }
-  .card h2 { font-size: 20px; margin-bottom: 25px; }
-  .hours { position: relative; margin-top: 20px; bottom: auto; padding-bottom: 20px; }
-}
+  .btn.active {
+    background: var(--primary-color);
+    color: #000;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(255, 204, 0, 0.3);
+  }
+
+  .hours-info {
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 12px;
+    letter-spacing: 0.5px;
+  }
+
+  /* Smooth transition for selection */
+  .option.selected .icon-box svg {
+    stroke: #000;
+  }
+
+  /* Desktop optimization: Hide blur if viewport is small */
+  @media (max-width: 480px) {
+    body::before { display: none; }
+    .app-shell { box-shadow: none; }
+  }
 </style>
 </head>
 
 <body>
 
-<div class="container">
-  <div class="brand-name">RIALTO</div>
+<div class="app-shell">
+  <header class="header">
+    <div class="brand-name">RIALTO</div>
+    <div class="welcome-text">Premium Dining Experience</div>
+  </header>
 
-  <div class="card">
-    <h2>How would you like to order?</h2>
+  <main class="main-content">
+    <h2 class="section-title">How would you like to order?</h2>
 
     <div class="option" data-type="dinein">
       <div class="icon-box">
@@ -185,7 +214,7 @@ body::before {
       </div>
       <div class="option-text">
         <h3>Dine In</h3>
-        <p>Enjoy at our restaurant</p>
+        <p>Enjoy the ambiance at our table</p>
       </div>
     </div>
 
@@ -195,7 +224,7 @@ body::before {
       </div>
       <div class="option-text">
         <h3>Takeaway</h3>
-        <p>Pick up your order</p>
+        <p>Swift pickup from our counter</p>
       </div>
     </div>
 
@@ -205,16 +234,21 @@ body::before {
       </div>
       <div class="option-text">
         <h3>Room Service</h3>
-        <p>Delivered to your room</p>
+        <p>Delivered straight to your door</p>
       </div>
     </div>
 
-    <button class="btn" id="viewMenuBtn">View Menu →</button>
-  </div>
-</div>
+    <div class="hours-info">
+      OPEN DAILY: 12:00 PM - 11:00 PM
+    </div>
+  </main>
 
-<div class="hours">
-  Open daily from 12:00 PM to 11:00 PM
+  <div class="footer-action">
+    <button class="btn" id="viewMenuBtn">
+      View Menu 
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+    </button>
+  </div>
 </div>
 
 <script>
@@ -224,9 +258,9 @@ let selected = null;
 
 options.forEach(option => {
   option.addEventListener("click", () => {
-    // Basic Haptic Feedback for mobile
+    // Premium Haptic Feedback
     if (window.navigator && window.navigator.vibrate) {
-      window.navigator.vibrate(15);
+      window.navigator.vibrate(20);
     }
 
     options.forEach(o => o.classList.remove("selected"));
@@ -234,14 +268,17 @@ options.forEach(option => {
     selected = option.dataset.type;
 
     btn.classList.add("active");
+    btn.innerHTML = `View Menu (${option.querySelector('h3').innerText}) <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>`;
   });
 });
 
-// --- NAVIGATION LOGIC ---
 btn.addEventListener("click", () => {
   if (selected) {
-    // Redirects the browser to your menu page
-    window.location.href = "menu.html";
+    // Add a small delay for the click animation to finish
+    btn.style.transform = "scale(0.95)";
+    setTimeout(() => {
+      window.location.href = "menu.html";
+    }, 150);
   }
 });
 </script>
