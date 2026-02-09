@@ -103,14 +103,31 @@
     top: -2px; 
   }
 
+  /* Dropdown arrow styles */
+  .arrow-toggle {
+    margin-left: auto;
+    padding: 5px;
+    transition: transform 0.3s ease;
+    display: none; /* Only visible when selected */
+  }
+
+  .option.selected .arrow-toggle {
+    display: block;
+  }
+
+  .arrow-toggle.rotated {
+    transform: rotate(180deg);
+  }
+
   /* Dine-in Details Dropdown */
   #dinein-form {
     max-height: 0;
     overflow: hidden;
-    transition: max-height 0.4s ease, margin-bottom 0.4s ease;
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), margin-bottom 0.4s ease, padding 0.4s ease;
     background: #fff;
     border-radius: 16px;
     margin-bottom: 0;
+    border: 0 solid #e0e0e0;
   }
 
   #dinein-form.active {
@@ -225,13 +242,16 @@
   <main class="card">
     <h2>Select Order Mode</h2>
 
-    <div class="option" data-type="dinein">
+    <div class="option" data-type="dinein" id="dinein-option">
       <div class="icon-box">
         <svg viewBox="0 0 24 24"><path d="M18 8c0 3.31-2.69 6-6 6M18 8V3M14 8V3M22 8V3M18 21v-7"/><path d="M2 15c0 3.87 3.13 7 7 7s7-3.13 7-7-3.13-7-7-7-7 3.13-7 7zM9 8V2"/></svg>
       </div>
       <div class="option-text">
         <h3>Dine In</h3>
         <p>Enjoy at our restaurant</p>
+      </div>
+      <div class="arrow-toggle" id="arrowToggle">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
       </div>
     </div>
 
@@ -268,6 +288,7 @@ const btn = document.getElementById("viewMenuBtn");
 const dineinForm = document.getElementById("dinein-form");
 const nameInput = document.getElementById("userName");
 const countInput = document.getElementById("userCount");
+const arrowToggle = document.getElementById("arrowToggle");
 let selected = null;
 
 function validateForm() {
@@ -285,7 +306,14 @@ function validateForm() {
 }
 
 options.forEach(option => {
-  option.addEventListener("click", () => {
+  option.addEventListener("click", (e) => {
+    // If arrow is clicked specifically while already selected, toggle the form
+    if (option.id === "dinein-option" && selected === "dinein" && e.target.closest('#arrowToggle')) {
+        dineinForm.classList.toggle("active");
+        arrowToggle.classList.toggle("rotated");
+        return;
+    }
+
     // Haptic Feedback
     if (window.navigator && window.navigator.vibrate) {
       window.navigator.vibrate(15);
@@ -295,9 +323,10 @@ options.forEach(option => {
     option.classList.add("selected");
     selected = option.dataset.type;
 
-    // Show/Hide dropdown based on selection
+    // Show dropdown when Dine In is first selected
     if (selected === "dinein") {
       dineinForm.classList.add("active");
+      arrowToggle.classList.remove("rotated");
     } else {
       dineinForm.classList.remove("active");
     }
@@ -306,7 +335,7 @@ options.forEach(option => {
   });
 });
 
-// Listen for input changes to enable button
+// Input listeners
 nameInput.addEventListener("input", validateForm);
 countInput.addEventListener("input", validateForm);
 
