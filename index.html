@@ -9,111 +9,139 @@
 
 <style>
   :root {
-    --primary-yellow: #ffcc00; /* [cite: 10] */
-    --primary-dark: #cc9900;   /* [cite: 10] */
-    --card-bg: #f7f7f7;        /*  */
+    --primary-yellow: #ffcc00;
+    --primary-dark: #cc9900;   
+    --card-bg: #f7f7f7;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
   body {
-    font-family: 'Inter', sans-serif; /* [cite: 2] */
-    background: url("https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=1920") center/cover no-repeat fixed; /* [cite: 2] */
+    font-family: 'Inter', sans-serif;
+    background: url("https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=1920") center/cover no-repeat fixed;
     min-height: 100vh;
     display: flex;
     justify-content: center;
   }
 
-  /* Blurred Background Overlay */
   body::before {
     content: "";
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.65); /*  */
-    backdrop-filter: blur(4px);    /*  */
+    background: rgba(0,0,0,0.65); 
+    backdrop-filter: blur(4px);    
     z-index: 0;
   }
 
-  /* App Container: Centered on laptop, full on mobile */
   .app-shell {
     position: relative;
-    z-index: 2; /* [cite: 4] */
+    z-index: 2; 
     width: 100%;
     max-width: 480px;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    padding: 20px; /*  */
+    padding: 20px; 
   }
 
-  /* Hero Section */
   .header {
     text-align: center;
     padding: 40px 0;
   }
 
   .brand-name {
-    font-family: 'Playfair Display', serif; /* [cite: 5] */
-    font-size: 64px; /* [cite: 5] */
-    color: #fff;     /* [cite: 5] */
-    letter-spacing: 3px; /* [cite: 5] */
+    font-family: 'Playfair Display', serif;
+    font-size: 64px; 
+    color: #fff;
+    letter-spacing: 3px; 
     text-shadow: 0 4px 10px rgba(0,0,0,0.3);
   }
 
-  /* The Main White Card */
   .card {
-    background: var(--card-bg); /*  */
-    border-radius: 28px;        /*  */
-    padding: 35px 25px;         /*  */
-    box-shadow: 0 25px 60px rgba(0,0,0,0.45); /*  */
+    background: var(--card-bg);
+    border-radius: 28px;        
+    padding: 35px 25px;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.45); 
     flex: 1;
     display: flex;
     flex-direction: column;
-    margin-bottom: 100px; /* Space for sticky button */
+    margin-bottom: 100px; 
   }
 
   .card h2 {
     text-align: center;
     margin-bottom: 30px;
     font-weight: 500;
-    color: #111; /* [cite: 7] */
+    color: #111; 
   }
 
-  /* Dining Options */
   .option {
     display: flex;
     align-items: center;
-    gap: 18px; /* [cite: 8] */
+    gap: 18px; 
     padding: 18px;
     margin-bottom: 20px;
-    border-radius: 16px; /* [cite: 8] */
+    border-radius: 16px;
     cursor: pointer;
-    background: #ffffff; /* [cite: 8] */
-    border: 1px solid #e0e0e0; /* [cite: 8] */
+    background: #ffffff;
+    border: 1px solid #e0e0e0; 
     position: relative;
     top: 0;
-    box-shadow: 0 6px 0px #d6d6d6, 0 8px 15px rgba(0,0,0,0.1); /* [cite: 8] */
-    transition: all 0.1s ease; /* [cite: 9] */
+    box-shadow: 0 6px 0px #d6d6d6, 0 8px 15px rgba(0,0,0,0.1);
+    transition: all 0.1s ease;
   }
 
-  /* Press Effect */
   .option:active {
-    top: 4px; /* [cite: 9] */
-    box-shadow: 0 2px 0px #d6d6d6, 0 4px 8px rgba(0,0,0,0.1); /* [cite: 9] */
+    top: 4px;
+    box-shadow: 0 2px 0px #d6d6d6, 0 4px 8px rgba(0,0,0,0.1);
   }
 
-  /* Selected State */
   .option.selected {
-    background: var(--primary-yellow); /* [cite: 10] */
-    border-color: #e6b800;             /* [cite: 10] */
-    box-shadow: 0 6px 0px var(--primary-dark), 0 8px 20px rgba(255, 204, 0, 0.3); /* [cite: 10] */
-    top: -2px; /* [cite: 11] */
+    background: var(--primary-yellow);
+    border-color: #e6b800;             
+    box-shadow: 0 6px 0px var(--primary-dark), 0 8px 20px rgba(255, 204, 0, 0.3);
+    top: -2px; 
+  }
+
+  /* Dine-in Details Dropdown */
+  #dinein-form {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, margin-bottom 0.4s ease;
+    background: #fff;
+    border-radius: 16px;
+    margin-bottom: 0;
+  }
+
+  #dinein-form.active {
+    max-height: 200px;
+    margin-bottom: 20px;
+    border: 1px solid #e0e0e0;
+    padding: 15px;
+  }
+
+  .input-group {
+    margin-bottom: 10px;
+  }
+
+  .input-group input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    outline: none;
+  }
+
+  .input-group input:focus {
+    border-color: var(--primary-dark);
   }
 
   .icon-box {
     width: 48px;
     height: 48px;
-    background: #f0f0f0; /* [cite: 13] */
+    background: #f0f0f0; 
     border-radius: 14px;
     display: flex;
     align-items: center;
@@ -126,15 +154,14 @@
   .icon-box svg {
     width: 24px;
     height: 24px;
-    stroke: #111; /* [cite: 14] */
+    stroke: #111;
     stroke-width: 2;
     fill: none;
   }
 
   .option-text h3 { font-size: 16px; color: #111; }
-  .option-text p { font-size: 13px; color: #555; } /* [cite: 15] */
+  .option-text p { font-size: 13px; color: #555; } 
 
-  /* Sticky Action Button (Zepto Style) */
   .footer-action {
     position: fixed;
     bottom: 0;
@@ -148,28 +175,28 @@
   .btn {
     width: 100%;
     padding: 20px;
-    border-radius: 40px; /* [cite: 16] */
+    border-radius: 40px;
     border: none;
     font-size: 18px;
     font-weight: 700;
-    background: #e0e0e0; /* [cite: 16] */
-    color: #999;        /* [cite: 16] */
+    background: #e0e0e0;
+    color: #999;        
     cursor: not-allowed;
-    box-shadow: 0 4px 0px #bcbcbc; /* [cite: 16] */
+    box-shadow: 0 4px 0px #bcbcbc; 
     position: relative;
     top: 0;
     transition: all 0.3s ease;
   }
 
   .btn.active {
-    background: var(--primary-yellow); /* [cite: 18] */
-    color: #111;                       /* [cite: 18] */
+    background: var(--primary-yellow); 
+    color: #111;
     cursor: pointer;
-    box-shadow: 0 6px 0px var(--primary-dark), 0 10px 20px rgba(255, 204, 0, 0.4); /* [cite: 18] */
+    box-shadow: 0 6px 0px var(--primary-dark), 0 10px 20px rgba(255, 204, 0, 0.4);
   }
 
   .btn.active:active {
-    top: 4px; /* [cite: 18] */
+    top: 4px;
     box-shadow: 0 2px 0px var(--primary-dark);
   }
 
@@ -182,7 +209,7 @@
   }
 
   @media (max-width: 480px) {
-    .brand-name { font-size: 48px; } /* [cite: 20] */
+    .brand-name { font-size: 48px; } 
     .app-shell { padding: 15px; }
   }
 </style>
@@ -208,6 +235,15 @@
       </div>
     </div>
 
+    <div id="dinein-form">
+      <div class="input-group">
+        <input type="text" id="userName" placeholder="Your Name">
+      </div>
+      <div class="input-group">
+        <input type="number" id="userCount" placeholder="Number of People">
+      </div>
+    </div>
+
     <div class="option" data-type="takeaway">
       <div class="icon-box">
         <svg viewBox="0 0 24 24"><path d="M6 7h12l-1 14H7L6 7z"/><path d="M9 7V5a3 3 0 016 0v2"/></svg>
@@ -215,16 +251,6 @@
       <div class="option-text">
         <h3>Takeaway</h3>
         <p>Pick up your order</p>
-      </div>
-    </div>
-
-    <div class="option" data-type="room">
-      <div class="icon-box">
-        <svg viewBox="0 0 24 24"><path d="M12 3a5 5 0 00-5 5v3l-2 3h14l-2-3V8a5 5 0 00-5-5z"/><path d="M10 18a2 2 0 004 0"/></svg>
-      </div>
-      <div class="option-text">
-        <h3>Room Service</h3>
-        <p>Delivered to your room</p>
       </div>
     </div>
 
@@ -239,11 +265,28 @@
 <script>
 const options = document.querySelectorAll(".option");
 const btn = document.getElementById("viewMenuBtn");
+const dineinForm = document.getElementById("dinein-form");
+const nameInput = document.getElementById("userName");
+const countInput = document.getElementById("userCount");
 let selected = null;
+
+function validateForm() {
+  if (selected === "takeaway") {
+    btn.classList.add("active");
+  } else if (selected === "dinein") {
+    if (nameInput.value.trim() !== "" && countInput.value.trim() !== "") {
+      btn.classList.add("active");
+    } else {
+      btn.classList.remove("active");
+    }
+  } else {
+    btn.classList.remove("active");
+  }
+}
 
 options.forEach(option => {
   option.addEventListener("click", () => {
-    // Haptic Feedback [cite: 25]
+    // Haptic Feedback
     if (window.navigator && window.navigator.vibrate) {
       window.navigator.vibrate(15);
     }
@@ -252,13 +295,24 @@ options.forEach(option => {
     option.classList.add("selected");
     selected = option.dataset.type;
 
-    btn.classList.add("active");
+    // Show/Hide dropdown based on selection
+    if (selected === "dinein") {
+      dineinForm.classList.add("active");
+    } else {
+      dineinForm.classList.remove("active");
+    }
+
+    validateForm();
   });
 });
 
+// Listen for input changes to enable button
+nameInput.addEventListener("input", validateForm);
+countInput.addEventListener("input", validateForm);
+
 btn.addEventListener("click", () => {
-  if (selected) {
-    window.location.href = "menu.html"; // [cite: 26]
+  if (btn.classList.contains("active")) {
+    window.location.href = "menu.html"; 
   }
 });
 </script>
