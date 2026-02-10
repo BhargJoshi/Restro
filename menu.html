@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>Emerald Menu - Premium Mobile</title>
+<title>Rialto Menu - Premium Mobile</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -102,25 +102,30 @@ body {
 .filter-bar {
   display: none;
   justify-content: center;
-  gap: 10px;
-  padding: 10px;
+  gap: 8px;
+  padding: 12px;
   background: #fff;
 }
 
 .filter-btn {
-  padding: 6px 15px;
+  padding: 8px 14px;
   border-radius: 20px;
-  border: 1px solid #ddd;
-  background: #fff;
-  font-size: 12px;
+  border: 1px solid #eee;
+  background: #f9f9f9;
+  font-size: 11px;
   font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 4px;
   cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .filter-btn.active {
   background: #111;
   color: #fff;
   border-color: #111;
+  transform: scale(1.05);
 }
 
 .menu-container {
@@ -247,11 +252,13 @@ body {
   <div class="hero-header">
     <h1 id="section-name">Starters</h1>
   </div>
+  
   <div class="filter-bar" id="drink-filters">
-    <button class="filter-btn active" onclick="filterDrinks('all', this)">All</button>
-    <button class="filter-btn" onclick="filterDrinks('hot', this)">Hot</button>
-    <button class="filter-btn" onclick="filterDrinks('cold', this)">Cold</button>
+    <button class="filter-btn active" onclick="filterDrinks('all', this)"><span>📑</span> All</button>
+    <button class="filter-btn" onclick="filterDrinks('hot', this)"><span>🔥</span> Hot</button>
+    <button class="filter-btn" onclick="filterDrinks('cold', this)"><span>❄️</span> Cold</button>
   </div>
+
   <div class="menu-container">
     <div class="items-grid" id="menu-grid"></div>
   </div>
@@ -285,7 +292,6 @@ const menuData = {
   apps: Array.from({length: 10}, (_, i) => ({ id: `a${i}`, name: `Side ${i+1}`, price: 9.00, img: `https://images.unsplash.com/photo-1534422298391-e4f8c170db0a?w=300` })),
   desserts: Array.from({length: 10}, (_, i) => ({ id: `d${i}`, name: `Dessert ${i+1}`, price: 11.00, img: `https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?w=300` })),
   combos: Array.from({length: 5}, (_, i) => ({ id: `c${i}`, name: `Combo Meal ${i+1}`, price: 35.00, img: `https://images.unsplash.com/photo-1513104890138-7c749659a591?w=300` })),
-  // Drinks with type for filtering
   drinks: [
     { id: 'dr1', name: 'Espresso', price: 4.00, type: 'hot', img: 'https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?w=300' },
     { id: 'dr2', name: 'Cappuccino', price: 5.50, type: 'hot', img: 'https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=300' },
@@ -311,7 +317,6 @@ function showSection(section, el) {
   el.classList.add('active');
   document.getElementById('section-name').innerText = el.querySelector('label').innerText;
   
-  // Toggle filter bar visibility
   document.getElementById('drink-filters').style.display = (section === 'drinks') ? 'flex' : 'none';
   
   renderGrid(menuData[section]);
