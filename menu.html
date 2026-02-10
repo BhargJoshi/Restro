@@ -12,7 +12,7 @@
   --bg-light: #f7f7f7;
   --text-dark: #111;
   --surface: #ffffff;
-  --intro-beige: #f5f5dc; /* Noticeable beige background */
+  --intro-beige: #d2b48c; /* Warm Brownish Beige */
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -26,7 +26,7 @@ body {
   overflow: hidden;
 }
 
-/* --- MCDONALDS STYLE PROFILE ANIMATION --- */
+/* --- REFINED PROFILE ANIMATION --- */
 #intro-wrapper {
   position: fixed;
   inset: 0;
@@ -53,21 +53,39 @@ body {
   padding-bottom: 60px;
 }
 
-/* The Absolute Side-View Plate */
-.plate-side {
-  width: 200px;
-  height: 15px;
-  background: #fff;
-  border-radius: 4px 4px 20px 20px;
-  box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+/* Layered Plate to create "Inside" effect */
+.plate-wrapper {
   position: relative;
-  z-index: 5;
+  width: 200px;
+  height: 40px;
+  transform: translateX(-20px);
   animation: slidePlate 0.7s ease-out forwards;
+}
+
+.plate-back {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background: #e0e0e0;
+  border-radius: 4px 4px 40px 40px;
+  z-index: 4; /* Behind food */
+}
+
+.plate-front {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 20px;
+  background: #ffffff;
+  border-radius: 0 0 40px 40px;
+  border-top: 2px solid #eee;
+  z-index: 10; /* In front of food */
 }
 
 @keyframes slidePlate {
   0% { transform: translateX(100vw); }
-  100% { transform: translateX(-20px); } /* Offset slightly for drink space */
+  100% { transform: translateX(-20px); }
 }
 
 /* Falling Elements */
@@ -75,33 +93,28 @@ body {
   position: absolute;
   font-size: 45px;
   opacity: 0;
-  z-index: 6;
+  z-index: 7; /* Between plate-back and plate-front */
 }
 
-/* Food landing ON the plate */
-.item-burger { animation: dropOnPlate 0.5s 0.8s forwards; left: 110px; }
-.item-fries { animation: dropOnPlate 0.5s 1.1s forwards; left: 150px; }
-.item-salad { animation: dropOnPlate 0.5s 1.4s forwards; left: 80px; }
+/* Food landing INSIDE the plate (clipped by plate-front) */
+.item-burger { animation: dropInPlate 0.5s 0.8s forwards; left: 100px; }
+.item-fries { animation: dropInPlate 0.5s 1.1s forwards; left: 140px; }
+.item-salad { animation: dropInPlate 0.5s 1.4s forwards; left: 70px; }
 
 /* Drink landing OUTSIDE the plate */
-.item-drink { animation: dropOutside 0.6s 1.7s forwards; right: 40px; }
+.item-drink { animation: dropOutside 0.6s 1.7s forwards; right: 40px; z-index: 11; }
 
 /* Decoration falling LAST */
-.item-utensils { font-size: 35px; animation: dropDecor 0.5s 2.2s forwards; left: 115px; }
+.item-utensils { font-size: 35px; animation: dropInPlate 0.5s 2.2s forwards; left: 105px; }
 
-@keyframes dropOnPlate {
+@keyframes dropInPlate {
   0% { transform: translateY(-300px); opacity: 0; }
-  100% { transform: translateY(-20px); opacity: 1; }
+  100% { transform: translateY(-12px); opacity: 1; } /* Lands below top rim */
 }
 
 @keyframes dropOutside {
   0% { transform: translateY(-300px) scale(1.5); opacity: 0; }
   100% { transform: translateY(0) scale(1); opacity: 1; }
-}
-
-@keyframes dropDecor {
-  0% { transform: translateY(-300px) rotate(-45deg); opacity: 0; }
-  100% { transform: translateY(-25px) rotate(0deg); opacity: 1; }
 }
 
 /* Statements Container */
@@ -169,12 +182,18 @@ body {
 
 <div id="intro-wrapper">
     <div class="animation-container">
-        <div class="plate-side"></div>
+        <div class="plate-wrapper">
+            <div class="plate-back"></div>
+            <div class="plate-front"></div>
+        </div>
+
         <div class="falling-item item-burger">🍔</div>
         <div class="falling-item item-fries">🍟</div>
         <div class="falling-item item-salad">🥗</div>
-        <div class="falling-item item-drink">🥤</div>
+        
         <div class="falling-item item-utensils">🍴</div>
+
+        <div class="falling-item item-drink">🥤</div>
     </div>
     
     <div class="intro-text-container">
@@ -256,7 +275,6 @@ function triggerHaptic() { if ("vibrate" in navigator) navigator.vibrate(10); }
 // --- INTRO LOGIC ---
 function startCinematicIntro() {
     const wrapper = document.getElementById('intro-wrapper');
-    // Total time for all sequences to play (roughly 7s)
     setTimeout(() => {
         wrapper.classList.add('exit');
         setTimeout(() => wrapper.style.display = 'none', 800);
