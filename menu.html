@@ -56,59 +56,39 @@ body {
 /* Thinner Plate Profile */
 .plate-side {
   width: 180px;
-  height: 6px; /* Reduced thickness */
+  height: 8px; 
   background: #ffffff;
-  border-radius: 0 0 15px 15px; /* Subtle curve for profile view */
+  border-radius: 0 0 15px 15px; 
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
   position: relative;
-  z-index: 10; /* Higher than food to create overlap */
-  transform: translateX(-20px);
+  z-index: 10; /* Keeps items behind the front rim */
+  transform: translateX(0);
   animation: slidePlate 0.7s ease-out forwards;
-}
-
-/* Shadow for the thin plate */
-.plate-side::before {
-  content: '';
-  position: absolute;
-  bottom: -5px;
-  left: 10%;
-  width: 80%;
-  height: 4px;
-  background: rgba(0,0,0,0.05);
-  border-radius: 50%;
-  filter: blur(2px);
 }
 
 @keyframes slidePlate {
   0% { transform: translateX(100vw); }
-  100% { transform: translateX(-20px); }
+  100% { transform: translateX(0); }
 }
 
 /* Falling Elements */
 .falling-item {
   position: absolute;
-  font-size: 42px;
+  font-size: 40px;
   opacity: 0;
-  z-index: 5; /* Lower than plate to look "inside" */
+  z-index: 5; /* Behind the plate rim */
 }
 
-/* Food landing position adjusted to be "inside" the plate overlap */
-.item-burger { animation: dropIn 0.5s 0.8s forwards; left: 105px; }
-.item-fries { animation: dropIn 0.5s 1.1s forwards; left: 140px; }
-.item-salad { animation: dropIn 0.5s 1.4s forwards; left: 75px; }
-.item-utensils { font-size: 32px; animation: dropIn 0.5s 2.2s forwards; left: 110px; }
-
-/* Drink landing outside */
-.item-drink { animation: dropOutside 0.6s 1.7s forwards; right: 45px; z-index: 11; }
+/* Adjusted landing logic: Items stop exactly at the plate baseline */
+.item-burger { animation: dropIn 0.5s 0.8s forwards; left: 85px; }
+.item-fries  { animation: dropIn 0.5s 1.1s forwards; left: 125px; }
+.item-salad  { animation: dropIn 0.5s 1.4s forwards; left: 160px; }
+.item-wine   { animation: dropIn 0.5s 1.7s forwards; left: 200px; } /* Now inside */
+.item-utensils { font-size: 32px; animation: dropIn 0.5s 2.2s forwards; left: 130px; }
 
 @keyframes dropIn {
   0% { transform: translateY(-300px); opacity: 0; }
-  100% { transform: translateY(5px); opacity: 1; } /* Lands slightly behind the plate rim */
-}
-
-@keyframes dropOutside {
-  0% { transform: translateY(-300px) scale(1.5); opacity: 0; }
-  100% { transform: translateY(0) scale(1); opacity: 1; }
+  100% { transform: translateY(-8px); opacity: 1; } /* Stops exactly at plate depth */
 }
 
 /* Statements */
@@ -181,9 +161,8 @@ body {
         <div class="falling-item item-burger">🍔</div>
         <div class="falling-item item-fries">🍟</div>
         <div class="falling-item item-salad">🥗</div>
+        <div class="falling-item item-wine">🍷</div>
         <div class="falling-item item-utensils">🍴</div>
-
-        <div class="falling-item item-drink">🥤</div>
     </div>
     
     <div class="intro-text-container">
