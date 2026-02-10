@@ -49,31 +49,40 @@ body {
 .intro-content-wrapper {
   position: absolute;
   inset: 0;
-  width: 200%; /* Spans across both gates */
+  width: 200%; 
   height: 100%;
   display: flex;
+  flex-direction: column; /* Stack food and text */
   justify-content: center;
   align-items: center;
   z-index: 10000;
 }
 .gate-right .intro-content-wrapper { left: -100%; }
 
-/* Text Animation */
+/* Container for the sliding icons */
+.food-collision-zone {
+  position: relative;
+  width: 100%;
+  height: 120px; /* Space for icons */
+  margin-bottom: 20px; /* Gap so text stays below */
+}
+
+/* Text Animation - Positioned below the collision zone */
 .intro-text-container {
-  position: absolute;
+  position: relative;
   text-align: center;
   font-family: 'Playfair Display', serif;
   font-size: 28px;
   color: #111;
   width: 100%;
+  height: 40px;
 }
 
 .text-msg {
   position: absolute;
   width: 100%;
   left: 0;
-  top: 50%;
-  transform: translateY(-50%);
+  top: 0;
   opacity: 0;
 }
 
@@ -81,15 +90,15 @@ body {
 .msg-2 { animation: textSequence2 2s 2s forwards; }
 
 @keyframes textSequence1 {
-  0% { opacity: 0; transform: translate(-20%, -50%); }
-  20%, 80% { opacity: 1; transform: translate(0, -50%); }
-  100% { opacity: 0; transform: translate(20%, -50%); }
+  0% { opacity: 0; transform: translateX(-20%); }
+  20%, 80% { opacity: 1; transform: translateX(0); }
+  100% { opacity: 0; transform: translateX(20%); }
 }
 
 @keyframes textSequence2 {
-  0% { opacity: 0; transform: translate(-20%, -50%); }
-  20%, 90% { opacity: 1; transform: translate(0, -50%); }
-  100% { opacity: 1; transform: translate(0, -50%); }
+  0% { opacity: 0; transform: translateX(-20%); }
+  20%, 90% { opacity: 1; transform: translateX(0); }
+  100% { opacity: 1; transform: translateX(0); }
 }
 
 .intro-item {
@@ -100,6 +109,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .burger-left { left: -100px; animation: slideInLeft 1s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275); }
@@ -187,16 +198,21 @@ body {
 <div id="cinematic-container">
     <div class="gate-half gate-left">
         <div class="intro-content-wrapper">
+            <div class="food-collision-zone">
+                <div class="intro-item burger-left">🍔</div>
+            </div>
             <div class="intro-text-container">
                 <div class="text-msg msg-1">Prioritizing Taste</div>
                 <div class="text-msg msg-2">Serving With Speed</div>
             </div>
-            <div class="intro-item burger-left">🍔</div>
         </div>
     </div>
     <div class="gate-half gate-right">
         <div class="intro-content-wrapper">
-             <div class="intro-item fries-right">🍟</div>
+             <div class="food-collision-zone">
+                <div class="intro-item fries-right">🍟</div>
+             </div>
+             <div class="intro-text-container" style="visibility: hidden;">Placeholder</div>
         </div>
     </div>
 </div>
@@ -272,7 +288,7 @@ function triggerHaptic() { if ("vibrate" in navigator) navigator.vibrate(10); }
 
 function startCinematicIntro() {
     const container = document.getElementById('cinematic-container');
-    const leftGate = document.querySelector('.gate-left');
+    const zone = document.querySelector('.gate-left .food-collision-zone');
     const particles = ['🍟', '🥤', '🍔', '🥗', '🍗'];
     
     for(let i=0; i<25; i++) {
@@ -282,13 +298,14 @@ function startCinematicIntro() {
         p.style.setProperty('--tx', (Math.random() * 600 - 300) + 'px');
         p.style.setProperty('--ty', (Math.random() * 600 - 300) + 'px');
         p.style.setProperty('--tr', (Math.random() * 720) + 'deg');
-        leftGate.appendChild(p);
+        p.style.left = '50%'; p.style.top = '50%';
+        zone.appendChild(p);
     }
 
     setTimeout(() => {
         container.classList.add('open');
         setTimeout(() => container.style.display = 'none', 1000);
-    }, 4500); // Wait for both text sequences + spill to finish
+    }, 4500); 
 }
 
 function toggleSearch() {
