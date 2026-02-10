@@ -25,80 +25,46 @@ body {
   overflow: hidden;
 }
 
-/* --- CINEMATIC SPLIT-GATE INTRO --- */
-#cinematic-container {
+/* --- CINEMATIC SYSTEM --- */
+#intro-wrapper {
   position: fixed;
   inset: 0;
   z-index: 9999;
-  display: flex;
-  pointer-events: none;
+  overflow: hidden;
+  background: var(--primary); /* The background color for the animation zone */
 }
 
-.gate-half {
-  width: 50%;
+/* The Gates that slide away */
+.gate {
+  position: absolute;
+  top: 0;
+  width: 50.5%; /* Slight overlap to prevent seam */
   height: 100%;
   background: var(--primary);
-  transition: transform 1s cubic-bezier(0.7, 0, 0.3, 1);
-  position: relative;
-  overflow: hidden;
+  z-index: 10002;
+  transition: transform 1.2s cubic-bezier(0.7, 0, 0.3, 1);
 }
+.gate-left { left: 0; border-right: 1px solid rgba(0,0,0,0.05); }
+.gate-right { right: 0; }
 
-#cinematic-container.open .gate-left { transform: translateX(-100%); }
-#cinematic-container.open .gate-right { transform: translateX(100%); }
+#intro-wrapper.open .gate-left { transform: translateX(-100%); }
+#intro-wrapper.open .gate-right { transform: translateX(100%); }
 
-.intro-content-wrapper {
+/* The Animation Layer (Behind the gates) */
+#animation-layer {
   position: absolute;
   inset: 0;
-  width: 200%; 
-  height: 100%;
   display: flex;
-  flex-direction: column; /* Stack food and text */
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  z-index: 10000;
+  z-index: 10001;
 }
-.gate-right .intro-content-wrapper { left: -100%; }
 
-/* Container for the sliding icons */
 .food-collision-zone {
   position: relative;
   width: 100%;
-  height: 120px; /* Space for icons */
-  margin-bottom: 20px; /* Gap so text stays below */
-}
-
-/* Text Animation - Positioned below the collision zone */
-.intro-text-container {
-  position: relative;
-  text-align: center;
-  font-family: 'Playfair Display', serif;
-  font-size: 28px;
-  color: #111;
-  width: 100%;
-  height: 40px;
-}
-
-.text-msg {
-  position: absolute;
-  width: 100%;
-  left: 0;
-  top: 0;
-  opacity: 0;
-}
-
-.msg-1 { animation: textSequence1 2s forwards; }
-.msg-2 { animation: textSequence2 2s 2s forwards; }
-
-@keyframes textSequence1 {
-  0% { opacity: 0; transform: translateX(-20%); }
-  20%, 80% { opacity: 1; transform: translateX(0); }
-  100% { opacity: 0; transform: translateX(20%); }
-}
-
-@keyframes textSequence2 {
-  0% { opacity: 0; transform: translateX(-20%); }
-  20%, 90% { opacity: 1; transform: translateX(0); }
-  100% { opacity: 1; transform: translateX(0); }
+  height: 150px;
 }
 
 .intro-item {
@@ -116,22 +82,57 @@ body {
 .burger-left { left: -100px; animation: slideInLeft 1s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 .fries-right { right: -100px; animation: slideInRight 1s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 
-@keyframes slideInLeft { to { left: calc(50% - 60px); } }
-@keyframes slideInRight { to { right: calc(50% - 60px); } }
+@keyframes slideInLeft { to { left: calc(50% - 70px); } }
+@keyframes slideInRight { to { right: calc(50% - 70px); } }
+
+/* Text Sequence */
+.intro-text-container {
+  position: relative;
+  text-align: center;
+  font-family: 'Playfair Display', serif;
+  font-size: 26px;
+  color: #111;
+  width: 100%;
+  height: 50px;
+  margin-top: 20px;
+}
+
+.text-msg {
+  position: absolute;
+  width: 100%;
+  left: 0;
+  top: 0;
+  opacity: 0;
+}
+
+.msg-1 { animation: textSequence1 2s forwards; }
+.msg-2 { animation: textSequence2 2s 2s forwards; }
+
+@keyframes textSequence1 {
+  0% { opacity: 0; transform: translateY(10px); }
+  20%, 80% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-10px); }
+}
+
+@keyframes textSequence2 {
+  0% { opacity: 0; transform: translateY(10px); }
+  20%, 100% { opacity: 1; transform: translateY(0); }
+}
 
 .spill-particle {
   position: absolute;
   opacity: 0;
   font-size: 24px;
-  animation: spillOut 1.5s 1.2s forwards ease-out;
+  top: 50%; left: 50%;
+  animation: spillOut 1.5s 0.9s forwards ease-out;
 }
 
 @keyframes spillOut {
-  0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+  0% { transform: translate(-50%, -50%) rotate(0deg); opacity: 1; }
   100% { transform: translate(var(--tx), var(--ty)) rotate(var(--tr)); opacity: 0; }
 }
 
-/* --- MAIN MENU STYLES --- */
+/* --- MAIN WEBSITE STYLES --- */
 .sidebar {
   width: 85px; background: #1a1a1a; display: flex; flex-direction: column;
   align-items: center; padding-top: 15px; position: relative;
@@ -195,24 +196,18 @@ body {
 </head>
 <body>
 
-<div id="cinematic-container">
-    <div class="gate-half gate-left">
-        <div class="intro-content-wrapper">
-            <div class="food-collision-zone">
-                <div class="intro-item burger-left">🍔</div>
-            </div>
-            <div class="intro-text-container">
-                <div class="text-msg msg-1">Prioritizing Taste</div>
-                <div class="text-msg msg-2">Serving With Speed</div>
-            </div>
+<div id="intro-wrapper">
+    <div class="gate gate-left"></div>
+    <div class="gate gate-right"></div>
+
+    <div id="animation-layer">
+        <div class="food-collision-zone" id="collision-zone">
+            <div class="intro-item burger-left">🍔</div>
+            <div class="intro-item fries-right">🍟</div>
         </div>
-    </div>
-    <div class="gate-half gate-right">
-        <div class="intro-content-wrapper">
-             <div class="food-collision-zone">
-                <div class="intro-item fries-right">🍟</div>
-             </div>
-             <div class="intro-text-container" style="visibility: hidden;">Placeholder</div>
+        <div class="intro-text-container">
+            <div class="text-msg msg-1">Prioritizing Taste</div>
+            <div class="text-msg msg-2">Serving With Speed</div>
         </div>
     </div>
 </div>
@@ -287,24 +282,26 @@ let currentDrinkFilter = 'all';
 function triggerHaptic() { if ("vibrate" in navigator) navigator.vibrate(10); }
 
 function startCinematicIntro() {
-    const container = document.getElementById('cinematic-container');
-    const zone = document.querySelector('.gate-left .food-collision-zone');
+    const wrapper = document.getElementById('intro-wrapper');
+    const zone = document.getElementById('collision-zone');
     const particles = ['🍟', '🥤', '🍔', '🥗', '🍗'];
     
-    for(let i=0; i<25; i++) {
+    // Generate particles
+    for(let i=0; i<30; i++) {
         const p = document.createElement('div');
         p.className = 'spill-particle';
         p.innerText = particles[Math.floor(Math.random() * particles.length)];
-        p.style.setProperty('--tx', (Math.random() * 600 - 300) + 'px');
-        p.style.setProperty('--ty', (Math.random() * 600 - 300) + 'px');
+        p.style.setProperty('--tx', (Math.random() * 800 - 400) + 'px');
+        p.style.setProperty('--ty', (Math.random() * 800 - 400) + 'px');
         p.style.setProperty('--tr', (Math.random() * 720) + 'deg');
-        p.style.left = '50%'; p.style.top = '50%';
         zone.appendChild(p);
     }
 
+    // Logic to open gates
     setTimeout(() => {
-        container.classList.add('open');
-        setTimeout(() => container.style.display = 'none', 1000);
+        wrapper.classList.add('open');
+        // Clean up intro layer after gates finish moving
+        setTimeout(() => wrapper.style.display = 'none', 1200);
     }, 4500); 
 }
 
@@ -423,7 +420,10 @@ function updateGlobalUI() {
 function toggleCart() { triggerHaptic(); const p = document.getElementById('cart-popup'); p.style.display = (p.style.display === 'flex') ? 'none' : 'flex'; }
 function processPayment() { triggerHaptic(); alert("Redirecting to checkout..."); }
 
-window.onload = () => { startCinematicIntro(); showSection('starters', document.querySelector('.nav-item')); };
+window.onload = () => { 
+    startCinematicIntro(); 
+    showSection('starters', document.querySelector('.nav-item')); 
+};
 </script>
 </body>
 </html>
