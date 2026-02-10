@@ -12,7 +12,7 @@
   --bg-light: #f7f7f7;
   --text-dark: #111;
   --surface: #ffffff;
-  --intro-beige: #d2b48c; /* Warm Brownish Beige */
+  --intro-beige: #d2b48c; 
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -26,7 +26,7 @@ body {
   overflow: hidden;
 }
 
-/* --- REFINED PROFILE ANIMATION --- */
+/* --- REFINED THIN-PLATE ANIMATION --- */
 #intro-wrapper {
   position: fixed;
   inset: 0;
@@ -53,34 +53,30 @@ body {
   padding-bottom: 60px;
 }
 
-/* Layered Plate to create "Inside" effect */
-.plate-wrapper {
+/* Thinner Plate Profile */
+.plate-side {
+  width: 180px;
+  height: 6px; /* Reduced thickness */
+  background: #ffffff;
+  border-radius: 0 0 15px 15px; /* Subtle curve for profile view */
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
   position: relative;
-  width: 200px;
-  height: 40px;
+  z-index: 10; /* Higher than food to create overlap */
   transform: translateX(-20px);
   animation: slidePlate 0.7s ease-out forwards;
 }
 
-.plate-back {
+/* Shadow for the thin plate */
+.plate-side::before {
+  content: '';
   position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 100%;
-  background: #e0e0e0;
-  border-radius: 4px 4px 40px 40px;
-  z-index: 4; /* Behind food */
-}
-
-.plate-front {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 20px;
-  background: #ffffff;
-  border-radius: 0 0 40px 40px;
-  border-top: 2px solid #eee;
-  z-index: 10; /* In front of food */
+  bottom: -5px;
+  left: 10%;
+  width: 80%;
+  height: 4px;
+  background: rgba(0,0,0,0.05);
+  border-radius: 50%;
+  filter: blur(2px);
 }
 
 @keyframes slidePlate {
@@ -91,25 +87,23 @@ body {
 /* Falling Elements */
 .falling-item {
   position: absolute;
-  font-size: 45px;
+  font-size: 42px;
   opacity: 0;
-  z-index: 7; /* Between plate-back and plate-front */
+  z-index: 5; /* Lower than plate to look "inside" */
 }
 
-/* Food landing INSIDE the plate (clipped by plate-front) */
-.item-burger { animation: dropInPlate 0.5s 0.8s forwards; left: 100px; }
-.item-fries { animation: dropInPlate 0.5s 1.1s forwards; left: 140px; }
-.item-salad { animation: dropInPlate 0.5s 1.4s forwards; left: 70px; }
+/* Food landing position adjusted to be "inside" the plate overlap */
+.item-burger { animation: dropIn 0.5s 0.8s forwards; left: 105px; }
+.item-fries { animation: dropIn 0.5s 1.1s forwards; left: 140px; }
+.item-salad { animation: dropIn 0.5s 1.4s forwards; left: 75px; }
+.item-utensils { font-size: 32px; animation: dropIn 0.5s 2.2s forwards; left: 110px; }
 
-/* Drink landing OUTSIDE the plate */
-.item-drink { animation: dropOutside 0.6s 1.7s forwards; right: 40px; z-index: 11; }
+/* Drink landing outside */
+.item-drink { animation: dropOutside 0.6s 1.7s forwards; right: 45px; z-index: 11; }
 
-/* Decoration falling LAST */
-.item-utensils { font-size: 35px; animation: dropInPlate 0.5s 2.2s forwards; left: 105px; }
-
-@keyframes dropInPlate {
+@keyframes dropIn {
   0% { transform: translateY(-300px); opacity: 0; }
-  100% { transform: translateY(-12px); opacity: 1; } /* Lands below top rim */
+  100% { transform: translateY(5px); opacity: 1; } /* Lands slightly behind the plate rim */
 }
 
 @keyframes dropOutside {
@@ -117,7 +111,7 @@ body {
   100% { transform: translateY(0) scale(1); opacity: 1; }
 }
 
-/* Statements Container */
+/* Statements */
 .intro-text-container {
   margin-top: 20px;
   height: 50px;
@@ -182,15 +176,11 @@ body {
 
 <div id="intro-wrapper">
     <div class="animation-container">
-        <div class="plate-wrapper">
-            <div class="plate-back"></div>
-            <div class="plate-front"></div>
-        </div>
+        <div class="plate-side"></div>
 
         <div class="falling-item item-burger">🍔</div>
         <div class="falling-item item-fries">🍟</div>
         <div class="falling-item item-salad">🥗</div>
-        
         <div class="falling-item item-utensils">🍴</div>
 
         <div class="falling-item item-drink">🥤</div>
