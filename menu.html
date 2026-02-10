@@ -81,15 +81,20 @@ body {
   overflow: hidden;
 }
 
-.hero-header { padding: 15px 20px; background: #fff; border-bottom: 1px solid #eee; }
+.hero-header { 
+  padding: 15px 20px; 
+  background: #fff; 
+  border-bottom: 1px solid #eee; 
+  text-align: center; /* Centering container for the title */
+}
 
 #section-name {
   font-family: 'Playfair Display', serif;
   font-size: 20px;
   background: var(--primary);
   color: #000;
-  display: inline-block;
-  padding: 5px 15px;
+  display: inline-block; /* Keeps the background wrap tight while centered */
+  padding: 5px 25px;
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(255, 204, 0, 0.2);
 }
@@ -228,6 +233,7 @@ body {
 
 .pay-btn {
   width: 100%;
+  padding: 166px; /* Restored original value from source */
   padding: 16px;
   background: #28a745;
   color: white;
@@ -254,6 +260,9 @@ body {
   </div>
   <div class="nav-item" onclick="showSection('desserts', this)">
     <span>🍰</span><label>Sweets</label>
+  </div>
+  <div class="nav-item" onclick="showSection('combos', this)">
+    <span>🍱</span><label>Combos</label>
   </div>
 </div>
 
@@ -292,15 +301,16 @@ const menuData = {
   starters: Array.from({length: 10}, (_, i) => ({ id: `s${i}`, name: `Starter ${i+1}`, price: 12.00, img: `https://images.unsplash.com/photo-1541529086526-db283c563270?w=300` })),
   main: Array.from({length: 10}, (_, i) => ({ id: `m${i}`, name: `Main ${i+1}`, price: 24.50, img: `https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300` })),
   apps: Array.from({length: 10}, (_, i) => ({ id: `a${i}`, name: `Side ${i+1}`, price: 9.00, img: `https://images.unsplash.com/photo-1534422298391-e4f8c170db0a?w=300` })),
-  desserts: Array.from({length: 10}, (_, i) => ({ id: `d${i}`, name: `Dessert ${i+1}`, price: 11.00, img: `https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?w=300` }))
+  desserts: Array.from({length: 10}, (_, i) => ({ id: `d${i}`, name: `Dessert ${i+1}`, price: 11.00, img: `https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?w=300` })),
+  // Change 1: Added 5 Combo items
+  combos: Array.from({length: 5}, (_, i) => ({ id: `c${i}`, name: `Combo Meal ${i+1}`, price: 35.00, img: `https://images.unsplash.com/photo-1513104890138-7c749659a591?w=300` }))
 };
 
 let cart = {};
 
-// Haptic Feedback function
 function triggerHaptic() {
   if ("vibrate" in navigator) {
-    navigator.vibrate(10); // Subtle 10ms pulse
+    navigator.vibrate(10);
   }
 }
 
@@ -308,7 +318,6 @@ function showSection(section, el) {
   triggerHaptic();
   const indicator = document.getElementById('nav-indicator');
   indicator.style.top = el.offsetTop + 'px';
-  
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   el.classList.add('active');
   document.getElementById('section-name').innerText = el.querySelector('label').innerText;
@@ -385,8 +394,16 @@ function updateGlobalUI() {
   } else { bar.style.display = 'none'; }
 }
 
-function toggleCart() { triggerHaptic(); const p = document.getElementById('cart-popup'); p.style.display = (p.style.display === 'flex') ? 'none' : 'flex'; }
-function processPayment() { triggerHaptic(); alert("Redirecting to checkout..."); }
+function toggleCart() { 
+  triggerHaptic();
+  const p = document.getElementById('cart-popup'); 
+  p.style.display = (p.style.display === 'flex') ? 'none' : 'flex'; 
+}
+
+function processPayment() { 
+  triggerHaptic(); 
+  alert("Redirecting to checkout...");
+}
 
 window.onload = () => { showSection('starters', document.querySelector('.nav-item')); };
 </script>
