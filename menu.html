@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>Emerald Menu - Premium Mobile</title>
+<title>Rialto Menu - Premium Mobile</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -25,7 +25,7 @@ body {
   overflow: hidden;
 }
 
-/* --- SIDEBAR WITH SLIDING INDICATOR --- */
+/* --- SIDEBAR --- */
 .sidebar {
   width: 85px;
   background: #1a1a1a;
@@ -68,7 +68,6 @@ body {
 
 .nav-item span { font-size: 22px; margin-bottom: 4px; }
 .nav-item label { font-size: 9px; font-weight: 700; text-transform: uppercase; text-align: center; pointer-events: none; }
-
 .nav-item.active { color: #000; }
 
 /* --- MAIN CONTENT & HERO --- */
@@ -85,7 +84,7 @@ body {
   padding: 15px 20px; 
   background: #fff; 
   border-bottom: 1px solid #eee; 
-  text-align: center; /* Centering container for the title */
+  text-align: center; 
 }
 
 #section-name {
@@ -93,10 +92,35 @@ body {
   font-size: 20px;
   background: var(--primary);
   color: #000;
-  display: inline-block; /* Keeps the background wrap tight while centered */
+  display: inline-block;
   padding: 5px 25px;
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(255, 204, 0, 0.2);
+}
+
+/* --- DRINK FILTERS --- */
+.filter-bar {
+  display: none;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px;
+  background: #fff;
+}
+
+.filter-btn {
+  padding: 6px 15px;
+  border-radius: 20px;
+  border: 1px solid #ddd;
+  background: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.filter-btn.active {
+  background: #111;
+  color: #fff;
+  border-color: #111;
 }
 
 .menu-container {
@@ -125,123 +149,73 @@ body {
 
 .badge {
   position: absolute;
-  top: -5px;
-  right: -5px;
+  top: -5px; right: -5px;
   background: #ff3b30;
   color: white;
-  width: 22px;
-  height: 22px;
+  width: 22px; height: 22px;
   border-radius: 50%;
   display: none;
-  align-items: center;
-  justify-content: center;
-  font-size: 11px;
-  font-weight: 700;
-  border: 2px solid #fff;
-  z-index: 10;
+  align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700;
+  border: 2px solid #fff; z-index: 10;
 }
 
 .food-card img {
-  width: 100%;
-  aspect-ratio: 1/1;
-  object-fit: cover;
-  border-radius: 12px;
+  width: 100%; aspect-ratio: 1/1;
+  object-fit: cover; border-radius: 12px;
   margin-bottom: 8px;
 }
 
 .food-card h4 { font-size: 13px; line-height: 1.2; margin-bottom: 4px; height: 32px; overflow: hidden; }
 .price { font-weight: 700; color: #555; font-size: 14px; margin-bottom: 8px; }
 
-/* --- CONTROLS --- */
 .add-initial {
-  width: 100%;
-  padding: 8px;
-  background: #111;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 12px;
+  width: 100%; padding: 8px;
+  background: #111; color: #fff;
+  border: none; border-radius: 8px;
+  font-weight: 600; font-size: 12px;
 }
 
 .qty-controls {
-  display: none;
-  align-items: center;
-  justify-content: space-between;
-  background: #f0f0f0;
-  border-radius: 8px;
-  padding: 2px;
+  display: none; align-items: center; justify-content: space-between;
+  background: #f0f0f0; border-radius: 8px; padding: 2px;
 }
 
 .btn-qty {
-  width: 28px;
-  height: 28px;
-  border: none;
-  background: #fff;
-  border-radius: 6px;
-  font-weight: 700;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  width: 28px; height: 28px; border: none;
+  background: #fff; border-radius: 6px;
+  font-weight: 700; box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
-/* --- FLOATING CART --- */
+/* --- CART UI --- */
 .cart-bar {
-  position: fixed;
-  bottom: 15px;
-  left: 100px;
-  right: 15px;
-  background: #28a745;
-  height: 50px;
-  border-radius: 12px;
-  display: none;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 15px;
-  color: #fff;
-  font-weight: 700;
-  box-shadow: 0 8px 20px rgba(40, 167, 69, 0.3);
-  z-index: 1000;
+  position: fixed; bottom: 15px; left: 100px; right: 15px;
+  background: #28a745; height: 50px; border-radius: 12px;
+  display: none; align-items: center; justify-content: space-between;
+  padding: 0 15px; color: #fff; font-weight: 700;
+  box-shadow: 0 8px 20px rgba(40, 167, 69, 0.3); z-index: 1000;
 }
 
 .cart-popup {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.6);
-  display: none;
-  justify-content: center;
-  align-items: flex-end;
-  z-index: 2000;
+  position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+  display: none; justify-content: center; align-items: flex-end; z-index: 2000;
 }
 
 .cart-content {
-  width: 100%;
-  max-width: 500px;
-  background: #fff;
-  border-top-left-radius: 25px;
-  border-top-right-radius: 25px;
-  padding: 25px;
-  max-height: 80vh;
-  overflow-y: auto;
+  width: 100%; max-width: 500px; background: #fff;
+  border-top-left-radius: 25px; border-top-right-radius: 25px;
+  padding: 25px; max-height: 80vh; overflow-y: auto;
 }
 
 .cart-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 0;
-  border-bottom: 1px solid #eee;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 0; border-bottom: 1px solid #eee;
 }
 
 .pay-btn {
-  width: 100%;
-  padding: 166px; /* Restored original value from source */
-  padding: 16px;
-  background: #28a745;
-  color: white;
-  border: none;
-  border-radius: 12px;
-  font-size: 16px;
-  font-weight: 700;
-  margin-top: 20px;
+  width: 100%; padding: 16px; background: #28a745;
+  color: white; border: none; border-radius: 12px;
+  font-size: 16px; font-weight: 700; margin-top: 20px;
 }
 </style>
 </head>
@@ -264,11 +238,19 @@ body {
   <div class="nav-item" onclick="showSection('combos', this)">
     <span>🍱</span><label>Combos</label>
   </div>
+  <div class="nav-item" onclick="showSection('drinks', this)">
+    <span>🥤</span><label>Drinks</label>
+  </div>
 </div>
 
 <div class="main-content">
   <div class="hero-header">
     <h1 id="section-name">Starters</h1>
+  </div>
+  <div class="filter-bar" id="drink-filters">
+    <button class="filter-btn active" onclick="filterDrinks('all', this)">All</button>
+    <button class="filter-btn" onclick="filterDrinks('hot', this)">Hot</button>
+    <button class="filter-btn" onclick="filterDrinks('cold', this)">Cold</button>
   </div>
   <div class="menu-container">
     <div class="items-grid" id="menu-grid"></div>
@@ -302,29 +284,55 @@ const menuData = {
   main: Array.from({length: 10}, (_, i) => ({ id: `m${i}`, name: `Main ${i+1}`, price: 24.50, img: `https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300` })),
   apps: Array.from({length: 10}, (_, i) => ({ id: `a${i}`, name: `Side ${i+1}`, price: 9.00, img: `https://images.unsplash.com/photo-1534422298391-e4f8c170db0a?w=300` })),
   desserts: Array.from({length: 10}, (_, i) => ({ id: `d${i}`, name: `Dessert ${i+1}`, price: 11.00, img: `https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?w=300` })),
-  // Change 1: Added 5 Combo items
-  combos: Array.from({length: 5}, (_, i) => ({ id: `c${i}`, name: `Combo Meal ${i+1}`, price: 35.00, img: `https://images.unsplash.com/photo-1513104890138-7c749659a591?w=300` }))
+  combos: Array.from({length: 5}, (_, i) => ({ id: `c${i}`, name: `Combo Meal ${i+1}`, price: 35.00, img: `https://images.unsplash.com/photo-1513104890138-7c749659a591?w=300` })),
+  // Drinks with type for filtering
+  drinks: [
+    { id: 'dr1', name: 'Espresso', price: 4.00, type: 'hot', img: 'https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?w=300' },
+    { id: 'dr2', name: 'Cappuccino', price: 5.50, type: 'hot', img: 'https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=300' },
+    { id: 'dr3', name: 'Iced Latte', price: 6.00, type: 'cold', img: 'https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=300' },
+    { id: 'dr4', name: 'Fruit Smoothie', price: 7.50, type: 'cold', img: 'https://images.unsplash.com/photo-1505252585461-04db1eaa846d?w=300' },
+    { id: 'dr5', name: 'Hot Chocolate', price: 5.00, type: 'hot', img: 'https://images.unsplash.com/photo-1544787210-2211d7c928c7?w=300' }
+  ]
 };
 
 let cart = {};
+let currentSection = 'starters';
 
 function triggerHaptic() {
-  if ("vibrate" in navigator) {
-    navigator.vibrate(10);
-  }
+  if ("vibrate" in navigator) navigator.vibrate(10);
 }
 
 function showSection(section, el) {
   triggerHaptic();
+  currentSection = section;
   const indicator = document.getElementById('nav-indicator');
   indicator.style.top = el.offsetTop + 'px';
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   el.classList.add('active');
   document.getElementById('section-name').innerText = el.querySelector('label').innerText;
   
+  // Toggle filter bar visibility
+  document.getElementById('drink-filters').style.display = (section === 'drinks') ? 'flex' : 'none';
+  
+  renderGrid(menuData[section]);
+}
+
+function filterDrinks(type, btn) {
+  triggerHaptic();
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  
+  const filtered = type === 'all' 
+    ? menuData.drinks 
+    : menuData.drinks.filter(d => d.type === type);
+  
+  renderGrid(filtered);
+}
+
+function renderGrid(items) {
   const grid = document.getElementById('menu-grid');
   grid.innerHTML = '';
-  menuData[section].forEach(item => {
+  items.forEach(item => {
     const qty = cart[item.id]?.qty || 0;
     grid.innerHTML += `
       <div class="food-card">
@@ -400,10 +408,7 @@ function toggleCart() {
   p.style.display = (p.style.display === 'flex') ? 'none' : 'flex'; 
 }
 
-function processPayment() { 
-  triggerHaptic(); 
-  alert("Redirecting to checkout...");
-}
+function processPayment() { triggerHaptic(); alert("Redirecting to checkout..."); }
 
 window.onload = () => { showSection('starters', document.querySelector('.nav-item')); };
 </script>
