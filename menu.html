@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>Emerald Menu - Premium Mobile</title>
+<title>Rialto Menu - Premium Mobile</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -25,7 +25,52 @@ body {
   overflow: hidden;
 }
 
-/* --- SIDEBAR --- */
+/* --- CINEMATIC INTRO ANIMATION --- */
+#cinematic-intro {
+  position: fixed;
+  inset: 0;
+  background: var(--primary);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  transition: opacity 0.8s ease-out, visibility 0.8s;
+}
+
+.intro-item {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  font-size: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Slide in and Collide */
+.burger-left { left: -100px; animation: slideInLeft 1s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+.fries-right { right: -100px; animation: slideInRight 1s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+.drink-top { top: -100px; animation: slideInTop 1.2s 0.2s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+
+@keyframes slideInLeft { to { left: calc(50% - 60px); } }
+@keyframes slideInRight { to { right: calc(50% - 60px); } }
+@keyframes slideInTop { to { top: calc(50% - 40px); } }
+
+/* Spill/Shatter effect after collision */
+.spill-particle {
+  position: absolute;
+  opacity: 0;
+  font-size: 24px;
+  animation: spillOut 1.5s 1.2s forwards ease-out;
+}
+
+@keyframes spillOut {
+  0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+  100% { transform: translate(var(--tx), var(--ty)) rotate(var(--tr)); opacity: 0; }
+}
+
+/* --- MAIN MENU STYLES --- */
 .sidebar {
   width: 85px;
   background: #1a1a1a;
@@ -70,7 +115,6 @@ body {
 .nav-item label { font-size: 9px; font-weight: 700; text-transform: uppercase; text-align: center; pointer-events: none; }
 .nav-item.active { color: #000; }
 
-/* --- MAIN CONTENT & HERO --- */
 .main-content {
   flex: 1;
   display: flex;
@@ -100,10 +144,8 @@ body {
   padding: 5px 25px;
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(255, 204, 0, 0.2);
-  transition: opacity 0.3s ease;
 }
 
-/* --- SEARCH UI --- */
 .search-container {
   position: absolute;
   right: 15px;
@@ -112,111 +154,49 @@ body {
 }
 
 #search-input {
-  width: 0;
-  opacity: 0;
-  padding: 8px 0;
-  border: none;
-  border-bottom: 2px solid var(--primary);
-  outline: none;
-  font-family: 'Inter', sans-serif;
-  transition: all 0.3s ease;
-  font-size: 14px;
+  width: 0; opacity: 0; padding: 8px 0; border: none;
+  border-bottom: 2px solid var(--primary); outline: none;
+  font-family: 'Inter', sans-serif; transition: all 0.3s ease; font-size: 14px;
 }
 
-#search-input.active {
-  width: 130px;
-  opacity: 1;
-  padding: 8px 10px;
-  margin-right: 5px;
-}
+#search-input.active { width: 130px; opacity: 1; padding: 8px 10px; margin-right: 5px; }
 
-.search-icon-btn {
-  background: none;
-  border: none;
-  font-size: 20px;
-  cursor: pointer;
-  z-index: 5;
-}
+.search-icon-btn { background: none; border: none; font-size: 20px; cursor: pointer; z-index: 5; }
 
-/* --- DRINK FILTERS --- */
-.filter-bar {
-  display: none;
-  justify-content: center;
-  gap: 8px;
-  padding: 12px;
-  background: #fff;
-}
+.filter-bar { display: none; justify-content: center; gap: 8px; padding: 12px; background: #fff; }
 
 .filter-btn {
-  padding: 8px 14px;
-  border-radius: 20px;
-  border: 1px solid #eee;
-  background: #f9f9f9;
-  font-size: 11px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  cursor: pointer;
+  padding: 8px 14px; border-radius: 20px; border: 1px solid #eee;
+  background: #f9f9f9; font-size: 11px; font-weight: 700;
+  display: flex; align-items: center; gap: 4px; cursor: pointer;
 }
 
-.filter-btn.active {
-  background: #111;
-  color: #fff;
-  border-color: #111;
-}
+.filter-btn.active { background: #111; color: #fff; border-color: #111; }
 
-.menu-container {
-  flex: 1;
-  overflow-y: auto;
-  padding: 12px;
-  padding-bottom: 100px;
-}
+.menu-container { flex: 1; overflow-y: auto; padding: 12px; padding-bottom: 100px; }
 
-.items-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-}
+.items-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
 
-/* --- FOOD CARD --- */
 .food-card {
-  background: #fff;
-  border-radius: 16px;
-  padding: 8px;
-  display: flex;
-  flex-direction: column;
-  position: relative;
+  background: #fff; border-radius: 16px; padding: 8px;
+  display: flex; flex-direction: column; position: relative;
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
 .badge {
-  position: absolute;
-  top: -5px; right: -5px;
-  background: #ff3b30;
-  color: white;
-  width: 22px; height: 22px;
-  border-radius: 50%;
-  display: none;
-  align-items: center; justify-content: center;
-  font-size: 11px; font-weight: 700;
-  border: 2px solid #fff; z-index: 10;
+  position: absolute; top: -5px; right: -5px;
+  background: #ff3b30; color: white; width: 22px; height: 22px;
+  border-radius: 50%; display: none; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; border: 2px solid #fff; z-index: 10;
 }
 
-.food-card img {
-  width: 100%; aspect-ratio: 1/1;
-  object-fit: cover; border-radius: 12px;
-  margin-bottom: 8px;
-}
-
+.food-card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 12px; margin-bottom: 8px; }
 .food-card h4 { font-size: 13px; line-height: 1.2; margin-bottom: 4px; height: 32px; overflow: hidden; }
 .price { font-weight: 700; color: #555; font-size: 14px; margin-bottom: 8px; }
 
 .add-initial {
-  width: 100%; padding: 8px;
-  background: #111; color: #fff;
-  border: none; border-radius: 8px;
-  font-weight: 600; font-size: 12px;
+  width: 100%; padding: 8px; background: #111; color: #fff;
+  border: none; border-radius: 8px; font-weight: 600; font-size: 12px;
 }
 
 .qty-controls {
@@ -224,13 +204,9 @@ body {
   background: #f0f0f0; border-radius: 8px; padding: 2px;
 }
 
-.btn-qty {
-  width: 28px; height: 28px; border: none;
-  background: #fff; border-radius: 6px;
-  font-weight: 700; box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-}
+.btn-qty { width: 28px; height: 28px; border: none; background: #fff; border-radius: 6px; font-weight: 700; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
 
-/* --- CART UI --- */
+/* --- CART --- */
 .cart-bar {
   position: fixed; bottom: 15px; left: 100px; right: 15px;
   background: #28a745; height: 50px; border-radius: 12px;
@@ -250,10 +226,7 @@ body {
   padding: 25px; max-height: 80vh; overflow-y: auto;
 }
 
-.cart-row {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 12px 0; border-bottom: 1px solid #eee;
-}
+.cart-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #eee; }
 
 .pay-btn {
   width: 100%; padding: 16px; background: #28a745;
@@ -263,6 +236,12 @@ body {
 </style>
 </head>
 <body>
+
+<div id="cinematic-intro">
+    <div class="intro-item burger-left">🍔</div>
+    <div class="intro-item fries-right">🍟</div>
+    <div class="intro-item drink-top">🥤</div>
+    </div>
 
 <div class="sidebar" id="sidebar">
   <div class="nav-indicator" id="nav-indicator"></div>
@@ -347,21 +326,40 @@ let cart = {};
 let currentSection = 'starters';
 let currentDrinkFilter = 'all';
 
-function triggerHaptic() {
-  if ("vibrate" in navigator) navigator.vibrate(10);
+function triggerHaptic() { if ("vibrate" in navigator) navigator.vibrate(10); }
+
+// --- INTRO SYSTEM ---
+function startCinematicIntro() {
+    const intro = document.getElementById('cinematic-intro');
+    const particles = ['🍟', '🥤', '🍔', '🥗', '🍗'];
+    
+    // Create random spill particles
+    for(let i=0; i<30; i++) {
+        const p = document.createElement('div');
+        p.className = 'spill-particle';
+        p.innerText = particles[Math.floor(Math.random() * particles.length)];
+        p.style.setProperty('--tx', (Math.random() * 600 - 300) + 'px');
+        p.style.setProperty('--ty', (Math.random() * 600 - 300) + 'px');
+        p.style.setProperty('--tr', (Math.random() * 720) + 'deg');
+        intro.appendChild(p);
+    }
+
+    // Remove intro after animation ends
+    setTimeout(() => {
+        intro.style.opacity = '0';
+        setTimeout(() => intro.style.visibility = 'hidden', 800);
+    }, 3500);
 }
 
+// --- MENU LOGIC ---
 function toggleSearch() {
   triggerHaptic();
   const input = document.getElementById('search-input');
-  const title = document.getElementById('section-name');
   input.classList.toggle('active');
   if (input.classList.contains('active')) {
     input.focus();
-    if(window.innerWidth < 400) title.style.opacity = '0'; // Hide title if space is tight on mobile
   } else {
     input.value = '';
-    title.style.opacity = '1';
     handleSearch();
   }
 }
@@ -369,11 +367,9 @@ function toggleSearch() {
 function handleSearch() {
   const term = document.getElementById('search-input').value.toLowerCase();
   let baseItems = menuData[currentSection];
-  
   if (currentSection === 'drinks' && currentDrinkFilter !== 'all') {
     baseItems = baseItems.filter(d => d.type === currentDrinkFilter);
   }
-  
   const filtered = baseItems.filter(item => item.name.toLowerCase().includes(term));
   renderGrid(filtered);
 }
@@ -382,25 +378,14 @@ function showSection(section, el) {
   triggerHaptic();
   currentSection = section;
   currentDrinkFilter = 'all';
-  
-  // Reset Search
   document.getElementById('search-input').value = '';
   document.getElementById('search-input').classList.remove('active');
-  document.getElementById('section-name').style.opacity = '1';
-
   const indicator = document.getElementById('nav-indicator');
   indicator.style.top = el.offsetTop + 'px';
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   el.classList.add('active');
   document.getElementById('section-name').innerText = el.querySelector('label').innerText;
-  
   document.getElementById('drink-filters').style.display = (section === 'drinks') ? 'flex' : 'none';
-  // Reset filter buttons if entering drinks
-  if(section === 'drinks') {
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    document.querySelector('.filter-btn').classList.add('active');
-  }
-
   renderGrid(menuData[section]);
 }
 
@@ -409,7 +394,7 @@ function filterDrinks(type, btn) {
   currentDrinkFilter = type;
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  handleSearch(); // Reuse search logic to handle both search term + type filter
+  handleSearch();
 }
 
 function renderGrid(items) {
@@ -446,8 +431,6 @@ function handleFirstAdd(id, name, price) {
   const badge = document.getElementById(`badge-${id}`);
   badge.style.display = 'flex';
   badge.innerText = 1;
-  const qtyTxt = document.getElementById(`qty-text-${id}`);
-  if(qtyTxt) qtyTxt.innerText = 1;
   updateGlobalUI();
 }
 
@@ -472,8 +455,7 @@ function updateQty(id, change) {
 }
 
 function updateGlobalUI() {
-  let subtotal = 0;
-  let totalItems = 0;
+  let subtotal = 0, totalItems = 0;
   const list = document.getElementById('cart-items-list');
   list.innerHTML = '';
   Object.keys(cart).forEach(id => {
@@ -490,15 +472,13 @@ function updateGlobalUI() {
   } else { bar.style.display = 'none'; }
 }
 
-function toggleCart() { 
-  triggerHaptic();
-  const p = document.getElementById('cart-popup'); 
-  p.style.display = (p.style.display === 'flex') ? 'none' : 'flex'; 
-}
-
+function toggleCart() { triggerHaptic(); const p = document.getElementById('cart-popup'); p.style.display = (p.style.display === 'flex') ? 'none' : 'flex'; }
 function processPayment() { triggerHaptic(); alert("Redirecting to checkout..."); }
 
-window.onload = () => { showSection('starters', document.querySelector('.nav-item')); };
+window.onload = () => { 
+    startCinematicIntro();
+    showSection('starters', document.querySelector('.nav-item')); 
+};
 </script>
 </body>
 </html>
