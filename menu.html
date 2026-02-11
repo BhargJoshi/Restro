@@ -55,8 +55,8 @@ body {
 
 .animation-container {
   position: relative;
-  width: 320px;
-  height: 220px;
+  width: 350px;
+  height: 250px;
   display: flex;
   justify-content: center;
   align-items: flex-end;
@@ -65,106 +65,111 @@ body {
 
 /* Professional Side Profile Plate */
 .plate-side {
-  width: 260px;
-  height: 8px; 
+  width: 300px;
+  height: 10px; 
   background: #ffffff;
   border-radius: 20px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
   position: relative;
-  z-index: 10;
-  border-bottom: 2px solid #ddd;
+  z-index: 20;
+  border-bottom: 2px solid #ccc;
 }
 
-/* High-Quality Veg Dish Icons */
+/* High-Quality Lucid Food Icons */
 .falling-item {
   position: absolute;
-  font-size: 55px;
+  font-size: 50px;
   opacity: 0;
-  z-index: 5;
+  z-index: 10;
   bottom: 20px;
-  filter: drop-shadow(0 5px 5px rgba(0,0,0,0.1));
+  filter: drop-shadow(0 4px 4px rgba(0,0,0,0.15));
 }
 
-.item-1 { animation: proDrop 0.6s 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; left: 50px; }
-.item-2 { animation: proDrop 0.6s 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; left: 115px; }
-.item-3 { animation: proDrop 0.6s 1.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; left: 185px; }
+/* Items Stacking Logic */
+.item-1 { animation: proDrop 0.5s 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.2) forwards; left: 30px; } /* Drink */
+.item-2 { animation: proDrop 0.5s 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.2) forwards; left: 70px; } /* Biryani Bowl */
+.item-3 { animation: proDrop 0.5s 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.2) forwards; left: 120px; } /* Fries */
+.item-4 { animation: proDrop 0.5s 1.1s cubic-bezier(0.175, 0.885, 0.32, 1.2) forwards; left: 160px; } /* Salad */
+.item-5 { animation: proDrop 0.5s 1.3s cubic-bezier(0.175, 0.885, 0.32, 1.2) forwards; left: 200px; } /* Taco */
+.item-6 { animation: proDrop 0.5s 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.2) forwards; left: 240px; } /* Wrap */
+.item-7 { animation: proDrop 0.5s 1.7s cubic-bezier(0.175, 0.885, 0.32, 1.2) forwards; left: 90px; z-index: 11; } /* Overlay Item 1 */
+.item-8 { animation: proDrop 0.5s 1.9s cubic-bezier(0.175, 0.885, 0.32, 1.2) forwards; left: 140px; z-index: 11; } /* Overlay Item 2 */
 
 @keyframes proDrop {
-  0% { transform: translateY(-350px) rotate(-15deg); opacity: 0; }
-  100% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  0% { transform: translateY(-400px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
 }
 
 /* The Restaurant Cloche (Lid) */
 .lid {
   position: absolute;
-  width: 240px;
-  height: 120px;
-  background: linear-gradient(135deg, #f0f0f0 0%, #bbb 50%, #999 100%);
-  border-radius: 120px 120px 10px 10px;
-  bottom: 22px;
-  z-index: 15;
+  width: 320px;
+  height: 160px;
+  background: linear-gradient(135deg, #ffffff 0%, #d1d1d1 50%, #a3a3a3 100%);
+  border-radius: 160px 160px 10px 10px;
+  bottom: 25px;
+  z-index: 30;
   opacity: 0;
-  transform: translateY(-500px);
-  box-shadow: inset -10px -10px 20px rgba(0,0,0,0.1);
-  animation: lidDrop 0.8s 2.5s forwards, lidLift 1s 6.5s forwards;
+  transform: translateY(-600px);
+  box-shadow: inset -5px -10px 20px rgba(0,0,0,0.1), 0 10px 30px rgba(0,0,0,0.2);
+  animation: lidDrop 0.8s 2.8s forwards, lidLift 1.2s 7s forwards;
 }
 
-/* Lid Handle */
 .lid::before {
   content: '';
   position: absolute;
-  top: -12px;
+  top: -15px;
   left: 50%;
   transform: translateX(-50%);
-  width: 35px;
-  height: 15px;
-  background: #888;
+  width: 40px;
+  height: 18px;
+  background: #999;
   border-radius: 50% 50% 0 0;
 }
 
 @keyframes lidDrop {
-  0% { transform: translateY(-500px); opacity: 0; }
+  0% { transform: translateY(-600px); opacity: 0; }
   100% { transform: translateY(0); opacity: 1; }
 }
 
 @keyframes lidLift {
   0% { transform: translateY(0) rotate(0); opacity: 1; }
-  30% { transform: translateY(-50px) rotate(-5deg); opacity: 1; }
-  100% { transform: translateY(-600px) rotate(-15deg); opacity: 0; }
+  40% { transform: translateY(-100px) rotate(-10deg); opacity: 1; }
+  100% { transform: translateY(-800px) rotate(-20deg); opacity: 0; }
 }
 
 /* Smoke Particles */
 .smoke-wrap {
   position: absolute;
-  bottom: 25px;
-  width: 200px;
-  height: 100px;
-  z-index: 12;
+  bottom: 30px;
+  width: 280px;
+  height: 120px;
+  z-index: 25;
   display: flex;
   justify-content: space-around;
   opacity: 0;
-  animation: smokeFade 3s 3.3s forwards;
+  animation: smokeFade 3.5s 3.5s forwards;
 }
 
 .particle {
-  width: 25px;
-  height: 25px;
-  background: rgba(255,255,255,0.8);
-  filter: blur(10px);
+  width: 30px;
+  height: 30px;
+  background: rgba(255,255,255,0.7);
+  filter: blur(12px);
   border-radius: 50%;
-  animation: rise 2s infinite ease-out;
+  animation: rise 2.5s infinite ease-out;
 }
 
 @keyframes rise {
   0% { transform: translateY(0) scale(1); opacity: 0; }
-  50% { opacity: 0.6; }
-  100% { transform: translateY(-100px) scale(3); opacity: 0; }
+  50% { opacity: 0.5; }
+  100% { transform: translateY(-120px) scale(3.5); opacity: 0; }
 }
 
 @keyframes smokeFade {
   0% { opacity: 0; }
-  20% { opacity: 1; }
-  80% { opacity: 1; }
+  15% { opacity: 1; }
+  85% { opacity: 1; }
   100% { opacity: 0; }
 }
 
@@ -180,8 +185,8 @@ body {
 }
 
 .text-msg { position: absolute; width: 100%; left: 0; opacity: 0; color: #444; font-style: italic; }
-.msg-1 { animation: textFlow 2.5s 3.3s forwards; }
-.msg-2 { animation: textFlow 2.5s 6.8s forwards; }
+.msg-1 { animation: textFlow 2.5s 3.5s forwards; }
+.msg-2 { animation: textFlow 2.5s 7.5s forwards; }
 
 @keyframes textFlow {
   0% { opacity: 0; transform: translateY(15px); }
@@ -189,7 +194,7 @@ body {
   100% { opacity: 0; transform: translateY(-15px); }
 }
 
-/* --- MAIN CONTENT (UNCHANGED) --- */
+/* --- MAIN WEBSITE STYLES (INTACT) --- */
 .sidebar { width: 85px; background: #1a1a1a; display: flex; flex-direction: column; align-items: center; padding-top: 15px; position: relative; overflow-y: auto; border-right: 1px solid rgba(255,255,255,0.1); }
 .nav-indicator { position: absolute; left: 10px; width: 65px; height: 70px; background: var(--primary); border-radius: 12px; transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); z-index: 1; }
 .nav-item { width: 65px; height: 70px; margin-bottom: 12px; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; position: relative; z-index: 2; transition: color 0.3s ease; color: rgba(255,255,255,0.6); flex-shrink: 0; }
@@ -231,15 +236,15 @@ body {
     <div class="animation-container">
         <div class="smoke-wrap">
             <div class="particle" style="animation-delay: 0s"></div>
-            <div class="particle" style="animation-delay: 0.4s"></div>
-            <div class="particle" style="animation-delay: 0.8s"></div>
-            <div class="particle" style="animation-delay: 1.2s"></div>
+            <div class="particle" style="animation-delay: 0.5s"></div>
+            <div class="particle" style="animation-delay: 1s"></div>
+            <div class="particle" style="animation-delay: 1.5s"></div>
         </div>
 
         <div class="lid"></div>
         <div class="plate-side"></div>
 
-        <div class="falling-item item-1">🥗</div> <div class="falling-item item-2">🍲</div> <div class="falling-item item-3">🌯</div> </div>
+        <div class="falling-item item-1">🥤</div> <div class="falling-item item-2">🍲</div> <div class="falling-item item-3">🍟</div> <div class="falling-item item-4">🥗</div> <div class="falling-item item-5">🌮</div> <div class="falling-item item-6">🌯</div> <div class="falling-item item-7">🥘</div> <div class="falling-item item-8">🥙</div> </div>
     
     <div class="intro-text-container">
         <div class="text-msg msg-1">Prioritizing Taste</div>
@@ -318,11 +323,10 @@ function triggerHaptic() { if ("vibrate" in navigator) navigator.vibrate(10); }
 
 function startCinematicIntro() {
     const wrapper = document.getElementById('intro-wrapper');
-    // Adjusted timing to ensure users see the fresh reveal after lid lifts
     setTimeout(() => {
         wrapper.classList.add('exit');
         setTimeout(() => wrapper.style.display = 'none', 800);
-    }, 9500);
+    }, 10500); // Extended slightly to appreciate the reveal
 }
 
 function toggleSearch() { triggerHaptic(); const input = document.getElementById('search-input'); input.classList.toggle('active'); if (input.classList.contains('active')) input.focus(); else { input.value = ''; handleSearch(); } }
@@ -335,7 +339,7 @@ function renderGrid(items) {
     grid.innerHTML = ''; 
     items.forEach(item => { 
         const qty = cart[item.id]?.qty || 0; 
-        grid.innerHTML += `<div class=\"food-card\"><div class=\"badge\" id=\"badge-${item.id}\" style=\"display: ${qty > 0 ? 'flex' : 'none'}\">${qty}</div><img src=\"${item.img}\" alt=\"${item.name}\"><h4>${item.name}</h4><span class=\"price\">$${item.price.toFixed(2)}</span><button class=\"add-initial\" id=\"add-init-${item.id}\" style=\"display: ${qty > 0 ? 'none' : 'block'}\" onclick=\"handleFirstAdd('${item.id}', '${item.name}', ${item.price})\">ADD</button><div class=\"qty-controls\" id=\"ctrl-${item.id}\" style=\"display: ${qty > 0 ? 'flex' : 'none'}\"><button class=\"btn-qty\" onclick=\"updateQty('${item.id}', -1)\">-</button><span style=\"font-weight:700\" id=\"qty-text-${item.id}\">${qty}</span><button class=\"btn-qty\" onclick=\"updateQty('${item.id}', 1)\">+</button></div></div>`; 
+        grid.innerHTML += `<div class="food-card"><div class="badge" id="badge-${item.id}" style="display: ${qty > 0 ? 'flex' : 'none'}">${qty}</div><img src="${item.img}" alt="${item.name}"><h4>${item.name}</h4><span class="price">$${item.price.toFixed(2)}</span><button class="add-initial" id="add-init-${item.id}" style="display: ${qty > 0 ? 'none' : 'block'}" onclick="handleFirstAdd('${item.id}', '${item.name}', ${item.price})">ADD</button><div class="qty-controls" id="ctrl-${item.id}" style="display: ${qty > 0 ? 'flex' : 'none'}"><button class="btn-qty" onclick="updateQty('${item.id}', -1)">-</button><span style="font-weight:700" id="qty-text-${item.id}">${qty}</span><button class="btn-qty" onclick="updateQty('${item.id}', 1)">+</button></div></div>`; 
     }); 
 }
 
@@ -380,7 +384,7 @@ function updateGlobalUI() {
         const item = cart[id]; 
         subtotal += item.price * item.qty; 
         totalItems += item.qty; 
-        list.innerHTML += `<div class=\"cart-row\"><div><strong>${item.name}</strong><br><small>$${item.price.toFixed(2)}</small></div><div class=\"qty-controls\" style=\"display:flex; width: 90px;\"><button class=\"btn-qty\" onclick=\"updateQty('${id}', -1)\">-</button><span>${item.qty}</span><button class=\"btn-qty\" onclick=\"updateQty('${id}', 1)\">+</button></div></div>`; 
+        list.innerHTML += `<div class="cart-row"><div><strong>${item.name}</strong><br><small>$${item.price.toFixed(2)}</small></div><div class="qty-controls" style="display:flex; width: 90px;"><button class="btn-qty" onclick="updateQty('${id}', -1)">-</button><span>${item.qty}</span><button class="btn-qty" onclick="updateQty('${id}', 1)">+</button></div></div>`; 
     });
     document.getElementById('cart-total-price').innerText = `$${(subtotal * 1.1).toFixed(2)}`; 
     const bar = document.getElementById('cart-bar'); 
