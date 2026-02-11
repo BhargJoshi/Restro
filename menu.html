@@ -8,10 +8,8 @@
 <style>
 :root {
   --primary: #ffcc00;
-  --primary-dark: #cc9900;
   --bg-light: #f7f7f7;
   --text-dark: #111;
-  --surface: #ffffff;
   --intro-beige: #f4f1ea; 
 }
 
@@ -20,13 +18,12 @@
 body {
   font-family: 'Inter', sans-serif;
   background-color: #111;
-  color: var(--text-dark);
   height: 100vh;
   display: flex;
   overflow: hidden;
 }
 
-/* --- PROFESSIONAL CINEMATIC ANIMATION --- */
+/* --- CINEMATIC ANIMATION STYLES --- */
 #intro-wrapper {
   position: fixed;
   inset: 0;
@@ -43,20 +40,18 @@ body {
 
 .brand-header {
   position: absolute;
-  top: 80px;
-  font-family: 'Arial Black', Gadget, sans-serif;
-  font-size: 42px;
+  top: 60px;
+  font-family: 'Arial Black', sans-serif;
+  font-size: 48px;
   font-weight: 900;
   color: #000;
-  text-transform: uppercase;
   letter-spacing: -2px;
-  text-align: center;
 }
 
 .animation-container {
   position: relative;
   width: 350px;
-  height: 250px;
+  height: 300px;
   display: flex;
   justify-content: center;
   align-items: flex-end;
@@ -64,94 +59,88 @@ body {
 }
 
 .plate-side {
-  width: 300px;
-  height: 10px; 
+  width: 320px;
+  height: 12px; 
   background: #ffffff;
   border-radius: 20px;
   box-shadow: 0 10px 25px rgba(0,0,0,0.1);
   position: relative;
   z-index: 20;
-  border-bottom: 2px solid #ccc;
 }
 
-/* Fixed Vertical Icons: Removed all default emoji rotations */
+/* Food Items - Forced Upright */
 .falling-item {
   position: absolute;
-  font-size: 50px;
+  font-size: 55px;
   opacity: 0;
   z-index: 10;
-  bottom: 18px; 
-  filter: drop-shadow(0 4px 4px rgba(0,0,0,0.15));
-  transform: rotate(0deg) !important; /* Forces them to stay straight */
+  bottom: 22px; 
+  filter: drop-shadow(0 5px 5px rgba(0,0,0,0.1));
+  transform: rotate(0deg) !important; /* Fixes tilted icons */
 }
 
-/* Drop Animations with precise delays */
-.item-1 { animation: itemDrop 0.4s 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; left: 25px; } 
-.item-2 { animation: itemDrop 0.4s 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; left: 60px; } 
-.item-3 { animation: itemDrop 0.4s 1.1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; left: 100px; } 
-.item-4 { animation: itemDrop 0.4s 1.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; left: 140px; } 
-.item-5 { animation: itemDrop 0.4s 1.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; left: 185px; } 
-.item-6 { animation: itemDrop 0.4s 2.0s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; left: 230px; } 
-.item-7 { animation: itemDrop 0.4s 2.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; left: 50px; z-index: 11; } 
-.item-8 { animation: itemDrop 0.4s 2.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; left: 120px; z-index: 11; } 
-.item-9 { animation: itemDrop 0.4s 2.9s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; left: 170px; z-index: 12; } 
-.item-10 { animation: itemDrop 0.4s 3.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; left: 210px; z-index: 12; }
+/* Drop Delays (Matches Vibration Timings in JS) */
+.item-1 { animation: dropFromTop 0.5s 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; left: 10px; }
+.item-2 { animation: dropFromTop 0.5s 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; left: 45px; }
+.item-3 { animation: dropFromTop 0.5s 1.1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; left: 85px; }
+.item-4 { animation: dropFromTop 0.5s 1.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; left: 125px; }
+.item-5 { animation: dropFromTop 0.5s 1.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; left: 165px; }
+.item-6 { animation: dropFromTop 0.5s 2.0s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; left: 205px; }
+.item-7 { animation: dropFromTop 0.5s 2.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; left: 250px; }
+.item-8 { animation: dropFromTop 0.5s 2.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; left: 40px; z-index: 11; }
+.item-9 { animation: dropFromTop 0.5s 2.9s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; left: 110px; z-index: 11; }
+.item-10 { animation: dropFromTop 0.5s 3.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; left: 180px; z-index: 11; }
 
-@keyframes itemDrop {
-  0% { transform: translateY(-400px) scale(1.1); opacity: 0; }
-  100% { transform: translateY(0) scale(1); opacity: 1; }
+@keyframes dropFromTop {
+  0% { transform: translateY(-500px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
 }
 
 .lid {
   position: absolute;
-  width: 320px;
-  height: 165px;
-  background: linear-gradient(135deg, #ffffff 0%, #d1d1d1 50%, #a3a3a3 100%);
-  border-radius: 160px 160px 10px 10px;
+  width: 340px;
+  height: 170px;
+  background: linear-gradient(135deg, #ffffff 0%, #d1d1d1 50%, #888 100%);
+  border-radius: 170px 170px 10px 10px;
   bottom: 25px;
   z-index: 30;
   opacity: 0;
   transform: translateY(-600px);
-  box-shadow: inset -5px -10px 20px rgba(0,0,0,0.1), 0 10px 30px rgba(0,0,0,0.2);
-  animation: lidDrop 0.7s 4s forwards, lidLift 1.2s 8s forwards;
+  animation: lidCover 0.8s 4.2s forwards, lidReveal 1.2s 8.5s forwards;
 }
 
-.lid::before {
-  content: ''; position: absolute; top: -15px; left: 50%; transform: translateX(-50%);
-  width: 40px; height: 18px; background: #999; border-radius: 50% 50% 0 0;
-}
-
-@keyframes lidDrop {
+@keyframes lidCover {
   0% { transform: translateY(-600px); opacity: 0; }
   100% { transform: translateY(0); opacity: 1; }
 }
 
-@keyframes lidLift {
+@keyframes lidReveal {
   0% { transform: translateY(0); opacity: 1; }
-  100% { transform: translateY(-800px); opacity: 0; }
+  100% { transform: translateY(-900px); opacity: 0; }
 }
 
+/* Smoke particles inside/around lid */
 .smoke-wrap {
   position: absolute;
   bottom: 30px;
-  width: 280px;
-  height: 120px;
+  width: 300px;
+  height: 150px;
   z-index: 25;
   display: flex;
   justify-content: space-around;
   opacity: 0;
-  animation: smokeFade 3s 4.5s forwards;
+  animation: smokeFade 3.5s 4.8s forwards;
 }
 
 .particle {
-  width: 30px; height: 30px; background: rgba(255,255,255,0.7);
-  filter: blur(12px); border-radius: 50%; animation: rise 2s infinite ease-out;
+  width: 40px; height: 40px; background: rgba(255,255,255,0.8);
+  filter: blur(15px); border-radius: 50%; animation: rise 2.5s infinite ease-out;
 }
 
 @keyframes rise {
   0% { transform: translateY(0) scale(1); opacity: 0; }
-  50% { opacity: 0.5; }
-  100% { transform: translateY(-130px) scale(4); opacity: 0; }
+  50% { opacity: 0.6; }
+  100% { transform: translateY(-150px) scale(4); opacity: 0; }
 }
 
 @keyframes smokeFade {
@@ -160,49 +149,30 @@ body {
 }
 
 .intro-text-container {
-  margin-top: 50px; height: 40px; text-align: center; font-family: 'Playfair Display', serif;
-  font-size: 24px; position: relative; width: 100%;
+  margin-top: 40px; height: 50px; text-align: center; font-family: 'Playfair Display', serif; font-size: 26px;
 }
 
-.text-msg { position: absolute; width: 100%; left: 0; opacity: 0; color: #444; font-style: italic; }
-.msg-1 { animation: textFlow 2.5s 4.5s forwards; }
-.msg-2 { animation: textFlow 2.5s 8.5s forwards; }
-
-@keyframes textFlow {
-  0% { opacity: 0; transform: translateY(15px); }
-  20%, 80% { opacity: 1; transform: translateY(0); }
-  100% { opacity: 0; transform: translateY(-15px); }
-}
-
-/* MAIN UI (UNCHANGED) */
-.sidebar { width: 85px; background: #1a1a1a; display: flex; flex-direction: column; align-items: center; padding-top: 15px; position: relative; overflow-y: auto; border-right: 1px solid rgba(255,255,255,0.1); }
-.nav-indicator { position: absolute; left: 10px; width: 65px; height: 70px; background: var(--primary); border-radius: 12px; transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); z-index: 1; }
-.nav-item { width: 65px; height: 70px; margin-bottom: 12px; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; position: relative; z-index: 2; color: rgba(255,255,255,0.6); flex-shrink: 0; }
-.nav-item.active { color: #000; }
-.nav-item span { font-size: 22px; margin-bottom: 4px; }
-.nav-item label { font-size: 9px; font-weight: 700; text-transform: uppercase; }
+/* MAIN CONTENT STYLES */
+.sidebar { width: 85px; background: #1a1a1a; display: flex; flex-direction: column; align-items: center; padding-top: 15px; border-right: 1px solid rgba(255,255,255,0.1); }
 .main-content { flex: 1; display: flex; flex-direction: column; background: var(--bg-light); border-top-left-radius: 25px; overflow: hidden; }
-.hero-header { padding: 15px 20px; background: #fff; border-bottom: 1px solid #eee; text-align: center; position: relative; display: flex; align-items: center; justify-content: center; }
-#section-name { font-family: 'Playfair Display', serif; font-size: 20px; background: var(--primary); color: #000; padding: 5px 25px; border-radius: 8px; }
-.menu-container { flex: 1; overflow-y: auto; padding: 12px; padding-bottom: 100px; }
-.items-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-.food-card { background: #fff; border-radius: 16px; padding: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-.food-card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 12px; margin-bottom: 8px; }
-.cart-bar { position: fixed; bottom: 15px; left: 100px; right: 15px; background: #28a745; height: 50px; border-radius: 12px; display: none; align-items: center; justify-content: space-between; padding: 0 15px; color: #fff; font-weight: 700; z-index: 1000; }
+.hero-header { padding: 20px; background: #fff; border-bottom: 1px solid #eee; text-align: center; }
+#section-name { font-family: 'Playfair Display', serif; font-size: 22px; background: var(--primary); padding: 6px 30px; border-radius: 10px; display: inline-block; }
 </style>
 </head>
 <body>
 
 <div id="intro-wrapper">
     <div class="brand-header">EMERALD</div>
+    
     <div class="animation-container">
         <div class="smoke-wrap">
             <div class="particle" style="animation-delay: 0s"></div>
-            <div class="particle" style="animation-delay: 0.5s"></div>
-            <div class="particle" style="animation-delay: 1s"></div>
+            <div class="particle" style="animation-delay: 0.6s"></div>
+            <div class="particle" style="animation-delay: 1.2s"></div>
         </div>
         <div class="lid"></div>
         <div class="plate-side"></div>
+        
         <div class="falling-item item-1">🥤</div>
         <div class="falling-item item-2">🍲</div>
         <div class="falling-item item-3">🍟</div>
@@ -214,69 +184,59 @@ body {
         <div class="falling-item item-9">🥪</div>
         <div class="falling-item item-10">🍜</div>
     </div>
+    
     <div class="intro-text-container">
-        <div class="text-msg msg-1">Prioritizing Taste</div>
-        <div class="text-msg msg-2">Serving With Speed</div>
+        <p id="dynamic-text" style="color: #555; font-style: italic;"></p>
     </div>
 </div>
 
-<div class="sidebar" id="sidebar">
-  <div class="nav-indicator" id="nav-indicator"></div>
-  <div class="nav-item active" onclick="showSection('starters', this)"><span>🥗</span><label>Starters</label></div>
-  <div class="nav-item" onclick="showSection('main', this)"><span>🍝</span><label>Mains</label></div>
-  <div class="nav-item" onclick="showSection('apps', this)"><span>🍟</span><label>Sides</label></div>
-  <div class="nav-item" onclick="showSection('desserts', this)"><span>🍰</span><label>Sweets</label></div>
+<div class="sidebar">
+  <div style="color:var(--primary); font-size:24px; margin-bottom:30px;">🥗</div>
+  <div style="color:#666; font-size:24px; margin-bottom:30px;">🍝</div>
+  <div style="color:#666; font-size:24px; margin-bottom:30px;">🥤</div>
 </div>
 
 <div class="main-content">
   <div class="hero-header"><h1 id="section-name">Starters</h1></div>
-  <div class="menu-container"><div class="items-grid" id="menu-grid"></div></div>
+  <div style="padding: 20px; color: #999;">Menu items loading...</div>
 </div>
 
 <script>
-const menuData = {
-  starters: Array.from({length: 8}, (_, i) => ({ id: `s${i}`, name: `Starter ${i+1}`, price: 12.00, img: `https://images.unsplash.com/photo-1541529086526-db283c563270?w=300` })),
-  main: [], apps: [], desserts: []
-};
+function triggerVibe(ms) {
+    if ("vibrate" in navigator) navigator.vibrate(ms);
+}
 
-function triggerVibe(ms) { if ("vibrate" in navigator) navigator.vibrate(ms); }
+function startAnimationSequencer() {
+    // 1. Food Drop Vibrations (Each time an item hits the plate)
+    // Delay matches: CSS drop animation starts at X and lasts 0.5s
+    const impactTimes = [1000, 1300, 1600, 1900, 2200, 2500, 2800, 3100, 3400, 3700];
+    impactTimes.forEach(t => {
+        setTimeout(() => triggerVibe(20), t);
+    });
 
-function startCinematicIntro() {
-    // Vibrate when each item hits the plate (matched to animation timing)
-    const dropTimings = [900, 1200, 1500, 1800, 2100, 2400, 2700, 3000, 3300, 3600];
-    dropTimings.forEach(t => setTimeout(() => triggerVibe(30), t));
-    
-    // Vibrate for Lid Close
-    setTimeout(() => triggerVibe(60), 4700);
+    // 2. Lid Cover Impact
+    setTimeout(() => {
+        triggerVibe(60);
+        document.getElementById('dynamic-text').innerText = "Preparing your feast...";
+    }, 4900);
 
+    // 3. Reveal Reveal
+    setTimeout(() => {
+        triggerVibe([30, 50, 30]); // Triple pulse for reveal
+        document.getElementById('dynamic-text').innerText = "Bon Appétit";
+    }, 8500);
+
+    // 4. Final Exit
     const wrapper = document.getElementById('intro-wrapper');
     setTimeout(() => {
         wrapper.classList.add('exit');
         setTimeout(() => wrapper.style.display = 'none', 800);
-    }, 11500);
+    }, 11000);
 }
 
-function showSection(section, el) {
-    const indicator = document.getElementById('nav-indicator');
-    indicator.style.top = el.offsetTop + 'px';
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    el.classList.add('active');
-    renderGrid(menuData[section] || []);
-}
-
-function renderGrid(items) { 
-    const grid = document.getElementById('menu-grid'); 
-    grid.innerHTML = items.map(item => `
-        <div class="food-card">
-            <img src="${item.img}">
-            <h4>${item.name}</h4>
-            <p>$${item.price.toFixed(2)}</p>
-        </div>`).join('');
-}
-
-window.onload = () => { 
-    startCinematicIntro(); 
-    showSection('starters', document.querySelector('.nav-item')); 
+window.onload = () => {
+    document.getElementById('dynamic-text').innerText = "Selecting Fresh Ingredients";
+    startAnimationSequencer();
 };
 </script>
 </body>
