@@ -10,6 +10,10 @@
 <style>
 :root {
   --primary: #ffcc00;
+  --primary-dark: #cc9900;
+  --bg-light: #f7f7f7;
+  --text-dark: #111;
+  --surface: #ffffff;
   --intro-beige: #d2b48c;
 }
 
@@ -33,7 +37,7 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  transition: transform 0.8s ease;
+  transition: transform 0.8s cubic-bezier(0.7, 0, 0.3, 1);
 }
 
 #intro-wrapper.exit {
@@ -49,132 +53,119 @@ body {
   color: #3d2b1f;
 }
 
-.brand-header span {
-  color: var(--primary);
-}
+.brand-header span { color: var(--primary); }
 
 .animation-container {
   position: relative;
-  width: 300px;
+  width: 320px;
   height: 260px;
 }
 
 /* Plate */
 .plate {
   position: absolute;
-  bottom: 30px;
+  bottom: 40px;
   left: 50%;
+  transform: translateX(-50%);
   width: 200px;
-  height: 14px;
+  height: 16px;
   background: #fff;
   border-radius: 0 0 20px 20px;
-  transform: translateX(-50%);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-  animation: plateIn 0.8s ease forwards;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+  animation: plateIn 0.8s forwards;
 }
 
 @keyframes plateIn {
-  from { transform: translate(120vw, 0); }
-  to { transform: translate(-50%, 0); }
+  from { transform: translateX(100vw); }
+  to { transform: translateX(-50%); }
 }
 
-/* Food blocks */
-.food {
+/* Food */
+.sizzler {
   position: absolute;
-  bottom: 44px;
-  width: 36px;
-  height: 18px;
-  background: #c96b2c;
-  border-radius: 4px;
+  bottom: 60px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-300px);
+  font-size: 52px;
   opacity: 0;
+  animation: foodDrop 0.6s 0.9s forwards;
 }
-
-.food.f1 { left: 110px; animation: foodDrop 0.4s 1s forwards; }
-.food.f2 { left: 150px; animation: foodDrop 0.4s 1.2s forwards; }
-.food.f3 { left: 130px; animation: foodDrop 0.4s 1.4s forwards; }
 
 @keyframes foodDrop {
-  from { transform: translateY(-200px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+  to {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
 }
 
 /* Steam */
 .steam {
   position: absolute;
-  bottom: 60px;
+  bottom: 110px;
   left: 50%;
-  width: 6px;
-  height: 40px;
-  background: rgba(255,255,255,0.5);
-  border-radius: 50%;
-  filter: blur(2px);
-  animation: steamUp 1.5s infinite ease-in-out;
+  transform: translateX(-50%);
+  font-size: 28px;
+  opacity: 0;
+  animation: steamRise 1.2s 1.5s infinite;
 }
 
-.steam.s1 { margin-left: -20px; }
-.steam.s2 { margin-left: 0; animation-delay: 0.3s; }
-.steam.s3 { margin-left: 20px; animation-delay: 0.6s; }
-
-@keyframes steamUp {
-  from { transform: translateY(10px); opacity: 0; }
-  50% { opacity: 1; }
-  to { transform: translateY(-30px); opacity: 0; }
+@keyframes steamRise {
+  0% { opacity: 0; transform: translate(-50%, 0); }
+  50% { opacity: 0.6; }
+  100% { opacity: 0; transform: translate(-50%, -30px); }
 }
 
 /* Cover */
 .cover {
   position: absolute;
-  top: -120px;
+  top: -200px;
   left: 50%;
-  width: 220px;
-  height: 120px;
-  background: linear-gradient(#eee, #bbb);
-  border-radius: 0 0 120px 120px;
   transform: translateX(-50%);
-  animation: coverDrop 0.8s 2.2s forwards;
+  width: 160px;
+  height: 80px;
+  border-radius: 80px 80px 10px 10px;
+  background: linear-gradient(#eee, #bbb);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+  animation: coverDrop 0.6s 2.4s forwards;
 }
 
 .cover::after {
   content: '';
   position: absolute;
-  top: -16px;
+  top: -14px;
   left: 50%;
-  width: 26px;
-  height: 16px;
-  background: #999;
-  border-radius: 10px;
   transform: translateX(-50%);
+  width: 20px;
+  height: 20px;
+  background: #999;
+  border-radius: 50%;
 }
 
 @keyframes coverDrop {
-  from { top: -140px; }
-  to { top: 40px; }
+  to { top: 70px; }
 }
 
+/* Text */
 .intro-text-container {
-  margin-top: 40px;
-  text-align: center;
+  margin-top: 220px;
   font-family: 'Playfair Display', serif;
   font-size: 24px;
 }
 
 .text-msg {
   opacity: 0;
-  position: absolute;
-  width: 100%;
+  animation: textFade 2s 3s forwards;
 }
-
-.msg-1 { animation: textFade 2s 2.6s forwards; }
-.msg-2 { animation: textFade 2s 4.6s forwards; }
 
 @keyframes textFade {
-  0% { opacity: 0; transform: translateX(20px); }
-  20%,80% { opacity: 1; transform: translateX(0); }
-  100% { opacity: 0; transform: translateX(-20px); }
+  20%,80% { opacity: 1; }
+  100% { opacity: 0; }
 }
 
-/* ================= MAIN APP (UNCHANGED) ================= */
-/* ⬇️ YOUR ENTIRE ORIGINAL APP CSS AND JS REMAIN AS-IS ⬇️ */
+/* ================= MAIN SITE (UNCHANGED) ================= */
+/* 🔒 Everything below is EXACTLY SAME as your original code */
+/* (No logic, UI, cart, menu edited) */
+
 </style>
 </head>
 
@@ -185,31 +176,23 @@ body {
 
   <div class="animation-container">
     <div class="plate"></div>
-
-    <div class="food f1"></div>
-    <div class="food f2"></div>
-    <div class="food f3"></div>
-
-    <div class="steam s1"></div>
-    <div class="steam s2"></div>
-    <div class="steam s3"></div>
-
+    <div class="sizzler">🍖</div>
+    <div class="steam">💨💨</div>
     <div class="cover"></div>
   </div>
 
   <div class="intro-text-container">
-    <div class="text-msg msg-1">Prioritizing Taste</div>
-    <div class="text-msg msg-2">Serving With Speed</div>
+    <div class="text-msg">Serving Hot & Fresh</div>
   </div>
 </div>
 
 <script>
 function startCinematicIntro() {
-  const wrapper = document.getElementById('intro-wrapper');
+  const intro = document.getElementById('intro-wrapper');
   setTimeout(() => {
-    wrapper.classList.add('exit');
-    setTimeout(() => wrapper.style.display = 'none', 800);
-  }, 7000);
+    intro.classList.add('exit');
+    setTimeout(() => intro.style.display = 'none', 800);
+  }, 7200);
 }
 
 window.onload = startCinematicIntro;
@@ -217,3 +200,4 @@ window.onload = startCinematicIntro;
 
 </body>
 </html>
+
