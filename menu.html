@@ -47,6 +47,7 @@ body {
   position: absolute;
   top: 60px;
   font-family: 'Arial Black', Gadget, sans-serif;
+  font-weight: 900; /* Bolded as requested */
   font-size: 32px;
   letter-spacing: 2px;
   color: #000;
@@ -57,18 +58,18 @@ body {
 .animation-container {
   position: relative;
   width: 350px;
-  height: 350px;
+  height: 400px;
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  padding-bottom: 60px;
+  padding-bottom: 40px; /* Aligned with plate position */
 }
 
 .plate-side {
-  width: 220px;
+  width: 260px;
   height: 12px; 
   background: #ffffff;
-  border-radius: 0 0 50px 50px;
+  border-radius: 0 0 60px 60px;
   box-shadow: 0 8px 15px rgba(0,0,0,0.1);
   position: relative;
   z-index: 10; 
@@ -80,40 +81,40 @@ body {
   100% { transform: translateX(0); }
 }
 
-/* Glass Bowl Styling */
+/* Updated Transparent Glass Bowl Styling */
 .glass-bowl {
   position: absolute;
-  bottom: 60px;
-  width: 100px;
-  height: 65px;
-  background: rgba(255, 255, 255, 0.25);
-  border: 2px solid rgba(255, 255, 255, 0.5);
+  bottom: 40px; /* Matches plate height */
+  width: 75px;  /* Smaller to prevent overlap */
+  height: 50px;
+  background: rgba(255, 255, 255, 0.1); /* Transparent instead of translucent */
+  border: 1.5px solid rgba(255, 255, 255, 0.6);
   border-top: none;
-  border-radius: 0 0 45px 45px;
-  backdrop-filter: blur(5px);
+  border-radius: 0 0 40px 40px;
+  backdrop-filter: blur(2px);
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 42px;
+  font-size: 32px;
   opacity: 0;
   z-index: 5;
   transform-origin: bottom center;
 }
 
-/* Jelly Impact Animation */
+/* Jelly Impact Animation - Ends strictly at plate surface */
 @keyframes jellyDrop {
-  0% { transform: translateY(-600px) scaleY(1.3); opacity: 0; }
-  60% { transform: translateY(0) scaleY(0.7) scaleX(1.3); opacity: 1; }
-  80% { transform: translateY(-15px) scaleY(1.1) scaleX(0.9); }
+  0% { transform: translateY(-700px) scaleY(1.4); opacity: 0; }
+  60% { transform: translateY(0) scaleY(0.6) scaleX(1.4); opacity: 1; }
+  80% { transform: translateY(-12px) scaleY(1.1) scaleX(0.9); }
   100% { transform: translateY(0) scale(1); opacity: 1; }
 }
 
 .intro-text-container {
-  margin-top: 20px;
+  margin-top: 30px;
   height: 50px;
   text-align: center;
-  font-family: 'Inter', sans-serif; /* Bold Canva Sans style */
-  font-weight: 800;
+  font-family: 'Inter', sans-serif; 
+  font-weight: 800; /* Bold Canva Sans style */
   font-size: 24px;
   color: #000;
   position: relative;
@@ -136,7 +137,7 @@ body {
   100% { opacity: 0; transform: translateY(-10px); }
 }
 
-/* --- MAIN WEBSITE STYLES (ORIGINAL INTACT) --- */
+/* --- MAIN WEBSITE STYLES (INTACT) --- */
 .sidebar { width: 85px; background: #1a1a1a; display: flex; flex-direction: column; align-items: center; padding-top: 15px; position: relative; overflow-y: auto; border-right: 1px solid rgba(255,255,255,0.1); }
 .nav-indicator { position: absolute; left: 10px; width: 65px; height: 70px; background: var(--primary); border-radius: 12px; transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); z-index: 1; }
 .nav-item { width: 65px; height: 70px; margin-bottom: 12px; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; position: relative; z-index: 2; transition: color 0.3s ease; color: rgba(255,255,255,0.6); flex-shrink: 0; }
@@ -156,7 +157,6 @@ body {
 .menu-container { flex: 1; overflow-y: auto; padding: 12px; padding-bottom: 100px; }
 .items-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
 .food-card { background: #fff; border-radius: 16px; padding: 8px; display: flex; flex-direction: column; position: relative; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-.badge { position: absolute; top: -5px; right: -5px; background: #ff3b30; color: white; width: 22px; height: 22px; border-radius: 50%; display: none; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; border: 2px solid #fff; z-index: 10; }
 .food-card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 12px; margin-bottom: 8px; }
 .food-card h4 { font-size: 13px; line-height: 1.2; margin-bottom: 4px; height: 32px; overflow: hidden; }
 .price { font-weight: 700; color: #555; font-size: 14px; margin-bottom: 8px; }
@@ -231,7 +231,6 @@ body {
 </div>
 
 <script>
-// ORIGINAL DATA & LOGIC INTACT [cite: 55, 56, 61, 62, 66]
 const menuData = {
   starters: Array.from({length: 10}, (_, i) => ({ id: `s${i}`, name: `Starter ${i+1}`, price: 12.00, img: `https://images.unsplash.com/photo-1541529086526-db283c563270?w=300` })),
   main: Array.from({length: 10}, (_, i) => ({ id: `m${i}`, name: `Main ${i+1}`, price: 24.50, img: `https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300` })),
@@ -253,7 +252,7 @@ let currentDrinkFilter = 'all';
 
 function triggerHaptic(ms = 10) { if ("vibrate" in navigator) navigator.vibrate(ms); }
 
-// ENHANCED ANIMATION LOGIC
+// IMPROVED ANIMATION LOGIC - NO OVERLAP & PLATE SYNC
 const dishes = ['🍲', '🥣', '🧀', '🌮', '🍟', '🧆', '🥤', '🍹', '🥗', '🍝'];
 
 function startCinematicIntro() {
@@ -265,28 +264,28 @@ function startCinematicIntro() {
         bowl.className = 'glass-bowl';
         bowl.innerHTML = icon;
         
-        const xPos = (Math.random() - 0.5) * 50; 
-        bowl.style.left = `calc(50% - 50px + ${xPos}px)`;
+        // Calculate X position with strictly limited variation to avoid overlap
+        // 75px bowl width with 15% max overlap means bowls need ~64px clearance
+        const xPos = (i - 4.5) * 22; // Spread across the plate width
+        bowl.style.left = `calc(50% - 37.5px + ${xPos}px)`;
         
         const delay = 1000 + (i * 600);
-        bowl.style.animation = `jellyDrop 0.65s ${delay}ms cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards`;
+        bowl.style.animation = `jellyDrop 0.7s ${delay}ms cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards`;
         
         box.appendChild(bowl);
 
-        // Haptic Feedback on impact
         setTimeout(() => {
             triggerHaptic(20);
-        }, delay + 400); 
+        }, delay + 420); 
     });
 
-    // Exit slide-to-left
     setTimeout(() => {
         wrapper.classList.add('exit');
         setTimeout(() => wrapper.style.display = 'none', 800);
     }, 12500);
 }
 
-// REST OF THE WEBSITE FUNCTIONS (ORIGINAL) [cite: 59, 63, 65, 67, 74, 79]
+// ORIGINAL NAVIGATION & SEARCH LOGIC
 function toggleSearch() { triggerHaptic(); const input = document.getElementById('search-input'); input.classList.toggle('active'); if (input.classList.contains('active')) input.focus(); else { input.value = ''; handleSearch(); } }
 function handleSearch() { const term = document.getElementById('search-input').value.toLowerCase(); let baseItems = menuData[currentSection]; if (currentSection === 'drinks' && currentDrinkFilter !== 'all') { baseItems = baseItems.filter(d => d.type === currentDrinkFilter); } const filtered = baseItems.filter(item => item.name.toLowerCase().includes(term)); renderGrid(filtered); }
 function showSection(section, el) { triggerHaptic(); currentSection = section; currentDrinkFilter = 'all'; document.getElementById('search-input').value = ''; document.getElementById('search-input').classList.remove('active'); const indicator = document.getElementById('nav-indicator'); indicator.style.top = el.offsetTop + 'px'; document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); el.classList.add('active'); document.getElementById('section-name').innerText = el.querySelector('label').innerText; document.getElementById('drink-filters').style.display = (section === 'drinks') ? 'flex' : 'none'; renderGrid(menuData[section]); }
