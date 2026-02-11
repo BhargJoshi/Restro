@@ -4,30 +4,34 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <title>Emerald Menu - Premium Mobile</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
   --primary: #ffcc00;
+  --primary-dark: #cc9900; [cite: 2]
   --bg-light: #f7f7f7;
-  --intro-beige: #f4f1ea; 
+  --text-dark: #111;
+  --surface: #ffffff;
+  --intro-beige: #d2b48c; 
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; } [cite: 3]
 
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter', sans-serif; [cite: 4]
   background-color: #111;
+  color: var(--text-dark);
   height: 100vh;
   display: flex;
   overflow: hidden;
 }
 
-/* --- ANIMATION STAGE --- */
+/* --- BRANDED PROFILE ANIMATION --- */
 #intro-wrapper {
   position: fixed;
   inset: 0;
   z-index: 9999;
-  background: var(--intro-beige);
+  background: var(--intro-beige); [cite: 5]
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -35,191 +39,234 @@ body {
   transition: transform 0.8s cubic-bezier(0.7, 0, 0.3, 1);
 }
 
-#intro-wrapper.exit { transform: translateY(-100%); }
+#intro-wrapper.exit {
+  transform: translateX(-100%); [cite: 6]
+}
 
 .brand-header {
   position: absolute;
   top: 60px;
-  font-family: 'Arial Black', sans-serif;
-  font-size: 42px;
-  font-weight: 900;
-  color: #000;
-  letter-spacing: -2px;
+  font-family: 'Arial Black', Gadget, sans-serif; /* Updated to Arial Black */
+  font-size: 32px;
+  letter-spacing: 2px;
+  color: #000; /* Updated to Black */
+  text-transform: uppercase;
 }
 
 .animation-container {
   position: relative;
   width: 350px;
-  height: 400px;
+  height: 350px;
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  padding-bottom: 40px;
-  overflow: hidden; /* Clips the items as they fall from high up */
+  padding-bottom: 60px;
 }
 
 .plate-side {
-  width: 300px;
+  width: 220px;
   height: 12px; 
   background: #ffffff;
-  border-radius: 20px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  border-radius: 0 0 50px 50px;
+  box-shadow: 0 8px 15px rgba(0,0,0,0.1); [cite: 9]
   position: relative;
-  z-index: 20;
+  z-index: 10; 
+  animation: slidePlate 0.7s ease-out forwards; [cite: 10]
 }
 
-/* Food Items - Physical Drop Animation */
-.falling-item {
+@keyframes slidePlate {
+  0% { transform: translateX(100vw); }
+  100% { transform: translateX(0); }
+}
+
+/* Glass Bowl Container for Food */
+.glass-bowl {
   position: absolute;
-  font-size: 55px;
-  z-index: 10;
-  bottom: 45px; /* Sits just above plate */
+  bottom: 60px;
+  width: 100px;
+  height: 60px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top: none;
+  border-radius: 0 0 40px 40px;
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 40px;
   opacity: 0;
+  z-index: 5;
   transform-origin: bottom center;
 }
 
-/* Vertical Drop Keyframes */
-@keyframes physicalDrop {
-  0% { transform: translateY(-600px); opacity: 0; }
-  10% { opacity: 1; }
-  100% { transform: translateY(0); opacity: 1; }
+/* Jelly Animation Effect */
+@keyframes jellyDrop {
+  0% { transform: translateY(-500px) scaleY(1.2); opacity: 0; }
+  70% { transform: translateY(0) scaleY(0.6) scaleX(1.3); opacity: 1; }
+  85% { transform: translateY(-10px) scaleY(1.1) scaleX(0.9); }
+  100% { transform: translateY(0) scale(1); opacity: 1; }
 }
 
-/* Sequential Delays for 10 items */
-.item-1 { animation: physicalDrop 0.4s 0.5s cubic-bezier(0.47, 0, 0.745, 0.715) forwards; left: 15px; }
-.item-2 { animation: physicalDrop 0.4s 0.8s cubic-bezier(0.47, 0, 0.745, 0.715) forwards; left: 50px; }
-.item-3 { animation: physicalDrop 0.4s 1.1s cubic-bezier(0.47, 0, 0.745, 0.715) forwards; left: 90px; }
-.item-4 { animation: physicalDrop 0.4s 1.4s cubic-bezier(0.47, 0, 0.745, 0.715) forwards; left: 130px; }
-.item-5 { animation: physicalDrop 0.4s 1.7s cubic-bezier(0.47, 0, 0.745, 0.715) forwards; left: 175px; }
-.item-6 { animation: physicalDrop 0.4s 2.0s cubic-bezier(0.47, 0, 0.745, 0.715) forwards; left: 220px; }
-.item-7 { animation: physicalDrop 0.4s 2.3s cubic-bezier(0.47, 0, 0.745, 0.715) forwards; left: 260px; }
-.item-8 { animation: physicalDrop 0.4s 2.6s cubic-bezier(0.47, 0, 0.745, 0.715) forwards; left: 40px; z-index: 11; }
-.item-9 { animation: physicalDrop 0.4s 2.9s cubic-bezier(0.47, 0, 0.745, 0.715) forwards; left: 110px; z-index: 11; }
-.item-10 { animation: physicalDrop 0.4s 3.2s cubic-bezier(0.47, 0, 0.745, 0.715) forwards; left: 180px; z-index: 11; }
-
-/* Lid Animation */
-.lid {
-  position: absolute;
-  width: 320px;
-  height: 160px;
-  background: linear-gradient(135deg, #fff 0%, #ccc 100%);
-  border-radius: 160px 160px 10px 10px;
-  bottom: 48px;
-  z-index: 30;
-  opacity: 0;
-  transform: translateY(-800px);
-  animation: lidClose 0.6s 4s forwards, lidReveal 1s 8s forwards;
-}
-
-@keyframes lidClose {
-  0% { transform: translateY(-800px); opacity: 0; }
-  100% { transform: translateY(0); opacity: 1; }
-}
-
-@keyframes lidReveal {
-  0% { transform: translateY(0); opacity: 1; }
-  100% { transform: translateY(-900px); opacity: 0; }
-}
-
-/* White Smoke Particles */
-.smoke-container {
-  position: absolute;
-  bottom: 50px;
-  width: 250px;
-  height: 100px;
-  z-index: 25;
-  opacity: 0;
-  animation: smokeActive 3s 4.5s forwards;
-}
-
-.smoke {
-  position: absolute;
-  width: 40px; height: 40px; background: white;
-  border-radius: 50%; filter: blur(15px);
-  animation: floatUp 2s infinite ease-out;
-}
-
-@keyframes floatUp {
-  0% { transform: translateY(0) scale(1); opacity: 0; }
-  50% { opacity: 0.8; }
-  100% { transform: translateY(-120px) scale(3); opacity: 0; }
-}
-
-@keyframes smokeActive {
-  0%, 100% { opacity: 0; }
-  20%, 80% { opacity: 1; }
-}
-
-.intro-text {
+.intro-text-container {
   margin-top: 20px;
-  font-family: 'Playfair Display', serif;
+  height: 60px;
+  text-align: center;
+  font-family: 'Inter', sans-serif; /* Simplified for Canva Sans feel */
+  font-weight: 700;
   font-size: 22px;
-  color: #333;
+  color: #000; /* Updated to Black */
+  position: relative;
+  width: 100%;
 }
 
-/* --- MAIN UI PLACEHOLDER --- */
-.main-app { flex: 1; background: var(--bg-light); display: flex; flex-direction: column; }
-.header { height: 60px; background: white; border-bottom: 1px solid #ddd; }
+.text-msg {
+  position: absolute;
+  width: 100%;
+  left: 0;
+  opacity: 0; [cite: 17]
+}
+
+.msg-1 { animation: textFlow 2.5s 6.5s forwards; }
+.msg-2 { animation: textFlow 2.5s 8.5s forwards; }
+
+@keyframes textFlow {
+  0% { opacity: 0; transform: translateY(10px); }
+  20%, 80% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-10px); }
+}
+
+/* --- MAIN WEBSITE STYLES --- */
+.sidebar { width: 85px; background: #1a1a1a; display: flex; flex-direction: column; align-items: center; padding-top: 15px; position: relative; overflow-y: auto; border-right: 1px solid rgba(255,255,255,0.1); } [cite: 20]
+.nav-indicator { position: absolute; left: 10px; width: 65px; height: 70px; background: var(--primary); border-radius: 12px; transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); z-index: 1; } [cite: 22]
+.nav-item { width: 65px; height: 70px; margin-bottom: 12px; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; position: relative; z-index: 2; transition: color 0.3s ease; color: rgba(255,255,255,0.6); flex-shrink: 0; } [cite: 23]
+.nav-item.active { color: #000; } [cite: 25]
+.main-content { flex: 1; display: flex; flex-direction: column; background: var(--bg-light); border-top-left-radius: 25px; overflow: hidden; } [cite: 26]
+.hero-header { padding: 15px 20px; background: #fff; border-bottom: 1px solid #eee; text-align: center; position: relative; display: flex; align-items: center; justify-content: center; } [cite: 27]
+#section-name { font-weight: 700; font-size: 20px; background: var(--primary); color: #000; display: inline-block; padding: 5px 25px; border-radius: 8px; } [cite: 28]
+.menu-container { flex: 1; overflow-y: auto; padding: 12px; padding-bottom: 100px; } [cite: 35]
+.items-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; } [cite: 35]
+.food-card { background: #fff; border-radius: 16px; padding: 8px; display: flex; flex-direction: column; position: relative; box-shadow: 0 2px 8px rgba(0,0,0,0.05); } [cite: 36]
+.cart-bar { position: fixed; bottom: 15px; left: 100px; right: 15px; background: #28a745; height: 50px; border-radius: 12px; display: none; align-items: center; justify-content: space-between; padding: 0 15px; color: #fff; font-weight: 700; z-index: 1000; } [cite: 44]
 </style>
 </head>
 <body>
 
 <div id="intro-wrapper">
     <div class="brand-header">EMERALD</div>
-    
-    <div class="animation-container">
-        <div class="smoke-container">
-            <div class="smoke" style="left:20%; animation-delay:0s"></div>
-            <div class="smoke" style="left:50%; animation-delay:0.5s"></div>
-            <div class="smoke" style="left:80%; animation-delay:1s"></div>
-        </div>
-
-        <div class="lid"></div>
+    <div class="animation-container" id="animation-box">
         <div class="plate-side"></div>
-        
-        <div class="falling-item item-1">🥤</div> <div class="falling-item item-2">🍲</div> <div class="falling-item item-3">🍟</div> <div class="falling-item item-4">🥗</div> <div class="falling-item item-5">🌮</div> <div class="falling-item item-6">🌯</div> <div class="falling-item item-7">🥘</div> <div class="falling-item item-8">🥙</div> <div class="falling-item item-9">🥪</div> <div class="falling-item item-10">🍜</div> </div>
-    
-    <p class="intro-text" id="status-text">Arranging your order...</p>
+        </div>
+    <div class="intro-text-container">
+        <div class="text-msg msg-1">Prioritizing Taste</div>
+        <div class="text-msg msg-2">Serving With Speed</div>
+    </div>
 </div>
 
-<div class="main-app">
-    <div class="header"></div>
-    <div style="padding:40px; text-align:center; color:#999">Menu Content Loaded</div>
+<div class="sidebar" id="sidebar">
+  <div class="nav-indicator" id="nav-indicator"></div>
+  <div class="nav-item active" onclick="showSection('starters', this)"><span>🥗</span><label>Starters</label></div>
+  <div class="nav-item" onclick="showSection('main', this)"><span>🍝</span><label>Mains</label></div>
+  <div class="nav-item" onclick="showSection('apps', this)"><span>🍟</span><label>Sides</label></div>
+  <div class="nav-item" onclick="showSection('desserts', this)"><span>🍰</span><label>Sweets</label></div>
+  <div class="nav-item" onclick="showSection('combos', this)"><span>🍱</span><label>Combos</label></div>
+  <div class="nav-item" onclick="showSection('drinks', this)"><span>🥤</span><label>Drinks</label></div>
+</div>
+
+<div class="main-content">
+  <div class="hero-header">
+    <h1 id="section-name">Starters</h1>
+  </div>
+  <div class="menu-container"><div class="items-grid" id="menu-grid"></div></div>
+</div>
+
+<div class="cart-bar" id="cart-bar" onclick="toggleCart()">
+  <span id="cart-item-count">0 Items</span>
+  <span>View Cart →</span>
 </div>
 
 <script>
-function triggerVibe(duration) {
-    if ("vibrate" in navigator) navigator.vibrate(duration);
+const foodDishes = [
+  { icon: '🍲', name: 'Biryani' },
+  { icon: '🥣', name: 'Doritos' },
+  { icon: '🧀', name: 'Cheese Dip' },
+  { icon: '🌮', name: 'Tacos' },
+  { icon: '🍟', name: 'Fries' },
+  { icon: '🧆', name: 'Falafel' },
+  { icon: '🥤', name: 'Cold Drink' },
+  { icon: '🍹', name: 'Cocktail' },
+  { icon: '🥗', name: 'Salad' },
+  { icon: '🍝', name: 'Pasta' }
+];
+
+function triggerHaptic(intensity = 15) { 
+  if ("vibrate" in navigator) navigator.vibrate(intensity); [cite: 57]
 }
 
-function runSequence() {
-    // 1. Precise Vibration for each item hitting the plate
-    // Timings are matched to CSS animation start (delay) + duration
-    const impactTimings = [900, 1200, 1500, 1800, 2100, 2400, 2700, 3000, 3300, 3600];
-    
-    impactTimings.forEach(ms => {
-        setTimeout(() => triggerVibe(20), ms);
+function startCinematicIntro() {
+    const container = document.getElementById('animation-box');
+    const wrapper = document.getElementById('intro-wrapper');
+
+    foodDishes.forEach((dish, index) => {
+        const bowl = document.createElement('div');
+        bowl.className = 'glass-bowl';
+        bowl.innerHTML = dish.icon;
+        
+        // Random slight offsets for realism
+        const xOffset = (Math.random() - 0.5) * 40;
+        bowl.style.left = `calc(50% - 50px + ${xOffset}px)`;
+        
+        // Timing: Drop every 500ms
+        const delay = 800 + (index * 550);
+        bowl.style.animation = `jellyDrop 0.6s ${delay}ms cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards`;
+        
+        container.appendChild(bowl);
+
+        // Sync Vibration with Impact
+        setTimeout(() => {
+            triggerHaptic(25); // Harder hit for the drop
+        }, delay + 450); // Delay + duration of falling phase
     });
 
-    // 2. Lid Drop Impact
+    // Exit after all animations (approx 10 seconds)
     setTimeout(() => {
-        triggerVibe(50);
-        document.getElementById('status-text').innerText = "Simmering to perfection...";
-    }, 4600);
-
-    // 3. Lid Reveal Reveal
-    setTimeout(() => {
-        triggerVibe([30, 50, 30]);
-        document.getElementById('status-text').innerText = "Ready to serve!";
-    }, 8500);
-
-    // 4. Exit Intro
-    setTimeout(() => {
-        document.getElementById('intro-wrapper').classList.add('exit');
+        wrapper.classList.add('exit'); [cite: 58]
+        setTimeout(() => wrapper.style.display = 'none', 800);
     }, 11000);
 }
 
-window.onload = runSequence;
+const menuData = {
+  starters: Array.from({length: 10}, (_, i) => ({ id: `s${i}`, name: `Starter ${i+1}`, price: 12.00, img: `https://images.unsplash.com/photo-1541529086526-db283c563270?w=300` })),
+  main: Array.from({length: 10}, (_, i) => ({ id: `m${i}`, name: `Main ${i+1}`, price: 24.50, img: `https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300` })),
+  apps: Array.from({length: 10}, (_, i) => ({ id: `a${i}`, name: `Side ${i+1}`, price: 9.00, img: `https://images.unsplash.com/photo-1534422298391-e4f8c170db0a?w=300` })),
+  desserts: Array.from({length: 10}, (_, i) => ({ id: `d${i}`, name: `Dessert ${i+1}`, price: 11.00, img: `https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?w=300` })),
+  combos: Array.from({length: 5}, (_, i) => ({ id: `c${i}`, name: `Combo Meal ${i+1}`, price: 35.00, img: `https://images.unsplash.com/photo-1513104890138-7c749659a591?w=300` })),
+  drinks: [{ id: 'dr1', name: 'Espresso', price: 4.00, type: 'hot', img: 'https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?w=300' }]
+};
+
+let cart = {};
+
+function showSection(section, el) { 
+  triggerHaptic(10); 
+  const indicator = document.getElementById('nav-indicator');
+  indicator.style.top = el.offsetTop + 'px'; 
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); 
+  el.classList.add('active'); 
+  document.getElementById('section-name').innerText = el.querySelector('label').innerText;
+  renderGrid(menuData[section]); 
+}
+
+function renderGrid(items) { 
+  const grid = document.getElementById('menu-grid'); 
+  grid.innerHTML = '';
+  items.forEach(item => { 
+    grid.innerHTML += `<div class="food-card"><img src="${item.img}" alt="${item.name}"><h4>${item.name}</h4><span class="price">$${item.price.toFixed(2)}</span><button class="add-initial">ADD</button></div>`; 
+  }); [cite: 67]
+}
+
+window.onload = () => { 
+    startCinematicIntro(); 
+    showSection('starters', document.querySelector('.nav-item')); 
+};
 </script>
 </body>
 </html>
