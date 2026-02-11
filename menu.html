@@ -12,7 +12,7 @@
   --bg-light: #f7f7f7;
   --text-dark: #111;
   --surface: #ffffff;
-  --intro-beige: #d2b48c; 
+  --intro-beige: #f2e8cf; 
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -26,7 +26,7 @@ body {
   overflow: hidden;
 }
 
-/* --- BRANDED PROFILE ANIMATION --- */
+/* --- BRANDED SIDE-VIEW ANIMATION --- */
 #intro-wrapper {
   position: fixed;
   inset: 0;
@@ -39,96 +39,142 @@ body {
   transition: transform 0.8s cubic-bezier(0.7, 0, 0.3, 1);
 }
 
-#intro-wrapper.exit {
-  transform: translateX(-100%);
-}
+#intro-wrapper.exit { transform: translateX(-100%); }
 
 .brand-header {
   position: absolute;
   top: 60px;
-  font-family: 'Playfair Display', serif;
-  font-size: 32px;
-  letter-spacing: 4px;
-  color: #3d2b1f;
+  font-family: 'Arial Black', Gadget, sans-serif;
+  font-size: 36px;
+  font-weight: 900;
+  color: #000;
   text-transform: uppercase;
-}
-
-.brand-header span {
-  color: var(--primary);
+  letter-spacing: -1px;
 }
 
 .animation-container {
   position: relative;
-  width: 350px;
-  height: 250px;
+  width: 300px;
+  height: 200px;
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  padding-bottom: 60px;
+  padding-bottom: 20px;
 }
 
+/* Side Profile Plate */
 .plate-side {
-  width: 180px;
-  height: 8px; 
-  background: #ffffff;
-  border-radius: 0 0 15px 15px;
+  width: 220px;
+  height: 6px; 
+  background: #fff;
+  border-radius: 4px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
   position: relative;
-  z-index: 10; 
-  transform: translateX(0);
-  animation: slidePlate 0.7s ease-out forwards;
+  z-index: 10;
 }
 
-@keyframes slidePlate {
-  0% { transform: translateX(100vw); }
-  100% { transform: translateX(0); }
-}
-
+/* Food Icons - Side View Style */
 .falling-item {
   position: absolute;
-  font-size: 40px;
+  font-size: 45px;
   opacity: 0;
-  z-index: 5; 
+  z-index: 5;
+  bottom: 25px; /* Sits on plate */
 }
 
-.item-burger { animation: dropIn 0.5s 0.8s forwards; left: 85px; }
-.item-fries  { animation: dropIn 0.5s 1.1s forwards; left: 125px; }
-.item-salad  { animation: dropIn 0.5s 1.4s forwards; left: 160px; }
-.item-wine   { animation: dropIn 0.5s 1.7s forwards; left: 200px; } 
-.item-utensils { font-size: 32px; animation: dropIn 0.5s 2.2s forwards; left: 130px; }
+.item-1 { animation: sideDrop 0.5s 0.8s forwards; left: 60px; }
+.item-2 { animation: sideDrop 0.5s 1.1s forwards; left: 110px; }
+.item-3 { animation: sideDrop 0.5s 1.4s forwards; left: 170px; }
 
-@keyframes dropIn {
+@keyframes sideDrop {
   0% { transform: translateY(-300px); opacity: 0; }
-  100% { transform: translateY(-8px); opacity: 1; }
+  100% { transform: translateY(0); opacity: 1; }
 }
+
+/* Restaurant Lid (Cloche) */
+.lid {
+  position: absolute;
+  width: 200px;
+  height: 100px;
+  background: linear-gradient(145deg, #e6e6e6, #999);
+  border-radius: 100px 100px 5px 5px;
+  bottom: 22px;
+  z-index: 15;
+  opacity: 0;
+  transform: translateY(-400px);
+  animation: lidDrop 0.8s 2s forwards, lidLift 0.8s 5.5s forwards;
+}
+
+/* Lid Handle */
+.lid::after {
+  content: '';
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 30px;
+  height: 15px;
+  background: #888;
+  border-radius: 10px 10px 0 0;
+}
+
+@keyframes lidDrop {
+  0% { transform: translateY(-400px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes lidLift {
+  0% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(-500px); opacity: 0; }
+}
+
+/* Smoke Animation */
+.smoke-container {
+  position: absolute;
+  bottom: 120px;
+  display: flex;
+  gap: 15px;
+  opacity: 0;
+  animation: fadeInSmoke 1.5s 3s forwards, fadeOutSmoke 0.5s 5.3s forwards;
+}
+
+.smoke-cloud {
+  width: 20px;
+  height: 20px;
+  background: rgba(255,255,255,0.6);
+  filter: blur(8px);
+  border-radius: 50%;
+  animation: drift 2s infinite ease-in-out;
+}
+
+@keyframes drift {
+  0% { transform: translateY(0) scale(1); opacity: 0.5; }
+  100% { transform: translateY(-40px) scale(2); opacity: 0; }
+}
+@keyframes fadeInSmoke { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fadeOutSmoke { from { opacity: 1; } to { opacity: 0; } }
 
 .intro-text-container {
-  margin-top: 20px;
-  height: 50px;
+  margin-top: 40px;
+  height: 40px;
   text-align: center;
   font-family: 'Playfair Display', serif;
-  font-size: 24px;
+  font-size: 22px;
   position: relative;
   width: 100%;
 }
 
-.text-msg {
-  position: absolute;
-  width: 100%;
-  left: 0;
-  opacity: 0;
-}
-
-.msg-1 { animation: textFlow 2s 2.7s forwards; }
-.msg-2 { animation: textFlow 2s 4.7s forwards; }
+.text-msg { position: absolute; width: 100%; left: 0; opacity: 0; color: #333; }
+.msg-1 { animation: textFlow 2s 2.5s forwards; }
+.msg-2 { animation: textFlow 2.5s 5.5s forwards; }
 
 @keyframes textFlow {
-  0% { opacity: 0; transform: translateX(30px); }
-  20%, 80% { opacity: 1; transform: translateX(0); }
-  100% { opacity: 0; transform: translateX(-30px); }
+  0% { opacity: 0; transform: translateY(10px); }
+  20%, 80% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-10px); }
 }
 
-/* --- MAIN WEBSITE STYLES --- */
+/* --- MAIN WEBSITE STYLES (INTACT) --- */
 .sidebar { width: 85px; background: #1a1a1a; display: flex; flex-direction: column; align-items: center; padding-top: 15px; position: relative; overflow-y: auto; border-right: 1px solid rgba(255,255,255,0.1); }
 .nav-indicator { position: absolute; left: 10px; width: 65px; height: 70px; background: var(--primary); border-radius: 12px; transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); z-index: 1; }
 .nav-item { width: 65px; height: 70px; margin-bottom: 12px; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; position: relative; z-index: 2; transition: color 0.3s ease; color: rgba(255,255,255,0.6); flex-shrink: 0; }
@@ -165,15 +211,23 @@ body {
 <body>
 
 <div id="intro-wrapper">
-    <div class="brand-header">EME<span>RALD</span></div>
+    <div class="brand-header">EMERALD</div>
+    
     <div class="animation-container">
+        <div class="smoke-container">
+            <div class="smoke-cloud" style="animation-delay: 3.1s"></div>
+            <div class="smoke-cloud" style="animation-delay: 3.4s"></div>
+            <div class="smoke-cloud" style="animation-delay: 3.7s"></div>
+        </div>
+
+        <div class="lid"></div>
         <div class="plate-side"></div>
-        <div class="falling-item item-burger">🍔</div>
-        <div class="falling-item item-fries">🍟</div>
-        <div class="falling-item item-salad">🥗</div>
-        <div class="falling-item item-wine">🍷</div>
-        <div class="falling-item item-utensils">🍴</div>
+
+        <div class="falling-item item-1">🥗</div>
+        <div class="falling-item item-2">🥦</div>
+        <div class="falling-item item-3">🌽</div>
     </div>
+    
     <div class="intro-text-container">
         <div class="text-msg msg-1">Prioritizing Taste</div>
         <div class="text-msg msg-2">Serving With Speed</div>
@@ -251,21 +305,26 @@ function triggerHaptic() { if ("vibrate" in navigator) navigator.vibrate(10); }
 
 function startCinematicIntro() {
     const wrapper = document.getElementById('intro-wrapper');
+    // Total animation time is roughly 8 seconds to allow for Lid lift and final text message
     setTimeout(() => {
         wrapper.classList.add('exit');
         setTimeout(() => wrapper.style.display = 'none', 800);
-    }, 7200);
+    }, 8500);
 }
 
 function toggleSearch() { triggerHaptic(); const input = document.getElementById('search-input'); input.classList.toggle('active'); if (input.classList.contains('active')) input.focus(); else { input.value = ''; handleSearch(); } }
-
 function handleSearch() { const term = document.getElementById('search-input').value.toLowerCase(); let baseItems = menuData[currentSection]; if (currentSection === 'drinks' && currentDrinkFilter !== 'all') { baseItems = baseItems.filter(d => d.type === currentDrinkFilter); } const filtered = baseItems.filter(item => item.name.toLowerCase().includes(term)); renderGrid(filtered); }
-
 function showSection(section, el) { triggerHaptic(); currentSection = section; currentDrinkFilter = 'all'; document.getElementById('search-input').value = ''; document.getElementById('search-input').classList.remove('active'); const indicator = document.getElementById('nav-indicator'); indicator.style.top = el.offsetTop + 'px'; document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); el.classList.add('active'); document.getElementById('section-name').innerText = el.querySelector('label').innerText; document.getElementById('drink-filters').style.display = (section === 'drinks') ? 'flex' : 'none'; renderGrid(menuData[section]); }
-
 function filterDrinks(type, btn) { triggerHaptic(); currentDrinkFilter = type; document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); handleSearch(); }
 
-function renderGrid(items) { const grid = document.getElementById('menu-grid'); grid.innerHTML = ''; items.forEach(item => { const qty = cart[item.id]?.qty || 0; grid.innerHTML += `<div class="food-card"><div class="badge" id="badge-${item.id}" style="display: ${qty > 0 ? 'flex' : 'none'}">${qty}</div><img src="${item.img}" alt="${item.name}"><h4>${item.name}</h4><span class="price">$${item.price.toFixed(2)}</span><button class="add-initial" id="add-init-${item.id}" style="display: ${qty > 0 ? 'none' : 'block'}" onclick="handleFirstAdd('${item.id}', '${item.name}', ${item.price})">ADD</button><div class="qty-controls" id="ctrl-${item.id}" style="display: ${qty > 0 ? 'flex' : 'none'}"><button class="btn-qty" onclick="updateQty('${item.id}', -1)">-</button><span style="font-weight:700" id="qty-text-${item.id}">${qty}</span><button class="btn-qty" onclick="updateQty('${item.id}', 1)">+</button></div></div>`; }); }
+function renderGrid(items) { 
+    const grid = document.getElementById('menu-grid'); 
+    grid.innerHTML = ''; 
+    items.forEach(item => { 
+        const qty = cart[item.id]?.qty || 0; 
+        grid.innerHTML += `<div class="food-card"><div class="badge" id="badge-${item.id}" style="display: ${qty > 0 ? 'flex' : 'none'}">${qty}</div><img src="${item.img}" alt="${item.name}"><h4>${item.name}</h4><span class="price">$${item.price.toFixed(2)}</span><button class="add-initial" id="add-init-${item.id}" style="display: ${qty > 0 ? 'none' : 'block'}" onclick="handleFirstAdd('${item.id}', '${item.name}', ${item.price})">ADD</button><div class="qty-controls" id="ctrl-${item.id}" style="display: ${qty > 0 ? 'flex' : 'none'}"><button class="btn-qty" onclick="updateQty('${item.id}', -1)">-</button><span style="font-weight:700" id="qty-text-${item.id}">${qty}</span><button class="btn-qty" onclick="updateQty('${item.id}', 1)">+</button></div></div>`; 
+    }); 
+}
 
 function handleFirstAdd(id, name, price) { 
     triggerHaptic(); 
