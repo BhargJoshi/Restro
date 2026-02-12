@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -138,7 +137,7 @@ body {
 .nav-item.active { color: #000; }
 .main-content { flex: 1; display: flex; flex-direction: column; background: var(--bg-light); border-top-left-radius: 25px; overflow: hidden; }
 .hero-header { padding: 15px 20px; background: #fff; border-bottom: 1px solid #eee; text-align: center; position: relative; display: flex; align-items: center; justify-content: center; }
-#section-name { font-family: 'Playfair Display', serif; font-size: 20px; background: var(--primary); color: #000; display: inline-block; padding: 5px 25px; border-radius: 8px; box-shadow: 0 4px 10px rgba(255, 204, 0, 0.2); }
+#section-name { font-family: 'Playfair Display', serif; font-size: 18px; background: var(--primary); color: #000; display: inline-block; padding: 5px 15px; border-radius: 8px; box-shadow: 0 4px 10px rgba(255, 204, 0, 0.2); }
 .search-container { position: absolute; right: 15px; display: flex; align-items: center; }
 #search-input { width: 0; opacity: 0; padding: 8px 0; border: none; border-bottom: 2px solid var(--primary); outline: none; font-family: 'Inter', sans-serif; transition: all 0.3s ease; font-size: 14px; }
 #search-input.active { width: 130px; opacity: 1; padding: 8px 10px; margin-right: 5px; }
@@ -151,7 +150,7 @@ body {
 .food-card { background: #fff; border-radius: 16px; padding: 8px; display: flex; flex-direction: column; position: relative; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
 .badge { position: absolute; top: -5px; right: -5px; background: #ff3b30; color: white; width: 22px; height: 22px; border-radius: 50%; display: none; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; border: 2px solid #fff; z-index: 10; }
 .food-card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 12px; margin-bottom: 8px; }
-.food-card h4 { font-size: 13px; line-height: 1.2; margin-bottom: 4px; height: 32px; overflow: hidden; }
+.food-card h4 { font-size: 12px; line-height: 1.2; margin-bottom: 4px; height: 32px; overflow: hidden; }
 .price { font-weight: 700; color: #555; font-size: 14px; margin-bottom: 8px; }
 .add-initial { width: 100%; padding: 8px; background: #111; color: #fff; border: none; border-radius: 8px; font-weight: 600; font-size: 12px; }
 .qty-controls { display: none; align-items: center; justify-content: space-between; background: #f0f0f0; border-radius: 8px; padding: 2px; }
@@ -183,11 +182,11 @@ body {
 
 <div class="sidebar" id="sidebar">
   <div class="nav-indicator" id="nav-indicator"></div>
-  <div class="nav-item active" onclick="showSection('starters', this)"><span>🥗</span><label>Starters</label></div>
-  <div class="nav-item" onclick="showSection('main', this)"><span>🍝</span><label>Mains</label></div>
-  <div class="nav-item" onclick="showSection('apps', this)"><span>🍟</span><label>Sides</label></div>
-  <div class="nav-item" onclick="showSection('desserts', this)"><span>🍰</span><label>Sweets</label></div>
-  <div class="nav-item" onclick="showSection('combos', this)"><span>🍱</span><label>Combos</label></div>
+  <div class="nav-item active" onclick="showSection('starters', this)"><span>🍢</span><label>Starters</label></div>
+  <div class="nav-item" onclick="showSection('soups', this)"><span>🥣</span><label>Soups</label></div>
+  <div class="nav-item" onclick="showSection('salads', this)"><span>🥗</span><label>Salads</label></div>
+  <div class="nav-item" onclick="showSection('chinese', this)"><span>🥢</span><label>Chinese</label></div>
+  <div class="nav-item" onclick="showSection('sizzlers', this)"><span>🍳</span><label>Sizzlers</label></div>
   <div class="nav-item" onclick="showSection('drinks', this)"><span>🥤</span><label>Drinks</label></div>
 </div>
 
@@ -221,7 +220,7 @@ body {
     <div id="cart-items-list"></div>
     <div style="background: #f9f9f9; padding: 15px; border-radius: 12px; margin-top: 15px;">
       <div style="display: flex; justify-content: space-between; font-weight: 800; font-size: 20px;">
-        <span>Total</span><span id="cart-total-price">$0.00</span>
+        <span>Total</span><span id="cart-total-price">₹0.00</span>
       </div>
     </div>
     <button class="pay-btn" onclick="processPayment()">Place Order</button>
@@ -230,17 +229,62 @@ body {
 
 <script>
 const menuData = {
-  starters: Array.from({length: 10}, (_, i) => ({ id: `s${i}`, name: `Starter ${i+1}`, price: 12.00, img: `https://images.unsplash.com/photo-1541529086526-db283c563270?w=300` })),
-  main: Array.from({length: 10}, (_, i) => ({ id: `m${i}`, name: `Main ${i+1}`, price: 24.50, img: `https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300` })),
-  apps: Array.from({length: 10}, (_, i) => ({ id: `a${i}`, name: `Side ${i+1}`, price: 9.00, img: `https://images.unsplash.com/photo-1534422298391-e4f8c170db0a?w=300` })),
-  desserts: Array.from({length: 10}, (_, i) => ({ id: `d${i}`, name: `Dessert ${i+1}`, price: 11.00, img: `https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?w=300` })),
-  combos: Array.from({length: 5}, (_, i) => ({ id: `c${i}`, name: `Combo Meal ${i+1}`, price: 35.00, img: `https://images.unsplash.com/photo-1513104890138-7c749659a591?w=300` })),
+  starters: [
+    { id: 'st1', name: 'Corn Tikki', price: 180.00, img: 'https://images.unsplash.com/photo-1645177623570-ad4c5ac099d6?w=300' },
+    { id: 'st2', name: 'Paneer Tikka Dry', price: 225.00, img: 'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=300' },
+    { id: 'st3', name: 'Paneer Phudina Tikka', price: 225.00, img: 'https://images.unsplash.com/photo-1628294895950-983312949bb3?w=300' },
+    { id: 'st4', name: 'Paneer Lahsuni Tikka', price: 225.00, img: 'https://images.unsplash.com/photo-1567184109411-b28f21ee0c15?w=300' },
+    { id: 'st5', name: 'Hara bhara Kabab', price: 180.00, img: 'https://images.unsplash.com/photo-1626132646529-5aa214d49019?w=300' },
+    { id: 'st6', name: 'Raja Kabab', price: 180.00, img: 'https://images.unsplash.com/photo-1603360946369-dc9bb6258143?w=300' },
+    { id: 'st7', name: 'Tandoori Plater', price: 260.00, img: 'https://images.unsplash.com/photo-1585238342024-78d387f4a707?w=300' }
+  ],
+  soups: [
+    { id: 'sp1', name: 'Cream of Tomato', price: 90.00, img: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=300' },
+    { id: 'sp2', name: 'Minestrone Soup', price: 100.00, img: 'https://images.unsplash.com/photo-1547592116-43e86c0f6531?w=300' },
+    { id: 'sp3', name: 'Sweet Corn Veg. Soup', price: 90.00, img: 'https://images.unsplash.com/photo-1614735241165-6756e1df61ab?w=300' },
+    { id: 'sp4', name: 'Veg. Hot & Sour Soup', price: 100.00, img: 'https://images.unsplash.com/photo-1582819509237-45b754223abd?w=300' },
+    { id: 'sp5', name: 'Veg. Manchow Soup', price: 100.00, img: 'https://images.unsplash.com/photo-1612459284970-e8f027596582?w=300' },
+    { id: 'sp6', name: 'Lemon Coriander Soup', price: 100.00, img: 'https://images.unsplash.com/photo-1548943487-a2e4e43b4853?w=300' },
+    { id: 'sp7', name: 'Palak Phudina Soup', price: 100.00, img: 'https://images.unsplash.com/photo-1604152135912-04a022e23696?w=300' },
+    { id: 'sp8', name: 'Veg. Mushroom Soup', price: 110.00, img: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=300' },
+    { id: 'sp9', name: 'Clear Soup (Veg/Noodles)', price: 90.00, img: 'https://images.unsplash.com/photo-1555124817-a847cce2c70a?w=300' },
+    { id: 'sp10', name: 'Cheese Corn Tomato Soup', price: 110.00, img: 'https://images.unsplash.com/photo-1603105037880-880cd4edfb0d?w=300' }
+  ],
+  salads: [
+    { id: 'sl1', name: 'Cream of Fruit Salad', price: 120.00, img: 'https://images.unsplash.com/photo-1564093497595-593b96d80180?w=300' },
+    { id: 'sl2', name: 'Fresh Green Salad', price: 80.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=300' },
+    { id: 'sl3', name: 'Russian Salad', price: 120.00, img: 'https://images.unsplash.com/photo-1558947530-cbcf6e9aeeae?w=300' },
+    { id: 'sl4', name: 'Kachumber Salad', price: 70.00, img: 'https://images.unsplash.com/photo-1625944230945-1744a4693b2c?w=300' },
+    { id: 'sl5', name: 'Pineapple Raita', price: 80.00, img: 'https://images.unsplash.com/photo-1594911772125-07fc7a2d8d9f?w=300' },
+    { id: 'sl6', name: 'Veg. Raita / Cucumber Raita', price: 70.00, img: 'https://images.unsplash.com/photo-1594911772125-07fc7a2d8d9f?w=300' },
+    { id: 'sl7', name: 'Boondi Raita', price: 70.00, img: 'https://images.unsplash.com/photo-1626132646529-5aa214d49019?w=300' },
+    { id: 'sl8', name: 'Papad (Roasted/Fried)', price: 24.00, img: 'https://images.unsplash.com/photo-1626132646529-5aa214d49019?w=300' },
+    { id: 'sl9', name: 'Papad Masala', price: 40.00, img: 'https://images.unsplash.com/photo-1626132646529-5aa214d49019?w=300' }
+  ],
+  chinese: [
+    { id: 'ch1', name: 'Oriental Crispy Veg', price: 190.00, img: 'https://images.unsplash.com/photo-1512058560366-cd2429597954?w=300' },
+    { id: 'ch2', name: 'Baby Corn Chilli Fried', price: 190.00, img: 'https://images.unsplash.com/photo-1563379091339-03b21bc4a4f8?w=300' },
+    { id: 'ch3', name: 'Schezwan Paneer', price: 210.00, img: 'https://images.unsplash.com/photo-1567184109411-b28f21ee0c15?w=300' },
+    { id: 'ch4', name: 'Paneer Chilly', price: 210.00, img: 'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=300' },
+    { id: 'ch5', name: 'Paneer Manchurian', price: 210.00, img: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=300' },
+    { id: 'ch6', name: 'Veg Spring Roll', price: 180.00, img: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=300' },
+    { id: 'ch7', name: 'Mushroom Chilly Fry', price: 210.00, img: 'https://images.unsplash.com/photo-1628294895950-983312949bb3?w=300' }
+  ],
+  sizzlers: [
+    { id: 'sz1', name: 'Mix Grilled Sizzler', price: 299.00, img: 'https://images.unsplash.com/photo-1536392139158-9430c5a242c7?w=300' },
+    { id: 'sz2', name: 'Chinese Sizzler', price: 310.00, img: 'https://images.unsplash.com/photo-1555124817-a847cce2c70a?w=300' },
+    { id: 'sz3', name: 'Paneer Shaslik', price: 310.00, img: 'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=300' },
+    { id: 'sz4', name: 'Paneer Stick', price: 299.00, img: 'https://images.unsplash.com/photo-1628294895950-983312949bb3?w=300' }
+  ],
   drinks: [
-    { id: 'dr1', name: 'Espresso', price: 4.00, type: 'hot', img: 'https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?w=300' },
-    { id: 'dr2', name: 'Cappuccino', price: 5.50, type: 'hot', img: 'https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=300' },
-    { id: 'dr3', name: 'Iced Latte', price: 6.00, type: 'cold', img: 'https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=300' },
-    { id: 'dr4', name: 'Fruit Smoothie', price: 7.50, type: 'cold', img: 'https://images.unsplash.com/photo-1505252585461-04db1eaa846d?w=300' },
-    { id: 'dr5', name: 'Hot Chocolate', price: 5.00, type: 'hot', img: 'https://images.unsplash.com/photo-1544787210-2211d7c928c7?w=300' }
+    { id: 'dr1', name: 'Jal Jeera Water', price: 30.00, type: 'cold', img: 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=300' },
+    { id: 'dr2', name: 'Fresh Lime Soda', price: 30.00, type: 'cold', img: 'https://images.unsplash.com/photo-1543007630-9710e4a00a20?w=300' },
+    { id: 'dr3', name: 'Soft Drinks', price: 25.00, type: 'cold', img: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=300' },
+    { id: 'dr4', name: 'Lassi (Sweet/Salted)', price: 70.00, type: 'cold', img: 'https://images.unsplash.com/photo-1543007630-9710e4a00a20?w=300' },
+    { id: 'dr5', name: 'Special Lassi', price: 90.00, type: 'cold', img: 'https://images.unsplash.com/photo-1543007630-9710e4a00a20?w=300' },
+    { id: 'dr6', name: 'Mineral Water', price: 20.00, type: 'cold', img: 'https://images.unsplash.com/photo-1523362628242-f513a6572717?w=300' },
+    { id: 'dr7', name: 'Fruit Punch', price: 70.00, type: 'cold', img: 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=300' },
+    { id: 'dr8', name: 'Masala Butter Milk', price: 35.00, type: 'cold', img: 'https://images.unsplash.com/photo-1543007630-9710e4a00a20?w=300' }
   ]
 };
 
@@ -266,68 +310,18 @@ function showSection(section, el) { triggerHaptic(); currentSection = section; c
 
 function filterDrinks(type, btn) { triggerHaptic(); currentDrinkFilter = type; document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); handleSearch(); }
 
-function renderGrid(items) { const grid = document.getElementById('menu-grid'); grid.innerHTML = ''; items.forEach(item => { const qty = cart[item.id]?.qty || 0; grid.innerHTML += `<div class="food-card"><div class="badge" id="badge-${item.id}" style="display: ${qty > 0 ? 'flex' : 'none'}">${qty}</div><img src="${item.img}" alt="${item.name}"><h4>${item.name}</h4><span class="price">$${item.price.toFixed(2)}</span><button class="add-initial" id="add-init-${item.id}" style="display: ${qty > 0 ? 'none' : 'block'}" onclick="handleFirstAdd('${item.id}', '${item.name}', ${item.price})">ADD</button><div class="qty-controls" id="ctrl-${item.id}" style="display: ${qty > 0 ? 'flex' : 'none'}"><button class="btn-qty" onclick="updateQty('${item.id}', -1)">-</button><span style="font-weight:700" id="qty-text-${item.id}">${qty}</span><button class="btn-qty" onclick="updateQty('${item.id}', 1)">+</button></div></div>`; }); }
+function renderGrid(items) { const grid = document.getElementById('menu-grid'); grid.innerHTML = ''; items.forEach(item => { const qty = cart[item.id]?.qty || 0; grid.innerHTML += `<div class="food-card"><div class="badge" id="badge-${item.id}" style="display: ${qty > 0 ? 'flex' : 'none'}">${qty}</div><img src="${item.img}" alt="${item.name}"><h4>${item.name}</h4><span class="price">₹${item.price.toFixed(2)}</span><button class="add-initial" id="add-init-${item.id}" style="display: ${qty > 0 ? 'none' : 'block'}" onclick="handleFirstAdd('${item.id}', '${item.name}', ${item.price})">ADD</button><div class="qty-controls" id="ctrl-${item.id}" style="display: ${qty > 0 ? 'flex' : 'none'}"><button class="btn-qty" onclick="updateQty('${item.id}', -1)">-</button><span style="font-weight:700" id="qty-text-${item.id}">${qty}</span><button class="btn-qty" onclick="updateQty('${item.id}', 1)">+</button></div></div>`; }); }
 
-function handleFirstAdd(id, name, price) { 
-    triggerHaptic(); 
-    cart[id] = { name, price, qty: 1 }; 
-    document.getElementById(`add-init-${id}`).style.display = 'none'; 
-    document.getElementById(`ctrl-${id}`).style.display = 'flex';
-    const badge = document.getElementById(`badge-${id}`); 
-    badge.style.display = 'flex'; 
-    badge.innerText = 1; 
-    const qtyTxt = document.getElementById(`qty-text-${id}`);
-    if(qtyTxt) qtyTxt.innerText = 1;
-    updateGlobalUI(); 
-}
+function handleFirstAdd(id, name, price) { triggerHaptic(); cart[id] = { name, price, qty: 1 }; document.getElementById(`add-init-${id}`).style.display = 'none'; document.getElementById(`ctrl-${id}`).style.display = 'flex'; const badge = document.getElementById(`badge-${id}`); badge.style.display = 'flex'; badge.innerText = 1; const qtyTxt = document.getElementById(`qty-text-${id}`); if(qtyTxt) qtyTxt.innerText = 1; updateGlobalUI(); }
 
-function updateQty(id, change) { 
-    triggerHaptic(); 
-    if (!cart[id]) return;
-    cart[id].qty += change; 
-    if (cart[id].qty <= 0) { 
-        delete cart[id]; 
-        if(document.getElementById(`add-init-${id}`)) { 
-            document.getElementById(`add-init-${id}`).style.display = 'block'; 
-            document.getElementById(`ctrl-${id}`).style.display = 'none';
-            document.getElementById(`badge-${id}`).style.display = 'none'; 
-        } 
-    } else { 
-        const qtyTxt = document.getElementById(`qty-text-${id}`); 
-        const badge = document.getElementById(`badge-${id}`); 
-        if(qtyTxt) qtyTxt.innerText = cart[id].qty;
-        if(badge) badge.innerText = cart[id].qty; 
-    } 
-    updateGlobalUI(); 
-}
+function updateQty(id, change) { triggerHaptic(); if (!cart[id]) return; cart[id].qty += change; if (cart[id].qty <= 0) { delete cart[id]; if(document.getElementById(`add-init-${id}`)) { document.getElementById(`add-init-${id}`).style.display = 'block'; document.getElementById(`ctrl-${id}`).style.display = 'none'; document.getElementById(`badge-${id}`).style.display = 'none'; } } else { const qtyTxt = document.getElementById(`qty-text-${id}`); const badge = document.getElementById(`badge-${id}`); if(qtyTxt) qtyTxt.innerText = cart[id].qty; if(badge) badge.innerText = cart[id].qty; } updateGlobalUI(); }
 
-function updateGlobalUI() { 
-    let subtotal = 0, totalItems = 0; 
-    const list = document.getElementById('cart-items-list');
-    list.innerHTML = ''; 
-    Object.keys(cart).forEach(id => { 
-        const item = cart[id]; 
-        subtotal += item.price * item.qty; 
-        totalItems += item.qty; 
-        list.innerHTML += `<div class="cart-row"><div><strong>${item.name}</strong><br><small>$${item.price.toFixed(2)}</small></div><div class="qty-controls" style="display:flex; width: 90px;"><button class="btn-qty" onclick="updateQty('${id}', -1)">-</button><span>${item.qty}</span><button class="btn-qty" onclick="updateQty('${id}', 1)">+</button></div></div>`; 
-    });
-    document.getElementById('cart-total-price').innerText = `$${(subtotal * 1.1).toFixed(2)}`; 
-    const bar = document.getElementById('cart-bar'); 
-    if(totalItems > 0) { 
-        bar.style.display = 'flex';
-        document.getElementById('cart-item-count').innerText = `${totalItems} Item${totalItems > 1 ? 's' : ''}`; 
-    } else { 
-        bar.style.display = 'none';
-    } 
-}
+function updateGlobalUI() { let subtotal = 0, totalItems = 0; const list = document.getElementById('cart-items-list'); list.innerHTML = ''; Object.keys(cart).forEach(id => { const item = cart[id]; subtotal += item.price * item.qty; totalItems += item.qty; list.innerHTML += `<div class="cart-row"><div><strong>${item.name}</strong><br><small>₹${item.price.toFixed(2)}</small></div><div class="qty-controls" style="display:flex; width: 90px;"><button class="btn-qty" onclick="updateQty('${id}', -1)">-</button><span>${item.qty}</span><button class="btn-qty" onclick="updateQty('${id}', 1)">+</button></div></div>`; }); document.getElementById('cart-total-price').innerText = `₹${subtotal.toFixed(2)}`; const bar = document.getElementById('cart-bar'); if(totalItems > 0) { bar.style.display = 'flex'; document.getElementById('cart-item-count').innerText = `${totalItems} Item${totalItems > 1 ? 's' : ''}`; } else { bar.style.display = 'none'; } }
 
 function toggleCart() { triggerHaptic(); const p = document.getElementById('cart-popup'); p.style.display = (p.style.display === 'flex') ? 'none' : 'flex'; }
 function processPayment() { triggerHaptic(); alert("Redirecting to checkout..."); }
 
-window.onload = () => { 
-    startCinematicIntro(); 
-    showSection('starters', document.querySelector('.nav-item')); 
-};
+window.onload = () => { startCinematicIntro(); showSection('starters', document.querySelector('.nav-item')); };
 </script>
 </body>
 </html>
