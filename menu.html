@@ -68,11 +68,11 @@ body {
 }
 
 .plate-side {
-  width: 220px;
-  height: 8px; 
+  width: 240px;
+  height: 10px; 
   background: #ffffff;
   border-radius: 0 0 15px 15px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.15);
   position: relative;
   z-index: 10; 
   transform: translateX(0);
@@ -86,27 +86,28 @@ body {
 
 .falling-item {
   position: absolute;
-  font-size: 40px;
+  font-size: 45px;
   opacity: 0;
   z-index: 5; 
   transform-origin: bottom center;
+  filter: drop-shadow(0 4px 4px rgba(0,0,0,0.1));
 }
 
 /* Jelly Impact Animation */
 @keyframes dropInJelly {
-  0% { transform: translateY(-400px) scaleY(1.2) scaleX(0.8); opacity: 0; }
-  60% { transform: translateY(-8px) scaleY(1.2) scaleX(0.8); opacity: 1; }
-  75% { transform: translateY(-8px) scaleY(0.7) scaleX(1.3); }
-  90% { transform: translateY(-8px) scaleY(1.1) scaleX(0.9); }
-  100% { transform: translateY(-8px) scaleY(1) scaleX(1); opacity: 1; }
+  0% { transform: translateY(-400px) scaleY(1.3) scaleX(0.7); opacity: 0; }
+  60% { transform: translateY(-10px) scaleY(1.3) scaleX(0.7); opacity: 1; }
+  75% { transform: translateY(-10px) scaleY(0.6) scaleX(1.4); }
+  90% { transform: translateY(-10px) scaleY(1.1) scaleX(0.9); }
+  100% { transform: translateY(-10px) scaleY(1) scaleX(1); opacity: 1; }
 }
 
-/* Timings for items with Jelly Effect */
-.item-1 { animation: dropInJelly 0.7s 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; left: 70px; }
-.item-2 { animation: dropInJelly 0.7s 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; left: 110px; }
-.item-3 { animation: dropInJelly 0.7s 1.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; left: 150px; }
-.item-4 { animation: dropInJelly 0.7s 2.0s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; left: 190px; }
-.item-5 { animation: dropInJelly 0.7s 2.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; left: 230px; }
+/* Positioning items to sit perfectly on the white line */
+.item-1 { animation: dropInJelly 0.7s 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; left: 60px; }
+.item-2 { animation: dropInJelly 0.7s 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; left: 105px; }
+.item-3 { animation: dropInJelly 0.7s 1.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; left: 155px; }
+.item-4 { animation: dropInJelly 0.7s 2.0s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; left: 205px; }
+.item-5 { animation: dropInJelly 0.7s 2.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; left: 132px; font-size: 30px; z-index: 11; bottom: 65px;}
 
 .intro-text-container {
   margin-top: 20px;
@@ -174,12 +175,7 @@ body {
     <div class="brand-header">EME<span>RALD</span></div>
     <div class="animation-container">
         <div class="plate-side"></div>
-        <div class="falling-item item-1">🍱</div>
-        <div class="falling-item item-2">🍰</div>
-        <div class="falling-item item-3">🍞</div>
-        <div class="falling-item item-4">🥧</div>
-        <div class="falling-item item-5">🍽️</div>
-    </div>
+        <div class="falling-item item-1">🍱</div> <div class="falling-item item-2">🍜</div> <div class="falling-item item-3">🍮</div> <div class="falling-item item-4">🥘</div> <div class="falling-item item-5">🍴</div> </div>
     <div class="intro-text-container">
         <div class="text-msg msg-1">Prioritizing Taste</div>
         <div class="text-msg msg-2">Serving With Speed</div>
@@ -307,8 +303,8 @@ function triggerHaptic(duration = 10) { if ("vibrate" in navigator) navigator.vi
 function startCinematicIntro() {
     const wrapper = document.getElementById('intro-wrapper');
     
-    // Sync haptics with visual impact (when scale changes in animation)
-    const impactTimes = [1250, 1650, 2050, 2450, 2850]; // Approx milliseconds of impact
+    // Sync haptics with visual impact
+    const impactTimes = [1250, 1650, 2050, 2450, 2850]; 
     impactTimes.forEach(time => {
         setTimeout(() => triggerHaptic(20), time);
     });
