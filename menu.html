@@ -59,7 +59,7 @@ body {
 
 .animation-container {
   position: relative;
-  width: 350px;
+  width: 380px; /* Slightly wider to fit items side-by-side */
   height: 250px;
   display: flex;
   justify-content: center;
@@ -68,7 +68,7 @@ body {
 }
 
 .plate-side {
-  width: 280px; /* Widened to fit more icons */
+  width: 320px; /* Widened tray for all 7 items to sit flush */
   height: 10px; 
   background: #ffffff;
   border-radius: 0 0 15px 15px;
@@ -87,12 +87,12 @@ body {
 /* Semi-circle Lid (Cloche) */
 .cloche-lid {
   position: absolute;
-  width: 300px;
-  height: 150px;
+  width: 340px;
+  height: 170px;
   background: #e0e0e0;
-  border-radius: 150px 150px 0 0;
-  bottom: 60px; /* Matches the top of the tray exactly */
-  left: 25px;
+  border-radius: 170px 170px 0 0;
+  bottom: 60px; 
+  left: 20px;
   z-index: 20;
   opacity: 0;
   border: 2px solid #ccc;
@@ -107,7 +107,7 @@ body {
   background: #bdbdbd;
   border-radius: 17px 17px 0 0;
   top: -17px;
-  left: 133px;
+  left: 153px;
 }
 
 @keyframes clocheAction {
@@ -119,15 +119,14 @@ body {
 
 .falling-item {
   position: absolute;
-  font-size: 42px;
+  font-size: 40px;
   opacity: 0;
   z-index: 5; 
-  bottom: 60px; /* Locked to the top of the tray line */
+  bottom: 60px; /* Locked to tray line */
   transform-origin: bottom center;
   filter: drop-shadow(0 4px 4px rgba(0,0,0,0.1));
 }
 
-/* Adjusted Jelly Impact for exact alignment */
 @keyframes dropInJelly {
   0% { transform: translateY(-400px) scaleY(1.3) scaleX(0.7); opacity: 0; }
   60% { transform: translateY(0) scaleY(1.3) scaleX(0.7); opacity: 1; }
@@ -136,13 +135,14 @@ body {
   100% { transform: translateY(0) scaleY(1) scaleX(1); opacity: 1; }
 }
 
-.item-1 { animation: dropInJelly 0.7s 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; left: 40px; }
-.item-2 { animation: dropInJelly 0.7s 1.1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; left: 80px; }
-.item-3 { animation: dropInJelly 0.7s 1.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; left: 120px; }
-.item-4 { animation: dropInJelly 0.7s 1.7s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; left: 160px; }
-.item-5 { animation: dropInJelly 0.7s 2.0s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; left: 200px; }
+/* Positioned 7 items horizontally along the tray */
+.item-1 { animation: dropInJelly 0.7s 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; left: 35px; }
+.item-2 { animation: dropInJelly 0.7s 1.1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; left: 75px; }
+.item-3 { animation: dropInJelly 0.7s 1.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; left: 115px; }
+.item-4 { animation: dropInJelly 0.7s 1.7s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; left: 155px; }
+.item-5 { animation: dropInJelly 0.7s 2.0s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; left: 195px; }
 .item-6 { animation: dropInJelly 0.7s 2.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; left: 235px; }
-.item-7 { animation: dropInJelly 0.7s 2.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; left: 140px; bottom: 102px; font-size: 32px; z-index: 11; } /* Center garnish/bowl */
+.item-7 { animation: dropInJelly 0.7s 2.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; left: 275px; } /* Fixed: Now sits on the plate alongside others */
 
 .intro-text-container {
   margin-top: 20px;
@@ -213,7 +213,14 @@ body {
         <div class="cloche-lid">
             <div class="cloche-handle"></div>
         </div>
-        <div class="falling-item item-1">🍱</div> <div class="falling-item item-2">🍲</div> <div class="falling-item item-3">🍮</div> <div class="falling-item item-4">🥘</div> <div class="falling-item item-5">🍷</div> <div class="falling-item item-6">🧃</div> <div class="falling-item item-7">🥣</div> </div>
+        <div class="falling-item item-1">🍱</div>
+        <div class="falling-item item-2">🍲</div>
+        <div class="falling-item item-3">🍮</div>
+        <div class="falling-item item-4">🥘</div>
+        <div class="falling-item item-5">🍷</div>
+        <div class="falling-item item-6">🧃</div>
+        <div class="falling-item item-7">🥣</div>
+    </div>
     <div class="intro-text-container">
         <div class="text-msg msg-1">Prioritizing Taste</div>
         <div class="text-msg msg-2">A Feast for the Senses</div>
@@ -291,8 +298,6 @@ function triggerHaptic(duration = 10) { if ("vibrate" in navigator) navigator.vi
 
 function startCinematicIntro() {
     const wrapper = document.getElementById('intro-wrapper');
-    
-    // Updated Haptic Timings for 7 items + Cloche
     const timings = [1250, 1550, 1850, 2150, 2450, 2750, 3050, 4300, 6800];
     timings.forEach(time => setTimeout(() => triggerHaptic(20), time));
 
