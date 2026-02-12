@@ -59,7 +59,7 @@ body {
 
 .animation-container {
   position: relative;
-  width: 380px; 
+  width: 350px;
   height: 250px;
   display: flex;
   justify-content: center;
@@ -68,11 +68,11 @@ body {
 }
 
 .plate-side {
-  width: 320px; 
-  height: 10px; 
+  width: 180px;
+  height: 8px; 
   background: #ffffff;
   border-radius: 0 0 15px 15px;
-  box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
   position: relative;
   z-index: 10; 
   transform: translateX(0);
@@ -84,63 +84,23 @@ body {
   100% { transform: translateX(0); }
 }
 
-.cloche-lid {
-  position: absolute;
-  width: 340px;
-  height: 170px;
-  background: #e0e0e0;
-  border-radius: 170px 170px 0 0;
-  bottom: 60px; 
-  left: 20px;
-  z-index: 20;
-  opacity: 0;
-  border: 2px solid #ccc;
-  box-shadow: inset 0 10px 20px rgba(255,255,255,0.5);
-  animation: clocheAction 3.5s 3.8s forwards;
-}
-
-.cloche-handle {
-  position: absolute;
-  width: 34px;
-  height: 17px;
-  background: #bdbdbd;
-  border-radius: 17px 17px 0 0;
-  top: -17px;
-  left: 153px;
-}
-
-@keyframes clocheAction {
-  0% { transform: translateY(-500px); opacity: 0; }
-  15% { transform: translateY(0); opacity: 1; }
-  85% { transform: translateY(0); opacity: 1; }
-  100% { transform: translateY(-600px); opacity: 1; }
-}
-
 .falling-item {
   position: absolute;
   font-size: 40px;
   opacity: 0;
   z-index: 5; 
-  bottom: 60px; 
-  transform-origin: bottom center;
-  filter: drop-shadow(0 4px 4px rgba(0,0,0,0.1));
 }
 
-@keyframes dropInJelly {
-  0% { transform: translateY(-400px) scaleY(1.3) scaleX(0.7); opacity: 0; }
-  60% { transform: translateY(0) scaleY(1.3) scaleX(0.7); opacity: 1; }
-  75% { transform: translateY(0) scaleY(0.6) scaleX(1.4); }
-  90% { transform: translateY(0) scaleY(1.1) scaleX(0.9); }
-  100% { transform: translateY(0) scaleY(1) scaleX(1); opacity: 1; }
-}
+.item-burger { animation: dropIn 0.5s 0.8s forwards; left: 85px; }
+.item-fries  { animation: dropIn 0.5s 1.1s forwards; left: 125px; }
+.item-salad  { animation: dropIn 0.5s 1.4s forwards; left: 160px; }
+.item-wine   { animation: dropIn 0.5s 1.7s forwards; left: 200px; } 
+.item-utensils { font-size: 32px; animation: dropIn 0.5s 2.2s forwards; left: 130px; }
 
-.item-1 { animation: dropInJelly 0.7s 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; left: 35px; }
-.item-2 { animation: dropInJelly 0.7s 1.1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; left: 75px; }
-.item-3 { animation: dropInJelly 0.7s 1.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; left: 115px; }
-.item-4 { animation: dropInJelly 0.7s 1.7s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; left: 155px; }
-.item-5 { animation: dropInJelly 0.7s 2.0s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; left: 195px; }
-.item-6 { animation: dropInJelly 0.7s 2.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; left: 235px; }
-.item-7 { animation: dropInJelly 0.7s 2.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; left: 275px; } 
+@keyframes dropIn {
+  0% { transform: translateY(-300px); opacity: 0; }
+  100% { transform: translateY(-8px); opacity: 1; }
+}
 
 .intro-text-container {
   margin-top: 20px;
@@ -159,8 +119,8 @@ body {
   opacity: 0;
 }
 
-.msg-1 { animation: textFlow 2s 0.8s forwards; }
-.msg-2 { animation: textFlow 2s 7.2s forwards; }
+.msg-1 { animation: textFlow 2s 2.7s forwards; }
+.msg-2 { animation: textFlow 2s 4.7s forwards; }
 
 @keyframes textFlow {
   0% { opacity: 0; transform: translateX(30px); }
@@ -177,7 +137,7 @@ body {
 .nav-item.active { color: #000; }
 .main-content { flex: 1; display: flex; flex-direction: column; background: var(--bg-light); border-top-left-radius: 25px; overflow: hidden; }
 .hero-header { padding: 15px 20px; background: #fff; border-bottom: 1px solid #eee; text-align: center; position: relative; display: flex; align-items: center; justify-content: center; }
-#section-name { font-family: 'Playfair Display', serif; font-size: 20px; background: var(--primary); color: #000; display: inline-block; padding: 5px 25px; border-radius: 8px; box-shadow: 0 4px 10px rgba(255, 204, 0, 0.2); }
+#section-name { font-family: 'Playfair Display', serif; font-size: 18px; background: var(--primary); color: #000; display: inline-block; padding: 5px 15px; border-radius: 8px; box-shadow: 0 4px 10px rgba(255, 204, 0, 0.2); }
 .search-container { position: absolute; right: 15px; display: flex; align-items: center; }
 #search-input { width: 0; opacity: 0; padding: 8px 0; border: none; border-bottom: 2px solid var(--primary); outline: none; font-family: 'Inter', sans-serif; transition: all 0.3s ease; font-size: 14px; }
 #search-input.active { width: 130px; opacity: 1; padding: 8px 10px; margin-right: 5px; }
@@ -190,7 +150,7 @@ body {
 .food-card { background: #fff; border-radius: 16px; padding: 8px; display: flex; flex-direction: column; position: relative; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
 .badge { position: absolute; top: -5px; right: -5px; background: #ff3b30; color: white; width: 22px; height: 22px; border-radius: 50%; display: none; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; border: 2px solid #fff; z-index: 10; }
 .food-card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 12px; margin-bottom: 8px; }
-.food-card h4 { font-size: 13px; line-height: 1.2; margin-bottom: 4px; height: 32px; overflow: hidden; }
+.food-card h4 { font-size: 12px; line-height: 1.2; margin-bottom: 4px; height: 32px; overflow: hidden; }
 .price { font-weight: 700; color: #555; font-size: 14px; margin-bottom: 8px; }
 .add-initial { width: 100%; padding: 8px; background: #111; color: #fff; border: none; border-radius: 8px; font-weight: 600; font-size: 12px; }
 .qty-controls { display: none; align-items: center; justify-content: space-between; background: #f0f0f0; border-radius: 8px; padding: 2px; }
@@ -208,28 +168,25 @@ body {
     <div class="brand-header">EME<span>RALD</span></div>
     <div class="animation-container">
         <div class="plate-side"></div>
-        <div class="cloche-lid"><div class="cloche-handle"></div></div>
-        <div class="falling-item item-1">🍱</div>
-        <div class="falling-item item-2">🍲</div>
-        <div class="falling-item item-3">🍮</div>
-        <div class="falling-item item-4">🥘</div>
-        <div class="falling-item item-5">🍷</div>
-        <div class="falling-item item-6">🧃</div>
-        <div class="falling-item item-7">🥣</div>
+        <div class="falling-item item-burger">🍔</div>
+        <div class="falling-item item-fries">🍟</div>
+        <div class="falling-item item-salad">🥗</div>
+        <div class="falling-item item-wine">🍷</div>
+        <div class="falling-item item-utensils">🍴</div>
     </div>
     <div class="intro-text-container">
         <div class="text-msg msg-1">Prioritizing Taste</div>
-        <div class="text-msg msg-2">A Feast for the Senses</div>
+        <div class="text-msg msg-2">Serving With Speed</div>
     </div>
 </div>
 
 <div class="sidebar" id="sidebar">
   <div class="nav-indicator" id="nav-indicator"></div>
-  <div class="nav-item active" onclick="showSection('starters', this)"><span>🥗</span><label>Starters</label></div>
-  <div class="nav-item" onclick="showSection('main', this)"><span>🍝</span><label>Mains</label></div>
-  <div class="nav-item" onclick="showSection('apps', this)"><span>🍟</span><label>Sides</label></div>
-  <div class="nav-item" onclick="showSection('desserts', this)"><span>🍰</span><label>Sweets</label></div>
-  <div class="nav-item" onclick="showSection('combos', this)"><span>🍱</span><label>Combos</label></div>
+  <div class="nav-item active" onclick="showSection('starters', this)"><span>🍢</span><label>Starters</label></div>
+  <div class="nav-item" onclick="showSection('soups', this)"><span>🥣</span><label>Soups</label></div>
+  <div class="nav-item" onclick="showSection('salads', this)"><span>🥗</span><label>Salads</label></div>
+  <div class="nav-item" onclick="showSection('chinese', this)"><span>🥢</span><label>Chinese</label></div>
+  <div class="nav-item" onclick="showSection('sizzlers', this)"><span>🍳</span><label>Sizzlers</label></div>
   <div class="nav-item" onclick="showSection('drinks', this)"><span>🥤</span><label>Drinks</label></div>
 </div>
 
@@ -263,7 +220,7 @@ body {
     <div id="cart-items-list"></div>
     <div style="background: #f9f9f9; padding: 15px; border-radius: 12px; margin-top: 15px;">
       <div style="display: flex; justify-content: space-between; font-weight: 800; font-size: 20px;">
-        <span>Total</span><span id="cart-total-price">$0.00</span>
+        <span>Total</span><span id="cart-total-price">₹0.00</span>
       </div>
     </div>
     <button class="pay-btn" onclick="processPayment()">Place Order</button>
@@ -271,34 +228,67 @@ body {
 </div>
 
 <script>
-// Finalized Menu Data reflecting standard premium categories
 const menuData = {
   starters: [
-    { id: 's1', name: 'Truffle Mushroom Soup', price: 14.00, img: 'https://images.unsplash.com/photo-1547592110-90c3443c2288?w=300' },
-    { id: 's2', name: 'Burrata Salad', price: 18.00, img: 'https://images.unsplash.com/photo-1592417817098-8fd3d9eb14a5?w=300' },
-    { id: 's3', name: 'Grilled Octopus', price: 22.00, img: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=300' },
-    { id: 's4', name: 'Wagyu Beef Carpaccio', price: 26.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=300' }
+    { id: 'st1', name: 'Corn Tikki', price: 180.00, img: 'https://images.unsplash.com/photo-1645177623570-ad4c5ac099d6?w=300' },
+    { id: 'st2', name: 'Paneer Tikka Dry', price: 225.00, img: 'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=300' },
+    { id: 'st3', name: 'Paneer Phudina Tikka', price: 225.00, img: 'https://images.unsplash.com/photo-1628294895950-983312949bb3?w=300' },
+    { id: 'st4', name: 'Paneer Lahsuni Tikka', price: 225.00, img: 'https://images.unsplash.com/photo-1567184109411-b28f21ee0c15?w=300' },
+    { id: 'st5', name: 'Hara bhara Kabab', price: 180.00, img: 'https://images.unsplash.com/photo-1626132646529-5aa214d49019?w=300' },
+    { id: 'st6', name: 'Raja Kabab', price: 180.00, img: 'https://images.unsplash.com/photo-1603360946369-dc9bb6258143?w=300' },
+    { id: 'st7', name: 'Tandoori Plater', price: 260.00, img: 'https://images.unsplash.com/photo-1585238342024-78d387f4a707?w=300' }
   ],
-  main: [
-    { id: 'm1', name: 'Ribeye Steak', price: 45.00, img: 'https://images.unsplash.com/photo-1546241072-48010ad28c2c?w=300' },
-    { id: 'm2', name: 'Pan-Seared Salmon', price: 34.00, img: 'https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=300' },
-    { id: 'm3', name: 'Lobster Risotto', price: 38.00, img: 'https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=300' },
-    { id: 'm4', name: 'Rack of Lamb', price: 42.00, img: 'https://images.unsplash.com/photo-1514516369414-78177d7e997e?w=300' }
+  soups: [
+    { id: 'sp1', name: 'Cream of Tomato', price: 90.00, img: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=300' },
+    { id: 'sp2', name: 'Minestrone Soup', price: 100.00, img: 'https://images.unsplash.com/photo-1547592116-43e86c0f6531?w=300' },
+    { id: 'sp3', name: 'Sweet Corn Veg. Soup', price: 90.00, img: 'https://images.unsplash.com/photo-1614735241165-6756e1df61ab?w=300' },
+    { id: 'sp4', name: 'Veg. Hot & Sour Soup', price: 100.00, img: 'https://images.unsplash.com/photo-1582819509237-45b754223abd?w=300' },
+    { id: 'sp5', name: 'Veg. Manchow Soup', price: 100.00, img: 'https://images.unsplash.com/photo-1612459284970-e8f027596582?w=300' },
+    { id: 'sp6', name: 'Lemon Coriander Soup', price: 100.00, img: 'https://images.unsplash.com/photo-1548943487-a2e4e43b4853?w=300' },
+    { id: 'sp7', name: 'Palak Phudina Soup', price: 100.00, img: 'https://images.unsplash.com/photo-1604152135912-04a022e23696?w=300' },
+    { id: 'sp8', name: 'Veg. Mushroom Soup', price: 110.00, img: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=300' },
+    { id: 'sp9', name: 'Clear Soup (Veg/Noodles)', price: 90.00, img: 'https://images.unsplash.com/photo-1555124817-a847cce2c70a?w=300' },
+    { id: 'sp10', name: 'Cheese Corn Tomato Soup', price: 110.00, img: 'https://images.unsplash.com/photo-1603105037880-880cd4edfb0d?w=300' }
   ],
-  apps: [
-    { id: 'a1', name: 'Parmesan Fries', price: 9.00, img: 'https://images.unsplash.com/photo-1573082818143-f2913b3d114d?w=300' },
-    { id: 'a2', name: 'Garlic Asparagus', price: 11.00, img: 'https://images.unsplash.com/photo-1515471209610-dae1c92d8777?w=300' }
+  salads: [
+    { id: 'sl1', name: 'Cream of Fruit Salad', price: 120.00, img: 'https://images.unsplash.com/photo-1564093497595-593b96d80180?w=300' },
+    { id: 'sl2', name: 'Fresh Green Salad', price: 80.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=300' },
+    { id: 'sl3', name: 'Russian Salad', price: 120.00, img: 'https://images.unsplash.com/photo-1558947530-cbcf6e9aeeae?w=300' },
+    { id: 'sl4', name: 'Kachumber Salad', price: 70.00, img: 'https://images.unsplash.com/photo-1625944230945-1744a4693b2c?w=300' },
+    { id: 'sl5', name: 'Pineapple Raita', price: 80.00, img: 'https://images.unsplash.com/photo-1594911772125-07fc7a2d8d9f?w=300' },
+    { id: 'sl6', name: 'Veg. Raita / Cucumber Raita', price: 70.00, img: 'https://images.unsplash.com/photo-1594911772125-07fc7a2d8d9f?w=300' },
+    { id: 'sl7', name: 'Boondi Raita', price: 70.00, img: 'https://images.unsplash.com/photo-1626132646529-5aa214d49019?w=300' },
+    { id: 'sl8', name: 'Papad (Roasted/Fried)', price: 24.00, img: 'https://images.unsplash.com/photo-1626132646529-5aa214d49019?w=300' },
+    { id: 'sl9', name: 'Papad Masala', price: 40.00, img: 'https://images.unsplash.com/photo-1626132646529-5aa214d49019?w=300' }
   ],
-  desserts: [
-    { id: 'd1', name: 'Molten Lava Cake', price: 12.00, img: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=300' },
-    { id: 'd2', name: 'Classic Tiramisu', price: 14.00, img: 'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=300' }
+  chinese: [
+    { id: 'ch1', name: 'Oriental Crispy Veg', price: 190.00, img: 'https://images.unsplash.com/photo-1512058560366-cd2429597954?w=300' },
+    { id: 'ch2', name: 'Baby Corn Chilli Fried', price: 190.00, img: 'https://images.unsplash.com/photo-1563379091339-03b21bc4a4f8?w=300' },
+    { id: 'ch3', name: 'Schezwan Paneer', price: 210.00, img: 'https://images.unsplash.com/photo-1567184109411-b28f21ee0c15?w=300' },
+    { id: 'ch4', name: 'Paneer Chilly', price: 210.00, img: 'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=300' },
+    { id: 'ch5', name: 'Paneer Manchurian', price: 210.00, img: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=300' },
+    { id: 'ch6', name: 'Veg Spring Roll', price: 180.00, img: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=300' },
+    { id: 'ch7', name: 'Mushroom Chilly Fry', price: 210.00, img: 'https://images.unsplash.com/photo-1628294895950-983312949bb3?w=300' },
+    { id: 'ch8', name: 'Paneer 65', price: 210.00, img: 'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=300' },
+    { id: 'ch9', name: 'Veg Lollipop', price: 210.00, img: 'https://images.unsplash.com/photo-1512058560366-cd2429597954?w=300' },
+    { id: 'ch10', name: 'Veg Manchurian dry', price: 180.00, img: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=300' },
+    { id: 'ch11', name: 'Veg Manchurian gravy', price: 180.00, img: 'https://images.unsplash.com/photo-1612459284970-e8f027596582?w=300' }
   ],
-  combos: [
-    { id: 'c1', name: 'Chef Special Set', price: 85.00, img: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=300' }
+  sizzlers: [
+    { id: 'sz1', name: 'Mix Grilled Sizzler', price: 299.00, img: 'https://images.unsplash.com/photo-1536392139158-9430c5a242c7?w=300' },
+    { id: 'sz2', name: 'Chinese Sizzler', price: 310.00, img: 'https://images.unsplash.com/photo-1555124817-a847cce2c70a?w=300' },
+    { id: 'sz3', name: 'Paneer Shaslik', price: 310.00, img: 'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=300' },
+    { id: 'sz4', name: 'Paneer Stick', price: 299.00, img: 'https://images.unsplash.com/photo-1628294895950-983312949bb3?w=300' }
   ],
   drinks: [
-    { id: 'dr1', name: 'Old Fashioned', price: 16.00, type: 'cold', img: 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=300' },
-    { id: 'dr2', name: 'Cappuccino', price: 6.00, type: 'hot', img: 'https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=300' }
+    { id: 'dr1', name: 'Jal Jeera Water', price: 30.00, type: 'cold', img: 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=300' },
+    { id: 'dr2', name: 'Fresh Lime Soda', price: 30.00, type: 'cold', img: 'https://images.unsplash.com/photo-1543007630-9710e4a00a20?w=300' },
+    { id: 'dr3', name: 'Soft Drinks', price: 25.00, type: 'cold', img: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=300' },
+    { id: 'dr4', name: 'Lassi (Sweet/Salted)', price: 70.00, type: 'cold', img: 'https://images.unsplash.com/photo-1543007630-9710e4a00a20?w=300' },
+    { id: 'dr5', name: 'Special Lassi', price: 90.00, type: 'cold', img: 'https://images.unsplash.com/photo-1543007630-9710e4a00a20?w=300' },
+    { id: 'dr6', name: 'Mineral Water', price: 20.00, type: 'cold', img: 'https://images.unsplash.com/photo-1523362628242-f513a6572717?w=300' },
+    { id: 'dr7', name: 'Fruit Punch', price: 70.00, type: 'cold', img: 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=300' },
+    { id: 'dr8', name: 'Masala Butter Milk', price: 35.00, type: 'cold', img: 'https://images.unsplash.com/photo-1543007630-9710e4a00a20?w=300' }
   ]
 };
 
@@ -306,25 +296,35 @@ let cart = {};
 let currentSection = 'starters';
 let currentDrinkFilter = 'all';
 
-function triggerHaptic(duration = 10) { if ("vibrate" in navigator) navigator.vibrate(duration); }
+function triggerHaptic() { if ("vibrate" in navigator) navigator.vibrate(10); }
 
 function startCinematicIntro() {
     const wrapper = document.getElementById('intro-wrapper');
-    const timings = [1250, 1550, 1850, 2150, 2450, 2750, 3050, 4300, 6800];
-    timings.forEach(time => setTimeout(() => triggerHaptic(20), time));
-    setTimeout(() => { wrapper.classList.add('exit'); setTimeout(() => wrapper.style.display = 'none', 800); }, 9500);
+    setTimeout(() => {
+        wrapper.classList.add('exit');
+        setTimeout(() => wrapper.style.display = 'none', 800);
+    }, 7200);
 }
 
 function toggleSearch() { triggerHaptic(); const input = document.getElementById('search-input'); input.classList.toggle('active'); if (input.classList.contains('active')) input.focus(); else { input.value = ''; handleSearch(); } }
+
 function handleSearch() { const term = document.getElementById('search-input').value.toLowerCase(); let baseItems = menuData[currentSection]; if (currentSection === 'drinks' && currentDrinkFilter !== 'all') { baseItems = baseItems.filter(d => d.type === currentDrinkFilter); } const filtered = baseItems.filter(item => item.name.toLowerCase().includes(term)); renderGrid(filtered); }
+
 function showSection(section, el) { triggerHaptic(); currentSection = section; currentDrinkFilter = 'all'; document.getElementById('search-input').value = ''; document.getElementById('search-input').classList.remove('active'); const indicator = document.getElementById('nav-indicator'); indicator.style.top = el.offsetTop + 'px'; document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); el.classList.add('active'); document.getElementById('section-name').innerText = el.querySelector('label').innerText; document.getElementById('drink-filters').style.display = (section === 'drinks') ? 'flex' : 'none'; renderGrid(menuData[section]); }
+
 function filterDrinks(type, btn) { triggerHaptic(); currentDrinkFilter = type; document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); handleSearch(); }
-function renderGrid(items) { const grid = document.getElementById('menu-grid'); grid.innerHTML = ''; items.forEach(item => { const qty = cart[item.id]?.qty || 0; grid.innerHTML += `<div class="food-card"><div class="badge" id="badge-${item.id}" style="display: ${qty > 0 ? 'flex' : 'none'}">${qty}</div><img src="${item.img}" alt="${item.name}"><h4>${item.name}</h4><span class="price">$${item.price.toFixed(2)}</span><button class="add-initial" id="add-init-${item.id}" style="display: ${qty > 0 ? 'none' : 'block'}" onclick="handleFirstAdd('${item.id}', '${item.name}', ${item.price})">ADD</button><div class="qty-controls" id="ctrl-${item.id}" style="display: ${qty > 0 ? 'flex' : 'none'}"><button class="btn-qty" onclick="updateQty('${item.id}', -1)">-</button><span style="font-weight:700" id="qty-text-${item.id}">${qty}</span><button class="btn-qty" onclick="updateQty('${item.id}', 1)">+</button></div></div>`; }); }
-function handleFirstAdd(id, name, price) { triggerHaptic(); cart[id] = { name, price, qty: 1 }; document.getElementById(`add-init-${id}`).style.display = 'none'; document.getElementById(`ctrl-${id}`).style.display = 'flex'; const badge = document.getElementById(`badge-${id}`); badge.style.display = 'flex'; badge.innerText = 1; updateGlobalUI(); }
+
+function renderGrid(items) { const grid = document.getElementById('menu-grid'); grid.innerHTML = ''; items.forEach(item => { const qty = cart[item.id]?.qty || 0; grid.innerHTML += `<div class="food-card"><div class="badge" id="badge-${item.id}" style="display: ${qty > 0 ? 'flex' : 'none'}">${qty}</div><img src="${item.img}" alt="${item.name}"><h4>${item.name}</h4><span class="price">₹${item.price.toFixed(2)}</span><button class="add-initial" id="add-init-${item.id}" style="display: ${qty > 0 ? 'none' : 'block'}" onclick="handleFirstAdd('${item.id}', '${item.name}', ${item.price})">ADD</button><div class="qty-controls" id="ctrl-${item.id}" style="display: ${qty > 0 ? 'flex' : 'none'}"><button class="btn-qty" onclick="updateQty('${item.id}', -1)">-</button><span style="font-weight:700" id="qty-text-${item.id}">${qty}</span><button class="btn-qty" onclick="updateQty('${item.id}', 1)">+</button></div></div>`; }); }
+
+function handleFirstAdd(id, name, price) { triggerHaptic(); cart[id] = { name, price, qty: 1 }; document.getElementById(`add-init-${id}`).style.display = 'none'; document.getElementById(`ctrl-${id}`).style.display = 'flex'; const badge = document.getElementById(`badge-${id}`); badge.style.display = 'flex'; badge.innerText = 1; const qtyTxt = document.getElementById(`qty-text-${id}`); if(qtyTxt) qtyTxt.innerText = 1; updateGlobalUI(); }
+
 function updateQty(id, change) { triggerHaptic(); if (!cart[id]) return; cart[id].qty += change; if (cart[id].qty <= 0) { delete cart[id]; if(document.getElementById(`add-init-${id}`)) { document.getElementById(`add-init-${id}`).style.display = 'block'; document.getElementById(`ctrl-${id}`).style.display = 'none'; document.getElementById(`badge-${id}`).style.display = 'none'; } } else { const qtyTxt = document.getElementById(`qty-text-${id}`); const badge = document.getElementById(`badge-${id}`); if(qtyTxt) qtyTxt.innerText = cart[id].qty; if(badge) badge.innerText = cart[id].qty; } updateGlobalUI(); }
-function updateGlobalUI() { let subtotal = 0, totalItems = 0; const list = document.getElementById('cart-items-list'); list.innerHTML = ''; Object.keys(cart).forEach(id => { const item = cart[id]; subtotal += item.price * item.qty; totalItems += item.qty; list.innerHTML += `<div class="cart-row"><div><strong>${item.name}</strong><br><small>$${item.price.toFixed(2)}</small></div><div class="qty-controls" style="display:flex; width: 90px;"><button class="btn-qty" onclick="updateQty('${id}', -1)">-</button><span>${item.qty}</span><button class="btn-qty" onclick="updateQty('${id}', 1)">+</button></div></div>`; }); document.getElementById('cart-total-price').innerText = `$${(subtotal * 1.1).toFixed(2)}`; const bar = document.getElementById('cart-bar'); if(totalItems > 0) { bar.style.display = 'flex'; document.getElementById('cart-item-count').innerText = `${totalItems} Item${totalItems > 1 ? 's' : ''}`; } else { bar.style.display = 'none'; } }
+
+function updateGlobalUI() { let subtotal = 0, totalItems = 0; const list = document.getElementById('cart-items-list'); list.innerHTML = ''; Object.keys(cart).forEach(id => { const item = cart[id]; subtotal += item.price * item.qty; totalItems += item.qty; list.innerHTML += `<div class="cart-row"><div><strong>${item.name}</strong><br><small>₹${item.price.toFixed(2)}</small></div><div class="qty-controls" style="display:flex; width: 90px;"><button class="btn-qty" onclick="updateQty('${id}', -1)">-</button><span>${item.qty}</span><button class="btn-qty" onclick="updateQty('${id}', 1)">+</button></div></div>`; }); document.getElementById('cart-total-price').innerText = `₹${subtotal.toFixed(2)}`; const bar = document.getElementById('cart-bar'); if(totalItems > 0) { bar.style.display = 'flex'; document.getElementById('cart-item-count').innerText = `${totalItems} Item${totalItems > 1 ? 's' : ''}`; } else { bar.style.display = 'none'; } }
+
 function toggleCart() { triggerHaptic(); const p = document.getElementById('cart-popup'); p.style.display = (p.style.display === 'flex') ? 'none' : 'flex'; }
-function processPayment() { triggerHaptic(); alert("Order Placed Successfully!"); }
+function processPayment() { triggerHaptic(); alert("Redirecting to checkout..."); }
+
 window.onload = () => { startCinematicIntro(); showSection('starters', document.querySelector('.nav-item')); };
 </script>
 </body>
