@@ -181,6 +181,7 @@ body {
 <div class="sidebar" id="sidebar">
   <div class="nav-indicator" id="nav-indicator"></div>
   <div class="nav-item active" onclick="showSection('starters', this)"><span>🍢</span><label>Starters</label></div>
+  <div class="nav-item" onclick="showSection('indian', this)"><span>🥘</span><label>Indian</label></div>
   <div class="nav-item" onclick="showSection('soups', this)"><span>🥣</span><label>Soups</label></div>
   <div class="nav-item" onclick="showSection('salads', this)"><span>🥗</span><label>Salads</label></div>
   <div class="nav-item" onclick="showSection('chinese', this)"><span>🥢</span><label>Chinese</label></div>
@@ -241,6 +242,31 @@ const menuData = {
     { id: 'st11', name: 'Dahi Kabab', price: 190.00, img: 'https://images.unsplash.com/photo-1613149183416-559142f1f6a1?q=80&w=400&auto=format&fit=crop' },
     { id: 'st12', name: 'Jahangiri Tikka', price: 230.00, img: 'https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=400&auto=format&fit=crop' },
     { id: 'st13', name: 'Tandoori Plater', price: 285.00, img: 'https://images.unsplash.com/photo-1596797038583-08709332f741?q=80&w=400&auto=format&fit=crop' }
+  ],
+  indian: [
+    { id: 'in1', name: 'Emerald Sp. Veg.', price: 210.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=400&auto=format&fit=crop' },
+    { id: 'in2', name: 'Veg. Mastani / Veg. Jawalamukhi', price: 215.00, img: 'https://images.unsplash.com/photo-1606491956689-2ea8c5119c85?q=80&w=400&auto=format&fit=crop' },
+    { id: 'in3', name: 'Veg. Sizzling', price: 220.00, img: 'https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=400&auto=format&fit=crop' },
+    { id: 'in4', name: 'Veg. Tawa Masala', price: 200.00, img: 'https://images.unsplash.com/photo-1589302168068-964664d93dc0?q=80&w=400&auto=format&fit=crop' },
+    { id: 'in5', name: 'Veg. Kadai / Veg. Kolhapuri', price: 200.00, img: 'https://images.unsplash.com/photo-1626777552726-4a6b547b4e5d?q=80&w=400&auto=format&fit=crop' },
+    { id: 'in6', name: 'Veg. Makhanwala', price: 200.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?q=80&w=400&auto=format&fit=crop' },
+    { id: 'in7', name: 'Veg. Jaipuri / Veg. Singapuri', price: 200.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?q=80&w=400&auto=format&fit=crop' },
+    { id: 'in8', name: 'Veg. Handi', price: 200.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?q=80&w=400&auto=format&fit=crop' },
+    { id: 'in9', name: 'Veg. Jalfrezi', price: 200.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=400&auto=format&fit=crop' },
+    { id: 'in10', name: 'Veg. Shahi Korma (Light Sweet)', price: 200.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?q=80&w=400&auto=format&fit=crop' },
+    { id: 'in11', name: 'Veg. Toofani', price: 200.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?q=80&w=400&auto=format&fit=crop' },
+    { id: 'in12', name: 'Veg. Hyderabadi', price: 200.00, img: 'https://images.unsplash.com/photo-1603360946369-dc9bb6258143?q=80&w=400&auto=format&fit=crop' },
+    { id: 'in13', name: 'Palak Corn Capsicum', price: 200.00, img: 'https://images.unsplash.com/photo-1601050648497-3f9ebaec5878?q=80&w=400&auto=format&fit=crop' },
+    { id: 'in14', name: 'Mutter Methi Malai (Sweet)', price: 215.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?q=80&w=400&auto=format&fit=crop' },
+    { id: 'in15', name: 'Baby Corn Makhanwala', price: 215.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=400&auto=format&fit=crop' },
+    { id: 'in16', name: 'Navaratan Korma (Sweet)', price: 215.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?q=80&w=400&auto=format&fit=crop' },
+    { id: 'in17', name: 'Corn Tomato Bhartha', price: 200.00, img: 'https://images.unsplash.com/photo-1589302168068-964664d93dc0?q=80&w=400&auto=format&fit=crop' },
+    { id: 'in18', name: 'Mutter Mushroom', price: 215.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?q=80&w=400&auto=format&fit=crop' },
+    { id: 'in19', name: 'Mushroom Masala', price: 215.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?q=80&w=400&auto=format&fit=crop' },
+    { id: 'in20', name: 'Mix Vegetable', price: 190.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=400&auto=format&fit=crop' },
+    { id: 'in21', name: 'Chana Masala', price: 190.00, img: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?q=80&w=400&auto=format&fit=crop' },
+    { id: 'in22', name: 'Aloo Masala / Dum Aloo', price: 190.00, img: 'https://images.unsplash.com/photo-1589302168068-964664d93dc0?q=80&w=400&auto=format&fit=crop' },
+    { id: 'in23', name: 'Aloo Methi / Jeera Aloo', price: 155.00, img: 'https://images.unsplash.com/photo-1589302168068-964664d93dc0?q=80&w=400&auto=format&fit=crop' }
   ],
   soups: [
     { id: 'sp1', name: 'Cream of Tomato', price: 100.00, img: 'https://images.unsplash.com/photo-1547592110-8032646f901a?q=80&w=400&auto=format&fit=crop' },
@@ -335,10 +361,8 @@ function showSection(section, el) {
   document.getElementById('drink-filters').style.display = (section === 'drinks') ? 'flex' : 'none';
 }
 
-// FIX: New function added to handle the drink filter buttons
 function filterDrinks(type, el) {
   triggerHaptic();
-  
   // Update button active state
   document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
   el.classList.add('active');
@@ -356,7 +380,6 @@ function filterDrinks(type, el) {
 function renderMenu(items) {
   const grid = document.getElementById('menu-grid');
   grid.innerHTML = items.map(item => {
-    // Check if price is a number before calling .toFixed()
     const displayPrice = (typeof item.price === 'number') ? `₹${item.price.toFixed(2)}` : item.price;
     const addPrice = (typeof item.price === 'number') ? item.price : 0;
 
@@ -366,6 +389,7 @@ function renderMenu(items) {
       <img src="${item.img}" alt="${item.name}">
       <h4>${item.name}</h4>
       <div class="price">${displayPrice}</div>
+     
       <div id="controls-${item.id}" style="display: ${cart[item.id] ? 'none' : 'block'}">
         <button class="add-initial" onclick="addToCart('${item.id}', '${item.name}', ${addPrice})">ADD</button>
       </div>
