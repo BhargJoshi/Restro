@@ -182,6 +182,7 @@ body {
   <div class="nav-indicator" id="nav-indicator"></div>
   <div class="nav-item active" onclick="showSection('starters', this)"><span>🍢</span><label>Starters</label></div>
   <div class="nav-item" onclick="showSection('indian', this)"><span>🥘</span><label>Indian</label></div>
+  <div class="nav-item" onclick="showSection('paneer', this)"><span>🧀</span><label>Paneer</label></div>
   <div class="nav-item" onclick="showSection('soups', this)"><span>🥣</span><label>Soups</label></div>
   <div class="nav-item" onclick="showSection('salads', this)"><span>🥗</span><label>Salads</label></div>
   <div class="nav-item" onclick="showSection('chinese', this)"><span>🥢</span><label>Chinese</label></div>
@@ -267,6 +268,33 @@ const menuData = {
     { id: 'in21', name: 'Chana Masala', price: 190.00, img: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?q=80&w=400&auto=format&fit=crop' },
     { id: 'in22', name: 'Aloo Masala / Dum Aloo', price: 190.00, img: 'https://images.unsplash.com/photo-1589302168068-964664d93dc0?q=80&w=400&auto=format&fit=crop' },
     { id: 'in23', name: 'Aloo Methi / Jeera Aloo', price: 155.00, img: 'https://images.unsplash.com/photo-1589302168068-964664d93dc0?q=80&w=400&auto=format&fit=crop' }
+  ],
+  paneer: [
+    { id: 'pn1', name: 'Emerald Sp. Paneer', price: 240.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?q=80&w=400&auto=format&fit=crop' },
+    { id: 'pn2', name: 'Paneer Sizzling', price: 245.00, img: 'https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=400&auto=format&fit=crop' },
+    { id: 'pn3', name: 'Paneer Kathiyawadi', price: 230.00, img: 'https://images.unsplash.com/photo-1606491956689-2ea8c5119c85?q=80&w=400&auto=format&fit=crop' },
+    { id: 'pn4', name: 'Paneer Darwar', price: 230.00, img: 'https://images.unsplash.com/photo-1589302168068-964664d93dc0?q=80&w=400&auto=format&fit=crop' },
+    { id: 'pn5', name: 'Paneer Tiranga', price: 235.00, img: 'https://images.unsplash.com/photo-1626777552726-4a6b547b4e5d?q=80&w=400&auto=format&fit=crop' },
+    { id: 'pn6', name: 'Cheese Butter Masala', price: 235.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?q=80&w=400&auto=format&fit=crop' },
+    { id: 'pn7', name: 'Cheese Angoori', price: 235.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?q=80&w=400&auto=format&fit=crop' },
+    { id: 'pn8', name: 'Paneer Mushroom Masala', price: 230.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?q=80&w=400&auto=format&fit=crop' },
+    { id: 'pn9', name: 'Paneer Butter Masala', price: 210.00, img: 'https://images.unsplash.com/photo-1601050648497-3f9ebaec5878?q=80&w=400&auto=format&fit=crop' },
+    { id: 'pn10', name: 'Paneer Tikka Masala', price: 220.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?q=80&w=400&auto=format&fit=crop' },
+    { id: 'pn11', name: 'Paneer Kankani', price: 220.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?q=80&w=400&auto=format&fit=crop' },
+    { id: 'pn12', name: 'Paneer Diwani Handi', price: 220.00, img: 'https://images.unsplash.com/photo-1603360946369-dc9bb6258143?q=80&w=400&auto=format&fit=crop' },
+    { id: 'pn13', name: 'Paneer Lajawab / Kalimirch', price: 220.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?q=80&w=400&auto=format&fit=crop' },
+    { id: 'pn14', name: 'Paneer Kadai / Paneer Handi', price: 220.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?q=80&w=400&auto=format&fit=crop' },
+    { id: 'pn15', name: 'Balti Paneer / Tawa Paneer', price: 220.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=400&auto=format&fit=crop' },
+    { id: 'pn16', name: 'Paneer Toofani', price: 220.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?q=80&w=400&auto=format&fit=crop' },
+    { id: 'pn17', name: 'Paneer Hara Masala', price: 220.00, img: 'https://images.unsplash.com/photo-1589302168068-964664d93dc0?q=80&w=400&auto=format&fit=crop' },
+    { id: 'pn18', name: 'Paneer Shahi Korma (Light Sweet)', price: 220.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?q=80&w=400&auto=format&fit=crop' },
+    { id: 'pn19', name: 'Paneer Bhurjee', price: 230.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?q=80&w=400&auto=format&fit=crop' },
+    { id: 'pn20', name: 'Paneer Pasanda', price: 225.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=400&auto=format&fit=crop' },
+    { id: 'pn21', name: 'Mutter Paneer / Palak Paneer', price: 200.00, img: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?q=80&w=400&auto=format&fit=crop' },
+    { id: 'pn22', name: 'Methi Paneer Masala', price: 220.00, img: 'https://images.unsplash.com/photo-1589302168068-964664d93dc0?q=80&w=400&auto=format&fit=crop' },
+    { id: 'pn23', name: 'Kaju Paneer Masala', price: 245.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?q=80&w=400&auto=format&fit=crop' },
+    { id: 'pn24', name: 'Khoya Kaju (Sweet)', price: 240.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?q=80&w=400&auto=format&fit=crop' },
+    { id: 'pn25', name: 'Kaju Balti Masala / Kaju Curry', price: 245.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?q=80&w=400&auto=format&fit=crop' }
   ],
   soups: [
     { id: 'sp1', name: 'Cream of Tomato', price: 100.00, img: 'https://images.unsplash.com/photo-1547592110-8032646f901a?q=80&w=400&auto=format&fit=crop' },
