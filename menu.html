@@ -337,14 +337,19 @@ function showSection(section, el) {
 
 function renderMenu(items) {
   const grid = document.getElementById('menu-grid');
-  grid.innerHTML = items.map(item => `
+  grid.innerHTML = items.map(item => {
+    // FIXED: Handle "MRP" string or other non-number prices safely 
+    const priceDisplay = (typeof item.price === 'number') ? `₹${item.price.toFixed(2)}` : item.price;
+    const itemPriceForCart = (typeof item.price === 'number') ? item.price : 0;
+
+    return `
     <div class="food-card">
       <div class="badge" id="badge-${item.id}">${cart[item.id]?.qty || 0}</div>
       <img src="${item.img}" alt="${item.name}">
       <h4>${item.name}</h4>
-      <div class="price">₹${item.price.toFixed(2)}</div>
+      <div class="price">${priceDisplay}</div>
       <div id="controls-${item.id}" style="display: ${cart[item.id] ? 'none' : 'block'}">
-        <button class="add-initial" onclick="addToCart('${item.id}', '${item.name}', ${item.price})">ADD</button>
+        <button class="add-initial" onclick="addToCart('${item.id}', '${item.name}', ${itemPriceForCart})">ADD</button>
       </div>
       <div class="qty-controls" id="qty-ctrl-${item.id}" style="display: ${cart[item.id] ? 'flex' : 'none'}">
         <button class="btn-qty" onclick="updateQty('${item.id}', -1)">-</button>
@@ -352,8 +357,8 @@ function renderMenu(items) {
         <button class="btn-qty" onclick="updateQty('${item.id}', 1)">+</button>
       </div>
     </div>
-  `).join('');
-  
+  `}).join('');
+
   // Update badges for visible items
   items.forEach(item => {
     const b = document.getElementById(`badge-${item.id}`);
