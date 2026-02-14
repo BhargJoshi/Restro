@@ -13,7 +13,7 @@
   --text-dark: #111;
   --surface: #ffffff;
   --intro-beige: #d2b48c; 
-  --sidebar-width: 22vw; /* Relative width for mobile */
+  --sidebar-width: 22vw; /* Relative width for scaling */
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -123,7 +123,7 @@ body {
   100% { opacity: 0; transform: translateX(-30px); }
 }
 
-/* --- SIDEBAR - UPDATED FOR RESPONSIVENESS --- */
+/* --- SIDEBAR --- */
 .sidebar { 
   width: var(--sidebar-width); 
   max-width: 90px;
@@ -170,7 +170,7 @@ body {
 .nav-item label { font-size: 9px; font-weight: 700; text-transform: uppercase; text-align: center; pointer-events: none; }
 .nav-item.active { color: #000; }
 
-/* --- MAIN CONTENT - UPDATED --- */
+/* --- MAIN CONTENT --- */
 .main-content { 
   flex: 1; 
   display: flex; 
@@ -216,6 +216,32 @@ body {
 #search-input.active { width: 100px; opacity: 1; padding: 8px 10px; margin-right: 5px; }
 .search-icon-btn { background: none; border: none; font-size: 20px; cursor: pointer; }
 
+/* --- SUBSECTION BAR --- */
+.filter-bar { 
+  display: none; 
+  justify-content: center; 
+  gap: 8px; 
+  padding: 12px; 
+  background: #fff; 
+  overflow-x: auto; 
+  white-space: nowrap;
+  scrollbar-width: none;
+}
+.filter-bar::-webkit-scrollbar { display: none; }
+.filter-btn { 
+  padding: 8px 14px; 
+  border-radius: 20px; 
+  border: 1px solid #eee; 
+  background: #f9f9f9; 
+  font-size: 11px; 
+  font-weight: 700; 
+  display: flex; 
+  align-items: center; 
+  gap: 4px; 
+  cursor: pointer; 
+}
+.filter-btn.active { background: #111; color: #fff; border-color: #111; }
+
 .menu-container { flex: 1; overflow-y: auto; padding: 12px; padding-bottom: 100px; }
 .items-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
 .food-card { background: #fff; border-radius: 16px; padding: 8px; display: flex; flex-direction: column; position: relative; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
@@ -227,7 +253,7 @@ body {
 .qty-controls { display: none; align-items: center; justify-content: space-between; background: #f0f0f0; border-radius: 8px; padding: 2px; }
 .btn-qty { width: 28px; height: 28px; border: none; background: #fff; border-radius: 6px; font-weight: 700; }
 
-/* --- CART BAR - UPDATED FOR MARGIN FIX --- */
+/* --- CART BAR --- */
 .cart-bar { 
   position: fixed; 
   bottom: 15px; 
@@ -245,7 +271,7 @@ body {
   box-shadow: 0 8px 20px rgba(40, 167, 69, 0.3); 
   z-index: 1000; 
 }
-@media (min-width: 410px) { .cart-bar { left: 105px; } } /* Capping margin for larger phones */
+@media (min-width: 410px) { .cart-bar { left: 105px; } }
 
 .cart-popup { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: flex-end; z-index: 2000; }
 .cart-content { width: 100%; max-width: 500px; background: #fff; border-top-left-radius: 25px; border-top-right-radius: 25px; padding: 25px; max-height: 80vh; overflow-y: auto; }
@@ -290,6 +316,9 @@ body {
       <button class="search-icon-btn" onclick="toggleSearch()">🔍</button>
     </div>
   </div>
+  
+  <div class="filter-bar" id="sub-filter-bar"></div>
+  
   <div class="menu-container"><div class="items-grid" id="menu-grid"></div></div>
 </div>
 
@@ -338,19 +367,27 @@ const menuData = {
   sizzlers: [
     { id: 'sz1', name: 'Veg Sizzler', price: 320.00, img: 'https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=400' }
   ],
-  drinks: [
-    { id: 'dk1', name: 'Fresh Lime Soda', price: 45.00, img: 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?q=80&w=400' }
-  ]
+  drinks: {
+    hot: [
+      { id: 'dh1', name: 'Masala Tea', price: 30.00, img: 'https://images.unsplash.com/photo-1544787210-2213d2429f9b?q=80&w=400' }
+    ],
+    cold: [
+      { id: 'dc1', name: 'Fresh Lime Soda', price: 45.00, img: 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?q=80&w=400' }
+    ]
+  }
 };
 
 let cart = {};
 let currentSection = 'starters';
+let currentSubSection = 'all';
 
 function triggerHaptic() { if(window.navigator.vibrate) window.navigator.vibrate(10); }
 
 function showSection(section, element) {
   triggerHaptic();
   currentSection = section;
+  currentSubSection = 'all';
+  
   document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
   element.classList.add('active');
   
@@ -358,7 +395,42 @@ function showSection(section, element) {
   indicator.style.top = element.offsetTop + "px";
   
   document.getElementById('section-name').innerText = element.querySelector('label').innerText;
-  renderMenu(menuData[section] || []);
+  
+  renderSubSections(section);
+  renderMenu(getSectionData(section));
+}
+
+function renderSubSections(section) {
+  const filterBar = document.getElementById('sub-filter-bar');
+  const data = menuData[section];
+  
+  if (data && typeof data === 'object' && !Array.isArray(data)) {
+    filterBar.style.display = 'flex';
+    let html = `<button class="filter-btn active" onclick="filterData('all', this)">All</button>`;
+    Object.keys(data).forEach(sub => {
+      html += `<button class="filter-btn" onclick="filterData('${sub}', this)">${sub.charAt(0).toUpperCase() + sub.slice(1)}</button>`;
+    });
+    filterBar.innerHTML = html;
+  } else {
+    filterBar.style.display = 'none';
+  }
+}
+
+function filterData(sub, element) {
+  triggerHaptic();
+  currentSubSection = sub;
+  document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+  element.classList.add('active');
+  renderMenu(getSectionData(currentSection, sub));
+}
+
+function getSectionData(section, sub = 'all') {
+  const data = menuData[section];
+  if (Array.isArray(data)) return data;
+  if (sub === 'all') {
+    return Object.values(data).flat();
+  }
+  return data[sub] || [];
 }
 
 function renderMenu(items) {
@@ -385,8 +457,16 @@ function addToCart(id) {
   triggerHaptic();
   let item;
   for(let sec in menuData) {
-    const found = menuData[sec].find(i => i.id === id);
-    if(found) { item = found; break; }
+    const data = menuData[sec];
+    if (Array.isArray(data)) {
+      item = data.find(i => i.id === id);
+    } else {
+      for (let sub in data) {
+        item = data[sub].find(i => i.id === id);
+        if (item) break;
+      }
+    }
+    if(item) break;
   }
   cart[id] = { ...item, qty: 1 };
   updateUI(id);
@@ -456,14 +536,23 @@ function toggleSearch() {
 function handleSearch() {
   const term = document.getElementById('search-input').value.toLowerCase();
   let results = [];
-  for(let sec in menuData) results = results.concat(menuData[sec].filter(i => i.name.toLowerCase().includes(term)));
+  for(let sec in menuData) {
+    const data = menuData[sec];
+    if (Array.isArray(data)) {
+      results = results.concat(data.filter(i => i.name.toLowerCase().includes(term)));
+    } else {
+      Object.values(data).forEach(subArr => {
+        results = results.concat(subArr.filter(i => i.name.toLowerCase().includes(term)));
+      });
+    }
+  }
   renderMenu(results);
 }
 
 function processPayment() { alert("Order Placed!"); }
 
 window.onload = () => {
-  renderMenu(menuData['starters']);
+  renderMenu(getSectionData('starters'));
   setTimeout(() => { document.getElementById('intro-wrapper').classList.add('exit'); }, 6000);
 };
 </script>
