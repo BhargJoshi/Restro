@@ -122,7 +122,7 @@ body {
   100% { opacity: 0; transform: translateX(-30px); }
 }
 
-/* --- UPDATED SIDEBAR & COLLAPSIBLE STYLES --- */
+/* --- SIDEBAR & COLLAPSIBLE STYLES --- */
 .sidebar { width: 95px; background: #1a1a1a; display: flex; flex-direction: column; align-items: center; padding-top: 15px; position: relative; overflow-y: auto; border-right: 1px solid rgba(255,255,255,0.1); scrollbar-width: none; }
 .sidebar::-webkit-scrollbar { display: none; }
 
@@ -292,12 +292,15 @@ body {
 </div>
 
 <script>
-[cite_start]// Menu Data Organized as requested [cite: 106]
+// Menu Data Structure updated based on your category request
 const menuData = {
   ice_cream: [{ id: 'ds1', name: 'Vanilla Scoop', price: 60.00, img: 'https://images.unsplash.com/photo-1570197788417-0e82375c9391?q=80&w=400' }],
   milk_shakes: [{ id: 'ds2', name: 'Chocolate Shake', price: 120.00, img: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?q=80&w=400' }],
   beverages: [{ id: 'bv1', name: 'Fresh Lime Soda', price: 45.00, img: 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?q=80&w=400' }],
-  starters_reg: [{ id: 'st1', name: 'Hara Bhara Kabab', price: 180.00, img: 'https://images.unsplash.com/photo-1610057099443-fde8c4d50f91?q=80&w=400' }],
+  starters_reg: [
+    { id: 'st1', name: 'Hara Bhara Kabab', price: 180.00, img: 'https://images.unsplash.com/photo-1610057099443-fde8c4d50f91?q=80&w=400' },
+    { id: 'st2', name: 'Corn Tikki', price: 180.00, img: 'https://images.unsplash.com/photo-1601050648497-3f9ebaec5878?q=80&w=400' }
+  ],
   chinese_starters: [{ id: 'ch1', name: 'Veg Manchurian Dry', price: 190.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=400' }],
   soups: [{ id: 'sp1', name: 'Tomato Soup', price: 100.00, img: 'https://images.unsplash.com/photo-1547592110-8032646f901a?q=80&w=400' }],
   salad_papad: [{ id: 'sl1', name: 'Green Salad', price: 70.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=400' }],
@@ -460,3 +463,4 @@ window.onload = () => {
 </script>
 </body>
 </html>
+``` [cite: 113, 160, 218, 285]
