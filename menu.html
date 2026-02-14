@@ -13,6 +13,7 @@
   --text-dark: #111;
   --surface: #ffffff;
   --intro-beige: #d2b48c; 
+  --sidebar-width: 22vw; /* Relative width for mobile */
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -122,32 +123,97 @@ body {
   100% { opacity: 0; transform: translateX(-30px); }
 }
 
-/* --- SIDEBAR & COLLAPSIBLE STYLES --- */
-.sidebar { width: 95px; background: #1a1a1a; display: flex; flex-direction: column; align-items: center; padding-top: 15px; position: relative; overflow-y: auto; border-right: 1px solid rgba(255,255,255,0.1); scrollbar-width: none; }
+/* --- SIDEBAR - UPDATED FOR RESPONSIVENESS --- */
+.sidebar { 
+  width: var(--sidebar-width); 
+  max-width: 90px;
+  background: #1a1a1a; 
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  padding-top: 15px; 
+  position: relative; 
+  overflow-y: auto; 
+  border-right: 1px solid rgba(255,255,255,0.1);
+  scrollbar-width: none;
+}
 .sidebar::-webkit-scrollbar { display: none; }
 
-.section-group { width: 100%; display: flex; flex-direction: column; align-items: center; }
+.nav-indicator { 
+  position: absolute; 
+  left: 10%; 
+  width: 80%; 
+  height: 70px; 
+  background: var(--primary); 
+  border-radius: 12px; 
+  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); 
+  z-index: 1; 
+}
 
-.nav-item { width: 75px; height: 70px; margin-bottom: 8px; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; position: relative; transition: all 0.3s ease; color: rgba(255,255,255,0.6); flex-shrink: 0; }
+.nav-item { 
+  width: 80%; 
+  height: 70px; 
+  margin-bottom: 12px; 
+  border-radius: 12px; 
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  justify-content: center; 
+  cursor: pointer; 
+  position: relative; 
+  z-index: 2; 
+  transition: color 0.3s ease; 
+  color: rgba(255,255,255,0.6); 
+  flex-shrink: 0; 
+}
 .nav-item span { font-size: 22px; margin-bottom: 4px; }
 .nav-item label { font-size: 9px; font-weight: 700; text-transform: uppercase; text-align: center; pointer-events: none; }
-.nav-item.active { background: var(--primary); color: #000; }
+.nav-item.active { color: #000; }
 
-.sub-items { width: 100%; display: none; flex-direction: column; align-items: center; background: rgba(255,255,255,0.03); padding: 5px 0; margin-bottom: 12px; }
-.sub-item { width: 80px; padding: 10px 5px; margin: 4px 0; border-radius: 8px; font-size: 9px; font-weight: 600; color: rgba(255,255,255,0.5); text-align: center; text-transform: uppercase; cursor: pointer; transition: all 0.2s; border: 1px solid rgba(255,255,255,0.1); }
-.sub-item.active { background: #fff; color: #000; border-color: #fff; }
+/* --- MAIN CONTENT - UPDATED --- */
+.main-content { 
+  flex: 1; 
+  display: flex; 
+  flex-direction: column; 
+  background: var(--bg-light); 
+  border-top-left-radius: 25px; 
+  overflow: hidden; 
+}
 
-.arrow { font-size: 8px; position: absolute; bottom: 5px; transition: transform 0.3s; color: inherit; }
-.section-group.open .arrow { transform: rotate(180deg); }
-.section-group.open .sub-items { display: flex; }
+.hero-header { 
+  padding: 15px 20px; 
+  background: #fff; 
+  border-bottom: 1px solid #eee; 
+  text-align: center; 
+  position: relative; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+}
 
-/* --- MAIN CONTENT STYLES --- */
-.main-content { flex: 1; display: flex; flex-direction: column; background: var(--bg-light); border-top-left-radius: 25px; overflow: hidden; }
-.hero-header { padding: 15px 20px; background: #fff; border-bottom: 1px solid #eee; text-align: center; position: relative; display: flex; align-items: center; justify-content: center; }
-#section-name { font-family: 'Playfair Display', serif; font-size: 16px; background: var(--primary); color: #000; display: inline-block; padding: 5px 15px; border-radius: 8px; box-shadow: 0 4px 10px rgba(255, 204, 0, 0.2); }
+#section-name { 
+  font-family: 'Playfair Display', serif; 
+  font-size: 18px; 
+  background: var(--primary); 
+  color: #000; 
+  display: inline-block; 
+  padding: 5px 15px; 
+  border-radius: 8px; 
+  box-shadow: 0 4px 10px rgba(255, 204, 0, 0.2); 
+}
+
 .search-container { position: absolute; right: 15px; display: flex; align-items: center; }
-#search-input { width: 0; opacity: 0; padding: 8px 0; border: none; border-bottom: 2px solid var(--primary); outline: none; transition: all 0.3s ease; font-size: 14px; }
-#search-input.active { width: 110px; opacity: 1; padding: 8px 10px; margin-right: 5px; }
+#search-input { 
+  width: 0; 
+  opacity: 0; 
+  padding: 8px 0; 
+  border: none; 
+  border-bottom: 2px solid var(--primary); 
+  outline: none; 
+  transition: all 0.3s ease; 
+  font-size: 14px; 
+}
+#search-input.active { width: 100px; opacity: 1; padding: 8px 10px; margin-right: 5px; }
 .search-icon-btn { background: none; border: none; font-size: 20px; cursor: pointer; }
 
 .menu-container { flex: 1; overflow-y: auto; padding: 12px; padding-bottom: 100px; }
@@ -161,7 +227,26 @@ body {
 .qty-controls { display: none; align-items: center; justify-content: space-between; background: #f0f0f0; border-radius: 8px; padding: 2px; }
 .btn-qty { width: 28px; height: 28px; border: none; background: #fff; border-radius: 6px; font-weight: 700; }
 
-.cart-bar { position: fixed; bottom: 15px; left: 110px; right: 15px; background: #28a745; height: 50px; border-radius: 12px; display: none; align-items: center; justify-content: space-between; padding: 0 15px; color: #fff; font-weight: 700; box-shadow: 0 8px 20px rgba(40, 167, 69, 0.3); z-index: 1000; }
+/* --- CART BAR - UPDATED FOR MARGIN FIX --- */
+.cart-bar { 
+  position: fixed; 
+  bottom: 15px; 
+  left: calc(var(--sidebar-width) + 15px); 
+  right: 15px; 
+  background: #28a745; 
+  height: 50px; 
+  border-radius: 12px; 
+  display: none; 
+  align-items: center; 
+  justify-content: space-between; 
+  padding: 0 15px; 
+  color: #fff; 
+  font-weight: 700; 
+  box-shadow: 0 8px 20px rgba(40, 167, 69, 0.3); 
+  z-index: 1000; 
+}
+@media (min-width: 410px) { .cart-bar { left: 105px; } } /* Capping margin for larger phones */
+
 .cart-popup { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: flex-end; z-index: 2000; }
 .cart-content { width: 100%; max-width: 500px; background: #fff; border-top-left-radius: 25px; border-top-right-radius: 25px; padding: 25px; max-height: 80vh; overflow-y: auto; }
 .cart-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #eee; }
@@ -186,82 +271,20 @@ body {
 </div>
 
 <div class="sidebar" id="sidebar">
-  <div class="section-group">
-    <div class="nav-item" onclick="toggleGroup(this, 'Desserts')">
-      <span>🍨</span><label>Desserts</label><div class="arrow">▼</div>
-    </div>
-    <div class="sub-items">
-      <div class="sub-item" onclick="showSection('ice_cream', this)">Ice Cream</div>
-      <div class="sub-item" onclick="showSection('milk_shakes', this)">Milk Shakes</div>
-    </div>
-  </div>
-
-  <div class="section-group">
-    <div class="nav-item" onclick="showSection('beverages', this)">
-      <span>🥤</span><label>Beverages</label>
-    </div>
-  </div>
-
-  <div class="section-group">
-    <div class="nav-item" onclick="toggleGroup(this, 'Starters')">
-      <span>🍢</span><label>Starters</label><div class="arrow">▼</div>
-    </div>
-    <div class="sub-items">
-      <div class="sub-item" onclick="showSection('starters_reg', this)">Starters</div>
-      <div class="sub-item" onclick="showSection('chinese_starters', this)">Chinese</div>
-      <div class="sub-item" onclick="showSection('soups', this)">Soups</div>
-    </div>
-  </div>
-
-  <div class="section-group">
-    <div class="nav-item" onclick="showSection('salad_papad', this)">
-      <span>🥗</span><label>Salad</label>
-    </div>
-  </div>
-
-  <div class="section-group">
-    <div class="nav-item" onclick="toggleGroup(this, 'Main')">
-      <span>🥘</span><label>Main</label><div class="arrow">▼</div>
-    </div>
-    <div class="sub-items">
-      <div class="sub-item" onclick="showSection('tandoor', this)">Tandoor se</div>
-      <div class="sub-item" onclick="showSection('basmati', this)">Basmati</div>
-      <div class="sub-item" onclick="showSection('sizzlers', this)">Sizzlers</div>
-    </div>
-  </div>
-
-  <div class="section-group">
-    <div class="nav-item" onclick="toggleGroup(this, 'Indian')">
-      <span>🇮🇳</span><label>Indian</label><div class="arrow">▼</div>
-    </div>
-    <div class="sub-items">
-      <div class="sub-item" onclick="showSection('indian_reg', this)">Indian</div>
-      <div class="sub-item" onclick="showSection('paneer', this)">Paneer</div>
-      <div class="sub-item" onclick="showSection('kofta', this)">Kofta</div>
-    </div>
-  </div>
-
-  <div class="section-group">
-    <div class="nav-item" onclick="toggleGroup(this, 'Snacks')">
-      <span>🍿</span><label>Snacks</label><div class="arrow">▼</div>
-    </div>
-    <div class="sub-items">
-      <div class="sub-item" onclick="showSection('snacks_reg', this)">Snacks</div>
-      <div class="sub-item" onclick="showSection('noodles', this)">Noodles</div>
-      <div class="sub-item" onclick="showSection('rice', this)">Rice</div>
-    </div>
-  </div>
-
-  <div class="section-group">
-    <div class="nav-item" onclick="showSection('continental', this)">
-      <span>🍝</span><label>Continental</label>
-    </div>
-  </div>
+  <div class="nav-indicator" id="nav-indicator"></div>
+  <div class="nav-item active" onclick="showSection('starters', this)"><span>🍢</span><label>Starters</label></div>
+  <div class="nav-item" onclick="showSection('indian', this)"><span>🥘</span><label>Indian</label></div>
+  <div class="nav-item" onclick="showSection('paneer', this)"><span>🧀</span><label>Paneer</label></div>
+  <div class="nav-item" onclick="showSection('soups', this)"><span>🥣</span><label>Soups</label></div>
+  <div class="nav-item" onclick="showSection('salads', this)"><span>🥗</span><label>Salads</label></div>
+  <div class="nav-item" onclick="showSection('chinese', this)"><span>🥢</span><label>Chinese</label></div>
+  <div class="nav-item" onclick="showSection('sizzlers', this)"><span>🍳</span><label>Sizzlers</label></div>
+  <div class="nav-item" onclick="showSection('drinks', this)"><span>🥤</span><label>Drinks</label></div>
 </div>
 
 <div class="main-content">
   <div class="hero-header">
-    <h1 id="section-name">Welcome</h1>
+    <h1 id="section-name">Starters</h1>
     <div class="search-container">
       <input type="text" id="search-input" placeholder="Search..." oninput="handleSearch()">
       <button class="search-icon-btn" onclick="toggleSearch()">🔍</button>
@@ -292,67 +315,49 @@ body {
 </div>
 
 <script>
-// Menu Data Structure updated based on your category request
 const menuData = {
-  ice_cream: [{ id: 'ds1', name: 'Vanilla Scoop', price: 60.00, img: 'https://images.unsplash.com/photo-1570197788417-0e82375c9391?q=80&w=400' }],
-  milk_shakes: [{ id: 'ds2', name: 'Chocolate Shake', price: 120.00, img: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?q=80&w=400' }],
-  beverages: [{ id: 'bv1', name: 'Fresh Lime Soda', price: 45.00, img: 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?q=80&w=400' }],
-  starters_reg: [
-    { id: 'st1', name: 'Hara Bhara Kabab', price: 180.00, img: 'https://images.unsplash.com/photo-1610057099443-fde8c4d50f91?q=80&w=400' },
-    { id: 'st2', name: 'Corn Tikki', price: 180.00, img: 'https://images.unsplash.com/photo-1601050648497-3f9ebaec5878?q=80&w=400' }
+  starters: [
+    { id: 'st1', name: 'Corn Tikki', price: 180.00, img: 'https://images.unsplash.com/photo-1601050648497-3f9ebaec5878?q=80&w=400' },
+    { id: 'st2', name: 'Paneer Tikka Dry', price: 235.00, img: 'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?q=80&w=400' }
   ],
-  chinese_starters: [{ id: 'ch1', name: 'Veg Manchurian Dry', price: 190.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=400' }],
-  soups: [{ id: 'sp1', name: 'Tomato Soup', price: 100.00, img: 'https://images.unsplash.com/photo-1547592110-8032646f901a?q=80&w=400' }],
-  salad_papad: [{ id: 'sl1', name: 'Green Salad', price: 70.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=400' }],
-  tandoor: [{ id: 'td1', name: 'Butter Roti', price: 25.00, img: 'https://images.unsplash.com/photo-1533777324565-a04c11d33d70?q=80&w=400' }],
-  basmati: [{ id: 'br1', name: 'Veg Biryani', price: 220.00, img: 'https://images.unsplash.com/photo-1563379091339-03b21bc4a4f8?q=80&w=400' }],
-  sizzlers: [{ id: 'sz1', name: 'Paneer Sizzler', price: 350.00, img: 'https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=400' }],
-  indian_reg: [{ id: 'in1', name: 'Mix Veg', price: 190.00, img: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?q=80&w=400' }],
-  paneer: [{ id: 'pn1', name: 'Paneer Butter Masala', price: 210.00, img: 'https://images.unsplash.com/photo-1603360946369-dc9bb6258143?q=80&w=400' }],
-  kofta: [{ id: 'kf1', name: 'Malai Kofta', price: 230.00, img: 'https://images.unsplash.com/photo-1626777552726-4a6b547b4e5d?q=80&w=400' }],
-  snacks_reg: [{ id: 'sk1', name: 'Cheese Pakora', price: 140.00, img: 'https://images.unsplash.com/photo-1601050648497-3f9ebaec5878?q=80&w=400' }],
-  noodles: [{ id: 'nd1', name: 'Hakka Noodles', price: 180.00, img: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?q=80&w=400' }],
-  rice: [{ id: 'rc1', name: 'Fried Rice', price: 170.00, img: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?q=80&w=400' }],
-  continental: [{ id: 'ct1', name: 'Veg Pasta', price: 240.00, img: 'https://images.unsplash.com/photo-1473093226795-af9932fe5856?q=80&w=400' }]
+  indian: [
+    { id: 'in1', name: 'Mix Vegetable', price: 190.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=400' }
+  ],
+  paneer: [
+    { id: 'pn1', name: 'Paneer Butter Masala', price: 210.00, img: 'https://images.unsplash.com/photo-1601050648497-3f9ebaec5878?q=80&w=400' }
+  ],
+  soups: [
+    { id: 'sp1', name: 'Tomato Soup', price: 100.00, img: 'https://images.unsplash.com/photo-1547592110-8032646f901a?q=80&w=400' }
+  ],
+  salads: [
+    { id: 'sl1', name: 'Green Salad', price: 70.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=400' }
+  ],
+  chinese: [
+    { id: 'ch1', name: 'Veg Manchurian', price: 190.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=400' }
+  ],
+  sizzlers: [
+    { id: 'sz1', name: 'Veg Sizzler', price: 320.00, img: 'https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=400' }
+  ],
+  drinks: [
+    { id: 'dk1', name: 'Fresh Lime Soda', price: 45.00, img: 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?q=80&w=400' }
+  ]
 };
 
 let cart = {};
-let currentSection = '';
+let currentSection = 'starters';
 
 function triggerHaptic() { if(window.navigator.vibrate) window.navigator.vibrate(10); }
 
-function toggleGroup(element, sectionName) {
-  triggerHaptic();
-  const parent = element.parentElement;
-  const wasOpen = parent.classList.contains('open');
-  
-  // Close all other groups
-  document.querySelectorAll('.section-group').forEach(g => g.classList.remove('open'));
-  document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-  
-  if(!wasOpen) {
-    parent.classList.add('open');
-    element.classList.add('active');
-    document.getElementById('section-name').innerText = sectionName;
-  }
-}
-
 function showSection(section, element) {
-  event.stopPropagation();
   triggerHaptic();
   currentSection = section;
-  
-  // Highlight active item
-  document.querySelectorAll('.nav-item, .sub-item').forEach(i => i.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
   element.classList.add('active');
   
-  // If it's a sub-item, keep parent highlighted
-  const parentGroup = element.closest('.section-group');
-  if(parentGroup) parentGroup.querySelector('.nav-item').classList.add('active');
-
-  const title = element.innerText || element.querySelector('label').innerText;
-  document.getElementById('section-name').innerText = title;
+  const indicator = document.getElementById('nav-indicator');
+  indicator.style.top = element.offsetTop + "px";
   
+  document.getElementById('section-name').innerText = element.querySelector('label').innerText;
   renderMenu(menuData[section] || []);
 }
 
@@ -458,9 +463,9 @@ function handleSearch() {
 function processPayment() { alert("Order Placed!"); }
 
 window.onload = () => {
+  renderMenu(menuData['starters']);
   setTimeout(() => { document.getElementById('intro-wrapper').classList.add('exit'); }, 6000);
 };
 </script>
 </body>
 </html>
-``` [cite: 113, 160, 218, 285]
