@@ -129,7 +129,7 @@ body {
   height: 70px; 
   background: var(--primary); 
   border-radius: 12px;
-  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); 
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); 
   z-index: 1; 
 }
 
@@ -207,7 +207,7 @@ body {
 .food-card h4 { font-size: 12px; line-height: 1.2; margin-bottom: 4px; height: 32px; overflow: hidden; }
 .price { font-weight: 700; color: #555; font-size: 14px; margin-bottom: 8px; }
 
-/* Notification Badge */
+/* Badge for Change 1 */
 .cart-badge {
   position: absolute;
   top: -5px;
@@ -227,7 +227,7 @@ body {
 .qty-controls { display: none; align-items: center; justify-content: space-between; background: #f0f0f0; border-radius: 8px; padding: 2px; }
 .btn-qty { width: 28px; height: 28px; border: none; background: #fff; border-radius: 6px; font-weight: 700; cursor: pointer; }
 
-/* Cart Layout Updates */
+/* Cart Layout Updates for Change 2 */
 .cart-bar { position: fixed; bottom: 15px; left: 105px; right: 15px; background: #28a745; height: 50px; border-radius: 12px; display: none; align-items: center; justify-content: space-between; padding: 0 15px; color: #fff; font-weight: 700; z-index: 1000; }
 .cart-popup { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: flex-end; z-index: 2000; }
 .cart-content { width: 100%; max-width: 500px; background: #fff; border-top-left-radius: 25px; border-top-right-radius: 25px; padding: 25px; max-height: 80vh; overflow-y: auto; }
@@ -350,8 +350,7 @@ body {
       <h3>Your Basket</h3>
       <button onclick="toggleCart()" style="background:none; border:none; color:#999; font-size:20px">✕</button>
     </div>
-    <div id="cart-items-list">
-      </div>
+    <div id="cart-items-list"></div>
     <div style="background: #f9f9f9; padding: 15px; border-radius: 12px; margin-top: 15px;">
       <div style="display: flex; justify-content: space-between; font-weight: 800; font-size: 20px;">
         <span>Total</span><span id="cart-total-price">₹0.00</span>
@@ -363,17 +362,9 @@ body {
 
 <script>
 const menuData = {
-  starters: [
-    { id: 'st1', name: 'Corn Tikki', price: 180.00, img: 'https://images.unsplash.com/photo-1601050648497-3f9ebaec5878?w=400' },
-    { id: 'st2', name: 'Paneer Tikka Dry', price: 235.00, img: 'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=400' }
-  ],
-  chinese_starters: [
-    { id: 'cs1', name: 'Veg Manchurian Dry', price: 190.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400' },
-    { id: 'cs2', name: 'Crispy Corn', price: 210.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400' }
-  ],
-  soups: [
-    { id: 'sp1', name: 'Cream of Tomato', price: 100.00, img: 'https://images.unsplash.com/photo-1547592110-8032646f901a?w=400' }
-  ],
+  starters: [{ id: 'st1', name: 'Corn Tikki', price: 180.00, img: 'https://images.unsplash.com/photo-1601050648497-3f9ebaec5878?w=400' }, { id: 'st2', name: 'Paneer Tikka Dry', price: 235.00, img: 'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=400' }],
+  chinese_starters: [{ id: 'cs1', name: 'Veg Manchurian Dry', price: 190.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400' }, { id: 'cs2', name: 'Crispy Corn', price: 210.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400' }],
+  soups: [{ id: 'sp1', name: 'Cream of Tomato', price: 100.00, img: 'https://images.unsplash.com/photo-1547592110-8032646f901a?w=400' }],
   snacks: [{ id: 'sn1', name: 'French Fries', price: 120.00, img: 'https://images.unsplash.com/photo-1630384066202-18d038253a5d?w=400' }],
   noodles: [{ id: 'no1', name: 'Hakka Noodles', price: 180.00, img: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400' }],
   rice: [{ id: 'ri1', name: 'Fried Rice', price: 180.00, img: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400' }],
@@ -399,42 +390,46 @@ window.onload = () => {
   }, 5500);
 };
 
+// IMPROVED: Logic for Change 3 - Dynamic Indicator
 function moveIndicator(el) {
   const indicator = document.getElementById('nav-indicator');
-  const rect = el.getBoundingClientRect();
   const sidebar = document.getElementById('sidebar');
-  const sidebarRect = sidebar.getBoundingClientRect();
-  const scrollTop = sidebar.scrollTop;
   
-  indicator.style.top = (rect.top - sidebarRect.top + scrollTop) + 'px';
-  indicator.style.height = rect.height + 'px';
+  // Use offsetTop for perfect relative positioning within the scrollable sidebar
+  const targetTop = el.offsetTop;
+  const targetHeight = el.offsetHeight;
+  const targetWidth = el.offsetWidth;
+  const targetLeft = el.offsetLeft;
+
+  indicator.style.top = `${targetTop}px`;
+  indicator.style.height = `${targetHeight}px`;
+  indicator.style.width = `${targetWidth}px`;
+  indicator.style.left = `${targetLeft}px`;
 }
 
 function toggleGroup(groupId, el) {
   triggerHaptic();
   const allGroups = document.querySelectorAll('.nav-group');
   const clickedGroup = el.closest('.nav-group');
-  
   const isExpanded = clickedGroup.classList.contains('expanded');
+  
   allGroups.forEach(g => g.classList.remove('expanded'));
   
   if (!isExpanded) {
     clickedGroup.classList.add('expanded');
-    // Change 3: Automatically select first sub-item
-    const firstSubItem = clickedGroup.querySelector('.sub-item');
-    if(firstSubItem) {
-      // Find the onclick attribute to get section name
-      const onclickAttr = firstSubItem.getAttribute('onclick');
-      const sectionMatch = onclickAttr.match(/'([^']+)'/);
-      if(sectionMatch) showSection(sectionMatch[1], firstSubItem);
-      return; // showSection handles indicator
-    }
+    // Wait for the expansion transition to finish before moving indicator
+    requestAnimationFrame(() => {
+        const firstSub = clickedGroup.querySelector('.sub-item');
+        if (firstSub) {
+            const sectionName = firstSub.getAttribute('onclick').match(/'([^']+)'/)[1];
+            showSection(sectionName, firstSub);
+        } else {
+            moveIndicator(el);
+        }
+    });
+  } else {
+    moveIndicator(el);
   }
-  
-  moveIndicator(el);
-  document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-  document.querySelectorAll('.sub-item').forEach(i => i.classList.remove('active'));
-  el.classList.add('active');
 }
 
 function showSection(section, el) {
@@ -442,9 +437,11 @@ function showSection(section, el) {
   const grid = document.getElementById('menu-grid');
   const nameDisplay = document.getElementById('section-name');
   
-  moveIndicator(el);
   document.querySelectorAll('.nav-item, .sub-item').forEach(i => i.classList.remove('active'));
   el.classList.add('active');
+  
+  // Move indicator to the specific element (sub-item or nav-item)
+  moveIndicator(el);
   
   nameDisplay.innerText = section.replace('_', ' ').toUpperCase();
   
@@ -486,12 +483,10 @@ function syncCartUI() {
   let totalItems = 0;
   let subtotal = 0;
   
-  // Reset all Grid UI
   document.querySelectorAll('.add-initial').forEach(b => b.style.display = 'block');
   document.querySelectorAll('.qty-controls').forEach(c => c.style.display = 'none');
   document.querySelectorAll('.cart-badge').forEach(b => b.style.display = 'none');
 
-  // Build Cart List HTML (Change 2)
   const cartList = document.getElementById('cart-items-list');
   cartList.innerHTML = '';
 
@@ -500,7 +495,6 @@ function syncCartUI() {
     totalItems += item.qty;
     subtotal += item.price * item.qty;
     
-    // Update Grid UI
     const addBtn = document.getElementById(`add-btn-${id}`);
     const qtyCtrl = document.getElementById(`qty-ctrl-${id}`);
     const qtyVal = document.getElementById(`qty-val-${id}`);
@@ -510,13 +504,10 @@ function syncCartUI() {
       addBtn.style.display = 'none';
       qtyCtrl.style.display = 'flex';
       qtyVal.innerText = item.qty;
-      
-      // Change 1: Update notification badge
       badge.style.display = 'block';
       badge.innerText = item.qty;
     }
 
-    // Change 2: Populate Itemized Cart Popup
     cartList.innerHTML += `
       <div class="cart-item-row">
         <div class="cart-item-info">
