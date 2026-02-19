@@ -200,8 +200,6 @@ body {
 .price { font-weight: 700; color: #555; font-size: 14px; margin-bottom: 8px; }
 
 .add-initial { width: 100%; padding: 8px; background: #111; color: #fff; border: none; border-radius: 8px; font-weight: 600; font-size: 12px; }
-.qty-controls { display: none; align-items: center; justify-content: space-between; background: #f0f0f0; border-radius: 8px; padding: 2px; }
-.btn-qty { width: 28px; height: 28px; border: none; background: #fff; border-radius: 6px; font-weight: 700; }
 
 .cart-bar { position: fixed; bottom: 15px; left: 105px; right: 15px; background: #28a745; height: 50px; border-radius: 12px; display: none; align-items: center; justify-content: space-between; padding: 0 15px; color: #fff; font-weight: 700; z-index: 1000; }
 </style>
@@ -227,9 +225,7 @@ body {
   <div class="nav-indicator" id="nav-indicator"></div>
   
   <div class="nav-group" id="group-starters">
-    <div class="nav-item" onclick="toggleGroup('starters', this)">
-      <span>🍢</span><label>Starters</label>
-    </div>
+    <div class="nav-item" onclick="toggleGroup('starters', this)"><span>🍢</span><label>Starters</label></div>
     <div class="submenu">
       <div class="sub-item" onclick="showSection('starters', this)"><span>🍽️</span><label>Starters</label></div>
       <div class="sub-item" onclick="showSection('chinese_starters', this)"><span>🥡</span><label>Chinese</label></div>
@@ -238,9 +234,7 @@ body {
   </div>
 
   <div class="nav-group" id="group-snacks">
-    <div class="nav-item" onclick="toggleGroup('snacks', this)">
-      <span>🍟</span><label>Snacks</label>
-    </div>
+    <div class="nav-item" onclick="toggleGroup('snacks', this)"><span>🍟</span><label>Snacks</label></div>
     <div class="submenu">
       <div class="sub-item" onclick="showSection('snacks', this)"><span>🥨</span><label>Snacks</label></div>
       <div class="sub-item" onclick="showSection('noodles', this)"><span>🍜</span><label>Noodles</label></div>
@@ -251,9 +245,7 @@ body {
   <div class="nav-group"><div class="nav-item" onclick="showSection('salads', this)"><span>🥗</span><label>Salad/Papad</label></div></div>
 
   <div class="nav-group" id="group-main">
-    <div class="nav-item" onclick="toggleGroup('main', this)">
-      <span>🍖</span><label>Main</label>
-    </div>
+    <div class="nav-item" onclick="toggleGroup('main', this)"><span>🍖</span><label>Main</label></div>
     <div class="submenu">
       <div class="sub-item" onclick="showSection('tandoor', this)"><span>🔥</span><label>Tandoor</label></div>
       <div class="sub-item" onclick="showSection('basmati', this)"><span>🌾</span><label>Basmati</label></div>
@@ -262,9 +254,7 @@ body {
   </div>
 
   <div class="nav-group" id="group-indian">
-    <div class="nav-item" onclick="toggleGroup('indian', this)">
-      <span>🥘</span><label>Indian</label>
-    </div>
+    <div class="nav-item" onclick="toggleGroup('indian', this)"><span>🥘</span><label>Indian</label></div>
     <div class="submenu">
       <div class="sub-item" onclick="showSection('indian_curry', this)"><span>🍛</span><label>Curry</label></div>
       <div class="sub-item" onclick="showSection('paneer', this)"><span>🧀</span><label>Paneer</label></div>
@@ -290,10 +280,7 @@ body {
   <div class="menu-container"><div class="items-grid" id="menu-grid"></div></div>
 </div>
 
-<div class="cart-bar" id="cart-bar">
-  <span id="cart-item-count">0 Items</span>
-  <span>View Cart →</span>
-</div>
+<div class="cart-bar" id="cart-bar"><span id="cart-item-count">0 Items</span><span>View Cart →</span></div>
 
 <script>
 const menuData = {
@@ -319,13 +306,16 @@ const menuData = {
 window.onload = () => {
   setTimeout(() => {
     document.getElementById('intro-wrapper').classList.add('exit');
-    const firstSub = document.querySelector('#group-starters .sub-item');
-    toggleGroup('starters', document.querySelector('#group-starters .nav-item'));
+    // Start with Starters selected
+    const startersBtn = document.querySelector('#group-starters .nav-item');
+    toggleGroup('starters', startersBtn);
   }, 5500);
 };
 
 function moveIndicator(el) {
   const indicator = document.getElementById('nav-indicator');
+  if (!el) return;
+  // Use offsetTop to ensure we are relative to the sidebar parent
   indicator.style.top = el.offsetTop + 'px';
   indicator.style.height = el.offsetHeight + 'px';
 }
@@ -334,19 +324,26 @@ function toggleGroup(groupId, el) {
   const group = el.closest('.nav-group');
   const allGroups = document.querySelectorAll('.nav-group');
   
+  // Close all other groups
   allGroups.forEach(g => g.classList.remove('expanded'));
+  
+  // Expand the clicked group
   group.classList.add('expanded');
 
-  // Logic: Automatically click and select the FIRST sub-item of this newly opened group
-  const firstSubItem = group.querySelector('.sub-item');
-  if (firstSubItem) {
-    // Delay slightly to allow the expansion logic to start so offsetTop is correct
+  // Find the first sub-item
+  const firstSub = group.querySelector('.sub-item');
+
+  if (firstSub) {
+    // CRITICAL FIX: We need to wait for the CSS "max-height" transition to finish
+    // or use a small timeout so the DOM registers the new position of the sub-items.
     setTimeout(() => {
-        showSection(groupId === 'starters' ? 'starters' : firstSubItem.getAttribute('onclick').match(/'([^']+)'/)[1], firstSubItem);
-    }, 10);
+      // Extract the section name from the sub-item's onclick attribute
+      const sectionName = firstSub.getAttribute('onclick').match(/'([^']+)'/)[1];
+      showSection(sectionName, firstSub);
+    }, 50); 
   } else {
-    // For groups without sub-items (like Continental)
-    moveIndicator(el);
+    // If no sub-items (like Continental), just select the main item
+    showSection(groupId, el);
   }
 }
 
@@ -355,23 +352,24 @@ function showSection(section, el) {
   const grid = document.getElementById('menu-grid');
   const nameDisplay = document.getElementById('section-name');
   
+  // Update visual states
   document.querySelectorAll('.nav-item, .sub-item').forEach(i => i.classList.remove('active'));
   el.classList.add('active');
   
-  // Ensure indicator moves to the actual sub-item clicked
+  // Snap indicator to the specific element (now works for sub-items too)
   moveIndicator(el);
   
   nameDisplay.innerText = section.replace('_', ' ').toUpperCase();
   
   const items = menuData[section] || [];
-  grid.innerHTML = items.map(item => `
+  grid.innerHTML = items.length ? items.map(item => `
     <div class="food-card">
       <img src="${item.img}">
       <h4>${item.name}</h4>
       <div class="price">₹${item.price.toFixed(2)}</div>
       <button class="add-initial">ADD</button>
     </div>
-  `).join('');
+  `).join('') : '<p style="padding:20px; color:#666;">No items found in this section.</p>';
 }
 </script>
 </body>
