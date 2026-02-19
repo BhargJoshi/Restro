@@ -107,7 +107,7 @@ body {
   100% { opacity: 0; transform: translateX(-30px); }
 }
 
-/* --- SIDEBAR & NAV --- */
+/* --- SIDEBAR & NESTED NAV --- */
 .sidebar { 
   width: 90px; 
   background: #1a1a1a; 
@@ -129,9 +129,8 @@ body {
   height: 70px; 
   background: var(--primary); 
   border-radius: 12px; 
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); 
   z-index: 1; 
-  pointer-events: none;
 }
 
 .nav-group { width: 100%; display: flex; flex-direction: column; align-items: center; margin-bottom: 5px; }
@@ -152,20 +151,23 @@ body {
   color: rgba(255,255,255,0.6); 
   flex-shrink: 0; 
 }
+
 .nav-item.active { color: #000; }
 .nav-item span { font-size: 22px; margin-bottom: 4px; }
 .nav-item label { font-size: 9px; font-weight: 700; text-transform: uppercase; text-align: center; pointer-events: none; }
 
+/* Submenu Styling */
 .submenu {
   width: 100%;
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.4s ease-out;
-  display: flex; 
+  display: flex;
   flex-direction: column;
   align-items: center;
   background: rgba(255,255,255,0.03);
 }
+
 .nav-group.expanded .submenu { max-height: 500px; padding-bottom: 10px; }
 
 .sub-item {
@@ -182,6 +184,7 @@ body {
   color: rgba(255,255,255,0.4);
   transition: all 0.3s ease;
 }
+
 .sub-item.active { color: #000; }
 .sub-item span { font-size: 16px; }
 .sub-item label { font-size: 7px; font-weight: 600; text-transform: uppercase; margin-top: 2px; }
@@ -190,6 +193,11 @@ body {
 .main-content { flex: 1; display: flex; flex-direction: column; background: var(--bg-light); border-top-left-radius: 25px; overflow: hidden; }
 .hero-header { padding: 15px 20px; background: #fff; border-bottom: 1px solid #eee; text-align: center; position: relative; display: flex; align-items: center; justify-content: center; }
 #section-name { font-family: 'Playfair Display', serif; font-size: 16px; background: var(--primary); color: #000; display: inline-block; padding: 5px 12px; border-radius: 8px; box-shadow: 0 4px 10px rgba(255, 204, 0, 0.2); }
+
+.search-container { position: absolute; right: 15px; display: flex; align-items: center; }
+#search-input { width: 0; opacity: 0; padding: 8px 0; border: none; border-bottom: 2px solid var(--primary); outline: none; transition: all 0.3s ease; font-size: 14px; }
+#search-input.active { width: 120px; opacity: 1; padding: 8px 10px; margin-right: 5px; }
+.search-icon-btn { background: none; border: none; font-size: 20px; cursor: pointer; }
 
 .menu-container { flex: 1; overflow-y: auto; padding: 12px; padding-bottom: 100px; }
 .items-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
@@ -200,8 +208,13 @@ body {
 .price { font-weight: 700; color: #555; font-size: 14px; margin-bottom: 8px; }
 
 .add-initial { width: 100%; padding: 8px; background: #111; color: #fff; border: none; border-radius: 8px; font-weight: 600; font-size: 12px; }
+.qty-controls { display: none; align-items: center; justify-content: space-between; background: #f0f0f0; border-radius: 8px; padding: 2px; }
+.btn-qty { width: 28px; height: 28px; border: none; background: #fff; border-radius: 6px; font-weight: 700; }
 
 .cart-bar { position: fixed; bottom: 15px; left: 105px; right: 15px; background: #28a745; height: 50px; border-radius: 12px; display: none; align-items: center; justify-content: space-between; padding: 0 15px; color: #fff; font-weight: 700; z-index: 1000; }
+.cart-popup { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: flex-end; z-index: 2000; }
+.cart-content { width: 100%; max-width: 500px; background: #fff; border-top-left-radius: 25px; border-top-right-radius: 25px; padding: 25px; max-height: 80vh; overflow-y: auto; }
+.pay-btn { width: 100%; padding: 16px; background: #28a745; color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 700; margin-top: 20px; }
 </style>
 </head>
 <body>
@@ -225,7 +238,9 @@ body {
   <div class="nav-indicator" id="nav-indicator"></div>
   
   <div class="nav-group" id="group-starters">
-    <div class="nav-item" onclick="toggleGroup('starters', this)"><span>🍢</span><label>Starters</label></div>
+    <div class="nav-item active" onclick="toggleGroup('starters', this)">
+      <span>🍢</span><label>Starters</label>
+    </div>
     <div class="submenu">
       <div class="sub-item" onclick="showSection('starters', this)"><span>🍽️</span><label>Starters</label></div>
       <div class="sub-item" onclick="showSection('chinese_starters', this)"><span>🥡</span><label>Chinese</label></div>
@@ -234,7 +249,9 @@ body {
   </div>
 
   <div class="nav-group" id="group-snacks">
-    <div class="nav-item" onclick="toggleGroup('snacks', this)"><span>🍟</span><label>Snacks</label></div>
+    <div class="nav-item" onclick="toggleGroup('snacks', this)">
+      <span>🍟</span><label>Snacks</label>
+    </div>
     <div class="submenu">
       <div class="sub-item" onclick="showSection('snacks', this)"><span>🥨</span><label>Snacks</label></div>
       <div class="sub-item" onclick="showSection('noodles', this)"><span>🍜</span><label>Noodles</label></div>
@@ -242,10 +259,14 @@ body {
     </div>
   </div>
 
-  <div class="nav-group"><div class="nav-item" onclick="showSection('salads', this)"><span>🥗</span><label>Salad/Papad</label></div></div>
+  <div class="nav-group">
+     <div class="nav-item" onclick="showSection('salads', this)"><span>🥗</span><label>Salad/Papad</label></div>
+  </div>
 
   <div class="nav-group" id="group-main">
-    <div class="nav-item" onclick="toggleGroup('main', this)"><span>🍖</span><label>Main</label></div>
+    <div class="nav-item" onclick="toggleGroup('main', this)">
+      <span>🍖</span><label>Main</label>
+    </div>
     <div class="submenu">
       <div class="sub-item" onclick="showSection('tandoor', this)"><span>🔥</span><label>Tandoor</label></div>
       <div class="sub-item" onclick="showSection('basmati', this)"><span>🌾</span><label>Basmati</label></div>
@@ -254,7 +275,9 @@ body {
   </div>
 
   <div class="nav-group" id="group-indian">
-    <div class="nav-item" onclick="toggleGroup('indian', this)"><span>🥘</span><label>Indian</label></div>
+    <div class="nav-item" onclick="toggleGroup('indian', this)">
+      <span>🥘</span><label>Indian</label>
+    </div>
     <div class="submenu">
       <div class="sub-item" onclick="showSection('indian_curry', this)"><span>🍛</span><label>Curry</label></div>
       <div class="sub-item" onclick="showSection('paneer', this)"><span>🧀</span><label>Paneer</label></div>
@@ -262,136 +285,221 @@ body {
     </div>
   </div>
 
-  <div class="nav-group"><div class="nav-item" onclick="showSection('continental', this)"><span>🍝</span><label>Continental</label></div></div>
+  <div class="nav-group">
+    <div class="nav-item" onclick="showSection('continental', this)"><span>🍝</span><label>Continental</label></div>
+  </div>
 
   <div class="nav-group" id="group-desserts">
-    <div class="nav-item" onclick="toggleGroup('desserts', this)"><span>🍰</span><label>Desserts</label></div>
+    <div class="nav-item" onclick="toggleGroup('desserts', this)">
+      <span>🍰</span><label>Desserts</label>
+    </div>
     <div class="submenu">
       <div class="sub-item" onclick="showSection('ice_cream', this)"><span>🍦</span><label>Ice Cream</label></div>
       <div class="sub-item" onclick="showSection('shakes', this)"><span>🥤</span><label>Shakes</label></div>
     </div>
   </div>
 
-  <div class="nav-group"><div class="nav-item" onclick="showSection('drinks', this)"><span>🍷</span><label>Beverages</label></div></div>
+  <div class="nav-group">
+    <div class="nav-item" onclick="showSection('drinks', this)"><span>🍷</span><label>Beverages</label></div>
+  </div>
 </div>
 
 <div class="main-content">
-  <div class="hero-header"><h1 id="section-name">Menu</h1></div>
+  <div class="hero-header">
+    <h1 id="section-name">Starters</h1>
+    <div class="search-container">
+      <input type="text" id="search-input" placeholder="Search item..." oninput="handleSearch()">
+      <button class="search-icon-btn" onclick="toggleSearch()">🔍</button>
+    </div>
+  </div>
   <div class="menu-container"><div class="items-grid" id="menu-grid"></div></div>
 </div>
 
-<div class="cart-bar" id="cart-bar"><span id="cart-item-count">0 Items</span><span>View Cart →</span></div>
+<div class="cart-bar" id="cart-bar" onclick="toggleCart()">
+  <span id="cart-item-count">0 Items</span>
+  <span>View Cart →</span>
+</div>
+
+<div class="cart-popup" id="cart-popup">
+  <div class="cart-content">
+    <div style="display:flex; justify-content:space-between; margin-bottom:15px">
+      <h3>Basket</h3>
+      <button onclick="toggleCart()" style="background:none; border:none; color:#999; font-size:20px">✕</button>
+    </div>
+    <div id="cart-items-list"></div>
+    <div style="background: #f9f9f9; padding: 15px; border-radius: 12px; margin-top: 15px;">
+      <div style="display: flex; justify-content: space-between; font-weight: 800; font-size: 20px;">
+        <span>Total</span><span id="cart-total-price">₹0.00</span>
+      </div>
+    </div>
+    <button class="pay-btn" onclick="processPayment()">Place Order</button>
+  </div>
+</div>
 
 <script>
 const menuData = {
-  starters: [{ id: 'st1', name: 'Corn Tikki', price: 180, img: 'https://images.unsplash.com/photo-1601050648497-3f9ebaec5878?w=400' }],
-  chinese_starters: [{ id: 'cs1', name: 'Veg Manchurian', price: 190, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400' }],
-  soups: [{ id: 'sp1', name: 'Cream of Tomato', price: 100, img: 'https://images.unsplash.com/photo-1547592110-8032646f901a?w=400' }],
-  snacks: [{ id: 'sn1', name: 'French Fries', price: 120, img: 'https://images.unsplash.com/photo-1630384066202-18d038253a5d?w=400' }],
-  noodles: [{ id: 'no1', name: 'Hakka Noodles', price: 180, img: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400' }],
-  rice: [{ id: 'ri1', name: 'Fried Rice', price: 180, img: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400' }],
-  salads: [{ id: 'sl1', name: 'Green Salad', price: 80, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400' }],
-  tandoor: [{ id: 'ta1', name: 'Tandoori Roti', price: 30, img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' }],
-  basmati: [{ id: 'ba1', name: 'Jeera Rice', price: 150, img: 'https://images.unsplash.com/photo-1512058560366-cd242959b437?w=400' }],
-  sizzlers: [{ id: 'sz1', name: 'Veg Sizzler', price: 350, img: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=400' }],
-  indian_curry: [{ id: 'in1', name: 'Veg Makhanwala', price: 210, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' }],
-  paneer: [{ id: 'pn1', name: 'Paneer Butter Masala', price: 230, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' }],
-  kofta: [{ id: 'ko1', name: 'Malai Kofta', price: 240, img: 'https://images.unsplash.com/photo-1606491956689-2ea8c5119c85?w=400' }],
-  continental: [{ id: 'co1', name: 'Veg Pasta', price: 250, img: 'https://images.unsplash.com/photo-1473093226795-af9932fe5856?w=400' }],
-  ice_cream: [{ id: 'ic1', name: 'Vanilla Scoop', price: 80, img: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=400' }],
-  shakes: [{ id: 'sh1', name: 'Chocolate Shake', price: 120, img: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=400' }],
-  drinks: [{ id: 'dr1', name: 'Cold Drink', price: 40, img: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400' }]
+  starters: [
+    { id: 'st1', name: 'Corn Tikki', price: 180.00, img: 'https://images.unsplash.com/photo-1601050648497-3f9ebaec5878?w=400' },
+    { id: 'st2', name: 'Paneer Tikka Dry', price: 235.00, img: 'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=400' }
+  ],
+  chinese_starters: [
+    { id: 'cs1', name: 'Veg Manchurian Dry', price: 190.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400' },
+    { id: 'cs2', name: 'Crispy Corn', price: 210.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400' }
+  ],
+  soups: [
+    { id: 'sp1', name: 'Cream of Tomato', price: 100.00, img: 'https://images.unsplash.com/photo-1547592110-8032646f901a?w=400' }
+  ],
+  snacks: [{ id: 'sn1', name: 'French Fries', price: 120.00, img: 'https://images.unsplash.com/photo-1630384066202-18d038253a5d?w=400' }],
+  noodles: [{ id: 'no1', name: 'Hakka Noodles', price: 180.00, img: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400' }],
+  rice: [{ id: 'ri1', name: 'Fried Rice', price: 180.00, img: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400' }],
+  salads: [{ id: 'sl1', name: 'Green Salad', price: 80.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400' }],
+  tandoor: [{ id: 'ta1', name: 'Tandoori Roti', price: 30.00, img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' }],
+  basmati: [{ id: 'ba1', name: 'Jeera Rice', price: 150.00, img: 'https://images.unsplash.com/photo-1512058560366-cd242959b437?w=400' }],
+  sizzlers: [{ id: 'sz1', name: 'Veg Sizzler', price: 350.00, img: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=400' }],
+  indian_curry: [{ id: 'in1', name: 'Veg Makhanwala', price: 210.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' }],
+  paneer: [{ id: 'pn1', name: 'Paneer Butter Masala', price: 230.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' }],
+  kofta: [{ id: 'ko1', name: 'Malai Kofta', price: 240.00, img: 'https://images.unsplash.com/photo-1606491956689-2ea8c5119c85?w=400' }],
+  continental: [{ id: 'co1', name: 'Veg Pasta', price: 250.00, img: 'https://images.unsplash.com/photo-1473093226795-af9932fe5856?w=400' }],
+  ice_cream: [{ id: 'ic1', name: 'Vanilla Scoop', price: 80.00, img: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=400' }],
+  shakes: [{ id: 'sh1', name: 'Chocolate Shake', price: 120.00, img: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=400' }],
+  drinks: [{ id: 'dr1', name: 'Cold Drink', price: 40.00, img: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400' }]
 };
 
-let currentActiveElement = null;
+let cart = {};
 
 window.onload = () => {
   setTimeout(() => {
     document.getElementById('intro-wrapper').classList.add('exit');
-    const startersBtn = document.querySelector('#group-starters .nav-item');
-    toggleGroup('starters', startersBtn);
+    showSection('starters', document.querySelector('.sub-item'));
   }, 5500);
 };
 
-// RELIABLE POSITIONING: Uses current screen coordinates relative to the sidebar container
 function moveIndicator(el) {
-  if (!el) return;
-  currentActiveElement = el;
   const indicator = document.getElementById('nav-indicator');
-  const sidebar = document.getElementById('sidebar');
+  const rect = el.getBoundingClientRect();
+  const sidebarRect = document.getElementById('sidebar').getBoundingClientRect();
+  const scrollTop = document.getElementById('sidebar').scrollTop;
   
-  const sidebarRect = sidebar.getBoundingClientRect();
-  const elRect = el.getBoundingClientRect();
-  
-  // The 'top' position must account for the sidebar's current scroll position
-  // and its own offset on the page.
-  const relativeTop = (elRect.top - sidebarRect.top) + sidebar.scrollTop;
-  
-  indicator.style.top = relativeTop + 'px';
-  indicator.style.height = elRect.height + 'px';
+  indicator.style.top = (rect.top - sidebarRect.top + scrollTop) + 'px';
+  indicator.style.height = rect.height + 'px';
 }
 
 function toggleGroup(groupId, el) {
-  const group = el.closest('.nav-group');
+  triggerHaptic();
   const allGroups = document.querySelectorAll('.nav-group');
-  const submenu = group.querySelector('.submenu');
+  const clickedGroup = el.closest('.nav-group');
+  
+  const isExpanded = clickedGroup.classList.contains('expanded');
   
   allGroups.forEach(g => g.classList.remove('expanded'));
-  group.classList.add('expanded');
-
-  // We immediately track the movement
+  if (!isExpanded) clickedGroup.classList.add('expanded');
+  
   moveIndicator(el);
-
-  // CRITICAL FIX: Repeatedly check position as the menu slides open
-  // This ensures the selector "rides" the subsection down perfectly.
-  let animationInterval = setInterval(() => {
-    if(currentActiveElement) moveIndicator(currentActiveElement);
-  }, 16); // ~60fps tracking
-
-  if(submenu) {
-    submenu.addEventListener('transitionend', () => {
-        clearInterval(animationInterval);
-        if(currentActiveElement) moveIndicator(currentActiveElement);
-    }, { once: true });
-  }
-
-  const firstSub = group.querySelector('.sub-item');
-  if (firstSub) {
-      const sectionName = firstSub.getAttribute('onclick').match(/'([^']+)'/)[1];
-      showSection(sectionName, firstSub);
-  } else {
-    showSection(groupId, el);
-  }
+  
+  // Highlight the primary category text
+  document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+  document.querySelectorAll('.sub-item').forEach(i => i.classList.remove('active'));
+  el.classList.add('active');
 }
 
 function showSection(section, el) {
-  if (window.navigator.vibrate) window.navigator.vibrate(10);
+  triggerHaptic();
   const grid = document.getElementById('menu-grid');
   const nameDisplay = document.getElementById('section-name');
   
+  // Update indicator
+  moveIndicator(el);
+  
+  // Handle Active States
   document.querySelectorAll('.nav-item, .sub-item').forEach(i => i.classList.remove('active'));
   el.classList.add('active');
-  
-  // Re-calculate the position for the specific clicked item (nav or sub-item)
-  moveIndicator(el);
   
   nameDisplay.innerText = section.replace('_', ' ').toUpperCase();
   
   const items = menuData[section] || [];
-  grid.innerHTML = items.length ? items.map(item => `
+  grid.innerHTML = items.map(item => `
     <div class="food-card">
-      <img src="${item.img}">
+      <img src="${item.img}" alt="${item.name}">
       <h4>${item.name}</h4>
       <div class="price">₹${item.price.toFixed(2)}</div>
-      <button class="add-initial">ADD</button>
+      <button class="add-initial" id="add-btn-${item.id}" onclick="addToCart('${section}', '${item.id}')">ADD</button>
+      <div class="qty-controls" id="qty-ctrl-${item.id}">
+        <button class="btn-qty" onclick="updateQty('${item.id}', -1)">-</button>
+        <span id="qty-val-${item.id}">0</span>
+        <button class="btn-qty" onclick="updateQty('${item.id}', 1)">+</button>
+      </div>
     </div>
-  `).join('') : '<p style="padding:20px; color:#666;">No items found.</p>';
+  `).join('');
+  
+  syncCartUI();
 }
 
-// Ensure the indicator follows if the user scrolls the sidebar manually
-document.getElementById('sidebar').addEventListener('scroll', () => {
-    if(currentActiveElement) moveIndicator(currentActiveElement);
-});
+function addToCart(sec, id) {
+  triggerHaptic();
+  const item = menuData[sec].find(i => i.id === id);
+  if(!cart[id]) cart[id] = { ...item, qty: 1 };
+  syncCartUI();
+}
+
+function updateQty(id, delta) {
+  triggerHaptic();
+  if(cart[id]) {
+    cart[id].qty += delta;
+    if(cart[id].qty <= 0) delete cart[id];
+  }
+  syncCartUI();
+}
+
+function syncCartUI() {
+  let totalItems = 0;
+  let subtotal = 0;
+  
+  document.querySelectorAll('.add-initial').forEach(b => b.style.display = 'block');
+  document.querySelectorAll('.qty-controls').forEach(c => c.style.display = 'none');
+
+  Object.keys(cart).forEach(id => {
+    const item = cart[id];
+    totalItems += item.qty;
+    subtotal += item.price * item.qty;
+    
+    const addBtn = document.getElementById(`add-btn-${id}`);
+    const qtyCtrl = document.getElementById(`qty-ctrl-${id}`);
+    const qtyVal = document.getElementById(`qty-val-${id}`);
+    
+    if(addBtn) {
+      addBtn.style.display = 'none';
+      qtyCtrl.style.display = 'flex';
+      qtyVal.innerText = item.qty;
+    }
+  });
+
+  const bar = document.getElementById('cart-bar');
+  if(totalItems > 0) {
+    bar.style.display = 'flex';
+    document.getElementById('cart-item-count').innerText = `${totalItems} Items`;
+    document.getElementById('cart-total-price').innerText = `₹${subtotal.toFixed(2)}`;
+  } else {
+    bar.style.display = 'none';
+  }
+}
+
+function toggleCart() {
+  const p = document.getElementById('cart-popup');
+  p.style.display = (p.style.display === 'flex') ? 'none' : 'flex';
+}
+
+function toggleSearch() {
+  document.getElementById('search-input').classList.toggle('active');
+}
+
+function triggerHaptic() { if(window.navigator.vibrate) window.navigator.vibrate(10); }
+
+function processPayment() {
+  alert("Order Placed Successfully!");
+  cart = {};
+  syncCartUI();
+  toggleCart();
+}
 </script>
 </body>
 </html>
