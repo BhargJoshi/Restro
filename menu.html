@@ -62,12 +62,12 @@ body {
 
 .plate-side {
   width: 180px;
-  height: 8px; 
+  height: 8px;
   background: #ffffff;
   border-radius: 0 0 15px 15px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
   position: relative;
-  z-index: 10; 
+  z-index: 10;
   animation: slidePlate 0.7s ease-out forwards;
 }
 
@@ -109,7 +109,7 @@ body {
 
 /* --- SIDEBAR & NESTED NAV --- */
 .sidebar { 
-  width: 90px; 
+  width: 90px;
   background: #1a1a1a; 
   display: flex; 
   flex-direction: column; 
@@ -128,7 +128,7 @@ body {
   width: 70px; 
   height: 70px; 
   background: var(--primary); 
-  border-radius: 12px; 
+  border-radius: 12px;
   transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); 
   z-index: 1; 
 }
@@ -142,7 +142,7 @@ body {
   border-radius: 12px; 
   display: flex; 
   flex-direction: column; 
-  align-items: center; 
+  align-items: center;
   justify-content: center; 
   cursor: pointer; 
   position: relative; 
@@ -207,13 +207,37 @@ body {
 .food-card h4 { font-size: 12px; line-height: 1.2; margin-bottom: 4px; height: 32px; overflow: hidden; }
 .price { font-weight: 700; color: #555; font-size: 14px; margin-bottom: 8px; }
 
+/* Notification Badge */
+.cart-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: #ff4444;
+  color: white;
+  font-size: 10px;
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: 10px;
+  border: 2px solid white;
+  display: none;
+  z-index: 15;
+}
+
 .add-initial { width: 100%; padding: 8px; background: #111; color: #fff; border: none; border-radius: 8px; font-weight: 600; font-size: 12px; }
 .qty-controls { display: none; align-items: center; justify-content: space-between; background: #f0f0f0; border-radius: 8px; padding: 2px; }
-.btn-qty { width: 28px; height: 28px; border: none; background: #fff; border-radius: 6px; font-weight: 700; }
+.btn-qty { width: 28px; height: 28px; border: none; background: #fff; border-radius: 6px; font-weight: 700; cursor: pointer; }
 
+/* Cart Layout Updates */
 .cart-bar { position: fixed; bottom: 15px; left: 105px; right: 15px; background: #28a745; height: 50px; border-radius: 12px; display: none; align-items: center; justify-content: space-between; padding: 0 15px; color: #fff; font-weight: 700; z-index: 1000; }
 .cart-popup { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: flex-end; z-index: 2000; }
 .cart-content { width: 100%; max-width: 500px; background: #fff; border-top-left-radius: 25px; border-top-right-radius: 25px; padding: 25px; max-height: 80vh; overflow-y: auto; }
+
+.cart-item-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #eee; }
+.cart-item-info { flex: 1; }
+.cart-item-info h5 { font-size: 14px; margin-bottom: 2px; }
+.cart-item-info p { font-size: 12px; color: #777; }
+.cart-item-actions { display: flex; align-items: center; gap: 10px; }
+
 .pay-btn { width: 100%; padding: 16px; background: #28a745; color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 700; margin-top: 20px; }
 </style>
 </head>
@@ -323,10 +347,11 @@ body {
 <div class="cart-popup" id="cart-popup">
   <div class="cart-content">
     <div style="display:flex; justify-content:space-between; margin-bottom:15px">
-      <h3>Basket</h3>
+      <h3>Your Basket</h3>
       <button onclick="toggleCart()" style="background:none; border:none; color:#999; font-size:20px">✕</button>
     </div>
-    <div id="cart-items-list"></div>
+    <div id="cart-items-list">
+      </div>
     <div style="background: #f9f9f9; padding: 15px; border-radius: 12px; margin-top: 15px;">
       <div style="display: flex; justify-content: space-between; font-weight: 800; font-size: 20px;">
         <span>Total</span><span id="cart-total-price">₹0.00</span>
@@ -377,8 +402,9 @@ window.onload = () => {
 function moveIndicator(el) {
   const indicator = document.getElementById('nav-indicator');
   const rect = el.getBoundingClientRect();
-  const sidebarRect = document.getElementById('sidebar').getBoundingClientRect();
-  const scrollTop = document.getElementById('sidebar').scrollTop;
+  const sidebar = document.getElementById('sidebar');
+  const sidebarRect = sidebar.getBoundingClientRect();
+  const scrollTop = sidebar.scrollTop;
   
   indicator.style.top = (rect.top - sidebarRect.top + scrollTop) + 'px';
   indicator.style.height = rect.height + 'px';
@@ -390,13 +416,22 @@ function toggleGroup(groupId, el) {
   const clickedGroup = el.closest('.nav-group');
   
   const isExpanded = clickedGroup.classList.contains('expanded');
-  
   allGroups.forEach(g => g.classList.remove('expanded'));
-  if (!isExpanded) clickedGroup.classList.add('expanded');
+  
+  if (!isExpanded) {
+    clickedGroup.classList.add('expanded');
+    // Change 3: Automatically select first sub-item
+    const firstSubItem = clickedGroup.querySelector('.sub-item');
+    if(firstSubItem) {
+      // Find the onclick attribute to get section name
+      const onclickAttr = firstSubItem.getAttribute('onclick');
+      const sectionMatch = onclickAttr.match(/'([^']+)'/);
+      if(sectionMatch) showSection(sectionMatch[1], firstSubItem);
+      return; // showSection handles indicator
+    }
+  }
   
   moveIndicator(el);
-  
-  // Highlight the primary category text
   document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
   document.querySelectorAll('.sub-item').forEach(i => i.classList.remove('active'));
   el.classList.add('active');
@@ -407,10 +442,7 @@ function showSection(section, el) {
   const grid = document.getElementById('menu-grid');
   const nameDisplay = document.getElementById('section-name');
   
-  // Update indicator
   moveIndicator(el);
-  
-  // Handle Active States
   document.querySelectorAll('.nav-item, .sub-item').forEach(i => i.classList.remove('active'));
   el.classList.add('active');
   
@@ -419,6 +451,7 @@ function showSection(section, el) {
   const items = menuData[section] || [];
   grid.innerHTML = items.map(item => `
     <div class="food-card">
+      <div class="cart-badge" id="badge-${item.id}">0</div>
       <img src="${item.img}" alt="${item.name}">
       <h4>${item.name}</h4>
       <div class="price">₹${item.price.toFixed(2)}</div>
@@ -430,7 +463,6 @@ function showSection(section, el) {
       </div>
     </div>
   `).join('');
-  
   syncCartUI();
 }
 
@@ -454,23 +486,50 @@ function syncCartUI() {
   let totalItems = 0;
   let subtotal = 0;
   
+  // Reset all Grid UI
   document.querySelectorAll('.add-initial').forEach(b => b.style.display = 'block');
   document.querySelectorAll('.qty-controls').forEach(c => c.style.display = 'none');
+  document.querySelectorAll('.cart-badge').forEach(b => b.style.display = 'none');
+
+  // Build Cart List HTML (Change 2)
+  const cartList = document.getElementById('cart-items-list');
+  cartList.innerHTML = '';
 
   Object.keys(cart).forEach(id => {
     const item = cart[id];
     totalItems += item.qty;
     subtotal += item.price * item.qty;
     
+    // Update Grid UI
     const addBtn = document.getElementById(`add-btn-${id}`);
     const qtyCtrl = document.getElementById(`qty-ctrl-${id}`);
     const qtyVal = document.getElementById(`qty-val-${id}`);
+    const badge = document.getElementById(`badge-${id}`);
     
     if(addBtn) {
       addBtn.style.display = 'none';
       qtyCtrl.style.display = 'flex';
       qtyVal.innerText = item.qty;
+      
+      // Change 1: Update notification badge
+      badge.style.display = 'block';
+      badge.innerText = item.qty;
     }
+
+    // Change 2: Populate Itemized Cart Popup
+    cartList.innerHTML += `
+      <div class="cart-item-row">
+        <div class="cart-item-info">
+          <h5>${item.name}</h5>
+          <p>₹${(item.price * item.qty).toFixed(2)}</p>
+        </div>
+        <div class="cart-item-actions">
+           <button class="btn-qty" onclick="updateQty('${item.id}', -1)">-</button>
+           <span style="font-weight:700">${item.qty}</span>
+           <button class="btn-qty" onclick="updateQty('${item.id}', 1)">+</button>
+        </div>
+      </div>
+    `;
   });
 
   const bar = document.getElementById('cart-bar');
@@ -480,6 +539,7 @@ function syncCartUI() {
     document.getElementById('cart-total-price').innerText = `₹${subtotal.toFixed(2)}`;
   } else {
     bar.style.display = 'none';
+    cartList.innerHTML = '<p style="text-align:center; color:#999; padding:20px;">Your basket is empty</p>';
   }
 }
 
