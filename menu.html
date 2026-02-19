@@ -129,7 +129,7 @@ body {
   height: 70px; 
   background: var(--primary); 
   border-radius: 12px; 
-  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); 
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
   z-index: 1; 
   pointer-events: none;
 }
@@ -313,7 +313,7 @@ window.onload = () => {
   }, 5500);
 };
 
-// IMPROVED SELECTOR LOGIC: Calculate relative to sidebar container
+// RELIABLE POSITIONING: Uses current screen coordinates relative to the sidebar container
 function moveIndicator(el) {
   if (!el) return;
   currentActiveElement = el;
@@ -323,8 +323,9 @@ function moveIndicator(el) {
   const sidebarRect = sidebar.getBoundingClientRect();
   const elRect = el.getBoundingClientRect();
   
-  // Calculate top relative to the current visible scroll of the sidebar
-  const relativeTop = elRect.top - sidebarRect.top + sidebar.scrollTop;
+  // The 'top' position must account for the sidebar's current scroll position
+  // and its own offset on the page.
+  const relativeTop = (elRect.top - sidebarRect.top) + sidebar.scrollTop;
   
   indicator.style.top = relativeTop + 'px';
   indicator.style.height = elRect.height + 'px';
@@ -338,9 +339,18 @@ function toggleGroup(groupId, el) {
   allGroups.forEach(g => g.classList.remove('expanded'));
   group.classList.add('expanded');
 
-  // Listen for the end of the expansion animation to re-verify indicator position
+  // We immediately track the movement
+  moveIndicator(el);
+
+  // CRITICAL FIX: Repeatedly check position as the menu slides open
+  // This ensures the selector "rides" the subsection down perfectly.
+  let animationInterval = setInterval(() => {
+    if(currentActiveElement) moveIndicator(currentActiveElement);
+  }, 16); // ~60fps tracking
+
   if(submenu) {
     submenu.addEventListener('transitionend', () => {
+        clearInterval(animationInterval);
         if(currentActiveElement) moveIndicator(currentActiveElement);
     }, { once: true });
   }
@@ -362,7 +372,7 @@ function showSection(section, el) {
   document.querySelectorAll('.nav-item, .sub-item').forEach(i => i.classList.remove('active'));
   el.classList.add('active');
   
-  // Move the yellow box
+  // Re-calculate the position for the specific clicked item (nav or sub-item)
   moveIndicator(el);
   
   nameDisplay.innerText = section.replace('_', ' ').toUpperCase();
@@ -378,7 +388,7 @@ function showSection(section, el) {
   `).join('') : '<p style="padding:20px; color:#666;">No items found.</p>';
 }
 
-// Ensure the indicator follows if the user scrolls the sidebar
+// Ensure the indicator follows if the user scrolls the sidebar manually
 document.getElementById('sidebar').addEventListener('scroll', () => {
     if(currentActiveElement) moveIndicator(currentActiveElement);
 });
