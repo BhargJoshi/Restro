@@ -107,7 +107,7 @@ body {
   100% { opacity: 0; transform: translateX(-30px); }
 }
 
-/* --- SIDEBAR & NESTED NAV --- */
+/* --- SIDEBAR & NAV --- */
 .sidebar { 
   width: 90px; 
   background: #1a1a1a; 
@@ -122,6 +122,7 @@ body {
 }
 .sidebar::-webkit-scrollbar { display: none; }
 
+/* The Yellow Selector */
 .nav-indicator { 
   position: absolute; 
   left: 10px; 
@@ -131,6 +132,7 @@ body {
   border-radius: 12px; 
   transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); 
   z-index: 1; 
+  pointer-events: none;
 }
 
 .nav-group { width: 100%; display: flex; flex-direction: column; align-items: center; margin-bottom: 5px; }
@@ -151,12 +153,10 @@ body {
   color: rgba(255,255,255,0.6); 
   flex-shrink: 0; 
 }
-
 .nav-item.active { color: #000; }
 .nav-item span { font-size: 22px; margin-bottom: 4px; }
 .nav-item label { font-size: 9px; font-weight: 700; text-transform: uppercase; text-align: center; pointer-events: none; }
 
-/* Submenu Styling */
 .submenu {
   width: 100%;
   max-height: 0;
@@ -167,7 +167,6 @@ body {
   align-items: center;
   background: rgba(255,255,255,0.03);
 }
-
 .nav-group.expanded .submenu { max-height: 500px; padding-bottom: 10px; }
 
 .sub-item {
@@ -184,7 +183,6 @@ body {
   color: rgba(255,255,255,0.4);
   transition: all 0.3s ease;
 }
-
 .sub-item.active { color: #000; }
 .sub-item span { font-size: 16px; }
 .sub-item label { font-size: 7px; font-weight: 600; text-transform: uppercase; margin-top: 2px; }
@@ -238,7 +236,7 @@ body {
   <div class="nav-indicator" id="nav-indicator"></div>
   
   <div class="nav-group" id="group-starters">
-    <div class="nav-item active" onclick="toggleGroup('starters', this)">
+    <div class="nav-item active" id="initial-item" onclick="toggleGroup('starters', this)">
       <span>🍢</span><label>Starters</label>
     </div>
     <div class="submenu">
@@ -259,9 +257,7 @@ body {
     </div>
   </div>
 
-  <div class="nav-group">
-     <div class="nav-item" onclick="showSection('salads', this)"><span>🥗</span><label>Salad/Papad</label></div>
-  </div>
+  <div class="nav-group"><div class="nav-item" onclick="showSection('salads', this)"><span>🥗</span><label>Salad/Papad</label></div></div>
 
   <div class="nav-group" id="group-main">
     <div class="nav-item" onclick="toggleGroup('main', this)">
@@ -285,23 +281,17 @@ body {
     </div>
   </div>
 
-  <div class="nav-group">
-    <div class="nav-item" onclick="showSection('continental', this)"><span>🍝</span><label>Continental</label></div>
-  </div>
+  <div class="nav-group"><div class="nav-item" onclick="showSection('continental', this)"><span>🍝</span><label>Continental</label></div></div>
 
   <div class="nav-group" id="group-desserts">
-    <div class="nav-item" onclick="toggleGroup('desserts', this)">
-      <span>🍰</span><label>Desserts</label>
-    </div>
+    <div class="nav-item" onclick="toggleGroup('desserts', this)"><span>🍰</span><label>Desserts</label></div>
     <div class="submenu">
       <div class="sub-item" onclick="showSection('ice_cream', this)"><span>🍦</span><label>Ice Cream</label></div>
       <div class="sub-item" onclick="showSection('shakes', this)"><span>🥤</span><label>Shakes</label></div>
     </div>
   </div>
 
-  <div class="nav-group">
-    <div class="nav-item" onclick="showSection('drinks', this)"><span>🍷</span><label>Beverages</label></div>
-  </div>
+  <div class="nav-group"><div class="nav-item" onclick="showSection('drinks', this)"><span>🍷</span><label>Beverages</label></div></div>
 </div>
 
 <div class="main-content">
@@ -342,13 +332,8 @@ const menuData = {
     { id: 'st1', name: 'Corn Tikki', price: 180.00, img: 'https://images.unsplash.com/photo-1601050648497-3f9ebaec5878?w=400' },
     { id: 'st2', name: 'Paneer Tikka Dry', price: 235.00, img: 'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=400' }
   ],
-  chinese_starters: [
-    { id: 'cs1', name: 'Veg Manchurian Dry', price: 190.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400' },
-    { id: 'cs2', name: 'Crispy Corn', price: 210.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400' }
-  ],
-  soups: [
-    { id: 'sp1', name: 'Cream of Tomato', price: 100.00, img: 'https://images.unsplash.com/photo-1547592110-8032646f901a?w=400' }
-  ],
+  chinese_starters: [{ id: 'cs1', name: 'Veg Manchurian', price: 190.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400' }],
+  soups: [{ id: 'sp1', name: 'Cream of Tomato', price: 100.00, img: 'https://images.unsplash.com/photo-1547592110-8032646f901a?w=400' }],
   snacks: [{ id: 'sn1', name: 'French Fries', price: 120.00, img: 'https://images.unsplash.com/photo-1630384066202-18d038253a5d?w=400' }],
   noodles: [{ id: 'no1', name: 'Hakka Noodles', price: 180.00, img: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400' }],
   rice: [{ id: 'ri1', name: 'Fried Rice', price: 180.00, img: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400' }],
@@ -370,35 +355,39 @@ let cart = {};
 window.onload = () => {
   setTimeout(() => {
     document.getElementById('intro-wrapper').classList.add('exit');
-    showSection('starters', document.querySelector('.sub-item'));
+    // Initialize indicator on first item after intro
+    const initial = document.getElementById('initial-item');
+    moveIndicator(initial);
+    showSection('starters', initial);
   }, 5500);
 };
 
+// Fixed Indicator logic
 function moveIndicator(el) {
   const indicator = document.getElementById('nav-indicator');
-  const rect = el.getBoundingClientRect();
-  const sidebarRect = document.getElementById('sidebar').getBoundingClientRect();
-  const scrollTop = document.getElementById('sidebar').scrollTop;
+  const sidebar = document.getElementById('sidebar');
   
-  indicator.style.top = (rect.top - sidebarRect.top + scrollTop) + 'px';
-  indicator.style.height = rect.height + 'px';
+  // Calculate relative to sidebar's current scroll and item position
+  const targetTop = el.offsetTop; 
+  const targetHeight = el.offsetHeight;
+  
+  indicator.style.top = targetTop + 'px';
+  indicator.style.height = targetHeight + 'px';
 }
 
 function toggleGroup(groupId, el) {
   triggerHaptic();
   const allGroups = document.querySelectorAll('.nav-group');
   const clickedGroup = el.closest('.nav-group');
-  
   const isExpanded = clickedGroup.classList.contains('expanded');
   
   allGroups.forEach(g => g.classList.remove('expanded'));
   if (!isExpanded) clickedGroup.classList.add('expanded');
   
-  moveIndicator(el);
+  // Wait for expansion animation to finish before updating indicator
+  setTimeout(() => moveIndicator(el), 50);
   
-  // Highlight the primary category text
-  document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-  document.querySelectorAll('.sub-item').forEach(i => i.classList.remove('active'));
+  document.querySelectorAll('.nav-item, .sub-item').forEach(i => i.classList.remove('active'));
   el.classList.add('active');
 }
 
@@ -407,10 +396,8 @@ function showSection(section, el) {
   const grid = document.getElementById('menu-grid');
   const nameDisplay = document.getElementById('section-name');
   
-  // Update indicator
   moveIndicator(el);
   
-  // Handle Active States
   document.querySelectorAll('.nav-item, .sub-item').forEach(i => i.classList.remove('active'));
   el.classList.add('active');
   
@@ -453,23 +440,16 @@ function updateQty(id, delta) {
 function syncCartUI() {
   let totalItems = 0;
   let subtotal = 0;
-  
-  document.querySelectorAll('.add-initial').forEach(b => b.style.display = 'block');
-  document.querySelectorAll('.qty-controls').forEach(c => c.style.display = 'none');
-
   Object.keys(cart).forEach(id => {
     const item = cart[id];
     totalItems += item.qty;
     subtotal += item.price * item.qty;
-    
     const addBtn = document.getElementById(`add-btn-${id}`);
     const qtyCtrl = document.getElementById(`qty-ctrl-${id}`);
-    const qtyVal = document.getElementById(`qty-val-${id}`);
-    
     if(addBtn) {
       addBtn.style.display = 'none';
       qtyCtrl.style.display = 'flex';
-      qtyVal.innerText = item.qty;
+      document.getElementById(`qty-val-${id}`).innerText = item.qty;
     }
   });
 
