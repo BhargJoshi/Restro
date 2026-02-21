@@ -259,7 +259,7 @@ body {
 <div class="sidebar" id="sidebar">
   <div class="nav-indicator" id="nav-indicator"></div>
   
-  <div class="nav-group" id="group-starters">
+  <div class="nav-group expanded" id="group-starters">
     <div class="nav-item active" onclick="toggleGroup('starters', this)">
       <span>🍢</span><label>Starters</label>
     </div>
@@ -384,17 +384,17 @@ let cart = {};
 window.onload = () => {
   setTimeout(() => {
     document.getElementById('intro-wrapper').classList.add('exit');
-    const firstItem = document.querySelector('.sub-item');
-    showSection('starters', firstItem);
+    // Start with the first sub-item active and correctly placed
+    const firstSubItem = document.querySelector('.sub-item');
+    showSection('starters', firstSubItem);
   }, 5500);
 };
 
-// FIX: Dynamic Indicator logic using bounding box relative to parent
+// Dynamic Indicator logic using bounding box relative to parent
 function moveIndicator(el) {
   const indicator = document.getElementById('nav-indicator');
   const sidebar = document.getElementById('sidebar');
   
-  // Get positions relative to the viewport
   const rect = el.getBoundingClientRect();
   const sidebarRect = sidebar.getBoundingClientRect();
 
@@ -417,7 +417,6 @@ function toggleGroup(groupId, el) {
   
   if (!isExpanded) {
     clickedGroup.classList.add('expanded');
-    // Wait for the CSS transition (0.4s) to finish so items are in final position
     setTimeout(() => {
         const firstSub = clickedGroup.querySelector('.sub-item');
         if (firstSub) {
@@ -440,7 +439,6 @@ function showSection(section, el) {
   document.querySelectorAll('.nav-item, .sub-item').forEach(i => i.classList.remove('active'));
   el.classList.add('active');
   
-  // Ensure indicator moves to the correct final position
   moveIndicator(el);
   
   nameDisplay.innerText = section.replace('_', ' ').toUpperCase();
