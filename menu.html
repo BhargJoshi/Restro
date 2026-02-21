@@ -129,7 +129,7 @@ body {
   height: 70px; 
   background: var(--primary); 
   border-radius: 12px;
-  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); 
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
   z-index: 1; 
 }
 
@@ -207,7 +207,6 @@ body {
 .food-card h4 { font-size: 12px; line-height: 1.2; margin-bottom: 4px; height: 32px; overflow: hidden; }
 .price { font-weight: 700; color: #555; font-size: 14px; margin-bottom: 8px; }
 
-/* Badge for Change 1 */
 .cart-badge {
   position: absolute;
   top: -5px;
@@ -227,7 +226,6 @@ body {
 .qty-controls { display: none; align-items: center; justify-content: space-between; background: #f0f0f0; border-radius: 8px; padding: 2px; }
 .btn-qty { width: 28px; height: 28px; border: none; background: #fff; border-radius: 6px; font-weight: 700; cursor: pointer; }
 
-/* Cart Layout Updates for Change 2 */
 .cart-bar { position: fixed; bottom: 15px; left: 105px; right: 15px; background: #28a745; height: 50px; border-radius: 12px; display: none; align-items: center; justify-content: space-between; padding: 0 15px; color: #fff; font-weight: 700; z-index: 1000; }
 .cart-popup { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: flex-end; z-index: 2000; }
 .cart-content { width: 100%; max-width: 500px; background: #fff; border-top-left-radius: 25px; border-top-right-radius: 25px; padding: 25px; max-height: 80vh; overflow-y: auto; }
@@ -386,25 +384,27 @@ let cart = {};
 window.onload = () => {
   setTimeout(() => {
     document.getElementById('intro-wrapper').classList.add('exit');
-    showSection('starters', document.querySelector('.sub-item'));
+    const firstItem = document.querySelector('.sub-item');
+    showSection('starters', firstItem);
   }, 5500);
 };
 
-// IMPROVED: Logic for Change 3 - Dynamic Indicator
+// FIX: Dynamic Indicator logic using bounding box relative to parent
 function moveIndicator(el) {
   const indicator = document.getElementById('nav-indicator');
   const sidebar = document.getElementById('sidebar');
   
-  // Use offsetTop for perfect relative positioning within the scrollable sidebar
-  const targetTop = el.offsetTop;
-  const targetHeight = el.offsetHeight;
-  const targetWidth = el.offsetWidth;
-  const targetLeft = el.offsetLeft;
+  // Get positions relative to the viewport
+  const rect = el.getBoundingClientRect();
+  const sidebarRect = sidebar.getBoundingClientRect();
 
-  indicator.style.top = `${targetTop}px`;
-  indicator.style.height = `${targetHeight}px`;
-  indicator.style.width = `${targetWidth}px`;
-  indicator.style.left = `${targetLeft}px`;
+  // Calculate top position relative to sidebar top, considering scroll
+  const relativeTop = rect.top - sidebarRect.top + sidebar.scrollTop;
+
+  indicator.style.top = `${relativeTop}px`;
+  indicator.style.height = `${rect.height}px`;
+  indicator.style.width = `${rect.width}px`;
+  indicator.style.left = `${el.offsetLeft}px`;
 }
 
 function toggleGroup(groupId, el) {
@@ -417,8 +417,8 @@ function toggleGroup(groupId, el) {
   
   if (!isExpanded) {
     clickedGroup.classList.add('expanded');
-    // Wait for the expansion transition to finish before moving indicator
-    requestAnimationFrame(() => {
+    // Wait for the CSS transition (0.4s) to finish so items are in final position
+    setTimeout(() => {
         const firstSub = clickedGroup.querySelector('.sub-item');
         if (firstSub) {
             const sectionName = firstSub.getAttribute('onclick').match(/'([^']+)'/)[1];
@@ -426,7 +426,7 @@ function toggleGroup(groupId, el) {
         } else {
             moveIndicator(el);
         }
-    });
+    }, 400); 
   } else {
     moveIndicator(el);
   }
@@ -440,7 +440,7 @@ function showSection(section, el) {
   document.querySelectorAll('.nav-item, .sub-item').forEach(i => i.classList.remove('active'));
   el.classList.add('active');
   
-  // Move indicator to the specific element (sub-item or nav-item)
+  // Ensure indicator moves to the correct final position
   moveIndicator(el);
   
   nameDisplay.innerText = section.replace('_', ' ').toUpperCase();
@@ -489,7 +489,6 @@ function syncCartUI() {
 
   const cartList = document.getElementById('cart-items-list');
   cartList.innerHTML = '';
-
   Object.keys(cart).forEach(id => {
     const item = cart[id];
     totalItems += item.qty;
@@ -550,6 +549,37 @@ function processPayment() {
   cart = {};
   syncCartUI();
   toggleCart();
+}
+
+function handleSearch() {
+  const query = document.getElementById('search-input').value.toLowerCase();
+  const grid = document.getElementById('menu-grid');
+  let allItems = [];
+  Object.values(menuData).forEach(cat => allItems = [...allItems, ...cat]);
+  
+  const filtered = allItems.filter(i => i.name.toLowerCase().includes(query));
+  
+  if(query === "") {
+      const activeItem = document.querySelector('.nav-item.active, .sub-item.active');
+      const section = activeItem.getAttribute('onclick').match(/'([^']+)'/)[1];
+      showSection(section, activeItem);
+      return;
+  }
+
+  grid.innerHTML = filtered.map(item => `
+    <div class="food-card">
+      <div class="cart-badge" id="badge-${item.id}">${cart[item.id] ? cart[item.id].qty : 0}</div>
+      <img src="${item.img}" alt="${item.name}">
+      <h4>${item.name}</h4>
+      <div class="price">₹${item.price.toFixed(2)}</div>
+      <button class="add-initial" id="add-btn-${item.id}" onclick="addToCart('search', '${item.id}')" style="display: ${cart[item.id] ? 'none' : 'block'}">ADD</button>
+      <div class="qty-controls" id="qty-ctrl-${item.id}" style="display: ${cart[item.id] ? 'flex' : 'none'}">
+        <button class="btn-qty" onclick="updateQty('${item.id}', -1)">-</button>
+        <span id="qty-val-${item.id}">${cart[item.id] ? cart[item.id].qty : 0}</span>
+        <button class="btn-qty" onclick="updateQty('${item.id}', 1)">+</button>
+      </div>
+    </div>
+  `).join('');
 }
 </script>
 </body>
