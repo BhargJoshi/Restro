@@ -165,10 +165,14 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: rgba(255,255,255,0.03);
+  /* Change 2: distinct background for submenu area */
+  background: rgba(255, 204, 0, 0.07);
+  border-left: 2px solid rgba(255, 204, 0, 0.18);
+  border-right: 2px solid rgba(255, 204, 0, 0.18);
+  border-radius: 0 0 10px 10px;
 }
 
-.nav-group.expanded .submenu { max-height: 500px; padding-bottom: 10px; }
+.nav-group.expanded .submenu { max-height: 700px; padding-bottom: 10px; }
 
 .sub-item {
   width: 60px;
@@ -181,13 +185,15 @@ body {
   justify-content: center;
   cursor: pointer;
   z-index: 2;
-  color: rgba(255,255,255,0.4);
+  color: rgba(255,255,255,0.55);
   transition: all 0.3s ease;
+  /* Change 2: subtle inner background for sub-items */
+  background: rgba(255,255,255,0.04);
 }
 
 .sub-item.active { color: #000; }
 .sub-item span { font-size: 16px; }
-.sub-item label { font-size: 7px; font-weight: 600; text-transform: uppercase; margin-top: 2px; }
+.sub-item label { font-size: 7px; font-weight: 600; text-transform: uppercase; margin-top: 2px; pointer-events: none; }
 
 /* --- MAIN CONTENT --- */
 .main-content { flex: 1; display: flex; flex-direction: column; background: var(--bg-light); border-top-left-radius: 25px; overflow: hidden; }
@@ -222,11 +228,11 @@ body {
   z-index: 15;
 }
 
-.add-initial { width: 100%; padding: 8px; background: #111; color: #fff; border: none; border-radius: 8px; font-weight: 600; font-size: 12px; }
+.add-initial { width: 100%; padding: 8px; background: #111; color: #fff; border: none; border-radius: 8px; font-weight: 600; font-size: 12px; cursor: pointer; }
 .qty-controls { display: none; align-items: center; justify-content: space-between; background: #f0f0f0; border-radius: 8px; padding: 2px; }
 .btn-qty { width: 28px; height: 28px; border: none; background: #fff; border-radius: 6px; font-weight: 700; cursor: pointer; }
 
-.cart-bar { position: fixed; bottom: 15px; left: 105px; right: 15px; background: #28a745; height: 50px; border-radius: 12px; display: none; align-items: center; justify-content: space-between; padding: 0 15px; color: #fff; font-weight: 700; z-index: 1000; }
+.cart-bar { position: fixed; bottom: 15px; left: 105px; right: 15px; background: #28a745; height: 50px; border-radius: 12px; display: none; align-items: center; justify-content: space-between; padding: 0 15px; color: #fff; font-weight: 700; z-index: 1000; cursor: pointer; }
 .cart-popup { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: flex-end; z-index: 2000; }
 .cart-content { width: 100%; max-width: 500px; background: #fff; border-top-left-radius: 25px; border-top-right-radius: 25px; padding: 25px; max-height: 80vh; overflow-y: auto; }
 
@@ -236,7 +242,7 @@ body {
 .cart-item-info p { font-size: 12px; color: #777; }
 .cart-item-actions { display: flex; align-items: center; gap: 10px; }
 
-.pay-btn { width: 100%; padding: 16px; background: #28a745; color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 700; margin-top: 20px; }
+.pay-btn { width: 100%; padding: 16px; background: #28a745; color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 700; margin-top: 20px; cursor: pointer; }
 </style>
 </head>
 <body>
@@ -258,72 +264,82 @@ body {
 
 <div class="sidebar" id="sidebar">
   <div class="nav-indicator" id="nav-indicator"></div>
-  
+
+  <!-- 1. Starters & Appetizers -->
   <div class="nav-group expanded" id="group-starters">
     <div class="nav-item active" onclick="toggleGroup('starters', this)">
       <span>🍢</span><label>Starters</label>
     </div>
     <div class="submenu">
-      <div class="sub-item" onclick="showSection('starters', this)"><span>🍽️</span><label>Starters</label></div>
+      <div class="sub-item" onclick="showSection('starters', this)"><span>🍽️</span><label>Indian</label></div>
       <div class="sub-item" onclick="showSection('chinese_starters', this)"><span>🥡</span><label>Chinese</label></div>
-      <div class="sub-item" onclick="showSection('soups', this)"><span>🥣</span><label>Soups</label></div>
     </div>
   </div>
 
-  <div class="nav-group" id="group-snacks">
-    <div class="nav-item" onclick="toggleGroup('snacks', this)">
-      <span>🍟</span><label>Snacks</label>
-    </div>
-    <div class="submenu">
-      <div class="sub-item" onclick="showSection('snacks', this)"><span>🥨</span><label>Snacks</label></div>
-      <div class="sub-item" onclick="showSection('noodles', this)"><span>🍜</span><label>Noodles</label></div>
-      <div class="sub-item" onclick="showSection('rice', this)"><span>🍚</span><label>Rice</label></div>
-    </div>
-  </div>
-
-  <div class="nav-group">
-     <div class="nav-item" onclick="showSection('salads', this)"><span>🥗</span><label>Salad/Papad</label></div>
-  </div>
-
+  <!-- 2. Main Course -->
   <div class="nav-group" id="group-main">
     <div class="nav-item" onclick="toggleGroup('main', this)">
       <span>🍖</span><label>Main</label>
     </div>
     <div class="submenu">
-      <div class="sub-item" onclick="showSection('tandoor', this)"><span>🔥</span><label>Tandoor</label></div>
-      <div class="sub-item" onclick="showSection('basmati', this)"><span>🌾</span><label>Basmati</label></div>
-      <div class="sub-item" onclick="showSection('sizzlers', this)"><span>🍳</span><label>Sizzlers</label></div>
-    </div>
-  </div>
-
-  <div class="nav-group" id="group-indian">
-    <div class="nav-item" onclick="toggleGroup('indian', this)">
-      <span>🥘</span><label>Indian</label>
-    </div>
-    <div class="submenu">
-      <div class="sub-item" onclick="showSection('indian_curry', this)"><span>🍛</span><label>Curry</label></div>
       <div class="sub-item" onclick="showSection('paneer', this)"><span>🧀</span><label>Paneer</label></div>
       <div class="sub-item" onclick="showSection('kofta', this)"><span>🧆</span><label>Kofta</label></div>
+      <div class="sub-item" onclick="showSection('indian_curry', this)"><span>🍛</span><label>Curries</label></div>
+      <div class="sub-item" onclick="showSection('dal', this)"><span>🫘</span><label>Dal</label></div>
     </div>
   </div>
 
-  <div class="nav-group">
-    <div class="nav-item" onclick="showSection('continental', this)"><span>🍝</span><label>Continental</label></div>
-  </div>
-
-  <div class="nav-group" id="group-desserts">
-    <div class="nav-item" onclick="toggleGroup('desserts', this)">
-      <span>🍰</span><label>Desserts</label>
+  <!-- 3. Breads & Rice -->
+  <div class="nav-group" id="group-breads">
+    <div class="nav-item" onclick="toggleGroup('breads', this)">
+      <span>🫓</span><label>Breads</label>
     </div>
     <div class="submenu">
-      <div class="sub-item" onclick="showSection('ice_cream', this)"><span>🍦</span><label>Ice Cream</label></div>
-      <div class="sub-item" onclick="showSection('shakes', this)"><span>🥤</span><label>Shakes</label></div>
+      <div class="sub-item" onclick="showSection('tandoor', this)"><span>🔥</span><label>Tandoor</label></div>
+      <div class="sub-item" onclick="showSection('basmati', this)"><span>🌾</span><label>Rice</label></div>
     </div>
   </div>
 
-  <div class="nav-group">
-    <div class="nav-item" onclick="showSection('drinks', this)"><span>🍷</span><label>Beverages</label></div>
+  <!-- 4. Chinese & Global -->
+  <div class="nav-group" id="group-chinese">
+    <div class="nav-item" onclick="toggleGroup('chinese', this)">
+      <span>🍜</span><label>Chinese</label>
+    </div>
+    <div class="submenu">
+      <div class="sub-item" onclick="showSection('noodles', this)"><span>🍝</span><label>Noodles</label></div>
+      <div class="sub-item" onclick="showSection('rice', this)"><span>🍚</span><label>Rice</label></div>
+      <div class="sub-item" onclick="showSection('snacks', this)"><span>🍕</span><label>Snacks</label></div>
+    </div>
   </div>
+
+  <!-- 5. Soups & Accompaniments -->
+  <div class="nav-group" id="group-soups">
+    <div class="nav-item" onclick="toggleGroup('soups', this)">
+      <span>🥣</span><label>Soups</label>
+    </div>
+    <div class="submenu">
+      <div class="sub-item" onclick="showSection('soups', this)"><span>🍲</span><label>Soups</label></div>
+      <div class="sub-item" onclick="showSection('salads', this)"><span>🥗</span><label>Salads</label></div>
+    </div>
+  </div>
+
+  <!-- Sizzlers standalone -->
+  <div class="nav-group">
+    <div class="nav-item" onclick="showSection('sizzlers', this)"><span>🍳</span><label>Sizzlers</label></div>
+  </div>
+
+  <!-- 6. Beverages & Desserts -->
+  <div class="nav-group" id="group-beverages">
+    <div class="nav-item" onclick="toggleGroup('beverages', this)">
+      <span>🥤</span><label>Drinks</label>
+    </div>
+    <div class="submenu">
+      <div class="sub-item" onclick="showSection('drinks', this)"><span>🍷</span><label>Beverages</label></div>
+      <div class="sub-item" onclick="showSection('shakes', this)"><span>🥛</span><label>Shakes</label></div>
+      <div class="sub-item" onclick="showSection('ice_cream', this)"><span>🍦</span><label>Desserts</label></div>
+    </div>
+  </div>
+
 </div>
 
 <div class="main-content">
@@ -339,6 +355,7 @@ body {
 
 <div class="cart-bar" id="cart-bar" onclick="toggleCart()">
   <span id="cart-item-count">0 Items</span>
+  <span id="cart-total-price">₹0.00</span>
   <span>View Cart →</span>
 </div>
 
@@ -351,7 +368,7 @@ body {
     <div id="cart-items-list"></div>
     <div style="background: #f9f9f9; padding: 15px; border-radius: 12px; margin-top: 15px;">
       <div style="display: flex; justify-content: space-between; font-weight: 800; font-size: 20px;">
-        <span>Total</span><span id="cart-total-price">₹0.00</span>
+        <span>Total</span><span id="cart-total-price-popup">₹0.00</span>
       </div>
     </div>
     <button class="pay-btn" onclick="processPayment()">Place Order</button>
@@ -360,224 +377,253 @@ body {
 
 <script>
 const menuData = {
+  /* ── 1. STARTERS ── */
   starters: [
-    { id: 'st1', name: 'Corn Tikki', price: 200.00, img: 'https://images.unsplash.com/photo-1601050648497-3f9ebaec5878?w=400' },
-    { id: 'st2', name: 'Paneer Tikka Dry', price: 235.00, img: 'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=400' },
-    { id: 'st3', name: 'Paneer Phudina Tikka', price: 235.00, img: 'https://images.unsplash.com/photo-1628294895950-9805252327bc?w=400' },
-    { id: 'st4', name: 'Paneer Lahsuni Tikka', price: 235.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
-    { id: 'st5', name: 'Hara Bhara Kabab', price: 200.00, img: 'https://images.unsplash.com/photo-1626509653297-fc5709d67f3f?w=400' },
-    { id: 'st6', name: 'Raja Kabab', price: 210.00, img: 'https://images.unsplash.com/photo-1610057099443-fde8c4d50f91?w=400' },
-    { id: 'st7', name: 'Veg. Sheekh Kabab', price: 230.00, img: 'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=400' },
-    { id: 'st8', name: 'Paneer Sheekh Kabab', price: 260.00, img: 'https://images.unsplash.com/photo-1601050648497-3f9ebaec5878?w=400' },
-    { id: 'st9', name: 'Veg. Brice Kabab', price: 200.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400' },
-    { id: 'st10', name: 'Veg. Dilruba Sheekh Kabab', price: 260.00, img: 'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=400' },
-    { id: 'st11', name: 'Dahi Kabab', price: 190.00, img: 'https://images.unsplash.com/photo-1601050648497-3f9ebaec5878?w=400' },
-    { id: 'st12', name: 'Jahangiri Tikka', price: 230.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
-    { id: 'st13', name: 'Tandoori Plater', price: 285.00, img: 'https://images.unsplash.com/photo-1610057099443-fde8c4d50f91?w=400' }
+    { id: 'st1',  name: 'Corn Tikki',                  price: 200.00, img: 'https://images.unsplash.com/photo-1601050648497-3f9ebaec5878?w=400' },
+    { id: 'st2',  name: 'Paneer Tikka Dry',             price: 235.00, img: 'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=400' },
+    { id: 'st3',  name: 'Paneer Phudina Tikka',         price: 235.00, img: 'https://images.unsplash.com/photo-1628294895950-9805252327bc?w=400' },
+    { id: 'st4',  name: 'Paneer Lahsuni Tikka',         price: 235.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
+    { id: 'st5',  name: 'Hara Bhara Kabab',             price: 200.00, img: 'https://images.unsplash.com/photo-1626509653297-fc5709d67f3f?w=400' },
+    { id: 'st6',  name: 'Raja Kabab',                   price: 210.00, img: 'https://images.unsplash.com/photo-1610057099443-fde8c4d50f91?w=400' },
+    { id: 'st7',  name: 'Veg. Sheekh Kabab',            price: 230.00, img: 'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=400' },
+    { id: 'st8',  name: 'Paneer Sheekh Kabab',          price: 260.00, img: 'https://images.unsplash.com/photo-1601050648497-3f9ebaec5878?w=400' },
+    { id: 'st9',  name: 'Veg. Brice Kabab',             price: 200.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400' },
+    { id: 'st10', name: 'Veg. Dilruba Sheekh Kabab',    price: 260.00, img: 'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=400' },
+    { id: 'st11', name: 'Dahi Kabab',                   price: 190.00, img: 'https://images.unsplash.com/photo-1601050648497-3f9ebaec5878?w=400' },
+    { id: 'st12', name: 'Jahangiri Tikka',              price: 230.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
+    { id: 'st13', name: 'Tandoori Plater',              price: 285.00, img: 'https://images.unsplash.com/photo-1610057099443-fde8c4d50f91?w=400' }
   ],
   chinese_starters: [
-    { id: 'cs1', name: 'Oriental Crispy Vegetables', price: 200.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400' },
-    { id: 'cs2', name: 'Baby Corn Chilli Fried', price: 200.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400' },
-    { id: 'cs3', name: 'Schezwan Paneer', price: 225.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
-    { id: 'cs4', name: 'Paneer Chilly (Dry/Gravy)', price: 225.00, img: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400' },
-    { id: 'cs5', name: 'Paneer Manchurian (Dry/Gravy)', price: 220.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400' },
-    { id: 'cs6', name: 'Paneer 65', price: 225.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
-    { id: 'cs7', name: 'Veg. Manchurian (Dry/Gravy)', price: 200.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400' },
-    { id: 'cs8', name: 'Veg. Spring Roll', price: 210.00, img: 'https://images.unsplash.com/photo-1542528111-90ca4a796e6c?w=400' },
-    { id: 'cs9', name: 'Veg. Lollipop', price: 220.00, img: 'https://images.unsplash.com/photo-1601050648497-3f9ebaec5878?w=400' },
-    { id: 'cs10', name: 'Mushroom Chilly Fry', price: 225.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400' }
+    { id: 'cs1',  name: 'Oriental Crispy Vegetables',       price: 200.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400' },
+    { id: 'cs2',  name: 'Baby Corn Chilli Fried',           price: 200.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400' },
+    { id: 'cs3',  name: 'Schezwan Paneer',                  price: 225.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
+    { id: 'cs4',  name: 'Paneer Chilly (Dry / Gravy)',      price: 225.00, img: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400' },
+    { id: 'cs5',  name: 'Paneer Manchurian (Dry / Gravy)',  price: 220.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400' },
+    { id: 'cs6',  name: 'Paneer 65',                        price: 225.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
+    { id: 'cs7',  name: 'Veg. Manchurian (Dry / Gravy)',    price: 200.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400' },
+    { id: 'cs8',  name: 'Veg. Spring Roll',                 price: 210.00, img: 'https://images.unsplash.com/photo-1542528111-90ca4a796e6c?w=400' },
+    { id: 'cs9',  name: 'Veg. Lollipop',                   price: 220.00, img: 'https://images.unsplash.com/photo-1601050648497-3f9ebaec5878?w=400' },
+    { id: 'cs10', name: 'Mushroom Chilly Fry',              price: 225.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400' }
   ],
-  soups: [
-    { id: 'sp1', name: 'Cream of Tomato', price: 100.00, img: 'https://images.unsplash.com/photo-1547592110-8032646f901a?w=400' },
-    { id: 'sp2', name: 'Minestrone Soup', price: 115.00, img: 'https://images.unsplash.com/photo-1547592110-8032646f901a?w=400' },
-    { id: 'sp3', name: 'Sweet Corn Veg. Soup', price: 100.00, img: 'https://images.unsplash.com/photo-1547592110-8032646f901a?w=400' },
-    { id: 'sp4', name: 'Veg. Hot & Sour Soup', price: 115.00, img: 'https://images.unsplash.com/photo-1547592110-8032646f901a?w=400' },
-    { id: 'sp5', name: 'Veg. Manchow Soup', price: 115.00, img: 'https://images.unsplash.com/photo-1547592110-8032646f901a?w=400' },
-    { id: 'sp6', name: 'Lemon Coriander Soup', price: 115.00, img: 'https://images.unsplash.com/photo-1547592110-8032646f901a?w=400' },
-    { id: 'sp7', name: 'Palak Phudina Soup', price: 115.00, img: 'https://images.unsplash.com/photo-1547592110-8032646f901a?w=400' },
-    { id: 'sp8', name: 'Veg. Mushroom Soup', price: 120.00, img: 'https://images.unsplash.com/photo-1547592110-8032646f901a?w=400' },
-    { id: 'sp9', name: 'Clear Soup (Veg/Noodles)', price: 100.00, img: 'https://images.unsplash.com/photo-1547592110-8032646f901a?w=400' },
-    { id: 'sp10', name: 'Cheese Corn Tomato Soup', price: 120.00, img: 'https://images.unsplash.com/photo-1547592110-8032646f901a?w=400' }
-  ],
-  snacks: [
-    { id: 'sn1', name: 'Veg. Pizza / Italian Pizza', price: 135.00, img: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400' },
-    { id: 'sn2', name: 'Cheese Pizza', price: 150.00, img: 'https://images.unsplash.com/photo-1574071318508-1cdbad80ad38?w=400' },
-    { id: 'sn3', name: 'Jain Pizza', price: 120.00, img: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400' },
-    { id: 'sn4', name: 'Veg. Club Sandwich', price: 90.00, img: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=400' },
-    { id: 'sn5', name: 'Veg. Sandwich / Cheese Sandwich', price: 80.00, img: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=400' },
-    { id: 'sn6', name: 'Cheese Jam Sandwich', price: 90.00, img: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=400' },
-    { id: 'sn7', name: 'Bread Butter', price: 55.00, img: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=400' },
-    { id: 'sn8', name: 'French Fries', price: 100.00, img: 'https://images.unsplash.com/photo-1630384066202-18d038253a5d?w=400' }
-  ],
-  noodles: [
-    { id: 'no1', name: 'Veg. Chow Mein', price: 180.00, img: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400' },
-    { id: 'no2', name: 'Veg. Hakka Noodles', price: 190.00, img: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400' },
-    { id: 'no3', name: 'Schezwan Noodles', price: 190.00, img: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400' },
-    { id: 'no4', name: 'Chilly Garlic Noodles', price: 190.00, img: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400' },
-    { id: 'no5', name: 'Veg. Manchurian With Noodles', price: 190.00, img: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400' }
-  ],
-  rice: [
-    { id: 'ri1', name: 'Mushroom Fry Rice', price: 195.00, img: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400' },
-    { id: 'ri2', name: 'Chinese Bhel', price: 190.00, img: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400' },
-    { id: 'ri3', name: 'American Chopsuey', price: 190.00, img: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400' },
-    { id: 'ri4', name: 'Veg. Triple Fried Rice', price: 210.00, img: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400' },
-    { id: 'ri5', name: 'Veg. Fried Rice', price: 185.00, img: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400' },
-    { id: 'ri6', name: 'Schezwan Fried Rice', price: 185.00, img: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400' }
-  ],
-  salads: [
-    { id: 'sl1', name: 'Cream of Fruit Salad', price: 125.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400' },
-    { id: 'sl2', name: 'Fresh Green Salad', price: 80.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400' },
-    { id: 'sl3', name: 'Russian Salad', price: 125.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400' },
-    { id: 'sl4', name: 'Kachumber Salad', price: 70.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400' },
-    { id: 'sl5', name: 'Pineapple Raita', price: 95.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400' },
-    { id: 'sl6', name: 'Veg. Raita / Cucumber Raita', price: 85.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400' },
-    { id: 'sl7', name: 'Boondi Raita', price: 85.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400' },
-    { id: 'sl8', name: 'Curd', price: 65.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400' },
-    { id: 'sl9', name: 'Papad Roasted', price: 25.00, img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' },
-    { id: 'sl10', name: 'Papad Fried', price: 27.00, img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' },
-    { id: 'sl11', name: 'Papad Masala', price: 45.00, img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' },
-    { id: 'sl12', name: 'Papad Cheese Masala', price: 60.00, img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' }
-  ],
-  tandoor: [
-    { id: 'ta1', name: 'Roti - Plain', price: 25.00, img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' },
-    { id: 'ta2', name: 'Roti - Butter', price: 28.00, img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' },
-    { id: 'ta3', name: 'Paratha', price: 40.00, img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' },
-    { id: 'ta4', name: 'Paratha Butter / Lachha', price: 55.00, img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' },
-    { id: 'ta5', name: 'Paratha Stuffed', price: 65.00, img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' },
-    { id: 'ta6', name: 'Paratha Phudina', price: 65.00, img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' },
-    { id: 'ta7', name: 'Naan', price: 50.00, img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' },
-    { id: 'ta8', name: 'Naan Butter', price: 55.00, img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' },
-    { id: 'ta9', name: 'Naan Stuffed', price: 80.00, img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' },
-    { id: 'ta10', name: 'Naan Kashmiri (Sweet)', price: 90.00, img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' },
-    { id: 'ta11', name: 'Naan Garlic', price: 90.00, img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' },
-    { id: 'ta12', name: 'Naan Cheese / Hariyali', price: 99.00, img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' },
-    { id: 'ta13', name: 'Naan Cheese Garlic', price: 105.00, img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' },
-    { id: 'ta14', name: 'Family Naan', price: 125.00, img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' },
-    { id: 'ta15', name: 'Kulcha', price: 45.00, img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' },
-    { id: 'ta16', name: 'Kulcha Butter', price: 55.00, img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' },
-    { id: 'ta17', name: 'Kulcha Stuffed / Onion', price: 70.00, img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' },
-    { id: 'ta18', name: 'Paneer Paratha', price: 99.00, img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' },
-    { id: 'ta19', name: 'Paneer Cheese Paratha', price: 110.00, img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' },
-    { id: 'ta20', name: 'Missi Roti', price: 32.00, img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' }
-  ],
-  basmati: [
-    { id: 'ba1', name: 'Emerald Sp. Biryani', price: 199.00, img: 'https://images.unsplash.com/photo-1512058560366-cd242959b437?w=400' },
-    { id: 'ba2', name: 'Veg. Biryani', price: 150.00, img: 'https://images.unsplash.com/photo-1512058560366-cd242959b437?w=400' },
-    { id: 'ba3', name: 'Hyderabadi / Handi Biryani', price: 165.00, img: 'https://images.unsplash.com/photo-1512058560366-cd242959b437?w=400' },
-    { id: 'ba4', name: 'Veg. Pulav', price: 130.00, img: 'https://images.unsplash.com/photo-1512058560366-cd242959b437?w=400' },
-    { id: 'ba5', name: 'Peas Pulav', price: 130.00, img: 'https://images.unsplash.com/photo-1512058560366-cd242959b437?w=400' },
-    { id: 'ba6', name: 'Kashmiri Pulav (Sweet)', price: 170.00, img: 'https://images.unsplash.com/photo-1512058560366-cd242959b437?w=400' },
-    { id: 'ba7', name: 'Jeera Rice', price: 125.00, img: 'https://images.unsplash.com/photo-1512058560366-cd242959b437?w=400' },
-    { id: 'ba8', name: 'Steamed Rice', price: 95.00, img: 'https://images.unsplash.com/photo-1512058560366-cd242959b437?w=400' },
-    { id: 'ba9', name: 'Mint Rice / Corn Rice', price: 190.00, img: 'https://images.unsplash.com/photo-1512058560366-cd242959b437?w=400' }
-  ],
-  sizzlers: [
-    { id: 'sz1', name: 'Mix Grilled Sizzler', price: 330.00, img: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=400' },
-    { id: 'sz2', name: 'Chinese Sizzler', price: 340.00, img: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=400' },
-    { id: 'sz3', name: 'Paneer Shaslik', price: 340.00, img: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=400' },
-    { id: 'sz4', name: 'Paneer Stick', price: 340.00, img: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=400' },
-    { id: 'sz5', name: 'Paneer Sizzling', price: 245.00, img: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=400' },
-    { id: 'sz6', name: 'Veg. Sizzling', price: 220.00, img: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=400' }
-  ],
-  indian_curry: [
-    { id: 'in1', name: 'Dal Fry', price: 115.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' },
-    { id: 'in2', name: 'Dal Fry Butter', price: 120.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' },
-    { id: 'in3', name: 'Dal Fry Tadka', price: 140.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' },
-    { id: 'in4', name: 'Dal Palak', price: 145.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' },
-    { id: 'in5', name: 'Emerald Sp. Veg.', price: 210.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' },
-    { id: 'in6', name: 'Veg. Mastani / Jawalamukhi', price: 215.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' },
-    { id: 'in7', name: 'Veg. Tawa Masala', price: 200.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' },
-    { id: 'in8', name: 'Veg. Kadai / Kolhapuri', price: 200.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' },
-    { id: 'in9', name: 'Veg. Makhanwala', price: 200.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' },
-    { id: 'in10', name: 'Veg. Jaipuri / Singapuri', price: 200.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' },
-    { id: 'in11', name: 'Veg. Handi', price: 200.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' },
-    { id: 'in12', name: 'Veg. Jalfrezi', price: 200.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' },
-    { id: 'in13', name: 'Veg. Shahi Korma', price: 200.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' },
-    { id: 'in14', name: 'Veg. Toofani', price: 200.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' },
-    { id: 'in15', name: 'Veg. Hyderabadi', price: 200.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' },
-    { id: 'in16', name: 'Palak Corn Capsicum', price: 200.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' },
-    { id: 'in17', name: 'Mutter Methi Malai', price: 215.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' },
-    { id: 'in18', name: 'Baby Corn Makhanwala', price: 215.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' },
-    { id: 'in19', name: 'Navaratan Korma', price: 215.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' },
-    { id: 'in20', name: 'Corn Tomato Bhartha', price: 200.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' },
-    { id: 'in21', name: 'Mutter Mushroom', price: 215.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' },
-    { id: 'in22', name: 'Mushroom Masala', price: 215.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' },
-    { id: 'in23', name: 'Mix Vegetable', price: 190.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' },
-    { id: 'in24', name: 'Chana Masala', price: 190.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' },
-    { id: 'in25', name: 'Aloo Masala / Dum Aloo', price: 190.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' },
-    { id: 'in26', name: 'Aloo Methi / Jeera Aloo', price: 155.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' }
-  ],
+
+  /* ── 2. MAIN COURSE ── */
   paneer: [
-    { id: 'pn1', name: 'Emerald Sp. Paneer', price: 240.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
-    { id: 'pn2', name: 'Paneer Kathiyawadi', price: 230.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
-    { id: 'pn3', name: 'Paneer Darwar', price: 230.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
-    { id: 'pn4', name: 'Paneer Tiranga', price: 235.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
-    { id: 'pn5', name: 'Cheese Butter Masala', price: 235.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
-    { id: 'pn6', name: 'Cheese Angoori', price: 235.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
-    { id: 'pn7', name: 'Paneer Mushroom Masala', price: 230.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
-    { id: 'pn8', name: 'Paneer Butter Masala', price: 210.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
-    { id: 'pn9', name: 'Paneer Tikka Masala', price: 220.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
-    { id: 'pn10', name: 'Paneer Kankani', price: 220.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
-    { id: 'pn11', name: 'Paneer Diwani Handi', price: 220.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
-    { id: 'pn12', name: 'Paneer Lajawab / Kalimirch', price: 220.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
-    { id: 'pn13', name: 'Paneer Kadai / Handi', price: 220.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
-    { id: 'pn14', name: 'Balti Paneer / Tawa Paneer', price: 220.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
-    { id: 'pn15', name: 'Paneer Toofani', price: 220.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
-    { id: 'pn16', name: 'Paneer Hara Masala', price: 220.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
-    { id: 'pn17', name: 'Paneer Shahi Korma', price: 220.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
-    { id: 'pn18', name: 'Paneer Bhurjee', price: 230.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
-    { id: 'pn19', name: 'Paneer Pasanda', price: 225.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
-    { id: 'pn20', name: 'Mutter / Palak Paneer', price: 200.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
-    { id: 'pn21', name: 'Methi Paneer Masala', price: 220.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
-    { id: 'pn22', name: 'Kaju Paneer Masala', price: 245.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
-    { id: 'pn23', name: 'Khoya Kaju (Sweet)', price: 240.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
-    { id: 'pn24', name: 'Kaju Balti / Kaju Curry', price: 245.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' }
+    { id: 'pn1',  name: 'Emerald Sp. Paneer',          price: 240.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
+    { id: 'pn2',  name: 'Paneer Sizzling',             price: 245.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
+    { id: 'pn3',  name: 'Paneer Kathiyawadi',          price: 230.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
+    { id: 'pn4',  name: 'Paneer Darwar',               price: 230.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
+    { id: 'pn5',  name: 'Paneer Tiranga',              price: 235.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
+    { id: 'pn6',  name: 'Cheese Butter Masala',        price: 235.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
+    { id: 'pn7',  name: 'Cheese Angoori',              price: 235.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
+    { id: 'pn8',  name: 'Paneer Mushroom Masala',      price: 230.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
+    { id: 'pn9',  name: 'Paneer Butter Masala',        price: 210.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
+    { id: 'pn10', name: 'Paneer Tikka Masala',         price: 220.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
+    { id: 'pn11', name: 'Paneer Kankani',              price: 220.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
+    { id: 'pn12', name: 'Paneer Diwani Handi',         price: 220.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
+    { id: 'pn13', name: 'Paneer Lajawab',              price: 220.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
+    { id: 'pn14', name: 'Paneer Kalimirch',            price: 220.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
+    { id: 'pn15', name: 'Paneer Kadai',                price: 220.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
+    { id: 'pn16', name: 'Paneer Handi',                price: 220.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
+    { id: 'pn17', name: 'Balti Paneer',                price: 220.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
+    { id: 'pn18', name: 'Tawa Paneer',                 price: 220.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
+    { id: 'pn19', name: 'Paneer Toofani',              price: 220.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
+    { id: 'pn20', name: 'Paneer Hara Masala',          price: 220.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
+    { id: 'pn21', name: 'Paneer Shahi Korma',          price: 220.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
+    { id: 'pn22', name: 'Paneer Bhurjee',              price: 230.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
+    { id: 'pn23', name: 'Paneer Pasanda',              price: 225.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
+    { id: 'pn24', name: 'Mutter Paneer',               price: 200.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
+    { id: 'pn25', name: 'Palak Paneer',                price: 200.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
+    { id: 'pn26', name: 'Methi Paneer Masala',         price: 220.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
+    { id: 'pn27', name: 'Kaju Paneer Masala',          price: 245.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' }
   ],
   kofta: [
-    { id: 'ko1', name: 'Cheese Kofta', price: 225.00, img: 'https://images.unsplash.com/photo-1606491956689-2ea8c5119c85?w=400' },
-    { id: 'ko2', name: 'Malai Kofta (Sweet)', price: 220.00, img: 'https://images.unsplash.com/photo-1606491956689-2ea8c5119c85?w=400' },
-    { id: 'ko3', name: 'Veg. Kofta', price: 200.00, img: 'https://images.unsplash.com/photo-1606491956689-2ea8c5119c85?w=400' },
-    { id: 'ko4', name: 'Paneer Kofta', price: 215.00, img: 'https://images.unsplash.com/photo-1606491956689-2ea8c5119c85?w=400' },
-    { id: 'ko5', name: 'Kashmiri Kofta (Sweet)', price: 215.00, img: 'https://images.unsplash.com/photo-1606491956689-2ea8c5119c85?w=400' },
-    { id: 'ko6', name: 'Nargisi Kofta', price: 205.00, img: 'https://images.unsplash.com/photo-1606491956689-2ea8c5119c85?w=400' },
-    { id: 'ko7', name: 'Kadai Kofta', price: 210.00, img: 'https://images.unsplash.com/photo-1606491956689-2ea8c5119c85?w=400' },
-    { id: 'ko8', name: 'Kaju Kofta', price: 225.00, img: 'https://images.unsplash.com/photo-1606491956689-2ea8c5119c85?w=400' }
+    { id: 'ko1', name: 'Cheese Kofta',          price: 225.00, img: 'https://images.unsplash.com/photo-1606491956689-2ea8c5119c85?w=400' },
+    { id: 'ko2', name: 'Malai Kofta',           price: 220.00, img: 'https://images.unsplash.com/photo-1606491956689-2ea8c5119c85?w=400' },
+    { id: 'ko3', name: 'Veg. Kofta',            price: 200.00, img: 'https://images.unsplash.com/photo-1606491956689-2ea8c5119c85?w=400' },
+    { id: 'ko4', name: 'Paneer Kofta',          price: 215.00, img: 'https://images.unsplash.com/photo-1606491956689-2ea8c5119c85?w=400' },
+    { id: 'ko5', name: 'Kashmiri Kofta',        price: 215.00, img: 'https://images.unsplash.com/photo-1606491956689-2ea8c5119c85?w=400' },
+    { id: 'ko6', name: 'Nargisi Kofta',         price: 205.00, img: 'https://images.unsplash.com/photo-1606491956689-2ea8c5119c85?w=400' },
+    { id: 'ko7', name: 'Kadai Kofta',           price: 210.00, img: 'https://images.unsplash.com/photo-1606491956689-2ea8c5119c85?w=400' },
+    { id: 'ko8', name: 'Kaju Kofta',            price: 225.00, img: 'https://images.unsplash.com/photo-1606491956689-2ea8c5119c85?w=400' }
   ],
-  continental: [
-    { id: 'co1', name: 'Baked Macaroni with Pineapple', price: 205.00, img: 'https://images.unsplash.com/photo-1473093226795-af9932fe5856?w=400' },
-    { id: 'co2', name: 'Baked Spaghetti with Pineapple', price: 205.00, img: 'https://images.unsplash.com/photo-1473093226795-af9932fe5856?w=400' },
-    { id: 'co3', name: 'Baked Vegetable with Pineapple', price: 205.00, img: 'https://images.unsplash.com/photo-1473093226795-af9932fe5856?w=400' }
+  indian_curry: [
+    { id: 'in1',  name: 'Emerald Sp. Veg.',            price: 210.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' },
+    { id: 'in2',  name: 'Veg. Mastani',                price: 215.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' },
+    { id: 'in3',  name: 'Veg. Jawalamukhi',            price: 215.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' },
+    { id: 'in4',  name: 'Veg. Sizzling',               price: 220.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' },
+    { id: 'in5',  name: 'Veg. Tawa Masala',            price: 200.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' },
+    { id: 'in6',  name: 'Veg. Kadai',                  price: 200.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' },
+    { id: 'in7',  name: 'Veg. Kolhapuri',              price: 200.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' },
+    { id: 'in8',  name: 'Veg. Makhanwala',             price: 200.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' },
+    { id: 'in9',  name: 'Veg. Jaipuri',                price: 200.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' },
+    { id: 'in10', name: 'Veg. Singapuri',              price: 200.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' },
+    { id: 'in11', name: 'Veg. Handi',                  price: 200.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' },
+    { id: 'in12', name: 'Veg. Jalfrezi',               price: 200.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' },
+    { id: 'in13', name: 'Veg. Shahi Korma',            price: 200.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' },
+    { id: 'in14', name: 'Veg. Toofani',                price: 200.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' },
+    { id: 'in15', name: 'Veg. Hyderabadi',             price: 200.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' },
+    { id: 'in16', name: 'Palak Corn Capsicum',         price: 200.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' },
+    { id: 'in17', name: 'Mutter Methi Malai',          price: 215.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' },
+    { id: 'in18', name: 'Baby Corn Makhanwala',        price: 215.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' },
+    { id: 'in19', name: 'Navaratan Korma',             price: 215.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' },
+    { id: 'in20', name: 'Corn Tomato Bhartha',         price: 200.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' },
+    { id: 'in21', name: 'Mutter Mushroom',             price: 215.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' },
+    { id: 'in22', name: 'Mushroom Masala',             price: 215.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' },
+    { id: 'in23', name: 'Mix Vegetable',               price: 190.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' },
+    { id: 'in24', name: 'Chana Masala',                price: 190.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' },
+    { id: 'in25', name: 'Aloo Masala',                 price: 190.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' },
+    { id: 'in26', name: 'Dum Aloo',                    price: 190.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' },
+    { id: 'in27', name: 'Aloo Methi',                  price: 155.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' },
+    { id: 'in28', name: 'Jeera Aloo',                  price: 155.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' }
   ],
-  ice_cream: [
-    { id: 'ic1', name: 'Gulab Jamun', price: 50.00, img: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=400' },
-    { id: 'ic2', name: 'Rajbhog', price: 99.00, img: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=400' },
-    { id: 'ic3', name: 'Vanilla / Strawberry', price: 80.00, img: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=400' },
-    { id: 'ic4', name: 'Cheery Berry / Mango', price: 80.00, img: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=400' },
-    { id: 'ic5', name: 'Kesar Pista / Kaju Draksh', price: 90.00, img: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=400' },
-    { id: 'ic6', name: 'Butter Scotch / Chocolate', price: 90.00, img: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=400' },
-    { id: 'ic7', name: 'Fruit Salad with Ice Cream', price: 140.00, img: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=400' },
-    { id: 'ic8', name: 'American Nut', price: 99.00, img: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=400' }
+  dal: [
+    { id: 'da1', name: 'Dal Fry',        price: 115.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' },
+    { id: 'da2', name: 'Dal Fry Butter', price: 120.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' },
+    { id: 'da3', name: 'Dal Fry Tadka',  price: 140.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' },
+    { id: 'da4', name: 'Dal Palak',      price: 145.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' }
+  ],
+
+  /* ── 3. BREADS & RICE ── */
+  tandoor: [
+    { id: 'ta1',  name: 'Roti - Plain',             price: 25.00,  img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' },
+    { id: 'ta2',  name: 'Roti - Butter',            price: 28.00,  img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' },
+    { id: 'ta3',  name: 'Paratha',                  price: 40.00,  img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' },
+    { id: 'ta4',  name: 'Paratha Butter',           price: 55.00,  img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' },
+    { id: 'ta5',  name: 'Lachha Paratha',           price: 60.00,  img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' },
+    { id: 'ta6',  name: 'Paratha Stuffed',          price: 65.00,  img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' },
+    { id: 'ta7',  name: 'Paratha Phudina',          price: 65.00,  img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' },
+    { id: 'ta8',  name: 'Paneer Paratha',           price: 99.00,  img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' },
+    { id: 'ta9',  name: 'Paneer Cheese Paratha',    price: 110.00, img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' },
+    { id: 'ta10', name: 'Naan',                     price: 50.00,  img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' },
+    { id: 'ta11', name: 'Naan Butter',              price: 55.00,  img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' },
+    { id: 'ta12', name: 'Naan Stuffed',             price: 80.00,  img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' },
+    { id: 'ta13', name: 'Naan Kashmiri',            price: 90.00,  img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' },
+    { id: 'ta14', name: 'Naan Garlic',              price: 90.00,  img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' },
+    { id: 'ta15', name: 'Naan Cheese',              price: 99.00,  img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' },
+    { id: 'ta16', name: 'Hariyali Naan',            price: 99.00,  img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' },
+    { id: 'ta17', name: 'Naan Cheese Garlic',       price: 105.00, img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' },
+    { id: 'ta18', name: 'Family Naan',              price: 125.00, img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' },
+    { id: 'ta19', name: 'Kulcha',                   price: 45.00,  img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' },
+    { id: 'ta20', name: 'Kulcha Butter',            price: 55.00,  img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' },
+    { id: 'ta21', name: 'Kulcha Stuffed',           price: 70.00,  img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' },
+    { id: 'ta22', name: 'Onion Kulcha',             price: 70.00,  img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' },
+    { id: 'ta23', name: 'Missi Roti',               price: 32.00,  img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' }
+  ],
+  basmati: [
+    { id: 'ba1',  name: 'Emerald Sp. Biryani',      price: 199.00, img: 'https://images.unsplash.com/photo-1512058560366-cd242959b437?w=400' },
+    { id: 'ba2',  name: 'Veg. Biryani',             price: 150.00, img: 'https://images.unsplash.com/photo-1512058560366-cd242959b437?w=400' },
+    { id: 'ba3',  name: 'Hyderabadi Biryani',       price: 165.00, img: 'https://images.unsplash.com/photo-1512058560366-cd242959b437?w=400' },
+    { id: 'ba4',  name: 'Handi Biryani',            price: 165.00, img: 'https://images.unsplash.com/photo-1512058560366-cd242959b437?w=400' },
+    { id: 'ba5',  name: 'Veg. Pulav',               price: 130.00, img: 'https://images.unsplash.com/photo-1512058560366-cd242959b437?w=400' },
+    { id: 'ba6',  name: 'Peas Pulav',               price: 130.00, img: 'https://images.unsplash.com/photo-1512058560366-cd242959b437?w=400' },
+    { id: 'ba7',  name: 'Kashmiri Pulav',           price: 170.00, img: 'https://images.unsplash.com/photo-1512058560366-cd242959b437?w=400' },
+    { id: 'ba8',  name: 'Jeera Rice',               price: 125.00, img: 'https://images.unsplash.com/photo-1512058560366-cd242959b437?w=400' },
+    { id: 'ba9',  name: 'Steamed Rice',             price: 95.00,  img: 'https://images.unsplash.com/photo-1512058560366-cd242959b437?w=400' },
+    { id: 'ba10', name: 'Mint Rice',                price: 190.00, img: 'https://images.unsplash.com/photo-1512058560366-cd242959b437?w=400' },
+    { id: 'ba11', name: 'Corn Rice',                price: 190.00, img: 'https://images.unsplash.com/photo-1512058560366-cd242959b437?w=400' }
+  ],
+
+  /* ── 4. CHINESE & GLOBAL ── */
+  noodles: [
+    { id: 'no1', name: 'Veg. Chow Mein',                price: 180.00, img: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400' },
+    { id: 'no2', name: 'Veg. Hakka Noodles',            price: 190.00, img: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400' },
+    { id: 'no3', name: 'Schezwan Noodles',              price: 190.00, img: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400' },
+    { id: 'no4', name: 'Chilly Garlic Noodles',         price: 190.00, img: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400' },
+    { id: 'no5', name: 'Veg. Manchurian With Noodles',  price: 190.00, img: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400' }
+  ],
+  rice: [
+    { id: 'ri1', name: 'Mushroom Fry Rice',       price: 195.00, img: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400' },
+    { id: 'ri2', name: 'Chinese Bhel',            price: 190.00, img: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400' },
+    { id: 'ri3', name: 'American Chopsuey',       price: 190.00, img: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400' },
+    { id: 'ri4', name: 'Veg. Triple Fried Rice',  price: 210.00, img: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400' },
+    { id: 'ri5', name: 'Veg. Fried Rice',         price: 185.00, img: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400' },
+    { id: 'ri6', name: 'Schezwan Fried Rice',     price: 185.00, img: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400' }
+  ],
+  snacks: [
+    { id: 'sn1', name: 'Veg. Pizza',           price: 135.00, img: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400' },
+    { id: 'sn2', name: 'Italian Pizza',        price: 135.00, img: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400' },
+    { id: 'sn3', name: 'Cheese Pizza',         price: 150.00, img: 'https://images.unsplash.com/photo-1574071318508-1cdbad80ad38?w=400' },
+    { id: 'sn4', name: 'Jain Pizza',           price: 120.00, img: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400' },
+    { id: 'sn5', name: 'Veg. Club Sandwich',   price: 90.00,  img: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=400' },
+    { id: 'sn6', name: 'Veg. Sandwich',        price: 80.00,  img: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=400' },
+    { id: 'sn7', name: 'Cheese Sandwich',      price: 80.00,  img: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=400' },
+    { id: 'sn8', name: 'Cheese Jam Sandwich',  price: 90.00,  img: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=400' },
+    { id: 'sn9', name: 'Bread Butter',         price: 55.00,  img: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=400' },
+    { id: 'sn10',name: 'French Fries',         price: 100.00, img: 'https://images.unsplash.com/photo-1630384066202-18d038253a5d?w=400' }
+  ],
+
+  /* ── 5. SOUPS & ACCOMPANIMENTS ── */
+  soups: [
+    { id: 'sp1',  name: 'Cream of Tomato',              price: 100.00, img: 'https://images.unsplash.com/photo-1547592110-8032646f901a?w=400' },
+    { id: 'sp2',  name: 'Minestrone Soup',              price: 115.00, img: 'https://images.unsplash.com/photo-1547592110-8032646f901a?w=400' },
+    { id: 'sp3',  name: 'Sweet Corn Veg. Soup',         price: 100.00, img: 'https://images.unsplash.com/photo-1547592110-8032646f901a?w=400' },
+    { id: 'sp4',  name: 'Veg. Hot & Sour Soup',         price: 115.00, img: 'https://images.unsplash.com/photo-1547592110-8032646f901a?w=400' },
+    { id: 'sp5',  name: 'Veg. Manchow Soup',            price: 115.00, img: 'https://images.unsplash.com/photo-1547592110-8032646f901a?w=400' },
+    { id: 'sp6',  name: 'Lemon Coriander Soup',         price: 115.00, img: 'https://images.unsplash.com/photo-1547592110-8032646f901a?w=400' },
+    { id: 'sp7',  name: 'Palak Phudina Soup',           price: 115.00, img: 'https://images.unsplash.com/photo-1547592110-8032646f901a?w=400' },
+    { id: 'sp8',  name: 'Veg. Mushroom Soup',           price: 120.00, img: 'https://images.unsplash.com/photo-1547592110-8032646f901a?w=400' },
+    { id: 'sp9',  name: 'Clear Soup (Veg / Noodles)',   price: 100.00, img: 'https://images.unsplash.com/photo-1547592110-8032646f901a?w=400' },
+    { id: 'sp10', name: 'Cheese Corn Tomato Soup',      price: 120.00, img: 'https://images.unsplash.com/photo-1547592110-8032646f901a?w=400' }
+  ],
+  salads: [
+    { id: 'sl1',  name: 'Cream of Fruit Salad',             price: 125.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400' },
+    { id: 'sl2',  name: 'Fresh Green Salad',                price: 80.00,  img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400' },
+    { id: 'sl3',  name: 'Russian Salad',                    price: 125.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400' },
+    { id: 'sl4',  name: 'Kachumber Salad',                  price: 70.00,  img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400' },
+    { id: 'sl5',  name: 'Pineapple Raita',                  price: 95.00,  img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400' },
+    { id: 'sl6',  name: 'Veg. Raita',                       price: 85.00,  img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400' },
+    { id: 'sl7',  name: 'Cucumber Raita',                   price: 85.00,  img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400' },
+    { id: 'sl8',  name: 'Boondi Raita',                     price: 85.00,  img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400' },
+    { id: 'sl9',  name: 'Curd',                             price: 65.00,  img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400' },
+    { id: 'sl10', name: 'Papad Roasted',                    price: 25.00,  img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' },
+    { id: 'sl11', name: 'Papad Fried',                      price: 27.00,  img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' },
+    { id: 'sl12', name: 'Papad Masala',                     price: 45.00,  img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' },
+    { id: 'sl13', name: 'Papad Cheese Masala',              price: 60.00,  img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' }
+  ],
+
+  /* ── SIZZLERS (standalone) ── */
+  sizzlers: [
+    { id: 'sz1', name: 'Mix Grilled Sizzler', price: 330.00, img: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=400' },
+    { id: 'sz2', name: 'Chinese Sizzler',     price: 340.00, img: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=400' },
+    { id: 'sz3', name: 'Paneer Shaslik',      price: 340.00, img: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=400' },
+    { id: 'sz4', name: 'Paneer Stick',        price: 340.00, img: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=400' }
+  ],
+
+  /* ── 6. BEVERAGES & DESSERTS ── */
+  drinks: [
+    { id: 'dr1',  name: 'Jal Jeera Water',                  price: 40.00,  img: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400' },
+    { id: 'dr2',  name: 'Fresh Lime Soda',                  price: 40.00,  img: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400' },
+    { id: 'dr3',  name: 'Fresh Lime Water (Sweet / Salted)', price: 40.00, img: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400' },
+    { id: 'dr4',  name: 'Soft Drinks (MRP)',                price: 20.00,  img: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400' },
+    { id: 'dr5',  name: 'Lassi (Sweet / Salted)',           price: 80.00,  img: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400' },
+    { id: 'dr6',  name: 'Special Lassi',                    price: 100.00, img: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400' },
+    { id: 'dr7',  name: 'Mineral Water (MRP)',              price: 20.00,  img: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400' },
+    { id: 'dr8',  name: 'Fruit Punch',                      price: 70.00,  img: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400' },
+    { id: 'dr9',  name: 'Butter Milk',                      price: 30.00,  img: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400' },
+    { id: 'dr10', name: 'Masala Butter Milk',               price: 35.00,  img: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400' }
   ],
   shakes: [
-    { id: 'sh1', name: 'Vanilla Milk Shake', price: 99.00, img: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=400' },
-    { id: 'sh2', name: 'Strawberry Milk Shake', price: 99.00, img: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=400' },
-    { id: 'sh3', name: 'Chocolate Milk Shake', price: 99.00, img: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=400' },
+    { id: 'sh1', name: 'Vanilla Milk Shake',     price: 99.00,  img: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=400' },
+    { id: 'sh2', name: 'Strawberry Milk Shake',  price: 99.00,  img: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=400' },
+    { id: 'sh3', name: 'Chocolate Milk Shake',   price: 99.00,  img: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=400' },
     { id: 'sh4', name: 'Kesar Pista Milk Shake', price: 110.00, img: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=400' },
     { id: 'sh5', name: 'Kaju Draksh Milk Shake', price: 110.00, img: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=400' },
-    { id: 'sh6', name: 'Mango Milk Shake', price: 110.00, img: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=400' },
-    { id: 'sh7', name: 'Cold Coffee', price: 99.00, img: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=400' }
+    { id: 'sh6', name: 'Mango Milk Shake',        price: 110.00, img: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=400' },
+    { id: 'sh7', name: 'Cold Coffee',             price: 99.00,  img: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=400' }
   ],
-  drinks: [
-    { id: 'dr1', name: 'Jal Jeera Water', price: 40.00, img: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400' },
-    { id: 'dr2', name: 'Fresh Lime Soda', price: 40.00, img: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400' },
-    { id: 'dr3', name: 'Fresh Lime Water', price: 40.00, img: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400' },
-    { id: 'dr4', name: 'Soft Drinks (MRP)', price: 20.00, img: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400' },
-    { id: 'dr5', name: 'Lassi (Sweet/Salted)', price: 80.00, img: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400' },
-    { id: 'dr6', name: 'Special Lassi', price: 100.00, img: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400' },
-    { id: 'dr7', name: 'Mineral Water (MRP)', price: 20.00, img: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400' },
-    { id: 'dr8', name: 'Fruit Punch', price: 70.00, img: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400' },
-    { id: 'dr9', name: 'Butter Milk', price: 30.00, img: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400' },
-    { id: 'dr10', name: 'Masala Butter Milk', price: 35.00, img: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400' }
+  ice_cream: [
+    { id: 'ic1',  name: 'Gulab Jamun',                  price: 50.00,  img: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=400' },
+    { id: 'ic2',  name: 'Rajbhog',                      price: 99.00,  img: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=400' },
+    { id: 'ic3',  name: 'Vanilla Ice Cream',            price: 80.00,  img: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=400' },
+    { id: 'ic4',  name: 'Strawberry Ice Cream',         price: 80.00,  img: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=400' },
+    { id: 'ic5',  name: 'Cheery Berry Ice Cream',       price: 80.00,  img: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=400' },
+    { id: 'ic6',  name: 'Mango Ice Cream',              price: 80.00,  img: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=400' },
+    { id: 'ic7',  name: 'Kesar Pista Ice Cream',        price: 90.00,  img: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=400' },
+    { id: 'ic8',  name: 'Kaju Draksh Ice Cream',        price: 90.00,  img: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=400' },
+    { id: 'ic9',  name: 'Butter Scotch Ice Cream',      price: 90.00,  img: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=400' },
+    { id: 'ic10', name: 'Chocolate Ice Cream',          price: 90.00,  img: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=400' },
+    { id: 'ic11', name: 'Fruit Salad with Ice Cream',   price: 140.00, img: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=400' },
+    { id: 'ic12', name: 'American Nut',                 price: 99.00,  img: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=400' }
   ]
 };
 
@@ -612,13 +658,13 @@ function toggleGroup(groupId, el) {
   if (!isExpanded) {
     clickedGroup.classList.add('expanded');
     setTimeout(() => {
-        const firstSub = clickedGroup.querySelector('.sub-item');
-        if (firstSub) {
-            const sectionName = firstSub.getAttribute('onclick').match(/'([^']+)'/)[1];
-            showSection(sectionName, firstSub);
-        } else {
-            moveIndicator(el);
-        }
+      const firstSub = clickedGroup.querySelector('.sub-item');
+      if (firstSub) {
+        const sectionName = firstSub.getAttribute('onclick').match(/'([^']+)'/)[1];
+        showSection(sectionName, firstSub);
+      } else {
+        moveIndicator(el);
+      }
     }, 400);
   } else {
     moveIndicator(el);
@@ -632,14 +678,14 @@ function showSection(section, el) {
   document.querySelectorAll('.nav-item, .sub-item').forEach(i => i.classList.remove('active'));
   el.classList.add('active');
   moveIndicator(el);
-  nameDisplay.innerText = section.replace('_', ' ').toUpperCase();
+  nameDisplay.innerText = section.replace(/_/g, ' ').toUpperCase();
   const items = menuData[section] || [];
   grid.innerHTML = items.map(item => `
     <div class="food-card">
       <div class="cart-badge" id="badge-${item.id}">0</div>
       <img src="${item.img}" alt="${item.name}">
       <h4>${item.name}</h4>
-      <div class="price">₹${item.price.toFixed(2)}</div>
+      <div class="price">&#8377;${item.price.toFixed(2)}</div>
       <button class="add-initial" id="add-btn-${item.id}" onclick="addToCart('${section}', '${item.id}')">ADD</button>
       <div class="qty-controls" id="qty-ctrl-${item.id}">
         <button class="btn-qty" onclick="updateQty('${item.id}', -1)">-</button>
@@ -662,15 +708,15 @@ function addToCart(sec, id) {
   } else {
     item = menuData[sec].find(i => i.id === id);
   }
-  if(item && !cart[id]) cart[id] = { ...item, qty: 1 };
+  if (item && !cart[id]) cart[id] = { ...item, qty: 1 };
   syncCartUI();
 }
 
 function updateQty(id, delta) {
   triggerHaptic();
-  if(cart[id]) {
+  if (cart[id]) {
     cart[id].qty += delta;
-    if(cart[id].qty <= 0) delete cart[id];
+    if (cart[id].qty <= 0) delete cart[id];
   }
   syncCartUI();
 }
@@ -691,7 +737,7 @@ function syncCartUI() {
     const qtyCtrl = document.getElementById(`qty-ctrl-${id}`);
     const qtyVal = document.getElementById(`qty-val-${id}`);
     const badge = document.getElementById(`badge-${id}`);
-    if(addBtn) {
+    if (addBtn) {
       addBtn.style.display = 'none';
       qtyCtrl.style.display = 'flex';
       qtyVal.innerText = item.qty;
@@ -702,7 +748,7 @@ function syncCartUI() {
       <div class="cart-item-row">
         <div class="cart-item-info">
           <h5>${item.name}</h5>
-          <p>₹${(item.price * item.qty).toFixed(2)}</p>
+          <p>&#8377;${(item.price * item.qty).toFixed(2)}</p>
         </div>
         <div class="cart-item-actions">
            <button class="btn-qty" onclick="updateQty('${item.id}', -1)">-</button>
@@ -713,10 +759,11 @@ function syncCartUI() {
     `;
   });
   const bar = document.getElementById('cart-bar');
-  if(totalItems > 0) {
+  if (totalItems > 0) {
     bar.style.display = 'flex';
     document.getElementById('cart-item-count').innerText = `${totalItems} Items`;
-    document.getElementById('cart-total-price').innerText = `₹${subtotal.toFixed(2)}`;
+    document.getElementById('cart-total-price').innerText = `&#8377;${subtotal.toFixed(2)}`;
+    document.getElementById('cart-total-price-popup').innerText = `&#8377;${subtotal.toFixed(2)}`;
   } else {
     bar.style.display = 'none';
     cartList.innerHTML = '<p style="text-align:center; color:#999; padding:20px;">Your basket is empty</p>';
@@ -732,7 +779,7 @@ function toggleSearch() {
   document.getElementById('search-input').classList.toggle('active');
 }
 
-function triggerHaptic() { if(window.navigator.vibrate) window.navigator.vibrate(10); }
+function triggerHaptic() { if (window.navigator.vibrate) window.navigator.vibrate(10); }
 
 function processPayment() {
   alert("Order Placed Successfully!");
@@ -747,18 +794,21 @@ function handleSearch() {
   let allItems = [];
   Object.values(menuData).forEach(cat => allItems = [...allItems, ...cat]);
   const filtered = allItems.filter(i => i.name.toLowerCase().includes(query));
-  if(query === "") {
-      const activeItem = document.querySelector('.nav-item.active, .sub-item.active');
-      const section = activeItem.getAttribute('onclick').match(/'([^']+)'/)[1];
-      showSection(section, activeItem);
-      return;
+  if (query === "") {
+    const activeItem = document.querySelector('.nav-item.active, .sub-item.active');
+    if (activeItem) {
+      const onclickAttr = activeItem.getAttribute('onclick');
+      const match = onclickAttr.match(/'([^']+)'/);
+      if (match) showSection(match[1], activeItem);
+    }
+    return;
   }
   grid.innerHTML = filtered.map(item => `
     <div class="food-card">
       <div class="cart-badge" id="badge-${item.id}">${cart[item.id] ? cart[item.id].qty : 0}</div>
       <img src="${item.img}" alt="${item.name}">
       <h4>${item.name}</h4>
-      <div class="price">₹${item.price.toFixed(2)}</div>
+      <div class="price">&#8377;${item.price.toFixed(2)}</div>
       <button class="add-initial" id="add-btn-${item.id}" onclick="addToCart('search', '${item.id}')" style="display: ${cart[item.id] ? 'none' : 'block'}">ADD</button>
       <div class="qty-controls" id="qty-ctrl-${item.id}" style="display: ${cart[item.id] ? 'flex' : 'none'}">
         <button class="btn-qty" onclick="updateQty('${item.id}', -1)">-</button>
