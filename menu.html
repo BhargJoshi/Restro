@@ -762,8 +762,8 @@ function syncCartUI() {
   if (totalItems > 0) {
     bar.style.display = 'flex';
     document.getElementById('cart-item-count').innerText = `${totalItems} Items`;
-    document.getElementById('cart-total-price').innerText = `&#8377;${subtotal.toFixed(2)}`;
-    document.getElementById('cart-total-price-popup').innerText = `&#8377;${subtotal.toFixed(2)}`;
+    document.getElementById('cart-total-price').innerText = `₹;${subtotal.toFixed(2)}`;
+    document.getElementById('cart-total-price-popup').innerText = `₹;${subtotal.toFixed(2)}`;
   } else {
     bar.style.display = 'none';
     cartList.innerHTML = '<p style="text-align:center; color:#999; padding:20px;">Your basket is empty</p>';
