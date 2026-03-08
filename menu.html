@@ -314,6 +314,26 @@ body {
   font-weight: 700;
   cursor: pointer;
 }
+#order-ready-banner {
+  display: none;
+  margin-bottom: 18px;
+  animation: readyPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+#order-ready-banner.visible { display: block; }
+.order-ready-badge {
+  background: #28a745;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 800;
+  padding: 10px 24px;
+  border-radius: 50px;
+  display: inline-block;
+  letter-spacing: 0.5px;
+}
+@keyframes readyPop {
+  0% { transform: scale(0.5); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
 </style>
 </head>
 <body>
@@ -458,7 +478,8 @@ body {
       </svg>
       <div class="timer-label" id="timer-display">15:00</div>
     </div>
-    <div class="order-ready-text">Your order will be ready in 15 minutes</div>
+    <div class="order-ready-text" id="order-ready-subtext">Your order will be ready in 15 minutes</div>
+    <div id="order-ready-banner"><span class="order-ready-badge">🍴 Order Ready !</span></div>
     <button class="order-confirm-close" onclick="closeOrderConfirm()">Got it!</button>
   </div>
 </div>
@@ -882,6 +903,8 @@ function processPayment() {
 
 function showOrderConfirm() {
   const overlay = document.getElementById('order-confirm-overlay');
+  document.getElementById('order-ready-subtext').style.display = 'block';
+  document.getElementById('order-ready-banner').classList.remove('visible');
   overlay.classList.add('visible');
   startOrderTimer();
 }
@@ -911,6 +934,9 @@ function startOrderTimer() {
       orderTimerInterval = null;
       display.textContent = '00:00';
       circle.style.strokeDashoffset = CIRCUMFERENCE;
+      document.getElementById('order-ready-subtext').style.display = 'none';
+      const banner = document.getElementById('order-ready-banner');
+      banner.classList.add('visible');
     } else {
       secondsLeft--;
     }
