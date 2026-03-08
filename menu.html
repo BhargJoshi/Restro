@@ -243,6 +243,77 @@ body {
 .cart-item-actions { display: flex; align-items: center; gap: 10px; }
 
 .pay-btn { width: 100%; padding: 16px; background: #28a745; color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 700; margin-top: 20px; cursor: pointer; }
+
+/* --- ORDER CONFIRMATION OVERLAY --- */
+#order-confirm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 9000;
+}
+#order-confirm-overlay.visible { display: flex; }
+.order-confirm-box {
+  background: #fff;
+  border-radius: 24px;
+  padding: 40px 30px;
+  text-align: center;
+  width: 85%;
+  max-width: 340px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+@keyframes popIn {
+  0% { transform: scale(0.7); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.order-confirm-icon { font-size: 52px; margin-bottom: 12px; }
+.order-confirm-title { font-family: 'Playfair Display', serif; font-size: 22px; color: #111; margin-bottom: 20px; }
+.order-timer-ring {
+  position: relative;
+  width: 130px;
+  height: 130px;
+  margin: 0 auto 20px;
+}
+.order-timer-ring svg { transform: rotate(-90deg); }
+.timer-track { fill: none; stroke: #f0f0f0; stroke-width: 8; }
+.timer-progress {
+  fill: none;
+  stroke: #28a745;
+  stroke-width: 8;
+  stroke-linecap: round;
+  stroke-dasharray: 339.29;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 1s linear;
+}
+.timer-label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  font-weight: 800;
+  color: #111;
+}
+.order-ready-text {
+  font-size: 15px;
+  color: #555;
+  font-weight: 600;
+  margin-bottom: 24px;
+}
+.order-confirm-close {
+  background: #111;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 32px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
 </style>
 </head>
 <body>
@@ -372,6 +443,23 @@ body {
       </div>
     </div>
     <button class="pay-btn" onclick="processPayment()">Place Order</button>
+  </div>
+</div>
+
+<!-- ORDER CONFIRMATION OVERLAY -->
+<div id="order-confirm-overlay">
+  <div class="order-confirm-box">
+    <div class="order-confirm-icon">🍽️</div>
+    <div class="order-confirm-title">Order Placed!</div>
+    <div class="order-timer-ring">
+      <svg width="130" height="130" viewBox="0 0 130 130">
+        <circle class="timer-track" cx="65" cy="65" r="54"/>
+        <circle class="timer-progress" id="timer-progress-circle" cx="65" cy="65" r="54"/>
+      </svg>
+      <div class="timer-label" id="timer-display">15:00</div>
+    </div>
+    <div class="order-ready-text">Your order will be ready in 15 minutes</div>
+    <button class="order-confirm-close" onclick="closeOrderConfirm()">Got it!</button>
   </div>
 </div>
 
@@ -781,11 +869,55 @@ function toggleSearch() {
 
 function triggerHaptic() { if (window.navigator.vibrate) window.navigator.vibrate(10); }
 
+let orderTimerInterval = null;
+const TOTAL_SECONDS = 15 * 60;
+const CIRCUMFERENCE = 2 * Math.PI * 54; // 339.29
+
 function processPayment() {
-  alert("Order Placed Successfully!");
   cart = {};
   syncCartUI();
   toggleCart();
+  showOrderConfirm();
+}
+
+function showOrderConfirm() {
+  const overlay = document.getElementById('order-confirm-overlay');
+  overlay.classList.add('visible');
+  startOrderTimer();
+}
+
+function closeOrderConfirm() {
+  const overlay = document.getElementById('order-confirm-overlay');
+  overlay.classList.remove('visible');
+  if (orderTimerInterval) { clearInterval(orderTimerInterval); orderTimerInterval = null; }
+}
+
+function startOrderTimer() {
+  if (orderTimerInterval) { clearInterval(orderTimerInterval); }
+  let secondsLeft = TOTAL_SECONDS;
+  const display = document.getElementById('timer-display');
+  const circle = document.getElementById('timer-progress-circle');
+  circle.style.strokeDasharray = CIRCUMFERENCE;
+  circle.style.strokeDashoffset = 0;
+
+  function updateTimer() {
+    const mins = Math.floor(secondsLeft / 60);
+    const secs = secondsLeft % 60;
+    display.textContent = `${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+    const progress = (TOTAL_SECONDS - secondsLeft) / TOTAL_SECONDS;
+    circle.style.strokeDashoffset = CIRCUMFERENCE * progress;
+    if (secondsLeft <= 0) {
+      clearInterval(orderTimerInterval);
+      orderTimerInterval = null;
+      display.textContent = '00:00';
+      circle.style.strokeDashoffset = CIRCUMFERENCE;
+    } else {
+      secondsLeft--;
+    }
+  }
+
+  updateTimer();
+  orderTimerInterval = setInterval(updateTimer, 1000);
 }
 
 function handleSearch() {
