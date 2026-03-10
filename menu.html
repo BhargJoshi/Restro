@@ -356,7 +356,7 @@ body {
 <div class="sidebar" id="sidebar">
   <div class="nav-indicator" id="nav-indicator"></div>
 
-  <!-- 1. Starters & Appetizers -->
+  <!-- 1. Starters -->
   <div class="nav-group expanded" id="group-starters">
     <div class="nav-item active" onclick="toggleGroup('starters', this)">
       <span>🍢</span><label>Starters</label>
@@ -366,7 +366,7 @@ body {
     </div>
   </div>
 
-  <!-- 2. Main Course (now includes Rice) -->
+  <!-- 2. Main Course -->
   <div class="nav-group" id="group-main">
     <div class="nav-item" onclick="toggleGroup('main', this)">
       <span>🍖</span><label>Main</label>
@@ -379,10 +379,10 @@ body {
     </div>
   </div>
 
-  <!-- 3. Breads & More (now includes Kofta) -->
+  <!-- 3. Breads -->
   <div class="nav-group" id="group-breads">
     <div class="nav-item" onclick="toggleGroup('breads', this)">
-      <span>🫓</span><label>Breads & More</label>
+      <span>🫓</span><label>Breads</label>
     </div>
     <div class="submenu">
       <div class="sub-item" onclick="showSection('tandoor', this)"><span>🔥</span><label>Tandoor</label></div>
@@ -406,12 +406,12 @@ body {
     </div>
   </div>
 
-  <!-- Sizzlers standalone -->
+  <!-- Sizzlers -->
   <div class="nav-group">
     <div class="nav-item" onclick="showSection('sizzlers', this)"><span>🍳</span><label>Sizzlers</label></div>
   </div>
 
-  <!-- Continental standalone -->
+  <!-- Continental -->
   <div class="nav-group">
     <div class="nav-item" onclick="showSection('continental', this)"><span>🍝</span><label>Continental</label></div>
   </div>
@@ -500,8 +500,8 @@ const menuData = {
     { id: 'st13', name: 'Tandoori Plater',              price: 285.00, img: 'https://images.unsplash.com/photo-1610057099443-fde8c4d50f91?w=400' }
   ],
 
-  /* ── MAIN COURSE ── */
-  paneer: [
+  /* ── 2. MAIN COURSE ── */
+  paneer: [ /* ... same as before ... */ 
     { id: 'pn1',  name: 'Emerald Sp. Paneer',          price: 240.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
     { id: 'pn2',  name: 'Paneer Sizzling',             price: 245.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
     { id: 'pn3',  name: 'Paneer Kathiyawadi',          price: 230.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
@@ -532,7 +532,7 @@ const menuData = {
     { id: 'pn28', name: 'Khoya Kaju (sweet)',          price: 240.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
     { id: 'pn29', name: 'Kaju Balti Masala / Kaju Curry', price: 245.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' }
   ],
-  indian_curry: [
+  indian_curry: [ /* ... same ... */ 
     { id: 'in1',  name: 'Emerald Sp. Veg.',            price: 210.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' },
     { id: 'in2',  name: 'Veg. Mastani',                price: 215.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' },
     { id: 'in3',  name: 'Veg. Jawalamukhi',            price: 215.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400' },
@@ -588,7 +588,19 @@ const menuData = {
     { id: 'ri6', name: 'Schezwan Fried Rice',     price: 185.00, img: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400' }
   ],
 
-  /* ── BREADS & KOFTA ── */
+  /* ── KOFTA (now under Breads) ── */
+  kofta: [
+    { id: 'ko1', name: 'Cheese Kofta',          price: 225.00, img: 'https://images.unsplash.com/photo-1606491956689-2ea8c5119c85?w=400' },
+    { id: 'ko2', name: 'Malai Kofta',           price: 220.00, img: 'https://images.unsplash.com/photo-1606491956689-2ea8c5119c85?w=400' },
+    { id: 'ko3', name: 'Veg. Kofta',            price: 200.00, img: 'https://images.unsplash.com/photo-1606491956689-2ea8c5119c85?w=400' },
+    { id: 'ko4', name: 'Paneer Kofta',          price: 215.00, img: 'https://images.unsplash.com/photo-1606491956689-2ea8c5119c85?w=400' },
+    { id: 'ko5', name: 'Kashmiri Kofta',        price: 215.00, img: 'https://images.unsplash.com/photo-1606491956689-2ea8c5119c85?w=400' },
+    { id: 'ko6', name: 'Nargisi Kofta',         price: 205.00, img: 'https://images.unsplash.com/photo-1606491956689-2ea8c5119c85?w=400' },
+    { id: 'ko7', name: 'Kadai Kofta',           price: 210.00, img: 'https://images.unsplash.com/photo-1606491956689-2ea8c5119c85?w=400' },
+    { id: 'ko8', name: 'Kaju Kofta',            price: 225.00, img: 'https://images.unsplash.com/photo-1606491956689-2ea8c5119c85?w=400' }
+  ],
+
+  /* ── 3. BREADS ── */
   tandoor: [
     { id: 'ta1',  name: 'Roti - Plain',             price: 25.00,  img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' },
     { id: 'ta2',  name: 'Roti - Butter',            price: 28.00,  img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' },
@@ -613,16 +625,6 @@ const menuData = {
     { id: 'ta21', name: 'Kulcha Stuffed',           price: 70.00,  img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' },
     { id: 'ta22', name: 'Onion Kulcha',             price: 70.00,  img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' },
     { id: 'ta23', name: 'Missi Roti',               price: 32.00,  img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' }
-  ],
-  kofta: [
-    { id: 'ko1', name: 'Cheese Kofta',          price: 225.00, img: 'https://images.unsplash.com/photo-1606491956689-2ea8c5119c85?w=400' },
-    { id: 'ko2', name: 'Malai Kofta',           price: 220.00, img: 'https://images.unsplash.com/photo-1606491956689-2ea8c5119c85?w=400' },
-    { id: 'ko3', name: 'Veg. Kofta',            price: 200.00, img: 'https://images.unsplash.com/photo-1606491956689-2ea8c5119c85?w=400' },
-    { id: 'ko4', name: 'Paneer Kofta',          price: 215.00, img: 'https://images.unsplash.com/photo-1606491956689-2ea8c5119c85?w=400' },
-    { id: 'ko5', name: 'Kashmiri Kofta',        price: 215.00, img: 'https://images.unsplash.com/photo-1606491956689-2ea8c5119c85?w=400' },
-    { id: 'ko6', name: 'Nargisi Kofta',         price: 205.00, img: 'https://images.unsplash.com/photo-1606491956689-2ea8c5119c85?w=400' },
-    { id: 'ko7', name: 'Kadai Kofta',           price: 210.00, img: 'https://images.unsplash.com/photo-1606491956689-2ea8c5119c85?w=400' },
-    { id: 'ko8', name: 'Kaju Kofta',            price: 225.00, img: 'https://images.unsplash.com/photo-1606491956689-2ea8c5119c85?w=400' }
   ],
 
   /* ── CHINESE (Merged) ── */
@@ -654,8 +656,7 @@ const menuData = {
     { id: 'sn10',name: 'French Fries',         price: 100.00, img: 'https://images.unsplash.com/photo-1630384066202-18d038253a5d?w=400' }
   ],
 
-  /* ── 5. SOUPS & ACCOMPANIMENTS ── */
-  soups: [
+  soups: [ /* ... same as before ... */ 
     { id: 'sp1',  name: 'Cream of Tomato',              price: 100.00, img: 'https://images.unsplash.com/photo-1547592110-8032646f901a?w=400' },
     { id: 'sp2',  name: 'Minestrone Soup',              price: 115.00, img: 'https://images.unsplash.com/photo-1547592110-8032646f901a?w=400' },
     { id: 'sp3',  name: 'Sweet Corn Veg. Soup',         price: 100.00, img: 'https://images.unsplash.com/photo-1547592110-8032646f901a?w=400' },
@@ -667,7 +668,7 @@ const menuData = {
     { id: 'sp9',  name: 'Clear Soup (Veg / Noodles)',   price: 100.00, img: 'https://images.unsplash.com/photo-1547592110-8032646f901a?w=400' },
     { id: 'sp10', name: 'Cheese Corn Tomato Soup',      price: 120.00, img: 'https://images.unsplash.com/photo-1547592110-8032646f901a?w=400' }
   ],
-  salads: [
+  salads: [ /* ... same ... */ 
     { id: 'sl1',  name: 'Cream of Fruit Salad',             price: 125.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400' },
     { id: 'sl2',  name: 'Fresh Green Salad',                price: 80.00,  img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400' },
     { id: 'sl3',  name: 'Russian Salad',                    price: 125.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400' },
@@ -683,7 +684,6 @@ const menuData = {
     { id: 'sl13', name: 'Papad Cheese Masala',              price: 60.00,  img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' }
   ],
 
-  /* ── SIZZLERS ── */
   sizzlers: [
     { id: 'sz1', name: 'Mix Grilled Sizzler', price: 330.00, img: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=400' },
     { id: 'sz2', name: 'Chinese Sizzler',     price: 340.00, img: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=400' },
@@ -691,15 +691,13 @@ const menuData = {
     { id: 'sz4', name: 'Paneer Stick',        price: 340.00, img: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=400' }
   ],
 
-  /* ── CONTINENTAL ── */
   continental: [
     { id: 'con1', name: 'Baked Macaroni with Pineapple', price: 205.00, img: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400' },
     { id: 'con2', name: 'Baked Spaghetti with Pineapple', price: 205.00, img: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400' },
     { id: 'con3', name: 'Baked Vegetable with Pineapple', price: 205.00, img: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400' }
   ],
 
-  /* ── 6. BEVERAGES & DESSERTS ── */
-  drinks: [
+  drinks: [ /* ... same ... */ 
     { id: 'dr1',  name: 'Jal Jeera Water',                  price: 40.00,  img: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400' },
     { id: 'dr2',  name: 'Fresh Lime Soda',                  price: 40.00,  img: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400' },
     { id: 'dr3',  name: 'Fresh Lime Water (Sweet / Salted)', price: 40.00, img: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400' },
@@ -711,7 +709,7 @@ const menuData = {
     { id: 'dr9',  name: 'Butter Milk',                      price: 30.00,  img: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400' },
     { id: 'dr10', name: 'Masala Butter Milk',               price: 35.00,  img: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400' }
   ],
-  shakes: [
+  shakes: [ /* ... same with ice-cream variants ... */ 
     { id: 'sh1', name: 'Vanilla Milk Shake',     price: 99.00,  img: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=400' },
     { id: 'sh1ic', name: 'Vanilla Milk Shake (with Ice Cream)',     price: 110.00,  img: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=400' },
     { id: 'sh2', name: 'Strawberry Milk Shake',  price: 99.00,  img: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=400' },
@@ -727,7 +725,7 @@ const menuData = {
     { id: 'sh7', name: 'Cold Coffee',             price: 99.00,  img: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=400' },
     { id: 'sh7ic', name: 'Cold Coffee (with Ice Cream)',             price: 115.00,  img: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=400' }
   ],
-  ice_cream: [
+  ice_cream: [ /* ... same ... */ 
     { id: 'ic1',  name: 'Gulab Jamun',                  price: 50.00,  img: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=400' },
     { id: 'ic2',  name: 'Rajbhog',                      price: 99.00,  img: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=400' },
     { id: 'ic3',  name: 'Vanilla Ice Cream',            price: 80.00,  img: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=400' },
@@ -868,4 +866,123 @@ function syncCartUI() {
           <h5>${item.name}</h5>
           <p>&#8377;${(item.price * item.qty).toFixed(2)}</p>
         </div>
-        <di
+        <div class="cart-item-actions">
+           <button class="btn-qty" onclick="updateQty('${item.id}', -1)">-</button>
+           <span style="font-weight:700">${item.qty}</span>
+           <button class="btn-qty" onclick="updateQty('${item.id}', 1)">+</button>
+        </div>
+      </div>
+    `;
+  });
+  const bar = document.getElementById('cart-bar');
+  if (totalItems > 0) {
+    bar.style.display = 'flex';
+    document.getElementById('cart-item-count').innerText = `${totalItems} Items`;
+    document.getElementById('cart-total-price').innerText = `₹${subtotal.toFixed(2)}`;
+    document.getElementById('cart-total-price-popup').innerText = `₹${subtotal.toFixed(2)}`;
+  } else {
+    bar.style.display = 'none';
+    cartList.innerHTML = '<p style="text-align:center; color:#999; padding:20px;">Your basket is empty</p>';
+  }
+}
+
+function toggleCart() {
+  const p = document.getElementById('cart-popup');
+  p.style.display = (p.style.display === 'flex') ? 'none' : 'flex';
+}
+
+function toggleSearch() {
+  document.getElementById('search-input').classList.toggle('active');
+}
+
+function triggerHaptic() { if (window.navigator.vibrate) window.navigator.vibrate(10); }
+
+let orderTimerInterval = null;
+const TOTAL_SECONDS = 15 * 60;
+const CIRCUMFERENCE = 2 * Math.PI * 54;
+
+function processPayment() {
+  cart = {};
+  syncCartUI();
+  toggleCart();
+  showOrderConfirm();
+}
+
+function showOrderConfirm() {
+  const overlay = document.getElementById('order-confirm-overlay');
+  document.getElementById('order-ready-subtext').style.display = 'block';
+  document.getElementById('order-ready-banner').classList.remove('visible');
+  overlay.classList.add('visible');
+  startOrderTimer();
+}
+
+function closeOrderConfirm() {
+  const overlay = document.getElementById('order-confirm-overlay');
+  overlay.classList.remove('visible');
+  if (orderTimerInterval) { clearInterval(orderTimerInterval); orderTimerInterval = null; }
+}
+
+function startOrderTimer() {
+  if (orderTimerInterval) { clearInterval(orderTimerInterval); }
+  let secondsLeft = TOTAL_SECONDS;
+  const display = document.getElementById('timer-display');
+  const circle = document.getElementById('timer-progress-circle');
+  circle.style.strokeDasharray = CIRCUMFERENCE;
+  circle.style.strokeDashoffset = 0;
+
+  function updateTimer() {
+    const mins = Math.floor(secondsLeft / 60);
+    const secs = secondsLeft % 60;
+    display.textContent = `${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+    const progress = (TOTAL_SECONDS - secondsLeft) / TOTAL_SECONDS;
+    circle.style.strokeDashoffset = CIRCUMFERENCE * progress;
+    if (secondsLeft <= 0) {
+      clearInterval(orderTimerInterval);
+      orderTimerInterval = null;
+      display.textContent = '00:00';
+      circle.style.strokeDashoffset = CIRCUMFERENCE;
+      document.getElementById('order-ready-subtext').style.display = 'none';
+      const banner = document.getElementById('order-ready-banner');
+      banner.classList.add('visible');
+    } else {
+      secondsLeft--;
+    }
+  }
+
+  updateTimer();
+  orderTimerInterval = setInterval(updateTimer, 1000);
+}
+
+function handleSearch() {
+  const query = document.getElementById('search-input').value.toLowerCase();
+  const grid = document.getElementById('menu-grid');
+  let allItems = [];
+  Object.values(menuData).forEach(cat => allItems = [...allItems, ...cat]);
+  const filtered = allItems.filter(i => i.name.toLowerCase().includes(query));
+  if (query === "") {
+    const activeItem = document.querySelector('.nav-item.active, .sub-item.active');
+    if (activeItem) {
+      const onclickAttr = activeItem.getAttribute('onclick');
+      const match = onclickAttr.match(/'([^']+)'/);
+      if (match) showSection(match[1], activeItem);
+    }
+    return;
+  }
+  grid.innerHTML = filtered.map(item => `
+    <div class="food-card">
+      <div class="cart-badge" id="badge-${item.id}">${cart[item.id] ? cart[item.id].qty : 0}</div>
+      <img src="${item.img}" alt="${item.name}">
+      <h4>${item.name}</h4>
+      <div class="price">&#8377;${item.price.toFixed(2)}</div>
+      <button class="add-initial" id="add-btn-${item.id}" onclick="addToCart('search', '${item.id}')" style="display: ${cart[item.id] ? 'none' : 'block'}">ADD</button>
+      <div class="qty-controls" id="qty-ctrl-${item.id}" style="display: ${cart[item.id] ? 'flex' : 'none'}">
+        <button class="btn-qty" onclick="updateQty('${item.id}', -1)">-</button>
+        <span id="qty-val-${item.id}">${cart[item.id] ? cart[item.id].qty : 0}</span>
+        <button class="btn-qty" onclick="updateQty('${item.id}', 1)">+</button>
+      </div>
+    </div>
+  `).join('');
+}
+</script>
+</body>
+</html>
