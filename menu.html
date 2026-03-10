@@ -117,8 +117,10 @@ body {
   padding-top: 15px; 
   position: relative; 
   overflow-y: auto; 
+  height: 100vh;
   border-right: 1px solid rgba(255,255,255,0.1); 
   scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
 }
 .sidebar::-webkit-scrollbar { display: none; }
 
@@ -363,7 +365,6 @@ body {
     </div>
     <div class="submenu">
       <div class="sub-item" onclick="showSection('starters', this)"><span>🍽️</span><label>Indian</label></div>
-      <div class="sub-item" onclick="showSection('chinese_starters', this)"><span>🥡</span><label>Chinese</label></div>
     </div>
   </div>
 
@@ -387,20 +388,17 @@ body {
     </div>
     <div class="submenu">
       <div class="sub-item" onclick="showSection('tandoor', this)"><span>🔥</span><label>Tandoor</label></div>
-      <div class="sub-item" onclick="showSection('basmati', this)"><span>🌾</span><label>Rice</label></div>
     </div>
   </div>
 
-  <!-- 4. Chinese & Global -->
-  <div class="nav-group" id="group-chinese">
-    <div class="nav-item" onclick="toggleGroup('chinese', this)">
-      <span>🍜</span><label>Chinese</label>
-    </div>
-    <div class="submenu">
-      <div class="sub-item" onclick="showSection('noodles', this)"><span>🍝</span><label>Noodles</label></div>
-      <div class="sub-item" onclick="showSection('rice', this)"><span>🍚</span><label>Rice</label></div>
-      <div class="sub-item" onclick="showSection('snacks', this)"><span>🍕</span><label>Snacks</label></div>
-    </div>
+  <!-- Rice (Merged) -->
+  <div class="nav-group">
+    <div class="nav-item" onclick="showSection('rice_merged', this)"><span>🍚</span><label>Rice</label></div>
+  </div>
+
+  <!-- Chinese (Merged) -->
+  <div class="nav-group">
+    <div class="nav-item" onclick="showSection('chinese_merged', this)"><span>🍜</span><label>Chinese</label></div>
   </div>
 
   <!-- 5. Soups & Accompaniments -->
@@ -417,6 +415,11 @@ body {
   <!-- Sizzlers standalone -->
   <div class="nav-group">
     <div class="nav-item" onclick="showSection('sizzlers', this)"><span>🍳</span><label>Sizzlers</label></div>
+  </div>
+
+  <!-- Continental standalone -->
+  <div class="nav-group">
+    <div class="nav-item" onclick="showSection('continental', this)"><span>🍝</span><label>Continental</label></div>
   </div>
 
   <!-- 6. Beverages & Desserts -->
@@ -502,18 +505,6 @@ const menuData = {
     { id: 'st12', name: 'Jahangiri Tikka',              price: 230.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
     { id: 'st13', name: 'Tandoori Plater',              price: 285.00, img: 'https://images.unsplash.com/photo-1610057099443-fde8c4d50f91?w=400' }
   ],
-  chinese_starters: [
-    { id: 'cs1',  name: 'Oriental Crispy Vegetables',       price: 200.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400' },
-    { id: 'cs2',  name: 'Baby Corn Chilli Fried',           price: 200.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400' },
-    { id: 'cs3',  name: 'Schezwan Paneer',                  price: 225.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
-    { id: 'cs4',  name: 'Paneer Chilly (Dry / Gravy)',      price: 225.00, img: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400' },
-    { id: 'cs5',  name: 'Paneer Manchurian (Dry / Gravy)',  price: 220.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400' },
-    { id: 'cs6',  name: 'Paneer 65',                        price: 225.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
-    { id: 'cs7',  name: 'Veg. Manchurian (Dry / Gravy)',    price: 200.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400' },
-    { id: 'cs8',  name: 'Veg. Spring Roll',                 price: 210.00, img: 'https://images.unsplash.com/photo-1542528111-90ca4a796e6c?w=400' },
-    { id: 'cs9',  name: 'Veg. Lollipop',                   price: 220.00, img: 'https://images.unsplash.com/photo-1601050648497-3f9ebaec5878?w=400' },
-    { id: 'cs10', name: 'Mushroom Chilly Fry',              price: 225.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400' }
-  ],
 
   /* ── 2. MAIN COURSE ── */
   paneer: [
@@ -543,7 +534,9 @@ const menuData = {
     { id: 'pn24', name: 'Mutter Paneer',               price: 200.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
     { id: 'pn25', name: 'Palak Paneer',                price: 200.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
     { id: 'pn26', name: 'Methi Paneer Masala',         price: 220.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
-    { id: 'pn27', name: 'Kaju Paneer Masala',          price: 245.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' }
+    { id: 'pn27', name: 'Kaju Paneer Masala',          price: 245.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
+    { id: 'pn28', name: 'Khoya Kaju (sweet)',          price: 240.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
+    { id: 'pn29', name: 'Kaju Balti Masala / Kaju Curry', price: 245.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' }
   ],
   kofta: [
     { id: 'ko1', name: 'Cheese Kofta',          price: 225.00, img: 'https://images.unsplash.com/photo-1606491956689-2ea8c5119c85?w=400' },
@@ -618,7 +611,7 @@ const menuData = {
     { id: 'ta22', name: 'Onion Kulcha',             price: 70.00,  img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' },
     { id: 'ta23', name: 'Missi Roti',               price: 32.00,  img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=400' }
   ],
-  basmati: [
+  rice_merged: [
     { id: 'ba1',  name: 'Emerald Sp. Biryani',      price: 199.00, img: 'https://images.unsplash.com/photo-1512058560366-cd242959b437?w=400' },
     { id: 'ba2',  name: 'Veg. Biryani',             price: 150.00, img: 'https://images.unsplash.com/photo-1512058560366-cd242959b437?w=400' },
     { id: 'ba3',  name: 'Hyderabadi Biryani',       price: 165.00, img: 'https://images.unsplash.com/photo-1512058560366-cd242959b437?w=400' },
@@ -629,18 +622,7 @@ const menuData = {
     { id: 'ba8',  name: 'Jeera Rice',               price: 125.00, img: 'https://images.unsplash.com/photo-1512058560366-cd242959b437?w=400' },
     { id: 'ba9',  name: 'Steamed Rice',             price: 95.00,  img: 'https://images.unsplash.com/photo-1512058560366-cd242959b437?w=400' },
     { id: 'ba10', name: 'Mint Rice',                price: 190.00, img: 'https://images.unsplash.com/photo-1512058560366-cd242959b437?w=400' },
-    { id: 'ba11', name: 'Corn Rice',                price: 190.00, img: 'https://images.unsplash.com/photo-1512058560366-cd242959b437?w=400' }
-  ],
-
-  /* ── 4. CHINESE & GLOBAL ── */
-  noodles: [
-    { id: 'no1', name: 'Veg. Chow Mein',                price: 180.00, img: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400' },
-    { id: 'no2', name: 'Veg. Hakka Noodles',            price: 190.00, img: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400' },
-    { id: 'no3', name: 'Schezwan Noodles',              price: 190.00, img: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400' },
-    { id: 'no4', name: 'Chilly Garlic Noodles',         price: 190.00, img: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400' },
-    { id: 'no5', name: 'Veg. Manchurian With Noodles',  price: 190.00, img: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400' }
-  ],
-  rice: [
+    { id: 'ba11', name: 'Corn Rice',                price: 190.00, img: 'https://images.unsplash.com/photo-1512058560366-cd242959b437?w=400' },
     { id: 'ri1', name: 'Mushroom Fry Rice',       price: 195.00, img: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400' },
     { id: 'ri2', name: 'Chinese Bhel',            price: 190.00, img: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400' },
     { id: 'ri3', name: 'American Chopsuey',       price: 190.00, img: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400' },
@@ -648,7 +630,24 @@ const menuData = {
     { id: 'ri5', name: 'Veg. Fried Rice',         price: 185.00, img: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400' },
     { id: 'ri6', name: 'Schezwan Fried Rice',     price: 185.00, img: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400' }
   ],
-  snacks: [
+
+  /* ── CHINESE (Merged) ── */
+  chinese_merged: [
+    { id: 'cs1',  name: 'Oriental Crispy Vegetables',       price: 200.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400' },
+    { id: 'cs2',  name: 'Baby Corn Chilli Fried',           price: 200.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400' },
+    { id: 'cs3',  name: 'Schezwan Paneer',                  price: 225.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
+    { id: 'cs4',  name: 'Paneer Chilly (Dry / Gravy)',      price: 225.00, img: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400' },
+    { id: 'cs5',  name: 'Paneer Manchurian (Dry / Gravy)',  price: 220.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400' },
+    { id: 'cs6',  name: 'Paneer 65',                        price: 225.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
+    { id: 'cs7',  name: 'Veg. Manchurian (Dry / Gravy)',    price: 200.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400' },
+    { id: 'cs8',  name: 'Veg. Spring Roll',                 price: 210.00, img: 'https://images.unsplash.com/photo-1542528111-90ca4a796e6c?w=400' },
+    { id: 'cs9',  name: 'Veg. Lollipop',                   price: 220.00, img: 'https://images.unsplash.com/photo-1601050648497-3f9ebaec5878?w=400' },
+    { id: 'cs10', name: 'Mushroom Chilly Fry',              price: 225.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400' },
+    { id: 'no1', name: 'Veg. Chow Mein',                price: 180.00, img: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400' },
+    { id: 'no2', name: 'Veg. Hakka Noodles',            price: 190.00, img: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400' },
+    { id: 'no3', name: 'Schezwan Noodles',              price: 190.00, img: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400' },
+    { id: 'no4', name: 'Chilly Garlic Noodles',         price: 190.00, img: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400' },
+    { id: 'no5', name: 'Veg. Manchurian With Noodles',  price: 190.00, img: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400' },
     { id: 'sn1', name: 'Veg. Pizza',           price: 135.00, img: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400' },
     { id: 'sn2', name: 'Italian Pizza',        price: 135.00, img: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400' },
     { id: 'sn3', name: 'Cheese Pizza',         price: 150.00, img: 'https://images.unsplash.com/photo-1574071318508-1cdbad80ad38?w=400' },
@@ -698,6 +697,13 @@ const menuData = {
     { id: 'sz4', name: 'Paneer Stick',        price: 340.00, img: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=400' }
   ],
 
+  /* ── CONTINENTAL (new) ── */
+  continental: [
+    { id: 'con1', name: 'Baked Macaroni with Pineapple', price: 205.00, img: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400' },
+    { id: 'con2', name: 'Baked Spaghetti with Pineapple', price: 205.00, img: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400' },
+    { id: 'con3', name: 'Baked Vegetable with Pineapple', price: 205.00, img: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400' }
+  ],
+
   /* ── 6. BEVERAGES & DESSERTS ── */
   drinks: [
     { id: 'dr1',  name: 'Jal Jeera Water',                  price: 40.00,  img: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400' },
@@ -713,12 +719,19 @@ const menuData = {
   ],
   shakes: [
     { id: 'sh1', name: 'Vanilla Milk Shake',     price: 99.00,  img: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=400' },
+    { id: 'sh1ic', name: 'Vanilla Milk Shake (with Ice Cream)',     price: 110.00,  img: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=400' },
     { id: 'sh2', name: 'Strawberry Milk Shake',  price: 99.00,  img: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=400' },
+    { id: 'sh2ic', name: 'Strawberry Milk Shake (with Ice Cream)',  price: 110.00,  img: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=400' },
     { id: 'sh3', name: 'Chocolate Milk Shake',   price: 99.00,  img: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=400' },
+    { id: 'sh3ic', name: 'Chocolate Milk Shake (with Ice Cream)',   price: 115.00,  img: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=400' },
     { id: 'sh4', name: 'Kesar Pista Milk Shake', price: 110.00, img: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=400' },
+    { id: 'sh4ic', name: 'Kesar Pista Milk Shake (with Ice Cream)', price: 120.00, img: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=400' },
     { id: 'sh5', name: 'Kaju Draksh Milk Shake', price: 110.00, img: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=400' },
+    { id: 'sh5ic', name: 'Kaju Draksh Milk Shake (with Ice Cream)', price: 120.00, img: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=400' },
     { id: 'sh6', name: 'Mango Milk Shake',        price: 110.00, img: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=400' },
-    { id: 'sh7', name: 'Cold Coffee',             price: 99.00,  img: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=400' }
+    { id: 'sh6ic', name: 'Mango Milk Shake (with Ice Cream)',        price: 120.00, img: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=400' },
+    { id: 'sh7', name: 'Cold Coffee',             price: 99.00,  img: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=400' },
+    { id: 'sh7ic', name: 'Cold Coffee (with Ice Cream)',             price: 115.00,  img: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=400' }
   ],
   ice_cream: [
     { id: 'ic1',  name: 'Gulab Jamun',                  price: 50.00,  img: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=400' },
@@ -784,10 +797,11 @@ function showSection(section, el) {
   triggerHaptic();
   const grid = document.getElementById('menu-grid');
   const nameDisplay = document.getElementById('section-name');
+  const menuContainer = document.querySelector('.menu-container');
   document.querySelectorAll('.nav-item, .sub-item').forEach(i => i.classList.remove('active'));
   el.classList.add('active');
   moveIndicator(el);
-  nameDisplay.innerText = section.replace(/_/g, ' ').toUpperCase();
+  nameDisplay.innerText = section.replace(/_/g, ' ').toUpperCase().replace('Merged', '');
   const items = menuData[section] || [];
   grid.innerHTML = items.map(item => `
     <div class="food-card">
@@ -803,6 +817,7 @@ function showSection(section, el) {
       </div>
     </div>
   `).join('');
+  menuContainer.scrollTop = 0;
   syncCartUI();
 }
 
