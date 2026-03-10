@@ -114,7 +114,8 @@ body {
   display: flex; 
   flex-direction: column; 
   align-items: center; 
-  padding-top: 15px; 
+  padding-top: 15px;
+  padding-bottom: 100px;
   position: relative; 
   overflow-y: auto; 
   height: 100vh;
@@ -363,6 +364,7 @@ body {
     </div>
     <div class="submenu">
       <div class="sub-item" onclick="showSection('starters', this)"><span>🍽️</span><label>Indian</label></div>
+      <div class="sub-item" onclick="showSection('snacks', this)"><span>🍕</span><label>Snacks</label></div>
     </div>
   </div>
 
@@ -498,6 +500,20 @@ const menuData = {
     { id: 'st11', name: 'Dahi Kabab',                   price: 190.00, img: 'https://images.unsplash.com/photo-1601050648497-3f9ebaec5878?w=400' },
     { id: 'st12', name: 'Jahangiri Tikka',              price: 230.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400' },
     { id: 'st13', name: 'Tandoori Plater',              price: 285.00, img: 'https://images.unsplash.com/photo-1610057099443-fde8c4d50f91?w=400' }
+  ],
+
+  /* ── 1b. SNACKS (under Starters) ── */
+  snacks: [
+    { id: 'sn1', name: 'Veg. Pizza',           price: 135.00, img: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400' },
+    { id: 'sn2', name: 'Italian Pizza',        price: 135.00, img: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400' },
+    { id: 'sn3', name: 'Cheese Pizza',         price: 150.00, img: 'https://images.unsplash.com/photo-1574071318508-1cdbad80ad38?w=400' },
+    { id: 'sn4', name: 'Jain Pizza',           price: 120.00, img: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400' },
+    { id: 'sn5', name: 'Veg. Club Sandwich',   price: 90.00,  img: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=400' },
+    { id: 'sn6', name: 'Veg. Sandwich',        price: 80.00,  img: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=400' },
+    { id: 'sn7', name: 'Cheese Sandwich',      price: 80.00,  img: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=400' },
+    { id: 'sn8', name: 'Cheese Jam Sandwich',  price: 90.00,  img: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=400' },
+    { id: 'sn9', name: 'Bread Butter',         price: 55.00,  img: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=400' },
+    { id: 'sn10',name: 'French Fries',         price: 100.00, img: 'https://images.unsplash.com/photo-1630384066202-18d038253a5d?w=400' }
   ],
 
   /* ── 2. MAIN COURSE ── */
@@ -643,17 +659,7 @@ const menuData = {
     { id: 'no2', name: 'Veg. Hakka Noodles',            price: 190.00, img: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400' },
     { id: 'no3', name: 'Schezwan Noodles',              price: 190.00, img: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400' },
     { id: 'no4', name: 'Chilly Garlic Noodles',         price: 190.00, img: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400' },
-    { id: 'no5', name: 'Veg. Manchurian With Noodles',  price: 190.00, img: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400' },
-    { id: 'sn1', name: 'Veg. Pizza',           price: 135.00, img: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400' },
-    { id: 'sn2', name: 'Italian Pizza',        price: 135.00, img: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400' },
-    { id: 'sn3', name: 'Cheese Pizza',         price: 150.00, img: 'https://images.unsplash.com/photo-1574071318508-1cdbad80ad38?w=400' },
-    { id: 'sn4', name: 'Jain Pizza',           price: 120.00, img: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400' },
-    { id: 'sn5', name: 'Veg. Club Sandwich',   price: 90.00,  img: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=400' },
-    { id: 'sn6', name: 'Veg. Sandwich',        price: 80.00,  img: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=400' },
-    { id: 'sn7', name: 'Cheese Sandwich',      price: 80.00,  img: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=400' },
-    { id: 'sn8', name: 'Cheese Jam Sandwich',  price: 90.00,  img: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=400' },
-    { id: 'sn9', name: 'Bread Butter',         price: 55.00,  img: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=400' },
-    { id: 'sn10',name: 'French Fries',         price: 100.00, img: 'https://images.unsplash.com/photo-1630384066202-18d038253a5d?w=400' }
+    { id: 'no5', name: 'Veg. Manchurian With Noodles',  price: 190.00, img: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400' }
   ],
 
   soups: [ /* ... same as before ... */ 
