@@ -335,6 +335,30 @@ body {
   0% { transform: scale(0.5); opacity: 0; }
   100% { transform: scale(1); opacity: 1; }
 }
+.token-box {
+  background: #fff8e1;
+  border: 2px dashed #ffcc00;
+  border-radius: 12px;
+  padding: 10px 18px;
+  margin: 0 auto 20px;
+  display: inline-block;
+  text-align: center;
+}
+.token-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #888;
+  letter-spacing: 1.5px;
+  margin-bottom: 4px;
+}
+.token-number {
+  font-size: 28px;
+  font-weight: 800;
+  color: #111;
+  letter-spacing: 3px;
+  font-family: 'Courier New', monospace;
+}
 </style>
 </head>
 <body>
@@ -470,6 +494,12 @@ body {
   <div class="order-confirm-box">
     <div class="order-confirm-icon">🍽️</div>
     <div class="order-confirm-title">Order Placed!</div>
+    <div style="text-align:center; margin-bottom: 18px;">
+      <div class="token-box">
+        <div class="token-label">🎫 Your Token Number</div>
+        <div class="token-number" id="order-token-number">#---</div>
+      </div>
+    </div>
     <div class="order-timer-ring">
       <svg width="130" height="130" viewBox="0 0 130 130">
         <circle class="timer-track" cx="65" cy="65" r="54"/>
@@ -938,6 +968,8 @@ function showOrderConfirm() {
   const overlay = document.getElementById('order-confirm-overlay');
   document.getElementById('order-ready-subtext').style.display = 'block';
   document.getElementById('order-ready-banner').classList.remove('visible');
+  const token = Math.floor(100 + Math.random() * 900);
+  document.getElementById('order-token-number').textContent = '#' + token;
   overlay.classList.add('visible');
   startOrderTimer();
 }
