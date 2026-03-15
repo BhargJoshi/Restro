@@ -359,6 +359,40 @@ body {
   letter-spacing: 3px;
   font-family: 'Courier New', monospace;
 }
+
+/* --- TRACK ORDER BUTTON --- */
+#track-order-btn {
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #e00000;
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  padding: 13px 20px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  z-index: 8000;
+  box-shadow: 0 4px 18px rgba(220,0,0,0.45);
+  letter-spacing: 0.5px;
+}
+#track-order-btn.visible {
+  display: block;
+}
+@keyframes trackShake {
+  0%, 100% { transform: translateX(0) rotate(0deg); }
+  15%       { transform: translateX(-5px) rotate(-3deg); }
+  30%       { transform: translateX(5px) rotate(3deg); }
+  45%       { transform: translateX(-4px) rotate(-2deg); }
+  60%       { transform: translateX(4px) rotate(2deg); }
+  75%       { transform: translateX(-2px) rotate(-1deg); }
+  90%       { transform: translateX(2px) rotate(1deg); }
+}
+#track-order-btn.shake {
+  animation: trackShake 0.6s ease;
+}
 </style>
 </head>
 <body>
@@ -512,6 +546,9 @@ body {
     <button class="order-confirm-close" onclick="closeOrderConfirm()">Got it!</button>
   </div>
 </div>
+
+<!-- TRACK ORDER BUTTON (shown only after Got it! is pressed) -->
+<button id="track-order-btn" onclick="window.location.href='Track.html'">🛵 Track Order</button>
 
 <script>
 const menuData = {
@@ -978,6 +1015,22 @@ function closeOrderConfirm() {
   const overlay = document.getElementById('order-confirm-overlay');
   overlay.classList.remove('visible');
   if (orderTimerInterval) { clearInterval(orderTimerInterval); orderTimerInterval = null; }
+
+  // Show Track Order button
+  const trackBtn = document.getElementById('track-order-btn');
+  trackBtn.classList.add('visible');
+
+  // Shake immediately, then every 5 seconds
+  triggerTrackShake();
+  if (window._trackShakeInterval) clearInterval(window._trackShakeInterval);
+  window._trackShakeInterval = setInterval(triggerTrackShake, 5000);
+}
+
+function triggerTrackShake() {
+  const trackBtn = document.getElementById('track-order-btn');
+  trackBtn.classList.remove('shake');
+  void trackBtn.offsetWidth; // force reflow to restart animation
+  trackBtn.classList.add('shake');
 }
 
 function startOrderTimer() {
