@@ -77,7 +77,7 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--black);color:var(--
   max-width:1440px;margin:0 auto;
 }
 
-/* TRUE GLASS CARD — reference image inspired */
+/* TRUE GLASS CARD */
 .ocard{
   background:rgba(255,255,255,0.07);
   border:1px solid rgba(255,255,255,0.11);
@@ -100,7 +100,7 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--black);color:var(--
 .ocard.preparing{border-color:rgba(240,180,41,0.22);}
 .ocard.all-ready{border-color:rgba(45,212,170,0.22);}
 
-/* Top strip — table identity + status */
+/* Top strip */
 .ocard-head{
   padding:18px 20px 14px;
   border-bottom:1px solid rgba(255,255,255,0.07);
@@ -128,7 +128,7 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--black);color:var(--
 .chip.gold{color:var(--gold);background:rgba(240,180,41,0.08);border-color:rgba(240,180,41,.15);}
 .chip.red{color:var(--red);background:rgba(244,97,79,0.08);border-color:rgba(244,97,79,.15);}
 
-/* Overall status — top right, clickable if preparing */
+/* Overall status */
 .ocard-overall{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0;}
 .ostatus{
   font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1.5px;
@@ -154,7 +154,7 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--black);color:var(--
 .round.preparing{border-color:rgba(240,180,41,0.18);background:rgba(240,180,41,0.03);}
 .round.ready{border-color:rgba(45,212,170,0.18);background:rgba(45,212,170,0.03);}
 
-/* Round header — top row: label+id on left, status (clickable) on right */
+/* Round header */
 .round-head{
   display:flex;align-items:flex-start;justify-content:space-between;
   flex-wrap:wrap;gap:8px;margin-bottom:12px;
@@ -172,7 +172,7 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--black);color:var(--
 }
 .round-id svg{width:9px;height:9px;opacity:.5;}
 
-/* Status pill — clickable when preparing, becomes "Ready" */
+/* Status pill */
 .rstatus{
   font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1.5px;
   text-transform:uppercase;display:flex;align-items:center;gap:5px;
@@ -201,7 +201,7 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--black);color:var(--
 .item-qty{font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:800;color:var(--white);min-width:36px;text-align:right;line-height:1;}
 .item-qty-lbl{font-family:'Space Grotesk',sans-serif;font-size:8px;color:var(--white);letter-spacing:1px;text-transform:uppercase;text-align:right;display:block;margin-top:1px;}
 
-/* Print KOT button — bottom center of card, white */
+/* Print KOT button */
 .card-footer{
   padding:14px 20px 18px;
   border-top:1px solid rgba(255,255,255,0.07);
@@ -328,7 +328,14 @@ function renderOrders(data){
     groups[key].orders.push(order);
   });
 
-  Object.values(groups).forEach(grp=>{
+  // CHANGE 3: Sort the groups array descending to put newest orders right at the top
+  const sortedGroups = Object.values(groups).sort((a, b) => {
+      const maxA = Math.max(...a.orders.map(o => o.createdAt ? new Date(o.createdAt).getTime() : 0));
+      const maxB = Math.max(...b.orders.map(o => o.createdAt ? new Date(o.createdAt).getTime() : 0));
+      return maxB - maxA; 
+  });
+
+  sortedGroups.forEach(grp=>{
     grp.orders.sort((a,b)=>(a.createdAt?new Date(a.createdAt).getTime():0)-(b.createdAt?new Date(b.createdAt).getTime():0));
     const anyPrep=grp.orders.some(o=>o.status!=='Ready');
     const card=document.createElement('div');
@@ -341,7 +348,6 @@ function renderOrders(data){
     const allItems=grp.orders.flatMap(o=>Array.isArray(o.items)?o.items:(o.items&&typeof o.items==='object'?Object.values(o.items):[]));
     const totalQty=allItems.reduce((s,i)=>s+(i.qty||1),0);
 
-    /* One KOT button per card (first order's ID, or all rounds) — placed at bottom */
     const firstOrderId=grp.orders[0]?.id||'';
 
     const roundsHTML=grp.orders.map((order,ri)=>{
@@ -360,7 +366,6 @@ function renderOrders(data){
           </div>
         </li>`).join('');
 
-      /* Status pill is clickable when preparing — clicking it marks ready */
       const statusPill=isReady
         ?`<div class="rstatus ready"><div class="rstatus-dot"></div>Ready</div>`
         :`<div class="rstatus prep" onclick="markReady('${order.id}')" title="Tap to mark ready"><div class="rstatus-dot"></div>Preparing</div>`;
@@ -432,6 +437,7 @@ function printKOT(id){
     const dtStr=now.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
     const tmStr=now.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',hour12:true});
     const ih=items.length?items.map(i=>`<div class="kt-ir"><span class="kt-ir-n">${i.name}</span><span class="kt-ir-q">×${i.qty}</span></div>`).join(''):'<div>No items</div>';
+    
     document.getElementById('kotarea').innerHTML=`
       <div class="kt-brand">EMERALD</div>
       <div class="kt-title">— KITCHEN ORDER TICKET —</div>
