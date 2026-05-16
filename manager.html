@@ -95,8 +95,24 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--black);color:var(--
 /* TABLES GRID */
 .tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(272px,1fr));gap:14px;margin-bottom:36px;}
 
-.tcard{overflow:hidden;border-radius:var(--r16);}
+.tcard{position:relative; cursor:pointer;}
+.tcard.drag-over { border-color:var(--blue); box-shadow:0 0 20px rgba(90,171,248,0.4); transform:scale(1.02); }
+.tcard-inner{overflow:hidden; border-radius:inherit; height:100%; display:flex; flex-direction:column;}
 .tcard.occupied{border-color:rgba(240,180,41,0.2);}
+
+/* Next Order Notification */
+.next-notif {
+  position:absolute; top:-10px; right:-10px; width:28px; height:28px; border-radius:50%;
+  background:var(--gold); color:#000; display:flex; align-items:center; justify-content:center;
+  font-size:14px; cursor:grab; z-index:10; box-shadow:0 4px 10px rgba(0,0,0,0.6); transition:transform 0.2s;
+}
+.next-notif:hover { transform:scale(1.1); }
+.next-tooltip {
+  position:absolute; top:34px; right:0; background:rgba(10,12,20,0.95); border:1px solid var(--border);
+  padding:10px; border-radius:var(--r8); min-width:120px; font-family:'JetBrains Mono',monospace; font-size:10px;
+  color:var(--w80); z-index:20; display:none; box-shadow:0 4px 12px rgba(0,0,0,0.5); text-align:left;
+}
+.next-notif.show-tooltip .next-tooltip { display:block; }
 
 .tcard-top{
   padding:16px 18px 14px;display:flex;align-items:flex-start;justify-content:space-between;
@@ -115,7 +131,7 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--black);color:var(--
 .tcard-meta-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--w30);letter-spacing:2px;text-transform:uppercase;}
 .tcard-meta-val{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--blue);margin-left:6px;}
 
-.tcard-cust{padding:14px 18px;border-bottom:1px solid rgba(255,255,255,0.07);background:rgba(45,212,170,0.02);}
+.tcard-cust{padding:14px 18px;border-bottom:1px solid rgba(255,255,255,0.07);background:rgba(45,212,170,0.02);flex:1;}
 .tcard-cust-name{font-family:'Instrument Serif',serif;font-style:italic;font-size:18px;color:var(--green);line-height:1.2;margin-bottom:8px;}
 .tcard-cust-chips{display:flex;gap:12px;}
 .chip{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--w30);display:flex;align-items:center;gap:4px;}
@@ -142,7 +158,8 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--black);color:var(--
 
 /* QUEUE */
 .qlist{display:flex;flex-direction:column;gap:8px;margin-bottom:36px;}
-.qcard{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-radius:var(--r12);border-color:rgba(240,180,41,0.14);}
+.qcard{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-radius:var(--r12);border-color:rgba(240,180,41,0.14); cursor:grab;}
+.qcard:active{cursor:grabbing;}
 .qcard-left{display:flex;align-items:center;gap:14px;}
 .qidx{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--w30);width:18px;}
 .qname{font-family:'Instrument Serif',serif;font-style:italic;font-size:17px;color:var(--green);}
@@ -160,7 +177,6 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--black);color:var(--
 .btn-blue:hover{background:rgba(90,171,248,0.18);border-color:var(--blue);}
 .btn-ghost{background:rgba(255,255,255,0.05);color:var(--w55);border-color:rgba(255,255,255,0.1);}
 .btn-ghost:hover{background:rgba(255,255,255,0.1);color:var(--w80);}
-/* White glass button — matching KOT style */
 .btn-white{background:rgba(255,255,255,0.08);color:#ffffff;border-color:rgba(255,255,255,0.18);backdrop-filter:blur(10px);}
 .btn-white:hover{background:rgba(255,255,255,0.14);border-color:rgba(255,255,255,0.30);transform:translateY(-1px);}
 .btn-sm{padding:7px 12px;font-size:11px;}
@@ -199,6 +215,7 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--black);color:var(--
 .esp{display:none;width:11px;height:11px;border:2px solid rgba(255,255,255,.25);border-top-color:currentColor;border-radius:50%;animation:spin .6s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
 .ebtn.loading .esp{display:block;}.ebtn.loading .eico{display:none;}
+#expNote{display:none;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--w30);}
 
 /* History table */
 .hist-wrap{border:1px solid rgba(255,255,255,0.09);border-radius:var(--r12);overflow:hidden;margin-bottom:20px;backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px);}
@@ -238,7 +255,7 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--black);color:var(--
 .pgbtn.active{background:var(--blue);border-color:var(--blue);color:#fff;}
 .pgbtn:disabled{opacity:.2;cursor:not-allowed;}
 
-/* BILL MODAL */
+/* MODALS */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.82);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);z-index:999;display:none;align-items:flex-start;justify-content:center;padding:36px 16px;overflow-y:auto;}
 .overlay.open{display:flex;}
 .bmodal{
@@ -416,7 +433,7 @@ db.ref("orders").on("value",s=>{const d=s.val();allTkw=d?Object.values(d).filter
           <span class="eico"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 1.5L18.5 9H13V3.5zM7 19l2-3-2-3h1.5l1.25 2 1.25-2H12.5l-2 3 2 3H11l-1.25-2L8.5 19H7zm6.5 0v-6H15v5h2v1h-3.5z"/></svg></span>
           <span class="esp"></span>Excel
         </button>
-        <span id="expNote" style="display:none;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--w30);"><span id="expCount">0</span> records</span>
+        <span id="expNote"><span id="expCount">0</span> records</span>
       </div>
 
       <div class="hist-wrap">
@@ -428,6 +445,27 @@ db.ref("orders").on("value",s=>{const d=s.val();allTkw=d?Object.values(d).filter
       <div class="pagi" id="hpagi"></div>
     </div>
   </main>
+</div>
+
+<div class="overlay" id="viewOrderModal" onclick="if(event.target==this)closeViewOrder()">
+  <div class="bmodal" style="max-width:500px;">
+    <div class="bmodal-head">
+      <div><div class="bmodal-title">Current Order Details</div><div class="bmodal-sub" id="voSub">—</div></div>
+      <button class="bmodal-close" onclick="closeViewOrder()">✕</button>
+    </div>
+    <div class="bmodal-body">
+      <table class="btable">
+        <thead><tr><th>Item</th><th>Qty</th><th>Price</th><th style="text-align:right;">Total</th></tr></thead>
+        <tbody id="voItems"></tbody>
+      </table>
+      <div class="tbox" style="margin-top:16px;">
+        <div class="grand-row">
+          <span class="grand-lbl">Order Total</span>
+          <span class="grand-val" id="voTotal">₹0.00</span>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="overlay" id="billModal">
@@ -485,7 +523,7 @@ const allMenu=Object.values(menuData).flat();
 let allTables=[],allQueue=[],allTkw=[];
 let billItems=[],curOid=null,curTnum=null,curTkey=null,dMode='pct';
 
-db.ref("tables").once("value",s=>{if(!s.exists()){const d=[];for(let i=1;i<=10;i++)d.push({number:i,capacity:i<=4?2:i<=8?4:6,occupied:false,current:null});db.ref("tables").set(d);}});
+db.ref("tables").once("value",s=>{if(!s.exists()){const d=[];for(let i=1;i<=10;i++)d.push({number:i,capacity:i<=4?2:i<=8?4:6,occupied:false,current:null,nextOrder:null});db.ref("tables").set(d);}});
 db.ref("queue").once("value",s=>{if(!s.exists())db.ref("queue").set([]);});
 
 function renderDash(){
@@ -495,10 +533,19 @@ function renderDash(){
   const occ=allTables.filter(t=>t.occupied).length;
   document.getElementById('tcount').textContent=`${occ}/${allTables.length}`;
   document.getElementById('qcount').textContent=allQueue.length;
+  
   if(!allTables.length){g.innerHTML=`<div class="empty"><div class="empty-ico">🪑</div><div class="empty-txt">No tables configured</div></div>`;return;}
+  
   allTables.forEach(t=>{
     const el=document.createElement('div');
     el.className=`g tcard${t.occupied?' occupied':''}`;
+    
+    // Drag/Drop properties for the Table
+    el.setAttribute('ondragover', "event.preventDefault(); this.classList.add('drag-over')");
+    el.setAttribute('ondragleave', "this.classList.remove('drag-over')");
+    el.setAttribute('ondrop', `dropOnTable(event, ${t.number}); this.classList.remove('drag-over')`);
+    el.setAttribute('onclick', `viewOrderDetails(${t.number})`);
+
     let cust='';
     if(t.current){
       const m=Math.floor((Date.now()-t.current.since)/60000);
@@ -510,28 +557,141 @@ function renderDash(){
         </div>
       </div>
       <div class="tcard-actions">
-        <button class="btn btn-gold btn-sm" style="flex:1;" onclick="openBill(${t.number})">Generate Bill</button>
-        <button class="btn btn-red btn-sm" onclick="freeTable(${t.number})">Free</button>
+        <button class="btn btn-gold btn-sm" style="flex:1;" onclick="event.stopPropagation(); openBill(${t.number})">Generate Bill</button>
+        <button class="btn btn-red btn-sm" onclick="event.stopPropagation(); freeTable(${t.number})">Free</button>
       </div>`;
     }
+
+    let nextNotif = '';
+    if(t.nextOrder) {
+        nextNotif = `
+        <div class="next-notif" id="notif-${t.number}" draggable="true" 
+             ondragstart="event.stopPropagation(); event.dataTransfer.setData('text/plain', JSON.stringify({type:'table', tNum:${t.number}}))" 
+             onclick="event.stopPropagation(); toggleNextTooltip(${t.number})">
+          🔔
+          <div class="next-tooltip">
+              <span style="color:var(--gold);font-weight:bold;margin-bottom:4px;display:block;">Next in line:</span>
+              Name: ${t.nextOrder.name}<br/>
+              Pax: ${t.nextOrder.people}
+          </div>
+        </div>`;
+    }
+
     el.innerHTML=`
-      <div class="tcard-top">
-        <div><div class="tcard-num">${t.number}</div><div class="tcard-numlabel">Table</div></div>
-        <div class="tcard-status ${t.occupied?'occ':'free'}"><div class="sdot"></div>${t.occupied?'Occupied':'Free'}</div>
+      <div class="tcard-inner">
+        <div class="tcard-top">
+          <div><div class="tcard-num">${t.number}</div><div class="tcard-numlabel">Table</div></div>
+          <div class="tcard-status ${t.occupied?'occ':'free'}"><div class="sdot"></div>${t.occupied?'Occupied':'Free'}</div>
+        </div>
+        <div class="tcard-meta"><span class="tcard-meta-lbl">Capacity</span><span class="tcard-meta-val">${t.capacity} seats</span></div>
+        ${cust}
       </div>
-      <div class="tcard-meta"><span class="tcard-meta-lbl">Capacity</span><span class="tcard-meta-val">${t.capacity} seats</span></div>
-      ${cust}`;
+      ${nextNotif}`;
     g.appendChild(el);
   });
+  
   if(!allQueue.length){q.innerHTML=`<div class="empty" style="grid-column:unset;"><div class="empty-ico">📋</div><div class="empty-txt">Queue is empty</div></div>`;}
   else allQueue.forEach((qu,i)=>{
     const m=Math.floor((Date.now()-(qu.time||Date.now()))/60000);
-    const el=document.createElement('div');el.className='g qcard';
+    const el=document.createElement('div');
+    el.className='g qcard';
+    
+    // Draggable queue cards
+    el.setAttribute('draggable', 'true');
+    el.setAttribute('ondragstart', `event.dataTransfer.setData('text/plain', JSON.stringify({type:'queue', idx:${i}}))`);
+    
     el.innerHTML=`<div class="qcard-left"><span class="qidx">${i+1}</span><span class="qname">${qu.name||'Guest'}</span></div>
       <div class="qcard-right"><span class="qpeople">${qu.people} pax</span><span class="qwait">${m} min wait</span></div>`;
     q.appendChild(el);
   });
 }
+
+// Tooltip toggler
+window.toggleNextTooltip = function(tNum) {
+    document.querySelectorAll('.next-notif').forEach(n => {
+        if (n.id !== 'notif-'+tNum) n.classList.remove('show-tooltip');
+    });
+    const n = document.getElementById('notif-'+tNum);
+    if (n) n.classList.toggle('show-tooltip');
+};
+document.addEventListener('click', e => {
+    if(!e.target.closest('.next-notif')) {
+        document.querySelectorAll('.next-notif').forEach(n => n.classList.remove('show-tooltip'));
+    }
+});
+
+// Drag & Drop Handler
+window.dropOnTable = function(e, targetTnum) {
+    e.preventDefault();
+    try {
+        const data = JSON.parse(e.dataTransfer.getData('text/plain'));
+        db.ref("tables").once("value", s => {
+            const tablesRaw = s.val();
+            let targetKey = null, sourceKey = null;
+            Object.entries(tablesRaw).forEach(([k, v]) => {
+                if (v.number === targetTnum) targetKey = k;
+                if (data.type === 'table' && v.number === data.tNum) sourceKey = k;
+            });
+
+            if (data.type === 'queue') {
+                db.ref("queue").once("value", qs => {
+                    let q = qs.val() ? Object.values(qs.val()) : [];
+                    const item = q.splice(data.idx, 1)[0];
+                    db.ref("tables/"+targetKey).update({nextOrder: item});
+                    db.ref("queue").set(q);
+                });
+            } else if (data.type === 'table') {
+                if (sourceKey && targetKey && sourceKey !== targetKey) {
+                    const itemToMove = tablesRaw[sourceKey].nextOrder;
+                    db.ref("tables/"+sourceKey).update({nextOrder: null});
+                    db.ref("tables/"+targetKey).update({nextOrder: itemToMove});
+                }
+            }
+        });
+    } catch(err) {
+        console.error("Drag drop error", err);
+    }
+};
+
+// Order Details Viewer (Change 1)
+window.viewOrderDetails = function(n) {
+  db.ref("tables").once("value", s => {
+    const raw = s.val();
+    let t = null;
+    if(Array.isArray(raw)) t = raw[n-1];
+    else Object.values(raw).forEach(v => { if(v.number === n) t = v; });
+
+    if(!t || !t.occupied || !t.current) {
+        return;
+    }
+
+    const oid = t.current.orderId;
+    if(!oid) {
+        document.getElementById('voSub').textContent = `Table ${n} · ${t.current.name} · ${t.current.people} pax`;
+        document.getElementById('voItems').innerHTML = `<tr><td colspan="4" class="ebill-msg">No order placed yet.</td></tr>`;
+        document.getElementById('voTotal').textContent = `₹0.00`;
+        document.getElementById('viewOrderModal').classList.add('open');
+        return;
+    }
+
+    db.ref("orders/"+oid).once("value", os => {
+      const o = os.val();
+      if(!o) return;
+      document.getElementById('voSub').textContent = `Table ${n} · ${t.current.name} · ${t.current.people} pax`;
+      const items = Array.isArray(o.items) ? o.items : (o.items && typeof o.items === 'object' ? Object.values(o.items) : []);
+      if(!items.length) {
+          document.getElementById('voItems').innerHTML = `<tr><td colspan="4" class="ebill-msg">No items in order.</td></tr>`;
+      } else {
+          document.getElementById('voItems').innerHTML = items.map(i => `<tr><td>${i.name}</td><td>${i.qty}</td><td>₹${i.price.toFixed(2)}</td><td style="text-align:right;">₹${(i.price * i.qty).toFixed(2)}</td></tr>`).join('');
+      }
+      document.getElementById('voTotal').textContent = `₹${(o.total || 0).toFixed(2)}`;
+      document.getElementById('viewOrderModal').classList.add('open');
+    });
+  });
+};
+window.closeViewOrder = function() {
+  document.getElementById('viewOrderModal').classList.remove('open');
+};
 
 function renderTkw(){
   const g=document.getElementById('tkgrid');if(!g)return;
@@ -546,7 +706,7 @@ function renderTkw(){
       <div class="tkcard-body"><div class="tkcard-name">${o.customerName||'Customer'}</div><div class="tkcard-time">${m} min ago</div>
       <div class="tkcard-items">${preview||'<span style="color:var(--w30)">No items</span>'}</div>
       <span class="tkcard-total-lbl">Total</span><div class="tkcard-total">₹${(o.total||0).toFixed(2)}</div>
-      <button class="btn btn-blue btn-full" onclick="openTkwBill('${o.id}')">Print Bill &amp; Complete</button></div></div>`;
+      <button class="btn btn-blue btn-full" onclick="openTkwBill('${o.id}')">Print Bill & Complete</button></div></div>`;
   }).join('');
 }
 
@@ -557,11 +717,30 @@ function freeTable(n){
     if(Array.isArray(raw))k=n-1;else Object.entries(raw).forEach(([ki,v])=>{if(v.number===n)k=ki;});
     if(k===null)return;
     const t=raw[k];
-    db.ref("tables/"+k).update({occupied:false,current:null});
-    db.ref("queue").once("value",qs=>{
-      let q=qs.val()?Object.values(qs.val()):[];
-      if(q.length){const nx=q.shift();if((t.capacity||4)>=nx.people){db.ref("tables/"+k).update({occupied:true,current:{name:nx.name,people:nx.people,since:Date.now(),orderId:nx.orderId}});db.ref("queue").set(q);}else{q.unshift(nx);db.ref("queue").set(q);}}
-    });
+    
+    // Check if there is a next order assigned
+    if (t.nextOrder) {
+        db.ref("tables/"+k).update({
+            occupied: true,
+            current: {name: t.nextOrder.name, people: t.nextOrder.people, since: Date.now(), orderId: t.nextOrder.orderId || null},
+            nextOrder: null
+        });
+    } else {
+        db.ref("tables/"+k).update({occupied:false,current:null});
+        db.ref("queue").once("value",qs=>{
+          let q=qs.val()?Object.values(qs.val()):[];
+          if(q.length){
+            const nx=q.shift();
+            if((t.capacity||4)>=nx.people){
+              db.ref("tables/"+k).update({occupied:true,current:{name:nx.name,people:nx.people,since:Date.now(),orderId:nx.orderId}});
+              db.ref("queue").set(q);
+            }else{
+              q.unshift(nx);
+              db.ref("queue").set(q);
+            }
+          }
+        });
+    }
   });
 }
 
@@ -646,7 +825,12 @@ function printBill(){
   if(curOid)db.ref("orders/"+curOid).update(upd);
   const tn=curTnum,tk=curTkey,isTkw=!tk&&!tn;
   closeBill();window.print();
-  if(!isTkw&&tk!==null){setTimeout(()=>{db.ref("tables/"+tk).update({occupied:false,current:null});db.ref("queue").once("value",qs=>{let q=qs.val()?Object.values(qs.val()):[];if(q.length){db.ref("tables/"+tk).once("value",ts=>{const t=ts.val();const nx=q.shift();if((t?.capacity||4)>=nx.people){db.ref("tables/"+tk).update({occupied:true,current:{name:nx.name,people:nx.people,since:Date.now(),orderId:nx.orderId}});db.ref("queue").set(q);}else{q.unshift(nx);db.ref("queue").set(q);}});}});},500);}
+  if(!isTkw&&tk!==null){
+      setTimeout(()=>{
+          // Reuse freeTable logic here so nextOrder takes effect on Bill Print Free too
+          freeTable(tn);
+      },500);
+  }
 }
 
 function switchTab(n){['live','history'].forEach(x=>{document.getElementById('tab-'+x)?.classList.toggle('active',x===n);document.getElementById('mtab-'+x)?.classList.toggle('active',x===n);document.getElementById('panel-'+x)?.classList.toggle('active',x===n);});if(n==='history')loadHist();}
