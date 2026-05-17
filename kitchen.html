@@ -298,7 +298,6 @@ const db=firebase.database();firebase.analytics();
 
 <script>
 setInterval(()=>{const n=new Date(),pad=x=>String(x).padStart(2,'0');document.getElementById('clock').textContent=`${pad(n.getHours())}:${pad(n.getMinutes())}:${pad(n.getSeconds())}`;},1000);
-
 db.ref("orders").on("value",s=>renderOrders(s.val()));
 
 function renderOrders(data){
@@ -328,7 +327,6 @@ function renderOrders(data){
     groups[key].orders.push(order);
   });
 
-  // CHANGE 3: Sort the groups array descending to put newest orders right at the top
   const sortedGroups = Object.values(groups).sort((a, b) => {
       const maxA = Math.max(...a.orders.map(o => o.createdAt ? new Date(o.createdAt).getTime() : 0));
       const maxB = Math.max(...b.orders.map(o => o.createdAt ? new Date(o.createdAt).getTime() : 0));
@@ -437,7 +435,6 @@ function printKOT(id){
     const dtStr=now.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
     const tmStr=now.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',hour12:true});
     const ih=items.length?items.map(i=>`<div class="kt-ir"><span class="kt-ir-n">${i.name}</span><span class="kt-ir-q">×${i.qty}</span></div>`).join(''):'<div>No items</div>';
-    
     document.getElementById('kotarea').innerHTML=`
       <div class="kt-brand">EMERALD</div>
       <div class="kt-title">— KITCHEN ORDER TICKET —</div>
