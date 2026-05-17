@@ -14,9 +14,7 @@
   --surface: #ffffff;
   --intro-beige: #d2b48c; 
 }
-
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
 body {
   font-family: 'Inter', sans-serif;
   background-color: #111;
@@ -25,178 +23,44 @@ body {
   display: flex;
   overflow: hidden;
 }
-
 #intro-wrapper {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  background: var(--intro-beige);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  transition: transform 0.8s cubic-bezier(0.7, 0, 0.3, 1);
+  position: fixed; inset: 0; z-index: 9999; background: var(--intro-beige); display: flex; flex-direction: column; justify-content: center; align-items: center; transition: transform 0.8s cubic-bezier(0.7, 0, 0.3, 1);
 }
 #intro-wrapper.exit { transform: translateX(-100%); }
-
-.brand-header {
-  position: absolute;
-  top: 60px;
-  font-family: 'Arial Black', serif;
-  font-size: 32px;
-  letter-spacing: 4px;
-  color: #3d2b1f;
-  text-transform: uppercase;
-}
-
-.animation-container {
-  position: relative;
-  width: 350px;
-  height: 250px;
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  padding-bottom: 60px;
-}
-
-.plate-side {
-  width: 180px;
-  height: 8px;
-  background: #ffffff;
-  border-radius: 0 0 15px 15px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  position: relative;
-  z-index: 10;
-  animation: slidePlate 0.7s ease-out forwards;
-}
-
-@keyframes slidePlate {
-  0% { transform: translateX(100vw); }
-  100% { transform: translateX(0); }
-}
-
+.brand-header { position: absolute; top: 60px; font-family: 'Arial Black', serif; font-size: 32px; letter-spacing: 4px; color: #3d2b1f; text-transform: uppercase; }
+.animation-container { position: relative; width: 350px; height: 250px; display: flex; justify-content: center; align-items: flex-end; padding-bottom: 60px; }
+.plate-side { width: 180px; height: 8px; background: #ffffff; border-radius: 0 0 15px 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); position: relative; z-index: 10; animation: slidePlate 0.7s ease-out forwards; }
+@keyframes slidePlate { 0% { transform: translateX(100vw); } 100% { transform: translateX(0); } }
 .falling-item { position: absolute; font-size: 40px; opacity: 0; z-index: 5; }
 .item-burger { animation: dropIn 0.5s 0.8s forwards; left: 85px; }
 .item-fries  { animation: dropIn 0.5s 1.1s forwards; left: 125px; }
 .item-salad  { animation: dropIn 0.5s 1.4s forwards; left: 160px; }
 .item-wine   { animation: dropIn 0.5s 1.7s forwards; left: 200px; } 
-
-@keyframes dropIn {
-  0% { transform: translateY(-300px); opacity: 0; }
-  100% { transform: translateY(-8px); opacity: 1; }
-}
-
-.intro-text-container {
-  margin-top: 20px;
-  height: 50px;
-  text-align: center;
-  font-family: 'Times New Roman', serif;
-  font-size: 24px;
-  position: relative;
-  width: 100%;
-}
-
+@keyframes dropIn { 0% { transform: translateY(-300px); opacity: 0; } 100% { transform: translateY(-8px); opacity: 1; } }
+.intro-text-container { margin-top: 20px; height: 50px; text-align: center; font-family: 'Times New Roman', serif; font-size: 24px; position: relative; width: 100%; }
 .text-msg { position: absolute; width: 100%; left: 0; opacity: 0; }
 .msg-1 { animation: textFlow 2s 2.7s forwards; }
 .msg-2 { animation: textFlow 2s 4.7s forwards; }
+@keyframes textFlow { 0% { opacity: 0; transform: translateX(30px); } 20%, 80% { opacity: 1; transform: translateX(0); } 100% { opacity: 0; transform: translateX(-30px); } }
 
-@keyframes textFlow {
-  0% { opacity: 0; transform: translateX(30px); }
-  20%, 80% { opacity: 1; transform: translateX(0); }
-  100% { opacity: 0; transform: translateX(-30px); }
-}
-
-/* SIDEBAR & NESTED NAV */
-.sidebar { 
-  width: 90px;
-  background: #1a1a1a; 
-  display: flex; 
-  flex-direction: column; 
-  align-items: center; 
-  padding-top: 15px;
-  padding-bottom: 100px;
-  position: relative; 
-  overflow-y: auto; 
-  height: 100vh;
-  border-right: 1px solid rgba(255,255,255,0.1); 
-  scrollbar-width: none;
-  -webkit-overflow-scrolling: touch;
-}
+.sidebar { width: 90px; background: #1a1a1a; display: flex; flex-direction: column; align-items: center; padding-top: 15px; padding-bottom: 100px; position: relative; overflow-y: auto; height: 100vh; border-right: 1px solid rgba(255,255,255,0.1); scrollbar-width: none; -webkit-overflow-scrolling: touch; }
 .sidebar::-webkit-scrollbar { display: none; }
-
-.nav-indicator { 
-  position: absolute; 
-  left: 10px;
-  width: 70px; 
-  height: 70px; 
-  background: var(--primary); 
-  border-radius: 12px;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
-  z-index: 1;
-}
-
+.nav-indicator { position: absolute; left: 10px; width: 70px; height: 70px; background: var(--primary); border-radius: 12px; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); z-index: 1; }
 .nav-group { width: 100%; display: flex; flex-direction: column; align-items: center; margin-bottom: 5px; }
-
-.nav-item { 
-  width: 70px; 
-  height: 70px;
-  margin-bottom: 5px; 
-  border-radius: 12px; 
-  display: flex; 
-  flex-direction: column; 
-  align-items: center;
-  justify-content: center; 
-  cursor: pointer; 
-  position: relative; 
-  z-index: 2;
-  transition: color 0.3s ease; 
-  color: rgba(255,255,255,0.6); 
-  flex-shrink: 0; 
-}
-
+.nav-item { width: 70px; height: 70px; margin-bottom: 5px; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; position: relative; z-index: 2; transition: color 0.3s ease; color: rgba(255,255,255,0.6); flex-shrink: 0; }
 .nav-item.active { color: #000; }
 .nav-item span { font-size: 22px; margin-bottom: 4px; }
 .nav-item label { font-size: 9px; font-weight: 700; text-transform: uppercase; text-align: center; pointer-events: none; }
-
-.submenu {
-  width: 100%;
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.4s ease-out;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background: rgba(255, 204, 0, 0.07);
-  border-left: 2px solid rgba(255, 204, 0, 0.18);
-  border-right: 2px solid rgba(255, 204, 0, 0.18);
-  border-radius: 0 0 10px 10px;
-}
+.submenu { width: 100%; max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; display: flex; flex-direction: column; align-items: center; background: rgba(255, 204, 0, 0.07); border-left: 2px solid rgba(255, 204, 0, 0.18); border-right: 2px solid rgba(255, 204, 0, 0.18); border-radius: 0 0 10px 10px; }
 .nav-group.expanded .submenu { max-height: 700px; padding-bottom: 10px; }
-
-.sub-item {
-  width: 60px;
-  height: 55px;
-  margin-top: 8px;
-  border-radius: 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  z-index: 2;
-  color: rgba(255,255,255,0.55);
-  transition: all 0.3s ease;
-  background: rgba(255,255,255,0.04);
-}
+.sub-item { width: 60px; height: 55px; margin-top: 8px; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; z-index: 2; color: rgba(255,255,255,0.55); transition: all 0.3s ease; background: rgba(255,255,255,0.04); }
 .sub-item.active { color: #000; }
 .sub-item span { font-size: 16px; }
 .sub-item label { font-size: 7px; font-weight: 600; text-transform: uppercase; margin-top: 2px; pointer-events: none; }
 
-/* MAIN CONTENT */
 .main-content { flex: 1; display: flex; flex-direction: column; background: var(--bg-light); border-top-left-radius: 25px; overflow: hidden; }
 .hero-header { padding: 15px 20px; background: #fff; border-bottom: 1px solid #eee; text-align: center; position: relative; display: flex; align-items: center; justify-content: center; }
 #section-name { font-family: 'Playfair Display', serif; font-size: 16px; background: var(--primary); color: #000; display: inline-block; padding: 5px 12px; border-radius: 8px; box-shadow: 0 4px 10px rgba(255, 204, 0, 0.2); }
-
 .search-container { position: absolute; right: 15px; display: flex; align-items: center; }
 #search-input { width: 0; opacity: 0; padding: 8px 0; border: none; border-bottom: 2px solid var(--primary); outline: none; transition: all 0.3s ease; font-size: 14px; }
 #search-input.active { width: 120px; opacity: 1; padding: 8px 10px; margin-right: 5px; }
@@ -204,27 +68,12 @@ body {
 
 .menu-container { flex: 1; overflow-y: auto; padding: 12px; padding-bottom: 100px; }
 .items-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-
 .food-card { background: #fff; border-radius: 16px; padding: 8px; display: flex; flex-direction: column; position: relative; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
 .food-card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 12px; margin-bottom: 8px; }
 .food-card h4 { font-size: 12px; line-height: 1.2; margin-bottom: 4px; height: 32px; overflow: hidden; }
 .price { font-weight: 700; color: #555; font-size: 14px; margin-bottom: 8px; }
 
-.cart-badge {
-  position: absolute;
-  top: -5px;
-  right: -5px;
-  background: #ff4444;
-  color: white;
-  font-size: 10px;
-  font-weight: bold;
-  padding: 2px 6px;
-  border-radius: 10px;
-  border: 2px solid white;
-  display: none;
-  z-index: 15;
-}
-
+.cart-badge { position: absolute; top: -5px; right: -5px; background: #ff4444; color: white; font-size: 10px; font-weight: bold; padding: 2px 6px; border-radius: 10px; border: 2px solid white; display: none; z-index: 15; }
 .add-initial { width: 100%; padding: 8px; background: #111; color: #fff; border: none; border-radius: 8px; font-weight: 600; font-size: 12px; cursor: pointer; }
 .qty-controls { display: none; align-items: center; justify-content: space-between; background: #f0f0f0; border-radius: 8px; padding: 2px; }
 .btn-qty { width: 28px; height: 28px; border: none; background: #fff; border-radius: 6px; font-weight: 700; cursor: pointer; }
@@ -232,178 +81,43 @@ body {
 .cart-bar { position: fixed; bottom: 15px; left: 105px; right: 15px; background: #28a745; height: 50px; border-radius: 12px; display: none; align-items: center; justify-content: space-between; padding: 0 15px; color: #fff; font-weight: 700; z-index: 1000; cursor: pointer; }
 .cart-popup { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: flex-end; z-index: 2000; }
 .cart-content { width: 100%; max-width: 500px; background: #fff; border-top-left-radius: 25px; border-top-right-radius: 25px; padding: 25px; max-height: 80vh; overflow-y: auto; }
-
 .cart-item-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #eee; }
 .cart-item-info { flex: 1; }
 .cart-item-info h5 { font-size: 14px; margin-bottom: 2px; }
 .cart-item-info p { font-size: 12px; color: #777; }
 .cart-item-actions { display: flex; align-items: center; gap: 10px; }
-
 .pay-btn { width: 100%; padding: 16px; background: #28a745; color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 700; margin-top: 20px; cursor: pointer; }
 
 /* ORDER CONFIRMATION OVERLAY */
-#order-confirm-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.75);
-  display: none;
-  justify-content: center;
-  align-items: center;
-  z-index: 9000;
-}
+#order-confirm-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.75); display: none; justify-content: center; align-items: center; z-index: 9000; }
 #order-confirm-overlay.visible { display: flex; }
-.order-confirm-box {
-  background: #fff;
-  border-radius: 24px;
-  padding: 40px 30px;
-  text-align: center;
-  width: 85%;
-  max-width: 340px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-  animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-}
-@keyframes popIn {
-  0% { transform: scale(0.7); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
-}
+.order-confirm-box { background: #fff; border-radius: 24px; padding: 40px 30px; text-align: center; width: 85%; max-width: 340px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+@keyframes popIn { 0% { transform: scale(0.7); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 .order-confirm-icon { font-size: 52px; margin-bottom: 12px; }
 .order-confirm-title { font-family: 'Playfair Display', serif; font-size: 22px; color: #111; margin-bottom: 20px; }
-.order-timer-ring {
-  position: relative;
-  width: 130px;
-  height: 130px;
-  margin: 0 auto 20px;
-}
+.order-timer-ring { position: relative; width: 130px; height: 130px; margin: 0 auto 20px; }
 .order-timer-ring svg { transform: rotate(-90deg); }
 .timer-track { fill: none; stroke: #f0f0f0; stroke-width: 8; }
-.timer-progress {
-  fill: none;
-  stroke: #28a745;
-  stroke-width: 8;
-  stroke-linecap: round;
-  stroke-dasharray: 339.29;
-  stroke-dashoffset: 0;
-  transition: stroke-dashoffset 1s linear;
-}
-.timer-label {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 28px;
-  font-weight: 800;
-  color: #111;
-}
-.order-ready-text {
-  font-size: 15px;
-  color: #555;
-  font-weight: 600;
-  margin-bottom: 24px;
-}
-.order-confirm-close {
-  background: #111;
-  color: #fff;
-  border: none;
-  border-radius: 12px;
-  padding: 12px 32px;
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-}
-#order-ready-banner {
-  display: none;
-  margin-bottom: 18px;
-  animation: readyPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-}
+.timer-progress { fill: none; stroke: #28a745; stroke-width: 8; stroke-linecap: round; stroke-dasharray: 339.29; stroke-dashoffset: 0; transition: stroke-dashoffset 1s linear; }
+.timer-label { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 800; color: #111; }
+.order-ready-text { font-size: 15px; color: #555; font-weight: 600; margin-bottom: 24px; }
+.order-confirm-close { background: #111; color: #fff; border: none; border-radius: 12px; padding: 12px 32px; font-size: 14px; font-weight: 700; cursor: pointer; }
+#order-ready-banner { display: none; margin-bottom: 18px; animation: readyPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
 #order-ready-banner.visible { display: block; }
-.order-ready-badge {
-  background: #28a745;
-  color: #fff;
-  font-size: 20px;
-  font-weight: 800;
-  padding: 10px 24px;
-  border-radius: 50px;
-  display: inline-block;
-  letter-spacing: 0.5px;
-}
-@keyframes readyPop {
-  0% { transform: scale(0.5); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
-}
-.token-box {
-  background: #fff8e1;
-  border: 2px dashed #ffcc00;
-  border-radius: 12px;
-  padding: 10px 18px;
-  margin: 0 auto 20px;
-  display: inline-block;
-  text-align: center;
-}
-.token-label {
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: #888;
-  letter-spacing: 1.5px;
-  margin-bottom: 4px;
-}
-.token-number {
-  font-size: 28px;
-  font-weight: 800;
-  color: #111;
-  letter-spacing: 3px;
-  font-family: 'Courier New', monospace;
-}
+.order-ready-badge { background: #28a745; color: #fff; font-size: 20px; font-weight: 800; padding: 10px 24px; border-radius: 50px; display: inline-block; letter-spacing: 0.5px; }
+@keyframes readyPop { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+.token-box { background: #fff8e1; border: 2px dashed #ffcc00; border-radius: 12px; padding: 10px 18px; margin: 0 auto 20px; display: inline-block; text-align: center; }
+.token-label { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #888; letter-spacing: 1.5px; margin-bottom: 4px; }
+.token-number { font-size: 28px; font-weight: 800; color: #111; letter-spacing: 3px; font-family: 'Courier New', monospace; }
 
 /* TRACK ORDER BUTTON */
-#track-order-btn {
-  display: none;
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background: #e00000;
-  color: #fff;
-  border: none;
-  border-radius: 14px;
-  padding: 13px 20px;
-  font-size: 13px;
-  font-weight: 700;
-  cursor: pointer;
-  z-index: 8000;
-  box-shadow: 0 4px 18px rgba(220,0,0,0.45);
-  letter-spacing: 0.5px;
-}
+#track-order-btn { display: none; position: fixed; bottom: 20px; right: 20px; background: #e00000; color: #fff; border: none; border-radius: 14px; padding: 13px 20px; font-size: 13px; font-weight: 700; cursor: pointer; z-index: 8000; box-shadow: 0 4px 18px rgba(220,0,0,0.45); letter-spacing: 0.5px; }
 #track-order-btn.visible { display: block; }
-@keyframes trackShake {
-  0%, 100% { transform: translateX(0) rotate(0deg); }
-  15%       { transform: translateX(-5px) rotate(-3deg); }
-  30%       { transform: translateX(5px) rotate(3deg); }
-  45%       { transform: translateX(-4px) rotate(-2deg); }
-  60%       { transform: translateX(4px) rotate(2deg); }
-  75%       { transform: translateX(-2px) rotate(-1deg); }
-  90%       { transform: translateX(2px) rotate(1deg); }
-}
+@keyframes trackShake { 0%, 100% { transform: translateX(0) rotate(0deg); } 15% { transform: translateX(-5px) rotate(-3deg); } 30% { transform: translateX(5px) rotate(3deg); } 45% { transform: translateX(-4px) rotate(-2deg); } 60% { transform: translateX(4px) rotate(2deg); } 75% { transform: translateX(-2px) rotate(-1deg); } 90% { transform: translateX(2px) rotate(1deg); } }
 #track-order-btn.shake { animation: trackShake 0.6s ease; }
 </style>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-analytics-compat.js"></script>
-<script>
-const firebaseConfig = {
-  apiKey: "AIzaSyC_LUKzINx6H4XE7uWoCpeLSldpIp-DR80",
-  authDomain: "restro-4db49.firebaseapp.com",
-  databaseURL: "https://restro-4db49-default-rtdb.firebaseio.com",
-  projectId: "restro-4db49",
-  storageBucket: "restro-4db49.firebasestorage.app",
-  messagingSenderId: "860567729744",
-  appId: "1:860567729744:web:773f5a315af7340d950355",
-  measurementId: "G-D9CJCYZJF4"
-};
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
-const analytics = firebase.analytics();
-</script>
 </head>
 <body>
 
@@ -425,10 +139,7 @@ const analytics = firebase.analytics();
 <div class="sidebar" id="sidebar">
   <div class="nav-indicator" id="nav-indicator"></div>
   <div class="nav-group expanded" id="group-starters">
-    <div class="nav-item active" onclick="toggleGroup('starters', this)">
-      <span>🍢</span><label>Starters</label>
-    </div>
-    
+    <div class="nav-item active" onclick="toggleGroup('starters', this)"><span>🍢</span><label>Starters</label></div>
     <div class="submenu">
       <div class="sub-item" onclick="showSection('starters', this)"><span>🍽️</span><label>Indian</label></div>
       <div class="sub-item" onclick="showSection('snacks', this)"><span>🍕</span><label>Snacks</label></div>
@@ -436,9 +147,7 @@ const analytics = firebase.analytics();
     </div>
   </div>
   <div class="nav-group" id="group-main">
-    <div class="nav-item" onclick="toggleGroup('main', this)">
-      <span>🫕</span><label>Main</label>
-    </div>
+    <div class="nav-item" onclick="toggleGroup('main', this)"><span>🫕</span><label>Main</label></div>
     <div class="submenu">
       <div class="sub-item" onclick="showSection('paneer', this)"><span>🧀</span><label>Paneer</label></div>
       <div class="sub-item" onclick="showSection('indian_curry', this)"><span>🍛</span><label>Curries</label></div>
@@ -447,9 +156,7 @@ const analytics = firebase.analytics();
     </div>
   </div>
   <div class="nav-group" id="group-breads">
-    <div class="nav-item" onclick="toggleGroup('breads', this)">
-      <span>🍞</span><label>Breads</label>
-    </div>
+    <div class="nav-item" onclick="toggleGroup('breads', this)"><span>🍞</span><label>Breads</label></div>
     <div class="submenu">
       <div class="sub-item" onclick="showSection('tandoor', this)"><span>🔥</span><label>Tandoor</label></div>
       <div class="sub-item" onclick="showSection('kofta', this)"><span>🫓</span><label>Kofta</label></div>
@@ -459,9 +166,7 @@ const analytics = firebase.analytics();
     <div class="nav-item" onclick="showSection('chinese_merged', this)"><span>🍜</span><label>Chinese</label></div>
   </div>
   <div class="nav-group" id="group-soups">
-    <div class="nav-item" onclick="toggleGroup('soups', this)">
-      <span>🥣</span><label>Soups</label>
-    </div>
+    <div class="nav-item" onclick="toggleGroup('soups', this)"><span>🥣</span><label>Soups</label></div>
     <div class="submenu">
       <div class="sub-item" onclick="showSection('soups', this)"><span>🍲</span><label>Soups</label></div>
     </div>
@@ -473,9 +178,7 @@ const analytics = firebase.analytics();
     <div class="nav-item" onclick="showSection('continental', this)"><span>🍝</span><label>Continental</label></div>
   </div>
   <div class="nav-group" id="group-beverages">
-    <div class="nav-item" onclick="toggleGroup('beverages', this)">
-      <span>🥤</span><label>Drinks</label>
-    </div>
+    <div class="nav-item" onclick="toggleGroup('beverages', this)"><span>🥤</span><label>Drinks</label></div>
     <div class="submenu">
       <div class="sub-item" onclick="showSection('drinks', this)"><span>🍷</span><label>Beverages</label></div>
       <div class="sub-item" onclick="showSection('shakes', this)"><span>🥛</span><label>Shakes</label></div>
@@ -487,7 +190,6 @@ const analytics = firebase.analytics();
 <div class="main-content">
   <div class="hero-header">
     <h1 id="section-name">Starters</h1>
-   
     <div class="search-container">
       <input type="text" id="search-input" placeholder="Search item..." oninput="handleSearch()">
       <button class="search-icon-btn" onclick="toggleSearch()">🔍</button>
@@ -544,6 +246,18 @@ const analytics = firebase.analytics();
 <button id="track-order-btn" onclick="goToTrackOrder()">🛵 Track Order</button>
 
 <script>
+const firebaseConfig = {
+  apiKey: "AIzaSyC_LUKzINx6H4XE7uWoCpeLSldpIp-DR80",
+  authDomain: "restro-4db49.firebaseapp.com",
+  databaseURL: "https://restro-4db49-default-rtdb.firebaseio.com",
+  projectId: "restro-4db49",
+  storageBucket: "restro-4db49.firebasestorage.app",
+  messagingSenderId: "860567729744",
+  appId: "1:860567729744:web:773f5a315af7340d950355"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
 const menuData = {
   starters: [
     { id: 'st1',  name: 'Corn Tikki',                  price: 200.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnMSoDPqbSHVRvP9UUOfUXeQmo2cHT-_TPtUZ3YJRXKf8o38sRbov1ICUmpA&s' },
@@ -821,11 +535,9 @@ function toggleGroup(groupId, el) {
     clearTimeout(_togglePendingTimer);
     _togglePendingTimer = null;
   }
-
   const allGroups = document.querySelectorAll('.nav-group');
   const clickedGroup = el.closest('.nav-group');
   const isExpanded = clickedGroup.classList.contains('expanded');
-
   allGroups.forEach(g => g.classList.remove('expanded'));
   if (!isExpanded) {
     clickedGroup.classList.add('expanded');
@@ -836,17 +548,10 @@ function toggleGroup(groupId, el) {
         if (firstSub) {
           const sectionName = firstSub.getAttribute('onclick').match(/'([^']+)'/)[1];
           showSection(sectionName, firstSub);
-        } else {
-          moveIndicator(el);
-        }
-      } 
-      else {
-        moveIndicator(el);
-      }
+        } else { moveIndicator(el); }
+      } else { moveIndicator(el); }
     }, 400);
-  } else {
-    moveIndicator(el);
-  }
+  } else { moveIndicator(el); }
 }
 
 function showSection(section, el) {
@@ -977,18 +682,28 @@ function processPayment() {
 
   const createNewOrder = (assignedTableNum, bypassAssign) => {
     const orderId = "ORD" + Date.now();
+    
+    // Safely map values directly to avoid any broken data slipping into Firebase
+    const cleanItems = Object.values(cart).map(item => ({
+        id: item.id,
+        name: item.name,
+        price: item.price,
+        qty: item.qty
+    }));
+
     const order = {
       id: orderId,
       tableNumber: assignedTableNum || null,
-      customerName: customerName,
-      people: peopleCount,
-      items: Object.values(cart),
-      total: Object.values(cart).reduce((sum, item) => sum + (item.price * item.qty), 0),
+      customerName: customerName || "Guest",
+      people: peopleCount || 1,
+      items: cleanItems,
+      total: cleanItems.reduce((sum, item) => sum + (item.price * item.qty), 0),
       status: "Preparing",
       diet: "Regular",
-      orderType: orderType,
+      orderType: orderType || "takeaway",
       createdAt: new Date().toISOString()
     };
+    
     db.ref("orders/" + orderId).set(order).then(() => {
       localStorage.setItem("currentOrderId", orderId);
       cart = {};
@@ -1008,7 +723,6 @@ function processPayment() {
     db.ref("orders/" + prevOrderId).once("value", snap => {
       const prevOrder = snap.val();
       if (prevOrder && prevOrder.status !== "Completed" && prevOrder.status !== "Cancelled" && prevOrder.tableNumber) {
-        // Continue adding to the user's current table without reassigning
         createNewOrder(prevOrder.tableNumber, true);
       } else {
         createNewOrder(null, false);
@@ -1019,14 +733,12 @@ function processPayment() {
   }
 }
 
-// Rewritten assignTable function to safely map direct Firebase keys instead of array indices
 function assignTable(name, people, orderId, tablePref) {
   db.ref("tables").once("value", (snapshot) => {
     let rawData = snapshot.val() || {};
     let tables = [];
     let keyMap = {}; 
 
-    // Safely map Firebase keys to avoid sparse array corruption
     Object.keys(rawData).forEach(key => {
       let t = rawData[key];
       if (t) {
@@ -1037,17 +749,23 @@ function assignTable(name, people, orderId, tablePref) {
 
     if (tables.length === 0) {
       for (let i = 1; i <= 10; i++) {
-        tables.push({
-          number: i,
-          capacity: i <= 4 ? 2 : i <= 8 ? 4 : 6,
-          occupied: false,
-          current: null
-        });
-        keyMap[i] = i - 1; // Map standard indices initially
+        tables.push({ number: i, capacity: i <= 4 ? 2 : i <= 8 ? 4 : 6, occupied: false, current: null });
+        keyMap[i] = i - 1; 
       }
+      
+      // Perform initial local assignment BEFORE Firebase payload
+      let selected = tablePref ? tables.find(t => t.number == parseInt(tablePref)) : tables[0];
+      if(selected) {
+          selected.occupied = true;
+          selected.current = { name: name, people: people, since: Date.now(), orderId: orderId };
+          db.ref("orders/" + orderId).update({ tableNumber: selected.number });
+      }
+      // Write the entirety at once to avoid racing callbacks
       db.ref("tables").set(tables);
+      return; 
     }
 
+    // Normal logic
     let selectedTable = null;
     if (tablePref && tablePref.trim() !== "" && !isNaN(tablePref)) {
       selectedTable = tables.find(t => t.number === parseInt(tablePref));
@@ -1073,7 +791,7 @@ function assignTable(name, people, orderId, tablePref) {
     }
 
     if (selectedTable) {
-      const tableKey = keyMap[selectedTable.number]; // Grab the exact Firebase reference key
+      const tableKey = keyMap[selectedTable.number];
       if (selectedTable.occupied) {
         db.ref("tables/" + tableKey).update({
           nextOrder: { name: name, people: people, since: Date.now(), orderId: orderId }
@@ -1102,8 +820,7 @@ function showOrderConfirm() {
 function closeOrderConfirm() {
   const overlay = document.getElementById('order-confirm-overlay');
   overlay.classList.remove('visible');
-  if (orderTimerInterval) { clearInterval(orderTimerInterval);
-  orderTimerInterval = null; }
+  if (orderTimerInterval) { clearInterval(orderTimerInterval); orderTimerInterval = null; }
   const trackBtn = document.getElementById('track-order-btn');
   trackBtn.classList.add('visible');
   triggerTrackShake();
