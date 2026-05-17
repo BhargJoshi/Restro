@@ -789,6 +789,7 @@ const menuData = {
     { id: 'ic12', name: 'American Nut',                 price: 99.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhXpPuia6sOViPa3XvY4PhIcgs0d3FxjG2K1LeBtL_ExZMXZ5A5KRE1C_ieA&s' }
   ]
 };
+
 let cart = {};
 
 window.onload = () => {
@@ -964,36 +965,58 @@ const CIRCUMFERENCE = 2 * Math.PI * 54;
 
 function processPayment() {
   triggerHaptic();
-  const orderId = "ORD" + Date.now();
+  
   const currentOrderInfo = JSON.parse(localStorage.getItem("currentOrderInfo") || "{}");
   const orderType = currentOrderInfo.orderType || "takeaway";
   const customerName = currentOrderInfo.name || "Customer";
   const peopleCount = parseInt(currentOrderInfo.people) || 1;
   const tablePref = currentOrderInfo.tablePref || "";
 
-  const order = {
-    id: orderId,
-    tableNumber: null,
-    customerName: customerName,
-    people: peopleCount,
-    items: Object.values(cart),
-    total: Object.values(cart).reduce((sum, item) => sum + (item.price * item.qty), 0),
-    status: "Preparing",
-    diet: "Regular",
-    orderType: orderType,
-    createdAt: new Date().toISOString()
+  const prevOrderId = localStorage.getItem("currentOrderId");
+
+  const createNewOrder = (assignedTableNum, bypassAssign) => {
+    const orderId = "ORD" + Date.now();
+    const order = {
+      id: orderId,
+      tableNumber: assignedTableNum || null,
+      customerName: customerName,
+      people: peopleCount,
+      items: Object.values(cart),
+      total: Object.values(cart).reduce((sum, item) => sum + (item.price * item.qty), 0),
+      status: "Preparing",
+      diet: "Regular",
+      orderType: orderType,
+      createdAt: new Date().toISOString()
+    };
+
+    db.ref("orders/" + orderId).set(order).then(() => {
+      localStorage.setItem("currentOrderId", orderId);
+      cart = {};
+      syncCartUI();
+
+      if (orderType === "dinein" && !bypassAssign) {
+        assignTable(customerName, peopleCount, orderId, tablePref);
+      }
+      showOrderConfirm();
+    }).catch((error) => {
+      console.error("Error placing order:", error);
+      alert("Error placing order. Please try again.");
+    });
   };
 
-  db.ref("orders/" + orderId).set(order).then(() => {
-    localStorage.setItem("currentOrderId", orderId);
-    if (orderType === "dinein") {
-      assignTable(customerName, peopleCount, orderId, tablePref);
-    }
-    showOrderConfirm();
-  }).catch((error) => {
-    console.error("Error placing order:", error);
-    alert("Error placing order. Please try again.");
-  });
+  if (orderType === "dinein" && prevOrderId) {
+    db.ref("orders/" + prevOrderId).once("value", snap => {
+      const prevOrder = snap.val();
+      if (prevOrder && prevOrder.status !== "Completed" && prevOrder.status !== "Cancelled" && prevOrder.tableNumber) {
+        // Continue adding to the user's current table without reassigning
+        createNewOrder(prevOrder.tableNumber, true);
+      } else {
+        createNewOrder(null, false);
+      }
+    });
+  } else {
+    createNewOrder(null, false);
+  }
 }
 
 function assignTable(name, people, orderId, tablePref) {
@@ -1016,7 +1039,6 @@ function assignTable(name, people, orderId, tablePref) {
       selectedTable = tables.find(t => t.number === parseInt(tablePref));
     }
 
-    // Advanced Check: Fallback logic for when the selected table is occupied
     if (!selectedTable || (selectedTable.occupied && selectedTable.nextOrder)) {
       let emptyTables = tables.filter(t => !t.occupied);
       if (emptyTables.length > 0) {
@@ -1026,13 +1048,12 @@ function assignTable(name, people, orderId, tablePref) {
         if (noNextOrderTables.length > 0) {
           selectedTable = noNextOrderTables[Math.floor(Math.random() * noNextOrderTables.length)];
         } else {
-          // Everything is completely full; push directly to queue to prevent overwrite.
           db.ref("queue").once("value", qSnap => {
               let q = qSnap.val() ? Object.values(qSnap.val()) : [];
               q.push({name: name, people: people, orderId: orderId, time: Date.now()});
               db.ref("queue").set(q);
           });
-          return; // Stop here, do not assign table yet
+          return; 
         }
       }
     }
@@ -1040,12 +1061,10 @@ function assignTable(name, people, orderId, tablePref) {
     if (selectedTable) {
       const tableIndex = tables.findIndex(t => t.number === selectedTable.number);
       if (selectedTable.occupied) {
-        // Table is occupied but has space in nextOrder, queue it directly to table
         db.ref("tables/" + tableIndex).update({
           nextOrder: { name: name, people: people, since: Date.now(), orderId: orderId }
         });
       } else {
-        // Table is empty, occupy instantly
         db.ref("tables/" + tableIndex).update({
           occupied: true,
           current: { name: name, people: people, since: Date.now(), orderId: orderId }
