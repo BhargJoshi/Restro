@@ -65,7 +65,31 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--black);color:var(--
 .nav-tab{padding:7px 18px;border:none;border-radius:6px;background:transparent;font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:500;color:var(--w30);cursor:pointer;transition:all .2s;letter-spacing:.3px;}
 .nav-tab.active{background:rgba(255,255,255,0.09);color:var(--w80);box-shadow:0 1px 6px rgba(0,0,0,.4);}
 .nav-tab:not(.active):hover{color:var(--w55);background:rgba(255,255,255,0.05);}
+
+.nav-right{display:flex;align-items:center;gap:18px;}
 .nav-clock{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--w30);letter-spacing:1.5px;}
+
+/* Hamburger Menu CSS */
+.hamburger-menu { position: relative; }
+.hamb-btn {
+  background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+  color: #fff; font-size: 16px; padding: 6px 10px; border-radius: 6px;
+  cursor: pointer; transition: all 0.2s;
+}
+.hamb-btn:hover { background: rgba(255,255,255,0.15); }
+.hamb-dropdown {
+  position: absolute; right: 0; top: 120%; width: 200px;
+  background: rgba(12, 14, 22, 0.95); border: 1px solid var(--border);
+  border-radius: var(--r8); box-shadow: 0 8px 24px rgba(0,0,0,0.8);
+  display: none; flex-direction: column; overflow: hidden; backdrop-filter: blur(20px);
+}
+.hamb-dropdown.active { display: flex; }
+.hamb-dropdown a {
+  padding: 12px 16px; font-size: 12px; color: var(--w80); cursor: pointer;
+  border-bottom: 1px solid rgba(255,255,255,0.05); transition: background 0.2s;
+}
+.hamb-dropdown a:hover { background: rgba(90,171,248,0.1); color: #fff; }
+.hamb-dropdown a:last-child { border-bottom: none; }
 
 .main{flex:1;padding:26px 28px;max-width:1440px;margin:0 auto;width:100%;}
 .tab-panel{display:none;}.tab-panel.active{display:block;}
@@ -102,8 +126,7 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--black);color:var(--
 
 /* Next Order Notification */
 .next-notif {
-  position:absolute; top:-10px; right:-10px; width:28px;
-  height:28px; border-radius:50%;
+  position:absolute; top:-10px; right:-10px; width:28px; height:28px; border-radius:50%;
   background:var(--gold); color:#000; display:flex; align-items:center; justify-content:center;
   font-size:14px; cursor:grab; z-index:10; box-shadow:0 4px 10px rgba(0,0,0,0.6); transition:transform 0.2s;
 }
@@ -156,6 +179,7 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--black);color:var(--
 .tkcard-iqty{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gold);}
 .tkcard-total-lbl{font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--w30);letter-spacing:2px;text-transform:uppercase;display:block;margin-bottom:2px;}
 .tkcard-total{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--red);margin-bottom:12px;}
+.tkcard-cancel{background:none;border:none;color:var(--red);cursor:pointer;font-size:16px;margin-left:auto;}
 
 /* QUEUE */
 .qlist{display:flex;flex-direction:column;gap:8px;margin-bottom:36px;}
@@ -167,6 +191,7 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--black);color:var(--
 .qcard-right{display:flex;align-items:center;gap:16px;}
 .qwait{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--blue);}
 .qpeople{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--w30);}
+.qcancel{background:none;border:none;color:var(--red);cursor:pointer;font-size:14px;padding-left:10px;}
 
 /* BUTTONS */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:8px 14px;border-radius:var(--r8);border:1px solid transparent;font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:600;letter-spacing:.3px;cursor:pointer;transition:all .18s;white-space:nowrap;}
@@ -363,7 +388,17 @@ firebase.initializeApp(firebaseConfig);
 const db=firebase.database();firebase.analytics();
 db.ref("tables").on("value",s=>{const d=s.val();if(d)allTables=Array.isArray(d)?d:Object.values(d);renderDash();});
 db.ref("queue").on("value",s=>{const d=s.val();allQueue=d?Object.values(d):[];renderDash();});
-db.ref("orders").on("value",s=>{const d=s.val();allTkw=d?Object.values(d).filter(o=>o.orderType==='takeaway'&&o.status==='pending'):[];renderTkw();});
+db.ref("orders").on("value",s=>{
+    const d=s.val(); 
+    const ordersArr = d ? Object.values(d) : [];
+    
+    // Original Takeaway Array
+    allTkw=ordersArr.filter(o=>o.orderType==='takeaway'&&(o.status==='pending'||o.status==='Preparing')); 
+    renderTkw();
+
+    // Trigger update for tracker dashboard
+    updateTrackerStats(ordersArr);
+});
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
@@ -381,14 +416,28 @@ db.ref("orders").on("value",s=>{const d=s.val();allTkw=d?Object.values(d).filter
     <div class="nav-tabs">
       <button class="nav-tab active" id="tab-live" onclick="switchTab('live')">Live Dashboard</button>
       <button class="nav-tab" id="tab-history" onclick="switchTab('history')">Bill History</button>
+      <button class="nav-tab" id="tab-tracker" onclick="switchTab('tracker')">Order Tracking</button>
     </div>
-    <div class="nav-clock" id="clock">--:--:--</div>
+    <div class="nav-right">
+      <div class="nav-clock" id="clock">--:--:--</div>
+      
+      <div class="hamburger-menu">
+        <button class="hamb-btn" onclick="toggleMenu()">☰ Menu</button>
+        <div class="hamb-dropdown" id="hambDrop">
+            <a onclick="switchTab('live'); toggleMenu()">Live Dashboard</a>
+            <a onclick="switchTab('history'); toggleMenu()">Bill History</a>
+            <a onclick="switchTab('tracker'); toggleMenu()">Order Tracking Dashboard</a>
+        </div>
+      </div>
+
+    </div>
   </nav>
 
   <main class="main">
     <div class="mob-tabs">
       <button class="mob-tab active" id="mtab-live" onclick="switchTab('live')">Live</button>
       <button class="mob-tab" id="mtab-history" onclick="switchTab('history')">History</button>
+      <button class="mob-tab" id="mtab-tracker" onclick="switchTab('tracker')">Tracker</button>
     </div>
 
     <div class="tab-panel active" id="panel-live">
@@ -444,6 +493,16 @@ db.ref("orders").on("value",s=>{const d=s.val();allTkw=d?Object.values(d).filter
         </table>
       </div>
       <div class="pagi" id="hpagi"></div>
+    </div>
+
+    <div class="tab-panel" id="panel-tracker">
+      <div class="slabel"><span class="slabel-txt">Order Tracking Overview</span><span class="slabel-line"></span></div>
+      <div class="stats" id="trackerStats">
+          <div class="g stile"><span class="stile-lbl">Total Orders</span><span class="stile-val" id="trk-total">0</span><span class="stile-sub">Active & Served</span></div>
+          <div class="g stile"><span class="stile-lbl">Waiting to Serve</span><span class="stile-val gold" id="trk-wait">0</span><span class="stile-sub">Pending / In Queue</span></div>
+          <div class="g stile"><span class="stile-lbl">In Kitchen</span><span class="stile-val red" id="trk-cook">0</span><span class="stile-sub">Cooking Process</span></div>
+          <div class="g stile"><span class="stile-lbl">Served / Ready</span><span class="stile-val green" id="trk-served">0</span><span class="stile-sub">Completed</span></div>
+      </div>
     </div>
   </main>
 </div>
@@ -596,14 +655,25 @@ function renderDash(){
     const el=document.createElement('div');
     el.className='g qcard';
     
-    // Draggable queue cards
+    // Draggable queue cards + Cancel Button
     el.setAttribute('draggable', 'true');
     el.setAttribute('ondragstart', `event.dataTransfer.setData('text/plain', JSON.stringify({type:'queue', idx:${i}}))`);
     el.innerHTML=`<div class="qcard-left"><span class="qidx">${i+1}</span><span class="qname">${qu.name||'Guest'}</span></div>
-      <div class="qcard-right"><span class="qpeople">${qu.people} pax</span><span class="qwait">${m} min wait</span></div>`;
+      <div class="qcard-right"><span class="qpeople">${qu.people} pax</span><span class="qwait">${m} min wait</span><button class="qcancel" onclick="event.stopPropagation(); cancelQueue(${i})" title="Remove from Queue">✕</button></div>`;
     q.appendChild(el);
   });
 }
+
+// Hamburger Toggle
+function toggleMenu() {
+    const d = document.getElementById('hambDrop');
+    d.classList.toggle('active');
+}
+document.addEventListener('click', e => {
+    if(!e.target.closest('.hamburger-menu')) {
+        document.getElementById('hambDrop')?.classList.remove('active');
+    }
+});
 
 // Tooltip toggler
 window.toggleNextTooltip = function(tNum) {
@@ -619,7 +689,7 @@ document.addEventListener('click', e => {
     }
 });
 
-// Drag & Drop Handler
+// Advanced Drag & Drop Handler 
 window.dropOnTable = function(e, targetTnum) {
     e.preventDefault();
     try {
@@ -632,18 +702,32 @@ window.dropOnTable = function(e, targetTnum) {
                 if (data.type === 'table' && v.number === data.tNum) sourceKey = k;
             });
 
+            const targetTable = tablesRaw[targetKey];
+
+            const handleMove = (item) => {
+                if (!targetTable.occupied) {
+                    db.ref("tables/"+targetKey).update({
+                        occupied: true,
+                        current: {name: item.name, people: item.people, since: Date.now(), orderId: item.orderId || null}
+                    });
+                    if(item.orderId) db.ref("orders/"+item.orderId).update({ tableNumber: targetTable.number });
+                } else {
+                    db.ref("tables/"+targetKey).update({nextOrder: item});
+                }
+            };
+
             if (data.type === 'queue') {
                 db.ref("queue").once("value", qs => {
                     let q = qs.val() ? Object.values(qs.val()) : [];
                     const item = q.splice(data.idx, 1)[0];
-                    db.ref("tables/"+targetKey).update({nextOrder: item});
+                    handleMove(item);
                     db.ref("queue").set(q);
                 });
             } else if (data.type === 'table') {
                 if (sourceKey && targetKey && sourceKey !== targetKey) {
                     const itemToMove = tablesRaw[sourceKey].nextOrder;
                     db.ref("tables/"+sourceKey).update({nextOrder: null});
-                    db.ref("tables/"+targetKey).update({nextOrder: itemToMove});
+                    handleMove(itemToMove);
                 }
             }
         });
@@ -652,7 +736,6 @@ window.dropOnTable = function(e, targetTnum) {
     }
 };
 
-// Order Details Viewer (Change 1)
 window.viewOrderDetails = function(n) {
   db.ref("tables").once("value", s => {
     const raw = s.val();
@@ -660,9 +743,7 @@ window.viewOrderDetails = function(n) {
     if(Array.isArray(raw)) t = raw[n-1];
     else Object.values(raw).forEach(v => { if(v.number === n) t = v; });
 
-    if(!t || !t.occupied || !t.current) {
-        return;
-    }
+    if(!t || !t.occupied || !t.current) { return; }
 
     const oid = t.current.orderId;
     if(!oid) {
@@ -702,12 +783,33 @@ function renderTkw(){
     const preview=items.slice(0,4).map(i=>`<div class="tkcard-item-row"><span class="tkcard-iname">${i.name}</span><span class="tkcard-iqty">×${i.qty}</span></div>`).join('')+(items.length>4?`<div class="tkcard-item-row" style="opacity:.4"><span class="tkcard-iname">+${items.length-4} more</span></div>`:'');
     const m=o.createdAt?Math.floor((Date.now()-new Date(o.createdAt).getTime())/60000):'?';
     const sid=(o.id||'').replace('ORD','');
-    return `<div class="g tkcard"><div class="tkcard-top"><span class="tkcard-id">#${sid}</span><span class="tkcard-badge">Takeaway</span></div>
+    return `<div class="g tkcard">
+      <div class="tkcard-top">
+          <span class="tkcard-id">#${sid}</span>
+          <span class="tkcard-badge">Takeaway</span>
+          <button class="tkcard-cancel" onclick="cancelTakeaway('${o.id}')" title="Cancel Takeaway">✕</button>
+      </div>
       <div class="tkcard-body"><div class="tkcard-name">${o.customerName||'Customer'}</div><div class="tkcard-time">${m} min ago</div>
       <div class="tkcard-items">${preview||'<span style="color:var(--w30)">No items</span>'}</div>
       <span class="tkcard-total-lbl">Total</span><div class="tkcard-total">₹${(o.total||0).toFixed(2)}</div>
       <button class="btn btn-blue btn-full" onclick="openTkwBill('${o.id}')">Print Bill & Complete</button></div></div>`;
   }).join('');
+}
+
+// Cancel functions
+window.cancelTakeaway = function(oid) {
+    if(confirm("Are you sure you want to cancel this takeaway order?")) {
+        db.ref("orders/"+oid).update({status: 'Cancelled'});
+    }
+}
+window.cancelQueue = function(idx) {
+    if(confirm("Remove this customer from the queue?")) {
+        db.ref("queue").once("value", qs => {
+            let q = qs.val() ? Object.values(qs.val()) : [];
+            q.splice(idx, 1);
+            db.ref("queue").set(q);
+        });
+    }
 }
 
 function freeTable(n){
@@ -725,6 +827,7 @@ function freeTable(n){
             current: {name: t.nextOrder.name, people: t.nextOrder.people, since: Date.now(), orderId: t.nextOrder.orderId || null},
             nextOrder: null
         });
+        if(t.nextOrder.orderId) db.ref("orders/"+t.nextOrder.orderId).update({ tableNumber: t.number });
     } else {
         db.ref("tables/"+k).update({occupied:false,current:null});
         db.ref("queue").once("value",qs=>{
@@ -733,6 +836,7 @@ function freeTable(n){
             const nx=q.shift();
             if((t.capacity||4)>=nx.people){
               db.ref("tables/"+k).update({occupied:true,current:{name:nx.name,people:nx.people,since:Date.now(),orderId:nx.orderId}});
+              if(nx.orderId) db.ref("orders/"+nx.orderId).update({ tableNumber: t.number });
               db.ref("queue").set(q);
             }else{
               q.unshift(nx);
@@ -820,24 +924,48 @@ function printBill(){
   const dstr=now.toLocaleDateString('en-IN'),tstr=now.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
   const ih=billItems.map(i=>`<div class="pr-ir"><span class="pr-ir-n">${i.name}</span><span class="pr-ir-q">x${i.qty}</span><span class="pr-ir-p">${(i.price*i.qty).toFixed(2)}</span></div>`).join('');
   const dh=disc>0?`<div class="pr-tr"><span>${dMode==='pct'?`Discount (${v}%)`:'Discount'}</span><span>-${disc.toFixed(2)}</span></div>`:'';
-  document.getElementById('parea').innerHTML=`<div class="pr"><div class="pr-brand">EMERALD</div><div class="pr-tag">Fine Dining & Hospitality</div></div><hr class="pr-div"><div class="pr-row"><span>Order No:</span><span>#${on}</span></div><div class="pr-row"><span>Table:</span><span>${curTnum||'—'}</span></div><div class="pr-row"><span>Date:</span><span>${dstr}</span></div><div class="pr-row"><span>Time:</span><span>${tstr}</span></div><hr class="pr-div"><div class="pr-ih"><span style="flex:1">Item</span><span style="width:28px;text-align:center">Qty</span><span style="width:56px;text-
-  align:right">Amt</span></div><hr class="pr-div">${ih}<hr class="pr-div"><div class="pr-tr"><span>Subtotal</span><span>₹${sub.toFixed(2)}</span></div>${dh}<hr class="pr-div"><div class="pr-gr"><span>TOTAL</span><span>₹${grand.toFixed(2)}</span></div><hr class="pr-div"><div class="pr-ty">Thank You! 🙏</div><div class="pr-ft">Visit us again • EMERALD Restaurant</div>`;
+  
+  document.getElementById('parea').innerHTML=`<div class="pr"><div class="pr-brand">EMERALD</div><div class="pr-tag">Fine Dining & Hospitality</div></div><hr class="pr-div"><div class="pr-row"><span>Order No:</span><span>#${on}</span></div><div class="pr-row"><span>Table:</span><span>${curTnum||'—'}</span></div><div class="pr-row"><span>Date:</span><span>${dstr}</span></div><div class="pr-row"><span>Time:</span><span>${tstr}</span></div><hr class="pr-div"><div class="pr-ih"><span style="flex:1">Item</span><span style="width:28px;text-align:center">Qty</span><span style="width:56px;text-align:right">Amt</span></div><hr class="pr-div">${ih}<hr class="pr-div"><div class="pr-tr"><span>Subtotal</span><span>₹${sub.toFixed(2)}</span></div>${dh}<hr class="pr-div"><div class="pr-gr"><span>TOTAL</span><span>₹${grand.toFixed(2)}</span></div><hr class="pr-div"><div class="pr-ty">Thank You! 🙏</div><div class="pr-ft">Visit us again • EMERALD Restaurant</div>`;
   
   const upd={status:'Completed',items:billItems,total:sub,grandTotal:grand,discount:disc,billedAt:new Date().toISOString()};
   if(curOid)db.ref("orders/"+curOid).update(upd);
   
   const tn=curTnum,tk=curTkey,isTkw=!tk&&!tn;
   closeBill();window.print();
-  
   if(!isTkw&&tk!==null){
       setTimeout(()=>{
-          // Reuse freeTable logic here so nextOrder takes effect on Bill Print Free too
           freeTable(tn);
       },500);
   }
 }
 
-function switchTab(n){['live','history'].forEach(x=>{document.getElementById('tab-'+x)?.classList.toggle('active',x===n);document.getElementById('mtab-'+x)?.classList.toggle('active',x===n);document.getElementById('panel-'+x)?.classList.toggle('active',x===n);});if(n==='history')loadHist();}
+// Order Tracker Updater (Change 3)
+function updateTrackerStats(ordersArr) {
+    if (!ordersArr) return;
+    const total = ordersArr.filter(o => o.status !== 'Cancelled').length;
+    const wait = ordersArr.filter(o => o.status === 'pending').length + allQueue.length;
+    const cook = ordersArr.filter(o => o.status === 'Preparing').length;
+    const served = ordersArr.filter(o => o.status === 'Completed' || o.status === 'Ready').length;
+
+    const elTotal = document.getElementById('trk-total');
+    const elWait = document.getElementById('trk-wait');
+    const elCook = document.getElementById('trk-cook');
+    const elServed = document.getElementById('trk-served');
+
+    if(elTotal) elTotal.textContent = total;
+    if(elWait) elWait.textContent = wait;
+    if(elCook) elCook.textContent = cook;
+    if(elServed) elServed.textContent = served;
+}
+
+function switchTab(n){
+  ['live','history','tracker'].forEach(x=>{
+    document.getElementById('tab-'+x)?.classList.toggle('active',x===n);
+    document.getElementById('mtab-'+x)?.classList.toggle('active',x===n);
+    document.getElementById('panel-'+x)?.classList.toggle('active',x===n);
+  });
+  if(n==='history')loadHist();
+}
 
 let hData=[],hFilt=[],hPage=1;const HPGSZ=20;
 (()=>{const n=new Date(),y=n.getFullYear(),m=String(n.getMonth()+1).padStart(2,'0');document.getElementById('hFrom').value=`${y}-${m}-01`;document.getElementById('hTo').value=n.toISOString().split('T')[0];})();
@@ -846,7 +974,13 @@ function setMonth(){const n=new Date(),y=n.getFullYear(),m=String(n.getMonth()+1
 function setToday(){const t=new Date().toISOString().split('T')[0];document.getElementById('hFrom').value=t;document.getElementById('hTo').value=t;applyF();}
 function clearF(){document.getElementById('hFrom').value='';document.getElementById('hTo').value='';applyF();}
 
-function loadHist(){db.ref("orders").once("value",s=>{const d=s.val();hData=d?Object.values(d).filter(o=>o.billedAt||o.status==='Completed'||o.status==='Cancelled').sort((a,b)=>{const ta=a.billedAt?new Date(a.billedAt).getTime():(a.timestamp||0);const tb=b.billedAt?new Date(b.billedAt).getTime():(b.timestamp||0);return tb-ta;}):[]; applyF();});}
+function loadHist(){
+  db.ref("orders").once("value",s=>{
+    const d=s.val();
+    hData=d?Object.values(d).filter(o=>o.billedAt||o.status==='Completed'||o.status==='Cancelled').sort((a,b)=>{const ta=a.billedAt?new Date(a.billedAt).getTime():(a.timestamp||0);const tb=b.billedAt?new Date(b.billedAt).getTime():(b.timestamp||0);return tb-ta;}):[]; 
+    applyF();
+  });
+}
 
 function applyF(){
   const fr=document.getElementById('hFrom').value,to=document.getElementById('hTo').value;
