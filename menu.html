@@ -428,6 +428,7 @@ const analytics = firebase.analytics();
     <div class="nav-item active" onclick="toggleGroup('starters', this)">
       <span>🍢</span><label>Starters</label>
     </div>
+    
     <div class="submenu">
       <div class="sub-item" onclick="showSection('starters', this)"><span>🍽️</span><label>Indian</label></div>
       <div class="sub-item" onclick="showSection('snacks', this)"><span>🍕</span><label>Snacks</label></div>
@@ -486,6 +487,7 @@ const analytics = firebase.analytics();
 <div class="main-content">
   <div class="hero-header">
     <h1 id="section-name">Starters</h1>
+   
     <div class="search-container">
       <input type="text" id="search-input" placeholder="Search item..." oninput="handleSearch()">
       <button class="search-icon-btn" onclick="toggleSearch()">🔍</button>
@@ -789,7 +791,6 @@ const menuData = {
     { id: 'ic12', name: 'American Nut',                 price: 99.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhXpPuia6sOViPa3XvY4PhIcgs0d3FxjG2K1LeBtL_ExZMXZ5A5KRE1C_ieA&s' }
   ]
 };
-
 let cart = {};
 
 window.onload = () => {
@@ -838,7 +839,8 @@ function toggleGroup(groupId, el) {
         } else {
           moveIndicator(el);
         }
-      } else {
+      } 
+      else {
         moveIndicator(el);
       }
     }, 400);
@@ -971,7 +973,6 @@ function processPayment() {
   const customerName = currentOrderInfo.name || "Customer";
   const peopleCount = parseInt(currentOrderInfo.people) || 1;
   const tablePref = currentOrderInfo.tablePref || "";
-
   const prevOrderId = localStorage.getItem("currentOrderId");
 
   const createNewOrder = (assignedTableNum, bypassAssign) => {
@@ -988,7 +989,6 @@ function processPayment() {
       orderType: orderType,
       createdAt: new Date().toISOString()
     };
-
     db.ref("orders/" + orderId).set(order).then(() => {
       localStorage.setItem("currentOrderId", orderId);
       cart = {};
@@ -1019,9 +1019,22 @@ function processPayment() {
   }
 }
 
+// Rewritten assignTable function to safely map direct Firebase keys instead of array indices
 function assignTable(name, people, orderId, tablePref) {
   db.ref("tables").once("value", (snapshot) => {
-    let tables = snapshot.val() ? Object.values(snapshot.val()) : [];
+    let rawData = snapshot.val() || {};
+    let tables = [];
+    let keyMap = {}; 
+
+    // Safely map Firebase keys to avoid sparse array corruption
+    Object.keys(rawData).forEach(key => {
+      let t = rawData[key];
+      if (t) {
+        tables.push(t);
+        keyMap[t.number] = key;
+      }
+    });
+
     if (tables.length === 0) {
       for (let i = 1; i <= 10; i++) {
         tables.push({
@@ -1030,6 +1043,7 @@ function assignTable(name, people, orderId, tablePref) {
           occupied: false,
           current: null
         });
+        keyMap[i] = i - 1; // Map standard indices initially
       }
       db.ref("tables").set(tables);
     }
@@ -1040,11 +1054,11 @@ function assignTable(name, people, orderId, tablePref) {
     }
 
     if (!selectedTable || (selectedTable.occupied && selectedTable.nextOrder)) {
-      let emptyTables = tables.filter(t => !t.occupied);
+      let emptyTables = tables.filter(t => t && !t.occupied); 
       if (emptyTables.length > 0) {
         selectedTable = emptyTables[Math.floor(Math.random() * emptyTables.length)];
       } else {
-        let noNextOrderTables = tables.filter(t => t.occupied && !t.nextOrder);
+        let noNextOrderTables = tables.filter(t => t && t.occupied && !t.nextOrder);
         if (noNextOrderTables.length > 0) {
           selectedTable = noNextOrderTables[Math.floor(Math.random() * noNextOrderTables.length)];
         } else {
@@ -1059,13 +1073,13 @@ function assignTable(name, people, orderId, tablePref) {
     }
 
     if (selectedTable) {
-      const tableIndex = tables.findIndex(t => t.number === selectedTable.number);
+      const tableKey = keyMap[selectedTable.number]; // Grab the exact Firebase reference key
       if (selectedTable.occupied) {
-        db.ref("tables/" + tableIndex).update({
+        db.ref("tables/" + tableKey).update({
           nextOrder: { name: name, people: people, since: Date.now(), orderId: orderId }
         });
       } else {
-        db.ref("tables/" + tableIndex).update({
+        db.ref("tables/" + tableKey).update({
           occupied: true,
           current: { name: name, people: people, since: Date.now(), orderId: orderId }
         });
@@ -1088,7 +1102,8 @@ function showOrderConfirm() {
 function closeOrderConfirm() {
   const overlay = document.getElementById('order-confirm-overlay');
   overlay.classList.remove('visible');
-  if (orderTimerInterval) { clearInterval(orderTimerInterval); orderTimerInterval = null; }
+  if (orderTimerInterval) { clearInterval(orderTimerInterval);
+  orderTimerInterval = null; }
   const trackBtn = document.getElementById('track-order-btn');
   trackBtn.classList.add('visible');
   triggerTrackShake();
