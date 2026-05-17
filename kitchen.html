@@ -298,6 +298,7 @@ const db=firebase.database();firebase.analytics();
 
 <script>
 setInterval(()=>{const n=new Date(),pad=x=>String(x).padStart(2,'0');document.getElementById('clock').textContent=`${pad(n.getHours())}:${pad(n.getMinutes())}:${pad(n.getSeconds())}`;},1000);
+
 db.ref("orders").on("value",s=>renderOrders(s.val()));
 
 function renderOrders(data){
