@@ -188,8 +188,7 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--black);color:var(--
 
 /* QUEUE */
 .qlist{display:flex;flex-direction:column;gap:8px;margin-bottom:36px;}
-.qcard{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-radius:var(--r12);border-color:rgba(240,180,41,0.14);
-  cursor:grab;}
+.qcard{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-radius:var(--r12);border-color:rgba(240,180,41,0.14); cursor:grab;}
 .qcard:active{cursor:grabbing;}
 .qcard-left{display:flex;align-items:center;gap:14px;}
 .qidx{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--w30);width:18px;}
@@ -392,7 +391,17 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--black);color:var(--
 const firebaseConfig={apiKey:"AIzaSyC_LUKzINx6H4XE7uWoCpeLSldpIp-DR80",authDomain:"restro-4db49.firebaseapp.com",databaseURL:"https://restro-4db49-default-rtdb.firebaseio.com",projectId:"restro-4db49",storageBucket:"restro-4db49.firebasestorage.app",messagingSenderId:"860567729744",appId:"1:860567729744:web:773f5a315af7340d950355",measurementId:"G-D9CJCYZJF4"};
 firebase.initializeApp(firebaseConfig);
 const db=firebase.database();firebase.analytics();
-db.ref("tables").on("value",s=>{const d=s.val();if(d)allTables=Array.isArray(d)?d:Object.values(d);renderDash();});
+
+db.ref("tables").on("value",s=>{
+    const raw=s.val();
+    if(raw) {
+        allTables = [];
+        if(Array.isArray(raw)) raw.forEach(t => { if(t) allTables.push(t); });
+        else Object.values(raw).forEach(t => { if(t) allTables.push(t); });
+    }
+    renderDash();
+});
+
 db.ref("orders").on("value",s=>{
     const d=s.val(); 
     const ordersArr = d ? Object.values(d) : [];
@@ -586,7 +595,7 @@ const menuData={starters:[{id:'st1',name:'Corn Tikki',price:200},{id:'st2',name:
 const allMenu=Object.values(menuData).flat();
 
 let allTables=[],allQueue=[],allTkw=[];
-let billItems=[],curOid=null,curTnum=null,curTkey=null,dMode='pct';
+let billItems=[],curOids=[],curOid=null,curTnum=null,curTkey=null,dMode='pct';
 
 db.ref("tables").once("value",s=>{if(!s.exists()){const d=[];for(let i=1;i<=10;i++)d.push({number:i,capacity:i<=4?2:i<=8?4:6,occupied:false,current:null,nextOrder:null});db.ref("tables").set(d);}});
 
@@ -709,8 +718,8 @@ window.dropOnTable = function(e, targetTnum) {
             const tablesRaw = s.val();
             let targetKey = null, sourceKey = null;
             Object.entries(tablesRaw).forEach(([k, v]) => {
-                if (v.number === targetTnum) targetKey = k;
-                if (data.type === 'table' && v.number === data.tNum) sourceKey = k;
+                if (v && v.number === targetTnum) targetKey = k;
+                if (data.type === 'table' && v && v.number === data.tNum) sourceKey = k;
             });
 
             const targetTable = tablesRaw[targetKey];
@@ -725,6 +734,7 @@ window.dropOnTable = function(e, targetTnum) {
                     if(item.orderId) db.ref("orders/"+item.orderId).update({ tableNumber: targetTable.number });
                 } else {
                     db.ref("tables/"+targetKey).update({nextOrder: item});
+                    if(item.orderId) db.ref("orders/"+item.orderId).update({ tableNumber: targetTable.number });
                 }
             };
 
@@ -747,32 +757,39 @@ window.viewOrderDetails = function(n) {
   db.ref("tables").once("value", s => {
     const raw = s.val();
     let t = null;
-    if(Array.isArray(raw)) t = raw[n-1];
-    else Object.values(raw).forEach(v => { if(v.number === n) t = v; });
+    Object.values(raw || {}).forEach(v => { if(v && v.number === n) t = v; });
 
-    if(!t || !t.occupied || !t.current) { return; }
+    if(!t || !t.occupied || !t.current) return;
 
-    const oid = t.current.orderId;
-    if(!oid) {
-        document.getElementById('voSub').textContent = `Table ${n} · ${t.current.name} · ${t.current.people} pax`;
-        document.getElementById('voItems').innerHTML = `<tr><td colspan="4" class="ebill-msg">No order placed yet.</td></tr>`;
-        document.getElementById('voTotal').textContent = `₹0.00`;
-        document.getElementById('viewOrderModal').classList.add('open');
-        return;
-    }
+    // Fetch ALL active orders/rounds mapping to this table (Change 2)
+    db.ref("orders").once("value", os => {
+      const allOrders = os.val() ? Object.values(os.val()) : [];
+      const tableOrders = allOrders.filter(o => 
+         (o.tableNumber == n || o.id === t.current.orderId) && 
+         o.status !== 'Completed' && o.status !== 'Cancelled'
+      );
 
-    db.ref("orders/"+oid).once("value", os => {
-      const o = os.val();
-      if(!o) return;
       document.getElementById('voSub').textContent = `Table ${n} · ${t.current.name} · ${t.current.people} pax`;
-      const items = Array.isArray(o.items) ? o.items : (o.items && typeof o.items === 'object' ? Object.values(o.items) : []);
       
-      if(!items.length) {
-          document.getElementById('voItems').innerHTML = `<tr><td colspan="4" class="ebill-msg">No items in order.</td></tr>`;
+      if(!tableOrders.length) {
+          document.getElementById('voItems').innerHTML = `<tr><td colspan="4" class="ebill-msg">No active items.</td></tr>`;
+          document.getElementById('voTotal').textContent = `₹0.00`;
       } else {
-          document.getElementById('voItems').innerHTML = items.map(i => `<tr><td>${i.name}</td><td>${i.qty}</td><td>₹${i.price.toFixed(2)}</td><td style="text-align:right;">₹${(i.price * i.qty).toFixed(2)}</td></tr>`).join('');
+          let allItems = [];
+          let grandTotal = 0;
+          tableOrders.forEach(o => {
+              const items = Array.isArray(o.items) ? o.items : (o.items && typeof o.items === 'object' ? Object.values(o.items) : []);
+              // Visually merge duplicate items
+              items.forEach(item => {
+                  let existing = allItems.find(i => i.name === item.name);
+                  if(existing) { existing.qty += item.qty; } 
+                  else { allItems.push({...item}); }
+              });
+              grandTotal += (o.total || 0);
+          });
+          document.getElementById('voItems').innerHTML = allItems.map(i => `<tr><td>${i.name}</td><td>${i.qty}</td><td>₹${i.price.toFixed(2)}</td><td style="text-align:right;">₹${(i.price * i.qty).toFixed(2)}</td></tr>`).join('');
+          document.getElementById('voTotal').textContent = `₹${grandTotal.toFixed(2)}`;
       }
-      document.getElementById('voTotal').textContent = `₹${(o.total || 0).toFixed(2)}`;
       document.getElementById('viewOrderModal').classList.add('open');
     });
   });
@@ -816,8 +833,7 @@ window.cancelQueue = function(tNum) {
         db.ref("tables").once("value", s => {
             let raw = s.val();
             let key = null;
-            if(Array.isArray(raw)) key = tNum-1; 
-            else Object.entries(raw).forEach(([k,v]) => { if(v.number === tNum) key = k; });
+            Object.entries(raw).forEach(([k,v]) => { if(v && v.number === tNum) key = k; });
             if(key !== null) {
                 db.ref("tables/"+key).update({nextOrder: null});
             }
@@ -829,7 +845,7 @@ function freeTable(n){
   db.ref("tables").once("value",s=>{
     const raw=s.val();if(!raw)return;
     let k=null;
-    if(Array.isArray(raw))k=n-1;else Object.entries(raw).forEach(([ki,v])=>{if(v.number===n)k=ki;});
+    Object.entries(raw).forEach(([ki,v])=>{if(v && v.number===n)k=ki;});
     if(k===null)return;
     const t=raw[k];
     
@@ -847,23 +863,41 @@ function freeTable(n){
 }
 
 function openBill(n){
-  curTnum=n;billItems=[];
+  curTnum=n; billItems=[]; curOids=[]; curOid=null;
   document.getElementById('dVal').value='';document.getElementById('msearch').value='';document.getElementById('mresults').style.display='none';setDisc('pct');
   document.getElementById('pbtn').textContent='Print Bill & Free Table';
+  
   db.ref("tables").once("value",s=>{
     const raw=s.val();if(!raw)return;
     let k=null,t=null;
-    if(Array.isArray(raw)){k=n-1;t=raw[k];}else Object.entries(raw).forEach(([ki,v])=>{if(v.number===n){k=ki;t=v;}});
-    curTkey=k;curOid=t?.current?.orderId||null;
+    Object.entries(raw).forEach(([ki,v])=>{if(v && v.number===n){k=ki;t=v;}});
+    curTkey=k; 
+    
     document.getElementById('bsub').textContent=`Table ${n} · ${t?.current?.name||'Guest'} · ${t?.current?.people||1} pax`;
-    const load=()=>{renderBItems();recalc();document.getElementById('billModal').classList.add('open');};
-    if(curOid){db.ref("orders/"+curOid).once("value",os=>{const o=os.val();if(o){const arr=Array.isArray(o.items)?o.items:(o.items&&typeof o.items==='object'?Object.values(o.items):[]);if(arr.length)billItems=arr.map(i=>({id:i.id||'i'+Math.random(),name:i.name,qty:i.qty,price:i.price}));}load();});}
-    else load();
+    
+    // Aggregates ALL non-completed orders assigned to this table (Change 2)
+    db.ref("orders").once("value",os=>{
+        const d = os.val();
+        if(d){
+            Object.entries(d).forEach(([oid, o]) => {
+                if((o.tableNumber == n || oid === t.current.orderId) && o.status !== 'Completed' && o.status !== 'Cancelled') {
+                    curOids.push(oid);
+                    const arr = Array.isArray(o.items)?o.items:(o.items&&typeof o.items==='object'?Object.values(o.items):[]);
+                    arr.forEach(i => {
+                        let ex = billItems.find(b => b.name === i.name);
+                        if(ex) ex.qty += i.qty;
+                        else billItems.push({id:i.id||'i'+Math.random(), name:i.name, qty:i.qty, price:i.price});
+                    });
+                }
+            });
+        }
+        renderBItems(); recalc(); document.getElementById('billModal').classList.add('open');
+    });
   });
 }
 
 function openTkwBill(oid){
-  curOid=oid;curTnum=null;curTkey=null;billItems=[];
+  curOid=oid; curOids=[]; curTnum=null; curTkey=null; billItems=[];
   document.getElementById('dVal').value='';document.getElementById('msearch').value='';document.getElementById('mresults').style.display='none';setDisc('pct');
   document.getElementById('pbtn').textContent='Print Bill & Complete';
   db.ref("orders/"+oid).once("value",s=>{
@@ -875,7 +909,7 @@ function openTkwBill(oid){
   });
 }
 
-function closeBill(){document.getElementById('billModal').classList.remove('open');curOid=null;curTnum=null;curTkey=null;billItems=[];}
+function closeBill(){document.getElementById('billModal').classList.remove('open');curOids=[];curOid=null;curTnum=null;curTkey=null;billItems=[];}
 
 function renderBItems(){
   const b=document.getElementById('bitems');
@@ -912,34 +946,49 @@ function recalc(){
   document.getElementById('bgrand').textContent=`₹${(sub-disc).toFixed(2)}`;
 }
 
-function saveOnly(){if(curOid)db.ref("orders/"+curOid).update({items:billItems,total:billItems.reduce((s,i)=>s+i.price*i.qty,0)}).then(closeBill);else closeBill();}
+function saveOnly(){
+    const sub=billItems.reduce((s,i)=>s+i.price*i.qty,0);
+    if(curOids && curOids.length > 0) {
+        db.ref("orders/"+curOids[0]).update({items:billItems,total:sub}).then(closeBill);
+    } else if (curOid) {
+        db.ref("orders/"+curOid).update({items:billItems,total:sub}).then(closeBill);
+    } else closeBill();
+}
+
 function printBill(){
   const sub=billItems.reduce((s,i)=>s+i.price*i.qty,0);
   const v=parseFloat(document.getElementById('dVal').value)||0;
   const disc=dMode==='pct'?Math.min(sub,sub*v/100):Math.min(sub,v);
   const grand=sub-disc;
-  const now=new Date(),on=curOid?(curOid.replace('ORD','')):Date.now();
+  const now=new Date(),on=(curOids && curOids.length>0)?curOids[0].replace('ORD',''):(curOid?(curOid.replace('ORD','')):Date.now());
   const dstr=now.toLocaleDateString('en-IN'),tstr=now.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
   const ih=billItems.map(i=>`<div class="pr-ir"><span class="pr-ir-n">${i.name}</span><span class="pr-ir-q">x${i.qty}</span><span class="pr-ir-p">${(i.price*i.qty).toFixed(2)}</span></div>`).join('');
   const dh=disc>0?`<div class="pr-tr"><span>${dMode==='pct'?`Discount (${v}%)`:'Discount'}</span><span>-${disc.toFixed(2)}</span></div>`:'';
   document.getElementById('parea').innerHTML=`<div class="pr"><div class="pr-brand">EMERALD</div><div class="pr-tag">Fine Dining & Hospitality</div></div><hr class="pr-div"><div class="pr-row"><span>Order No:</span><span>#${on}</span></div><div class="pr-row"><span>Table:</span><span>${curTnum||'—'}</span></div><div class="pr-row"><span>Date:</span><span>${dstr}</span></div><div class="pr-row"><span>Time:</span><span>${tstr}</span></div><hr class="pr-div"><div class="pr-ih"><span style="flex:1">Item</span><span style="width:28px;text-align:center">Qty</span><span style="width:56px;text-align:right">Amt</span></div><hr class="pr-div">${ih}<hr class="pr-div"><div class="pr-tr"><span>Subtotal</span><span>₹${sub.toFixed(2)}</span></div>${dh}<hr class="pr-div"><div class="pr-gr"><span>TOTAL</span><span>₹${grand.toFixed(2)}</span></div><hr class="pr-div"><div class="pr-ty">Thank You! 🙏</div><div class="pr-ft">Visit us again • EMERALD Restaurant</div>`;
   
   const upd={status:'Completed',items:billItems,total:sub,grandTotal:grand,discount:disc,billedAt:new Date().toISOString()};
-  if(curOid)db.ref("orders/"+curOid).update(upd);
+  
+  // Flag secondary rounds explicitly (Change 2)
+  if (curOids && curOids.length > 0) {
+      db.ref("orders/"+curOids[0]).update(upd);
+      for(let i=1; i<curOids.length; i++) {
+          db.ref("orders/"+curOids[i]).update({status:'Completed', isSubRound: true, billedAt:new Date().toISOString()});
+      }
+  } else if (curOid) {
+      db.ref("orders/"+curOid).update(upd);
+  }
   
   const tn=curTnum,tk=curTkey,isTkw=!tk&&!tn;
   closeBill();window.print();
   if(!isTkw&&tk!==null){
-      setTimeout(()=>{
-          freeTable(tn);
-      },500);
+      setTimeout(()=>{ freeTable(tn); },500);
   }
 }
 
 function updateTrackerStats(ordersArr) {
     if (!ordersArr) return;
     const total = ordersArr.filter(o => o.status !== 'Cancelled').length;
-    const wait = ordersArr.filter(o => o.status === 'pending').length + allQueue.length;
+    const wait = allQueue.length;
     const cook = ordersArr.filter(o => o.status === 'Preparing').length;
     const served = ordersArr.filter(o => o.status === 'Completed' || o.status === 'Ready').length;
     const elTotal = document.getElementById('trk-total');
@@ -972,7 +1021,7 @@ function clearF(){document.getElementById('hFrom').value='';document.getElementB
 function loadHist(){
   db.ref("orders").once("value",s=>{
     const d=s.val();
-    hData=d?Object.values(d).filter(o=>o.billedAt||o.status==='Completed'||o.status==='Cancelled').sort((a,b)=>{const ta=a.billedAt?new Date(a.billedAt).getTime():(a.timestamp||0);const tb=b.billedAt?new Date(b.billedAt).getTime():(b.timestamp||0);return tb-ta;}):[]; 
+    hData=d?Object.values(d).filter(o=>!o.isSubRound && (o.billedAt||o.status==='Completed'||o.status==='Cancelled')).sort((a,b)=>{const ta=a.billedAt?new Date(a.billedAt).getTime():(a.timestamp||0);const tb=b.billedAt?new Date(b.billedAt).getTime():(b.timestamp||0);return tb-ta;}):[]; 
     applyF();
   });
 }
