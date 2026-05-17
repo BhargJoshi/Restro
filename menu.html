@@ -26,7 +26,6 @@ body {
   overflow: hidden;
 }
 
-/* --- INTRO ANIMATION --- */
 #intro-wrapper {
   position: fixed;
   inset: 0;
@@ -107,7 +106,7 @@ body {
   100% { opacity: 0; transform: translateX(-30px); }
 }
 
-/* --- SIDEBAR & NESTED NAV --- */
+/* SIDEBAR & NESTED NAV */
 .sidebar { 
   width: 90px;
   background: #1a1a1a; 
@@ -159,7 +158,6 @@ body {
 .nav-item span { font-size: 22px; margin-bottom: 4px; }
 .nav-item label { font-size: 9px; font-weight: 700; text-transform: uppercase; text-align: center; pointer-events: none; }
 
-/* Submenu Styling */
 .submenu {
   width: 100%;
   max-height: 0;
@@ -173,7 +171,6 @@ body {
   border-right: 2px solid rgba(255, 204, 0, 0.18);
   border-radius: 0 0 10px 10px;
 }
-
 .nav-group.expanded .submenu { max-height: 700px; padding-bottom: 10px; }
 
 .sub-item {
@@ -191,12 +188,11 @@ body {
   transition: all 0.3s ease;
   background: rgba(255,255,255,0.04);
 }
-
 .sub-item.active { color: #000; }
 .sub-item span { font-size: 16px; }
 .sub-item label { font-size: 7px; font-weight: 600; text-transform: uppercase; margin-top: 2px; pointer-events: none; }
 
-/* --- MAIN CONTENT --- */
+/* MAIN CONTENT */
 .main-content { flex: 1; display: flex; flex-direction: column; background: var(--bg-light); border-top-left-radius: 25px; overflow: hidden; }
 .hero-header { padding: 15px 20px; background: #fff; border-bottom: 1px solid #eee; text-align: center; position: relative; display: flex; align-items: center; justify-content: center; }
 #section-name { font-family: 'Playfair Display', serif; font-size: 16px; background: var(--primary); color: #000; display: inline-block; padding: 5px 12px; border-radius: 8px; box-shadow: 0 4px 10px rgba(255, 204, 0, 0.2); }
@@ -245,7 +241,7 @@ body {
 
 .pay-btn { width: 100%; padding: 16px; background: #28a745; color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 700; margin-top: 20px; cursor: pointer; }
 
-/* --- ORDER CONFIRMATION OVERLAY --- */
+/* ORDER CONFIRMATION OVERLAY */
 #order-confirm-overlay {
   position: fixed;
   inset: 0;
@@ -360,7 +356,7 @@ body {
   font-family: 'Courier New', monospace;
 }
 
-/* --- TRACK ORDER BUTTON --- */
+/* TRACK ORDER BUTTON */
 #track-order-btn {
   display: none;
   position: fixed;
@@ -378,9 +374,7 @@ body {
   box-shadow: 0 4px 18px rgba(220,0,0,0.45);
   letter-spacing: 0.5px;
 }
-#track-order-btn.visible {
-  display: block;
-}
+#track-order-btn.visible { display: block; }
 @keyframes trackShake {
   0%, 100% { transform: translateX(0) rotate(0deg); }
   15%       { transform: translateX(-5px) rotate(-3deg); }
@@ -390,17 +384,12 @@ body {
   75%       { transform: translateX(-2px) rotate(-1deg); }
   90%       { transform: translateX(2px) rotate(1deg); }
 }
-#track-order-btn.shake {
-  animation: trackShake 0.6s ease;
-}
+#track-order-btn.shake { animation: trackShake 0.6s ease; }
 </style>
-
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-analytics-compat.js"></script>
-
 <script>
-// Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyC_LUKzINx6H4XE7uWoCpeLSldpIp-DR80",
   authDomain: "restro-4db49.firebaseapp.com",
@@ -411,14 +400,11 @@ const firebaseConfig = {
   appId: "1:860567729744:web:773f5a315af7340d950355",
   measurementId: "G-D9CJCYZJF4"
 };
-// Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 const analytics = firebase.analytics();
 </script>
-
 </head>
-
 <body>
 
 <div id="intro-wrapper">
@@ -438,7 +424,6 @@ const analytics = firebase.analytics();
 
 <div class="sidebar" id="sidebar">
   <div class="nav-indicator" id="nav-indicator"></div>
-
   <div class="nav-group expanded" id="group-starters">
     <div class="nav-item active" onclick="toggleGroup('starters', this)">
       <span>🍢</span><label>Starters</label>
@@ -449,7 +434,6 @@ const analytics = firebase.analytics();
       <div class="sub-item" onclick="showSection('salads', this)"><span>🥗</span><label>Salads</label></div>
     </div>
   </div>
-
   <div class="nav-group" id="group-main">
     <div class="nav-item" onclick="toggleGroup('main', this)">
       <span>🫕</span><label>Main</label>
@@ -461,7 +445,6 @@ const analytics = firebase.analytics();
       <div class="sub-item" onclick="showSection('rice_merged', this)"><span>🍚</span><label>Rice</label></div>
     </div>
   </div>
-
   <div class="nav-group" id="group-breads">
     <div class="nav-item" onclick="toggleGroup('breads', this)">
       <span>🍞</span><label>Breads</label>
@@ -471,11 +454,9 @@ const analytics = firebase.analytics();
       <div class="sub-item" onclick="showSection('kofta', this)"><span>🫓</span><label>Kofta</label></div>
     </div>
   </div>
-
   <div class="nav-group">
     <div class="nav-item" onclick="showSection('chinese_merged', this)"><span>🍜</span><label>Chinese</label></div>
   </div>
-
   <div class="nav-group" id="group-soups">
     <div class="nav-item" onclick="toggleGroup('soups', this)">
       <span>🥣</span><label>Soups</label>
@@ -484,15 +465,12 @@ const analytics = firebase.analytics();
       <div class="sub-item" onclick="showSection('soups', this)"><span>🍲</span><label>Soups</label></div>
     </div>
   </div>
-
   <div class="nav-group">
     <div class="nav-item" onclick="showSection('sizzlers', this)"><span>🍝</span><label>Sizzlers</label></div>
   </div>
-
   <div class="nav-group">
     <div class="nav-item" onclick="showSection('continental', this)"><span>🍝</span><label>Continental</label></div>
   </div>
-
   <div class="nav-group" id="group-beverages">
     <div class="nav-item" onclick="toggleGroup('beverages', this)">
       <span>🥤</span><label>Drinks</label>
@@ -503,7 +481,6 @@ const analytics = firebase.analytics();
       <div class="sub-item" onclick="showSection('ice_cream', this)"><span>🍦</span><label>Desserts</label></div>
     </div>
   </div>
-
 </div>
 
 <div class="main-content">
@@ -566,24 +543,21 @@ const analytics = firebase.analytics();
 
 <script>
 const menuData = {
-  /* ── 1. STARTERS ── */
   starters: [
     { id: 'st1',  name: 'Corn Tikki',                  price: 200.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnMSoDPqbSHVRvP9UUOfUXeQmo2cHT-_TPtUZ3YJRXKf8o38sRbov1ICUmpA&s' },
-    { id: 'st2',  name: 'Paneer Tikka Dry',             price: 235.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQLGilZUsB-UT5Fg1yIFJYN2dzc-ctilFBpzVYPiRlRvGNKCxo4Hus6uDl2Zrg&s' },
-    { id: 'st3',  name: 'Paneer Phudina Tikka',         price: 235.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHPW-1_J3YuQ8umbCW6ZvQ1chf-w9c2RAXcwqVwVvSakhp3Ua-W7zqcIvszY4&s' },
-    { id: 'st4',  name: 'Paneer Lahsuni Tikka',         price: 235.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSaK7iaUGqo5RGmx1gPMSJSwCWdYn-gd8zmsuEQ9r_FQRwCIYGxIQ_rwmgy660&s' },
-    { id: 'st5',  name: 'Hara Bhara Kabab',             price: 200.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQvEdtCyriAu9hZPb3iXzI7hQb9UZU9iXi6iUBA8UcuHjR1ULg_tdI00-QyYw&s' },
-    { id: 'st6',  name: 'Raja Kabab',                   price: 210.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTd3XlcCjYFtIKVur7D10WD97WpOGOLlic7pAeumvMNPADhHDAQh5lck-ck4Q&s' },
-    { id: 'st7',  name: 'Veg. Sheekh Kabab',            price: 230.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUZ9k9eehKgTjP9SjmhEDkuW8YNzEdDgMbrBH8rEhDntEJgKhKyJnXYx7rU7A&s' },
-    { id: 'st8',  name: 'Paneer Sheekh Kabab',          price: 260.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPVJK_eKYv-A8Cf29C0PeFm0IhtuI5sphRqy3UVxr8mxTKykkhYx4O7um5Lxs&s' },
-    { id: 'st9',  name: 'Veg. Brice Kabab',             price: 200.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX1eCH5sW_OqxyeVuci48XeoKgSz2vzX8CZbK9dBSopgMjEf-6ezXNCXPFSQ&s' },
-    { id: 'st10', name: 'Veg. Dilruba Sheekh Kabab',    price: 260.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRjm5xJKeHPP5KVP_MnaM1Ge-ar-Zkx4cuLASlykXS_j3l63fM3o6ioGm0G8CI&s' },
-    { id: 'st11', name: 'Dahi Kabab',                   price: 190.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTs8qU1I9cJMvKSJPmdzVwyBcOyvN_RRF6LPgiin1ChAYPZ7P6aenjM9rMsPRA&s' },
-    { id: 'st12', name: 'Jahangiri Tikka',              price: 230.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRyZoBs7nOJyMXCegt8puFzSWIDb_kep2QtT6_UNsglPLHC59ZaSahcOTFTww&s' },
-    { id: 'st13', name: 'Tandoori Plater',              price: 285.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTh_9O4lCssUkRfWcTPlNTXtsboJRNaIYaIhtHz-w5Y-F1GOTwv9bfS-Iye0tg&s' }
+    { id: 'st2',  name: 'Paneer Tikka Dry',            price: 235.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQLGilZUsB-UT5Fg1yIFJYN2dzc-ctilFBpzVYPiRlRvGNKCxo4Hus6uDl2Zrg&s' },
+    { id: 'st3',  name: 'Paneer Phudina Tikka',        price: 235.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHPW-1_J3YuQ8umbCW6ZvQ1chf-w9c2RAXcwqVwVvSakhp3Ua-W7zqcIvszY4&s' },
+    { id: 'st4',  name: 'Paneer Lahsuni Tikka',        price: 235.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSaK7iaUGqo5RGmx1gPMSJSwCWdYn-gd8zmsuEQ9r_FQRwCIYGxIQ_rwmgy660&s' },
+    { id: 'st5',  name: 'Hara Bhara Kabab',            price: 200.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQvEdtCyriAu9hZPb3iXzI7hQb9UZU9iXi6iUBA8UcuHjR1ULg_tdI00-QyYw&s' },
+    { id: 'st6',  name: 'Raja Kabab',                  price: 210.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTd3XlcCjYFtIKVur7D10WD97WpOGOLlic7pAeumvMNPADhHDAQh5lck-ck4Q&s' },
+    { id: 'st7',  name: 'Veg. Sheekh Kabab',           price: 230.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUZ9k9eehKgTjP9SjmhEDkuW8YNzEdDgMbrBH8rEhDntEJgKhKyJnXYx7rU7A&s' },
+    { id: 'st8',  name: 'Paneer Sheekh Kabab',         price: 260.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPVJK_eKYv-A8Cf29C0PeFm0IhtuI5sphRqy3UVxr8mxTKykkhYx4O7um5Lxs&s' },
+    { id: 'st9',  name: 'Veg. Brice Kabab',            price: 200.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX1eCH5sW_OqxyeVuci48XeoKgSz2vzX8CZbK9dBSopgMjEf-6ezXNCXPFSQ&s' },
+    { id: 'st10', name: 'Veg. Dilruba Sheekh Kabab',   price: 260.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRjm5xJKeHPP5KVP_MnaM1Ge-ar-Zkx4cuLASlykXS_j3l63fM3o6ioGm0G8CI&s' },
+    { id: 'st11', name: 'Dahi Kabab',                  price: 190.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTs8qU1I9cJMvKSJPmdzVwyBcOyvN_RRF6LPgiin1ChAYPZ7P6aenjM9rMsPRA&s' },
+    { id: 'st12', name: 'Jahangiri Tikka',             price: 230.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRyZoBs7nOJyMXCegt8puFzSWIDb_kep2QtT6_UNsglPLHC59ZaSahcOTFTww&s' },
+    { id: 'st13', name: 'Tandoori Plater',             price: 285.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTh_9O4lCssUkRfWcTPlNTXtsboJRNaIYaIhtHz-w5Y-F1GOTwv9bfS-Iye0tg&s' }
   ],
-
-  /* ── 1b. SNACKS ── */
   snacks: [
     { id: 'sn1', name: 'Veg. Pizza',           price: 135.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcZbS_g1y4mcyqDyffzQ1em9LxESjjv_XboKDdb3dFi1KjY6JUi8RDtGowvA&s' },
     { id: 'sn2', name: 'Italian Pizza',        price: 135.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJiAJiyeCBwrKH9QGXwjmHcAK8N_N6pGV47gitT1a8II32wuTPl2OB98ju6x4&s' },
@@ -596,12 +570,10 @@ const menuData = {
     { id: 'sn9', name: 'Bread Butter',         price: 55.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTCjaFXXRZfGg0loRiNy0IgPtttFEDaWd-H_LVAoUakfTeVt01CjO8jNe6D75I&s' },
     { id: 'sn10',name: 'French Fries',         price: 100.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQMhzEnJCL7mXaVf_4Dsm01mZXmpTuIFURvjQxQaX3sZpeIpWpLLUVX85QrqQ&s' }
   ],
-
-  /* ── 2. MAIN COURSE ── */
   paneer: [
     { id: 'pn1',  name: 'Emerald Sp. Paneer',          price: 240.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQZ1NZRI0qF1uVzh3cHKrlV5ws8AzWEXNmr1wi_09jdFV9H_3-uauxLkbn2_Q&s' },
     { id: 'pn2',  name: 'Paneer Sizzling',             price: 245.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTENXelHAQVN1o1El1uyXXlLt2sBzAXzikGoHMVWAug8tBM52wifobxgIQeLA&s' },
-    { id: 'pn3',  name: 'Paneer Kathiyawadi',          price: 230.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwoTP1i4WHoSkkRDHcBUMjdAWvmDTmwcZrfljrsrKwZLCJEvZz1cihiZuWkQ&s' },
+    { id: 'pn3',  name: 'Paneer Kathiyawadi',          price: 230.00, img: 'https://encrypted-tbn0.GcSwoTP1i4WHoSkkRDHcBUMjdAWvmDTmwcZrfljrsrKwZLCJEvZz1cihiZuWkQ&s' },
     { id: 'pn4',  name: 'Paneer Darwar',               price: 230.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTqGTAsBD1JR_ZXKpQzWDolO5dziF1DyaCkgDtyeKAgoCoM7fenbwStizfNFA&s' },
     { id: 'pn5',  name: 'Paneer Tiranga',              price: 235.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhXqrGjVSrLeU93WHYDSR-EfRXRPIxZxn4oV_zQ70_5I7sU4EjGCFvhcA_Cw&s' },
     { id: 'pn6',  name: 'Cheese Butter Masala',        price: 235.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKlyiDm0odqlRKurnQH-qfCF_4lXoI_WnG6nKqWtQfz0o4it89F9PRTiajXuo&s' },
@@ -627,7 +599,7 @@ const menuData = {
     { id: 'pn26', name: 'Methi Paneer Masala',         price: 220.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRvN7tPVw9DpOADOpZ3Qg9AF6mTrNPII3KYfPuYiACbVCxnGpa2YsKdWpX3xWg&s' },
     { id: 'pn27', name: 'Kaju Paneer Masala',          price: 245.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRo8Uy8AutD9fjV-YtsnqdQT2rkYACD8rvwiLc-mYCmvqTuxynHyJxpGe9oDu4&s' },
     { id: 'pn28', name: 'Khoya Kaju (sweet)',          price: 240.00, img: 'https://encrypted-tbn0.GcSvj8SGZmE8PWPGw2qf0ZJLU1xbotrSgM2rIk4X4xByA3zAx-citw1e_VhSbuA&s' },
-    { id: 'pn29', name: 'Kaju Balti Masala / Kaju Curry', price: 245.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSDYpgFi8rUHoXXS0_Dcj8WeHkzCGrTO8T_BpfmhCMhI2XkxlDW5rhaBDc49lQ&s' }
+    { id: 'pn29', name: 'Kaju Balti Masala',           price: 245.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSDYpgFi8rUHoXXS0_Dcj8WeHkzCGrTO8T_BpfmhCMhI2XkxlDW5rhaBDc49lQ&s' }
   ],
   indian_curry: [
     { id: 'in1',  name: 'Emerald Sp. Veg.',            price: 210.00, img: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=400' },
@@ -684,8 +656,6 @@ const menuData = {
     { id: 'ri5', name: 'Veg. Fried Rice',         price: 185.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRIItrz76aFxyRWjQ9fJ7Hamlt05YoQOWZpkW9KmC6Vlhuy32XZO5YUTinPUQ&s' },
     { id: 'ri6', name: 'Schezwan Fried Rice',     price: 185.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUE8D7f3AI6VhuH_QGfoekuBlxz4VrM5fmNW5Yu1nZSLhCaAWbHuzQB7AFyQ&s' }
   ],
-
-  /* ── KOFTA ── */
   kofta: [
     { id: 'ko1', name: 'Cheese Kofta',          price: 225.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTz6SjYMJmZJYKylGEGFEVjK_Lhuek0lp2Omnh2U6QYCFeZy9Uiw1l7Z-oqHX0&s' },
     { id: 'ko2', name: 'Malai Kofta',           price: 220.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStZp15hcWu3_F5UtuYx46XkcDiz3q2KbyP6L8a4dzarG6xUPNrz3Pky5049w&s' },
@@ -696,8 +666,6 @@ const menuData = {
     { id: 'ko7', name: 'Kadai Kofta',           price: 210.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAlQUx51gdmKbAqYGsAOxqBCJGZ9Iko2ecCJkK7QvH85fyhHHpdsWVu-0FVZs&s' },
     { id: 'ko8', name: 'Kaju Kofta',            price: 225.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIrpk1gWUI0HHns2P-wEnORCPaNtRd4CrFFjMMdwBgujE9ONto7Rf8Rt-nKFE&s' }
   ],
-
-  /* ── 3. BREADS ── */
   tandoor: [
     { id: 'ta1',  name: 'Roti - Plain',             price: 25.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRASLfl7eQ6yo_5x2RAm7K50NkiqJa4pRoRaaCuCh-nO7-oaFPecwjyRYljIQ&s' },
     { id: 'ta2',  name: 'Roti - Butter',            price: 28.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8zgs_vMZS-m8AaHi6oqMcc89HEuhOlpu2JhhW8-B9oXq9Gx7qOPLUcD5ZvQ&s' },
@@ -723,8 +691,6 @@ const menuData = {
     { id: 'ta22', name: 'Onion Kulcha',             price: 70.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0ylgoz7y_k3AtSxvaDCjPb1Fj9dDo7-0EmnuSzxOgjFuu1iPaOKDtbTuRfA&s' },
     { id: 'ta23', name: 'Missi Roti',               price: 32.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQeIHg52BZmtq5AxFfXkxqtPXadmfOXnS68MH0k1-pcgdk4s_smfGBx08bY5Q&s' }
   ],
-
-  /* ── CHINESE (Merged) ── */
   chinese_merged: [
     { id: 'cs1',  name: 'Oriental Crispy Vegetables',       price: 200.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSVGJB38RiIVf7iU4MN_YoeucVxPjkqBG9IVwWuyzm9eoR3Mmp83P10P2m8CNE&s' },
     { id: 'cs2',  name: 'Baby Corn Chilli Fried',           price: 200.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQbOVJqtFib_CiEJkse9XY0cyegvVP-BdWFBA5HBx3UmaZX6kQiC_UKoqJ2an8&s' },
@@ -742,7 +708,6 @@ const menuData = {
     { id: 'no4', name: 'Chilly Garlic Noodles',         price: 190.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT112W7k7LfbXy-JuWSi1ZO0kbDt8iuB7weVztEfMlTEQQhadfhVHQqsWU7Wg&s' },
     { id: 'no5', name: 'Veg. Manchurian With Noodles',  price: 190.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTCStge8hAfSjPp-wHhPCSyWx-RyBLehGLKgTd5J41dUxjnnDHUDtVibo-HeY&s' }
   ],
-
   soups: [
     { id: 'sp1',  name: 'Cream of Tomato',              price: 100.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhVcyucgQyRU-6gf5VLl2wSkhJCo1QswUcjGp4pGOd5oJNWwV-RPw_0GD-hc8&s' },
     { id: 'sp2',  name: 'Minestrone Soup',              price: 115.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjXwyRiOKV7X8Ka5SOV6zrhHvrXj8my110S6Ar0I9MRxU4PfJAhdNCfAc_-w&s' },
@@ -770,20 +735,17 @@ const menuData = {
     { id: 'sl12', name: 'Papad Masala',                     price: 45.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRMF4qjJcmXxI8UYlYYMD-aQnUf642CU77KknfePxKeJYam-xql2SJay6mOXA&s' },
     { id: 'sl13', name: 'Papad Cheese Masala',              price: 60.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRtTftYDmZvyB31TdH6u9IpacwT37Kk2VC1wVSiRBgbmUMjuV8Xp9LevVaP2g&s' }
   ],
-
   sizzlers: [
     { id: 'sz1', name: 'Mix Grilled Sizzler', price: 330.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNhXpjk4v0z5qnJiv5NZQiTvHJzw74HW3WIVZGjhPrmB6aKincBlLmZZPwd_Y&s' },
     { id: 'sz2', name: 'Chinese Sizzler',     price: 340.00, img: 'https://encrypted-tbn0.GcSxV54mJHwjNySJqYrpGMTA0y7m0Sb7v_KESr16JgQ_NfABg-QFzerN30gnhg&s' },
     { id: 'sz3', name: 'Paneer Shaslik',      price: 340.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQuLOv1AGTjm7niu7pJVoNLJiv5DAmsAKUb9UoaWgAmi_ju9GjnNRQWkO5EFEE&s' },
     { id: 'sz4', name: 'Paneer Stick',        price: 340.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFaRXtioc6Bn525TLUYTvQ1rttLzoD3OVsYTTa3VB9YN4ldj3YlOU1bXjhUQ&s' }
   ],
-
   continental: [
     { id: 'con1', name: 'Baked Macaroni with Pineapple', price: 205.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTVVJX4CejaVCf1__nhScf76SUT2rehI1hxnFmFoFKENFhuwQgurQmwFThpH2s&s' },
     { id: 'con2', name: 'Baked Spaghetti with Pineapple', price: 205.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSPIEUNdiU_3D_05lLNx7_LJOZAfINTL6iKkRddmTCCAyq-MnNSSQWzedUHXvs&s' },
     { id: 'con3', name: 'Baked Vegetable with Pineapple', price: 205.00, img: 'https://encrypted-tbn0.GcSq2IpgUk_IKO3kRU_WDdKj_vygon6dS-c6t6xRGkplMQBwKfDgWBCnd6cbEpM&s' }
   ],
-
   drinks: [
     { id: 'dr1',  name: 'Jal Jeera Water',                  price: 40.00,  img: 'https://encrypted-tbn0.GcSf0cAsq5HqaujK5x77DRVlG3b9BvqnyfxCXmTrTV9JlslsE5Woth3Q5mI_MA&s' },
     { id: 'dr2',  name: 'Fresh Lime Soda',                  price: 40.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRjA3RR-0gcYfV-BdT_8pHkqzrfoGBcVR_K2etJ6rBNn3AsrZus7oCypAUSsw&s' },
@@ -827,7 +789,6 @@ const menuData = {
     { id: 'ic12', name: 'American Nut',                 price: 99.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhXpPuia6sOViPa3XvY4PhIcgs0d3FxjG2K1LeBtL_ExZMXZ5A5KRE1C_ieA&s' }
   ]
 };
-
 let cart = {};
 
 window.onload = () => {
@@ -1003,36 +964,31 @@ const CIRCUMFERENCE = 2 * Math.PI * 54;
 
 function processPayment() {
   triggerHaptic();
-
   const orderId = "ORD" + Date.now();
   const currentOrderInfo = JSON.parse(localStorage.getItem("currentOrderInfo") || "{}");
   const orderType = currentOrderInfo.orderType || "takeaway";
   const customerName = currentOrderInfo.name || "Customer";
   const peopleCount = parseInt(currentOrderInfo.people) || 1;
-  const tablePref = currentOrderInfo.tablePref || ""; // Extracted preference
+  const tablePref = currentOrderInfo.tablePref || "";
 
   const order = {
     id: orderId,
-    tableNumber: null,          // will be set by assignTable() for dine-in
+    tableNumber: null,
     customerName: customerName,
     people: peopleCount,
     items: Object.values(cart),
     total: Object.values(cart).reduce((sum, item) => sum + (item.price * item.qty), 0),
-    status: "Preparing",        // unified status used by kitchen & track
+    status: "Preparing",
     diet: "Regular",
     orderType: orderType,
     createdAt: new Date().toISOString()
   };
 
-  // Save order to Firebase
   db.ref("orders/" + orderId).set(order).then(() => {
     localStorage.setItem("currentOrderId", orderId);
-
-    // Handle table assignment for dine-in incorporating the preference
     if (orderType === "dinein") {
       assignTable(customerName, peopleCount, orderId, tablePref);
     }
-
     showOrderConfirm();
   }).catch((error) => {
     console.error("Error placing order:", error);
@@ -1040,12 +996,9 @@ function processPayment() {
   });
 }
 
-/* 🪑 MODIFIED TABLE ASSIGNMENT FUNCTIONS */
 function assignTable(name, people, orderId, tablePref) {
   db.ref("tables").once("value", (snapshot) => {
     let tables = snapshot.val() ? Object.values(snapshot.val()) : [];
-
-    // Initialize tables if empty
     if (tables.length === 0) {
       for (let i = 1; i <= 10; i++) {
         tables.push({
@@ -1059,38 +1012,46 @@ function assignTable(name, people, orderId, tablePref) {
     }
 
     let selectedTable = null;
-
-    // 1. If user gave a preference, find it.
     if (tablePref && tablePref.trim() !== "" && !isNaN(tablePref)) {
       selectedTable = tables.find(t => t.number === parseInt(tablePref));
     }
 
-    // 2. Fallback if preferred isn't available/specified OR they chose 'random'
-    if (!selectedTable) {
+    // Advanced Check: Fallback logic for when the selected table is occupied
+    if (!selectedTable || (selectedTable.occupied && selectedTable.nextOrder)) {
       let emptyTables = tables.filter(t => !t.occupied);
       if (emptyTables.length > 0) {
-        // Random EMPTY table
         selectedTable = emptyTables[Math.floor(Math.random() * emptyTables.length)];
       } else {
-        // If NONE are free, force a completely random assignment
-        selectedTable = tables[Math.floor(Math.random() * tables.length)];
+        let noNextOrderTables = tables.filter(t => t.occupied && !t.nextOrder);
+        if (noNextOrderTables.length > 0) {
+          selectedTable = noNextOrderTables[Math.floor(Math.random() * noNextOrderTables.length)];
+        } else {
+          // Everything is completely full; push directly to queue to prevent overwrite.
+          db.ref("queue").once("value", qSnap => {
+              let q = qSnap.val() ? Object.values(qSnap.val()) : [];
+              q.push({name: name, people: people, orderId: orderId, time: Date.now()});
+              db.ref("queue").set(q);
+          });
+          return; // Stop here, do not assign table yet
+        }
       }
     }
 
-    // 3. Finalize Assignment to selectedTable
     if (selectedTable) {
       const tableIndex = tables.findIndex(t => t.number === selectedTable.number);
-      db.ref("tables/" + tableIndex).update({
-        occupied: true,
-        current: {
-          name: name,
-          people: people,
-          since: Date.now(),
-          orderId: orderId
-        }
-      });
-      // Write tableNumber back to the order so kitchen & track can show it immediately
-      db.ref("orders/" + orderId).update({ tableNumber: selectedTable.number });
+      if (selectedTable.occupied) {
+        // Table is occupied but has space in nextOrder, queue it directly to table
+        db.ref("tables/" + tableIndex).update({
+          nextOrder: { name: name, people: people, since: Date.now(), orderId: orderId }
+        });
+      } else {
+        // Table is empty, occupy instantly
+        db.ref("tables/" + tableIndex).update({
+          occupied: true,
+          current: { name: name, people: people, since: Date.now(), orderId: orderId }
+        });
+        db.ref("orders/" + orderId).update({ tableNumber: selectedTable.number });
+      }
     }
   });
 }
@@ -1109,8 +1070,6 @@ function closeOrderConfirm() {
   const overlay = document.getElementById('order-confirm-overlay');
   overlay.classList.remove('visible');
   if (orderTimerInterval) { clearInterval(orderTimerInterval); orderTimerInterval = null; }
-
-  // Show Track Order button
   const trackBtn = document.getElementById('track-order-btn');
   trackBtn.classList.add('visible');
   triggerTrackShake();
@@ -1132,14 +1091,12 @@ function startOrderTimer() {
   const circle = document.getElementById('timer-progress-circle');
   circle.style.strokeDasharray = CIRCUMFERENCE;
   circle.style.strokeDashoffset = 0;
-
   function updateTimer() {
     const mins = Math.floor(secondsLeft / 60);
     const secs = secondsLeft % 60;
     display.textContent = `${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
     const progress = (TOTAL_SECONDS - secondsLeft) / TOTAL_SECONDS;
     circle.style.strokeDashoffset = CIRCUMFERENCE * progress;
-
     if (secondsLeft <= 0) {
       clearInterval(orderTimerInterval);
       orderTimerInterval = null;
@@ -1152,7 +1109,6 @@ function startOrderTimer() {
       secondsLeft--;
     }
   }
-
   updateTimer();
   orderTimerInterval = setInterval(updateTimer, 1000);
 }
@@ -1163,7 +1119,6 @@ function handleSearch() {
   let allItems = [];
   Object.values(menuData).forEach(cat => allItems = [...allItems, ...cat]);
   const filtered = allItems.filter(i => i.name.toLowerCase().includes(query));
-
   if (query === "") {
     const activeItem = document.querySelector('.nav-item.active, .sub-item.active');
     if (activeItem) {
