@@ -74,18 +74,21 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--black);color:var(--
 .hamb-btn {
   background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
   color: #fff; font-size: 16px; padding: 6px 10px; border-radius: 6px;
-  cursor: pointer; transition: all 0.2s;
+  cursor: pointer;
+  transition: all 0.2s;
 }
 .hamb-btn:hover { background: rgba(255,255,255,0.15); }
 .hamb-dropdown {
   position: absolute; right: 0; top: 120%; width: 200px;
   background: rgba(12, 14, 22, 0.95); border: 1px solid var(--border);
   border-radius: var(--r8); box-shadow: 0 8px 24px rgba(0,0,0,0.8);
-  display: none; flex-direction: column; overflow: hidden; backdrop-filter: blur(20px);
+  display: none; flex-direction: column;
+  overflow: hidden; backdrop-filter: blur(20px);
 }
 .hamb-dropdown.active { display: flex; }
 .hamb-dropdown a {
-  padding: 12px 16px; font-size: 12px; color: var(--w80); cursor: pointer;
+  padding: 12px 16px; font-size: 12px; color: var(--w80);
+  cursor: pointer;
   border-bottom: 1px solid rgba(255,255,255,0.05); transition: background 0.2s;
 }
 .hamb-dropdown a:hover { background: rgba(90,171,248,0.1); color: #fff; }
@@ -126,8 +129,7 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--black);color:var(--
 
 /* Next Order Notification */
 .next-notif {
-  position:absolute; top:-10px; right:-10px; width:28px;
-  height:28px; border-radius:50%;
+  position:absolute; top:-10px; right:-10px; width:28px; height:28px; border-radius:50%;
   background:var(--gold); color:#000; display:flex; align-items:center; justify-content:center;
   font-size:14px; cursor:grab; z-index:10; box-shadow:0 4px 10px rgba(0,0,0,0.6); transition:transform 0.2s;
 }
@@ -386,8 +388,30 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--black);color:var(--
 <script>
 const firebaseConfig={apiKey:"AIzaSyC_LUKzINx6H4XE7uWoCpeLSldpIp-DR80",authDomain:"restro-4db49.firebaseapp.com",databaseURL:"https://restro-4db49-default-rtdb.firebaseio.com",projectId:"restro-4db49",storageBucket:"restro-4db49.firebasestorage.app",messagingSenderId:"860567729744",appId:"1:860567729744:web:773f5a315af7340d950355",measurementId:"G-D9CJCYZJF4"};
 firebase.initializeApp(firebaseConfig);
-const db=firebase.database();
-firebase.analytics();
+const db=firebase.database();firebase.analytics();
+
+db.ref("tables").on("value",s=>{
+    const raw=s.val();
+    if(raw) {
+        allTables = [];
+        if(Array.isArray(raw)) raw.forEach(t => { if(t) allTables.push(t); });
+        else Object.values(raw).forEach(t => { if(t) allTables.push(t); });
+    }
+    renderDash();
+});
+
+db.ref("orders").on("value",s=>{
+    const d=s.val(); 
+    const ordersArr = d ? Object.values(d) : [];
+    
+    // Original Takeaway Array
+    allTkw=ordersArr.filter(o=>o.orderType==='takeaway'&&(o.status==='pending'||o.status==='Preparing')); 
+    renderTkw();
+
+    // Trigger update for tracker dashboard
+    updateTrackerStats(ordersArr);
+});
+
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
@@ -413,9 +437,9 @@ firebase.analytics();
       <div class="hamburger-menu">
         <button class="hamb-btn" onclick="toggleMenu()">☰ Menu</button>
         <div class="hamb-dropdown" id="hambDrop">
-            <a onclick="switchTab('live');toggleMenu()">Live Dashboard</a>
-            <a onclick="switchTab('history');toggleMenu()">Bill History</a>
-            <a onclick="switchTab('tracker');toggleMenu()">Order Tracking Dashboard</a>
+            <a onclick="switchTab('live'); toggleMenu()">Live Dashboard</a>
+            <a onclick="switchTab('history'); toggleMenu()">Bill History</a>
+            <a onclick="switchTab('tracker'); toggleMenu()">Order Tracking Dashboard</a>
         </div>
       </div>
 
@@ -577,34 +601,9 @@ setInterval(()=>{const n=new Date(),pad=x=>String(x).padStart(2,'0');document.ge
 const menuData={starters:[{id:'st1',name:'Corn Tikki',price:200},{id:'st2',name:'Paneer Tikka Dry',price:235},{id:'st3',name:'Paneer Phudina Tikka',price:235},{id:'st4',name:'Paneer Lahsuni Tikka',price:235},{id:'st5',name:'Hara Bhara Kabab',price:200},{id:'st6',name:'Raja Kabab',price:210},{id:'st7',name:'Veg. Sheekh Kabab',price:230},{id:'st8',name:'Paneer Sheekh Kabab',price:260},{id:'st9',name:'Veg. Brice Kabab',price:200},{id:'st10',name:'Veg. Dilruba Sheekh Kabab',price:260},{id:'st11',name:'Dahi Kabab',price:190},{id:'st12',name:'Jahangiri Tikka',price:230},{id:'st13',name:'Tandoori Plater',price:285}],snacks:[{id:'sn1',name:'Veg. Pizza',price:135},{id:'sn2',name:'Italian Pizza',price:135},{id:'sn3',name:'Cheese Pizza',price:150},{id:'sn4',name:'Jain Pizza',price:120},{id:'sn5',name:'Veg. Club Sandwich',price:90},{id:'sn6',name:'Veg. Sandwich',price:80},{id:'sn7',name:'Cheese Sandwich',price:80},{id:'sn8',name:'Cheese Jam Sandwich',price:90},{id:'sn9',name:'Bread Butter',price:55},{id:'sn10',name:'French Fries',price:100}],salads:[{id:'sl1',name:'Green Salad',price:80},{id:'sl2',name:'Russian Salad',price:120},{id:'sl3',name:'Coleslaw',price:90},{id:'sl4',name:'Fruit Salad',price:130}],paneer:[{id:'pn1',name:'Emerald Sp. Paneer',price:240},{id:'pn2',name:'Paneer Sizzling',price:245},{id:'pn3',name:'Paneer Kathiyawadi',price:230},{id:'pn4',name:'Paneer Darwar',price:230},{id:'pn5',name:'Paneer Tiranga',price:235},{id:'pn6',name:'Cheese Butter Masala',price:235},{id:'pn7',name:'Cheese Angoori',price:235},{id:'pn8',name:'Paneer Mushroom Masala',price:230},{id:'pn9',name:'Paneer Butter Masala',price:210},{id:'pn10',name:'Paneer Tikka Masala',price:220},{id:'pn11',name:'Paneer Kankani',price:220},{id:'pn12',name:'Paneer Diwani Handi',price:220},{id:'pn13',name:'Paneer Lajawab',price:220},{id:'pn14',name:'Paneer Kalimirch',price:220},{id:'pn15',name:'Paneer Kadai',price:220},{id:'pn16',name:'Paneer Handi',price:220},{id:'pn17',name:'Balti Paneer',price:220},{id:'pn18',name:'Tawa Paneer',price:220},{id:'pn19',name:'Paneer Toofani',price:220},{id:'pn20',name:'Paneer Hara Masala',price:220},{id:'pn21',name:'Paneer Shahi Korma',price:220},{id:'pn22',name:'Paneer Bhurjee',price:230},{id:'pn23',name:'Paneer Pasanda',price:225},{id:'pn24',name:'Mutter Paneer',price:200},{id:'pn25',name:'Palak Paneer',price:200},{id:'pn26',name:'Methi Paneer Masala',price:220},{id:'pn27',name:'Kaju Paneer Masala',price:245},{id:'pn28',name:'Khoya Kaju (sweet)',price:240},{id:'pn29',name:'Kaju Balti Masala',price:245}],indian:[{id:'in1',name:'Emerald Sp. Veg.',price:210},{id:'in2',name:'Veg. Mastani',price:215},{id:'in3',name:'Veg. Jawalamukhi',price:215},{id:'in4',name:'Veg. Sizzling',price:220},{id:'in5',name:'Veg. Tawa Masala',price:200},{id:'in6',name:'Veg. Kadai',price:200},{id:'in7',name:'Veg. Kolhapuri',price:200},{id:'in8',name:'Veg. Makhanwala',price:200},{id:'in9',name:'Veg. Jaipuri',price:200},{id:'in10',name:'Veg. Handi',price:200},{id:'in11',name:'Veg. Jalfrezi',price:200},{id:'in12',name:'Veg. Shahi Korma',price:200},{id:'in13',name:'Veg. Toofani',price:200},{id:'in14',name:'Veg. Hyderabadi',price:200},{id:'in15',name:'Palak Corn Capsicum',price:200},{id:'in16',name:'Mutter Methi Malai',price:215},{id:'in17',name:'Baby Corn Makhanwala',price:215},{id:'in18',name:'Navaratan Korma',price:215},{id:'in19',name:'Mutter Mushroom',price:215},{id:'in20',name:'Mushroom Masala',price:215},{id:'in21',name:'Mix Vegetable',price:190},{id:'in22',name:'Chana Masala',price:190},{id:'in23',name:'Aloo Masala',price:190},{id:'in24',name:'Dum Aloo',price:190},{id:'in25',name:'Aloo Methi',price:155},{id:'in26',name:'Jeera Aloo',price:155}],dal:[{id:'dl1',name:'Dal Makhani',price:180},{id:'dl2',name:'Dal Fry',price:150},{id:'dl3',name:'Dal Tadka',price:150},{id:'dl4',name:'Dal Bukhara',price:185},{id:'dl5',name:'Panchmel Dal',price:160}],rice:[{id:'ri1',name:'Veg. Biryani',price:200},{id:'ri2',name:'Mutter Rice',price:170},{id:'ri3',name:'Pulao',price:160},{id:'ri4',name:'Jeera Rice',price:120},{id:'ri5',name:'Steamed Rice',price:100},{id:'ri6',name:'Mushroom Biryani',price:210}],tandoor:[{id:'tn1',name:'Tandoori Roti',price:25},{id:'tn2',name:'Butter Tandoori Roti',price:30},{id:'tn3',name:'Naan',price:35},{id:'tn4',name:'Butter Naan',price:40},{id:'tn5',name:'Garlic Naan',price:50},{id:'tn6',name:'Cheese Naan',price:70},{id:'tn7',name:'Kulcha',price:45},{id:'tn8',name:'Paratha',price:50},{id:'tn9',name:'Laccha Paratha',price:55},{id:'tn10',name:'Missi Roti',price:40}],kofta:[{id:'kf1',name:'Malai Kofta',price:220},{id:'kf2',name:'Dahi Kofta',price:220},{id:'kf3',name:'Nargisi Kofta',price:230},{id:'kf4',name:'Lauki Kofta',price:200}],chinese:[{id:'ch1',name:'Veg. Manchurian Dry',price:180},{id:'ch2',name:'Veg. Manchurian Gravy',price:190},{id:'ch3',name:'Chilli Paneer Dry',price:200},{id:'ch4',name:'Chilli Paneer Gravy',price:210},{id:'ch5',name:'Veg. Fried Rice',price:160},{id:'ch6',name:'Schezwan Fried Rice',price:175},{id:'ch7',name:'Veg. Hakka Noodles',price:155},{id:'ch8',name:'Schezwan Noodles',price:170},{id:'ch9',name:'Spring Rolls',price:140},{id:'ch10',name:'Veg. Crispy',price:180}],soups:[{id:'so1',name:'Tomato Soup',price:100},{id:'so2',name:'Sweet Corn Soup',price:110},{id:'so3',name:'Hot & Sour Soup',price:120},{id:'so4',name:'Cream of Mushroom',price:130},{id:'so5',name:'Minestrone Soup',price:140}],sizzlers:[{id:'sz1',name:'Veg. Sizzler',price:320},{id:'sz2',name:'Paneer Sizzler',price:350},{id:'sz3',name:'Mexican Sizzler',price:340},{id:'sz4',name:'Continental Sizzler',price:360}],continental:[{id:'co1',name:'Pasta Arrabiata',price:200},{id:'co2',name:'Pasta Alfredo',price:210},{id:'co3',name:'Mac & Cheese',price:190},{id:'co4',name:'Baked Vegetables',price:230}],drinks:[{id:'dr1',name:'Fresh Lime Soda',price:60},{id:'dr2',name:'Masala Chaas',price:70},{id:'dr3',name:'Cold Coffee',price:100},{id:'dr4',name:'Hot Tea',price:40},{id:'dr5',name:'Mineral Water',price:30},{id:'dr6',name:'Soft Drink',price:60}],shakes:[{id:'sh1',name:'Mango Shake',price:120},{id:'sh2',name:'Strawberry Shake',price:130},{id:'sh3',name:'Chocolate Shake',price:140},{id:'sh4',name:'Vanilla Shake',price:120},{id:'sh5',name:'Oreo Shake',price:150}],desserts:[{id:'ic1',name:'Vanilla Ice Cream',price:100},{id:'ic2',name:'Chocolate Ice Cream',price:110},{id:'ic3',name:'Gulab Jamun',price:90},{id:'ic4',name:'Rasmalai',price:120},{id:'ic5',name:'Gajar Halwa',price:100}]};
 const allMenu=Object.values(menuData).flat();
 
-// VARIABLES
 let allTables=[],allQueue=[],allTkw=[];
 let billItems=[],curOids=[],curOid=null,curTnum=null,curTkey=null,dMode='pct';
 
-// FIREBASE LISTENERS (Moved here from the <head> tag to resolve scoping issue)
-db.ref("tables").on("value",s=>{
-    const raw=s.val();
-    if(raw) {
-        allTables = [];
-        if(Array.isArray(raw)) raw.forEach(t => { if(t) allTables.push(t); });
-        else Object.values(raw).forEach(t => { if(t) allTables.push(t); });
-    }
-    renderDash();
-});
-
-db.ref("orders").on("value",s=>{
-    const d=s.val(); 
-    const ordersArr = d ? Object.values(d) : [];
-    
-    // Original Takeaway Array
-    allTkw=ordersArr.filter(o=>o.orderType==='takeaway'&&(o.status==='pending'||o.status==='Preparing')); 
-    renderTkw();
-
-    // Trigger update for tracker dashboard
-    updateTrackerStats(ordersArr);
-});
-
-// INITIALIZE TABLES IF EMPTY
 db.ref("tables").once("value",s=>{if(!s.exists()){const d=[];for(let i=1;i<=10;i++)d.push({number:i,capacity:i<=4?2:i<=8?4:6,occupied:false,current:null,nextOrder:null});db.ref("tables").set(d);}});
 
 function renderDash(){
@@ -614,7 +613,7 @@ function renderDash(){
   const occ=allTables.filter(t=>t.occupied).length;
   document.getElementById('tcount').textContent=`${occ}/${allTables.length}`;
   
-  // Build Queue directly from occupied tables' nextOrder (Change 1)
+  // Build Queue directly from occupied tables' nextOrder
   allQueue = [];
   allTables.forEach(t => {
       if (t.occupied && t.nextOrder) {
@@ -686,7 +685,7 @@ function renderDash(){
     const el=document.createElement('div');
     el.className='g qcard';
     
-    // Draggable queue cards linked directly to their source table (Change 1)
+    // Draggable queue cards linked directly to their source table
     el.setAttribute('draggable', 'true');
     el.setAttribute('ondragstart', `event.dataTransfer.setData('text/plain', JSON.stringify({type:'table', tNum:${qu.sourceTable}}))`);
     el.innerHTML=`<div class="qcard-left"><span class="qidx">${i+1}</span><span class="qname">${qu.name||'Guest'}</span></div>
@@ -704,6 +703,7 @@ document.addEventListener('click', e => {
         document.getElementById('hambDrop')?.classList.remove('active');
     }
 });
+
 window.toggleNextTooltip = function(tNum) {
     document.querySelectorAll('.next-notif').forEach(n => {
         if (n.id !== 'notif-'+tNum) n.classList.remove('show-tooltip');
@@ -716,6 +716,7 @@ document.addEventListener('click', e => {
         document.querySelectorAll('.next-notif').forEach(n => n.classList.remove('show-tooltip'));
     }
 });
+
 window.dropOnTable = function(e, targetTnum) {
     e.preventDefault();
     try {
@@ -736,13 +737,14 @@ window.dropOnTable = function(e, targetTnum) {
                         occupied: true,
                         current: {name: item.name, people: item.people, since: item.since || Date.now(), orderId: item.orderId || null}
                     });
-                    // Ensure the order's backend tableNumber is updated so further additions append here (Change 2)
+                    // Ensure the order's backend tableNumber is updated so further additions append here
                     if(item.orderId) db.ref("orders/"+item.orderId).update({ tableNumber: targetTable.number });
                 } else {
                     db.ref("tables/"+targetKey).update({nextOrder: item});
                     if(item.orderId) db.ref("orders/"+item.orderId).update({ tableNumber: targetTable.number });
                 }
             };
+
             if (data.type === 'table') {
                 if (sourceKey && targetKey && sourceKey !== targetKey) {
                     const itemToMove = tablesRaw[sourceKey].nextOrder;
@@ -757,6 +759,7 @@ window.dropOnTable = function(e, targetTnum) {
         console.error("Drag drop error", err);
     }
 };
+
 window.viewOrderDetails = function(n) {
   db.ref("tables").once("value", s => {
     const raw = s.val();
@@ -765,11 +768,11 @@ window.viewOrderDetails = function(n) {
 
     if(!t || !t.occupied || !t.current) return;
 
-    // Fetch ALL active orders/rounds mapping to this table (Change 2)
+    // Fetch ALL active orders/rounds mapping to this table
     db.ref("orders").once("value", os => {
       const allOrders = os.val() ? Object.values(os.val()) : [];
       const tableOrders = allOrders.filter(o => 
-          (o.tableNumber == n || o.id === t.current.orderId) && 
+         (o.tableNumber == n || o.id === t.current.orderId) && 
          o.status !== 'Completed' && o.status !== 'Cancelled'
       );
 
@@ -831,14 +834,13 @@ window.cancelTakeaway = function(oid) {
     }
 }
 
-// Cancel queue completely mirrors removing the nextOrder from a table (Change 1)
 window.cancelQueue = function(tNum) {
     if(confirm("Remove this customer from the queue?")) {
         db.ref("tables").once("value", s => {
             let raw = s.val();
             let key = null;
             Object.entries(raw).forEach(([k,v]) => { if(v && v.number === tNum) key = k; });
-             if(key !== null) {
+            if(key !== null) {
                 db.ref("tables/"+key).update({nextOrder: null});
             }
         });
@@ -870,6 +872,7 @@ function openBill(n){
   curTnum=n; billItems=[]; curOids=[]; curOid=null;
   document.getElementById('dVal').value='';document.getElementById('msearch').value='';document.getElementById('mresults').style.display='none';setDisc('pct');
   document.getElementById('pbtn').textContent='Print Bill & Free Table';
+  
   db.ref("tables").once("value",s=>{
     const raw=s.val();if(!raw)return;
     let k=null,t=null;
@@ -878,7 +881,7 @@ function openBill(n){
     
     document.getElementById('bsub').textContent=`Table ${n} · ${t?.current?.name||'Guest'} · ${t?.current?.people||1} pax`;
     
-    // Aggregates ALL non-completed orders assigned to this table (Change 2)
+    // Aggregates ALL non-completed orders assigned to this table
     db.ref("orders").once("value",os=>{
         const d = os.val();
         if(d){
@@ -971,7 +974,8 @@ function printBill(){
   document.getElementById('parea').innerHTML=`<div class="pr"><div class="pr-brand">EMERALD</div><div class="pr-tag">Fine Dining & Hospitality</div></div><hr class="pr-div"><div class="pr-row"><span>Order No:</span><span>#${on}</span></div><div class="pr-row"><span>Table:</span><span>${curTnum||'—'}</span></div><div class="pr-row"><span>Date:</span><span>${dstr}</span></div><div class="pr-row"><span>Time:</span><span>${tstr}</span></div><hr class="pr-div"><div class="pr-ih"><span style="flex:1">Item</span><span style="width:28px;text-align:center">Qty</span><span style="width:56px;text-align:right">Amt</span></div><hr class="pr-div">${ih}<hr class="pr-div"><div class="pr-tr"><span>Subtotal</span><span>₹${sub.toFixed(2)}</span></div>${dh}<hr class="pr-div"><div class="pr-gr"><span>TOTAL</span><span>₹${grand.toFixed(2)}</span></div><hr class="pr-div"><div class="pr-ty">Thank You! 🙏</div><div class="pr-ft">Visit us again • EMERALD Restaurant</div>`;
   
   const upd={status:'Completed',items:billItems,total:sub,grandTotal:grand,discount:disc,billedAt:new Date().toISOString()};
-  // Flag secondary rounds explicitly (Change 2)
+  
+  // Flag secondary rounds explicitly
   if (curOids && curOids.length > 0) {
       db.ref("orders/"+curOids[0]).update(upd);
       for(let i=1; i<curOids.length; i++) {
@@ -994,6 +998,7 @@ function updateTrackerStats(ordersArr) {
     const wait = allQueue.length;
     const cook = ordersArr.filter(o => o.status === 'Preparing').length;
     const served = ordersArr.filter(o => o.status === 'Completed' || o.status === 'Ready').length;
+    
     const elTotal = document.getElementById('trk-total');
     const elWait = document.getElementById('trk-wait');
     const elCook = document.getElementById('trk-cook');
@@ -1054,6 +1059,7 @@ function renderHist(){
   const b=document.getElementById('hbody'),p=document.getElementById('hpagi');
   if(!hFilt.length){b.innerHTML=`<tr><td colspan="8"><div class="empty" style="grid-column:unset;padding:36px;"><div class="empty-ico">📭</div><div class="empty-txt">No orders found</div></div></td></tr>`;p.innerHTML='';return;}
   const pages=Math.ceil(hFilt.length/HPGSZ),st=(hPage-1)*HPGSZ,sl=hFilt.slice(st,st+HPGSZ);
+  
   b.innerHTML=sl.map((o,i)=>{
     const raw=o.billedAt||(o.timestamp?new Date(o.timestamp).toISOString():null);
     const d=raw?new Date(raw):null;
