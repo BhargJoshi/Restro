@@ -172,6 +172,9 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--black);color:var(--
 }
 .round-id svg{width:9px;height:9px;opacity:.5;}
 
+/* Round right — status pill + KOT button stacked */
+.round-head-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;}
+
 /* Status pill */
 .rstatus{
   font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1.5px;
@@ -190,6 +193,25 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--black);color:var(--
 .rstatus.ready{color:var(--green);background:rgba(45,212,170,0.08);border-color:rgba(45,212,170,.2);cursor:default;}
 .rstatus-dot{width:4px;height:4px;border-radius:50%;background:currentColor;animation:blink 2.2s ease-in-out infinite;}
 
+/* Per-round KOT button */
+.btn-kot-round{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:5px 12px;border-radius:var(--r8);
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.14);
+  color:var(--w55);
+  font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:600;
+  letter-spacing:.4px;cursor:pointer;
+  transition:all .2s;white-space:nowrap;
+}
+.btn-kot-round:hover{
+  background:rgba(255,255,255,0.12);
+  border-color:rgba(255,255,255,0.28);
+  color:#fff;
+  transform:translateY(-1px);
+}
+.btn-kot-round svg{width:10px;height:10px;flex-shrink:0;}
+
 /* Items list */
 .items-list{list-style:none;border-top:1px solid rgba(255,255,255,0.06);padding-top:10px;}
 .item-row{
@@ -197,34 +219,9 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--black);color:var(--
   padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.04);
 }
 .item-row:last-child{border-bottom:none;}
-.item-name{font-family:'Space Grotesk',sans-serif;font-size:13px;color:var(--white);flex:1;}
-.item-qty{font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:800;color:var(--white);min-width:36px;text-align:right;line-height:1;}
-.item-qty-lbl{font-family:'Space Grotesk',sans-serif;font-size:8px;color:var(--white);letter-spacing:1px;text-transform:uppercase;text-align:right;display:block;margin-top:1px;}
-
-/* Print KOT button */
-.card-footer{
-  padding:14px 20px 18px;
-  border-top:1px solid rgba(255,255,255,0.07);
-  display:flex;justify-content:center;
-  background:rgba(255,255,255,0.02);
-}
-.btn-kot{
-  display:inline-flex;align-items:center;gap:7px;
-  padding:9px 28px;border-radius:var(--r8);
-  background:rgba(255,255,255,0.08);
-  border:1px solid rgba(255,255,255,0.18);
-  color:#ffffff;
-  font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:600;
-  letter-spacing:.5px;cursor:pointer;
-  transition:all .2s;
-  backdrop-filter:blur(10px);
-}
-.btn-kot:hover{
-  background:rgba(255,255,255,0.14);
-  border-color:rgba(255,255,255,0.3);
-  transform:translateY(-1px);
-}
-.btn-kot svg{width:12px;height:12px;flex-shrink:0;}
+.item-name{font-family:'Space Grotesk',sans-serif;font-size:13px;color:var(--w80);flex:1;}
+.item-qty{font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:800;color:var(--w80);min-width:36px;text-align:right;line-height:1;}
+.item-qty-lbl{font-family:'Space Grotesk',sans-serif;font-size:8px;color:var(--w55);letter-spacing:1px;text-transform:uppercase;text-align:right;display:block;margin-top:1px;}
 
 /* Empty state */
 .empty{
@@ -298,6 +295,7 @@ const db=firebase.database();firebase.analytics();
 
 <script>
 setInterval(()=>{const n=new Date(),pad=x=>String(x).padStart(2,'0');document.getElementById('clock').textContent=`${pad(n.getHours())}:${pad(n.getMinutes())}:${pad(n.getSeconds())}`;},1000);
+
 db.ref("orders").on("value",s=>renderOrders(s.val()));
 
 function renderOrders(data){
@@ -326,11 +324,13 @@ function renderOrders(data){
     }
     groups[key].orders.push(order);
   });
+
   const sortedGroups = Object.values(groups).sort((a, b) => {
-      const maxA = Math.max(...a.orders.map(o => o.createdAt ? new Date(o.createdAt).getTime() : 0));
-      const maxB = Math.max(...b.orders.map(o => o.createdAt ? new Date(o.createdAt).getTime() : 0));
-      return maxB - maxA; 
+    const maxA = Math.max(...a.orders.map(o => o.createdAt ? new Date(o.createdAt).getTime() : 0));
+    const maxB = Math.max(...b.orders.map(o => o.createdAt ? new Date(o.createdAt).getTime() : 0));
+    return maxB - maxA;
   });
+
   sortedGroups.forEach(grp=>{
     grp.orders.sort((a,b)=>(a.createdAt?new Date(a.createdAt).getTime():0)-(b.createdAt?new Date(b.createdAt).getTime():0));
     const anyPrep=grp.orders.some(o=>o.status!=='Ready');
@@ -344,8 +344,7 @@ function renderOrders(data){
     const allItems=grp.orders.flatMap(o=>Array.isArray(o.items)?o.items:(o.items&&typeof o.items==='object'?Object.values(o.items):[]));
     const totalQty=allItems.reduce((s,i)=>s+(i.qty||1),0);
 
-    const firstOrderId=grp.orders[0]?.id||'';
-
+    // ── FIX: each round gets its own KOT button ───────────────────────────────
     const roundsHTML=grp.orders.map((order,ri)=>{
       const isReady=order.status==='Ready';
       const isFirst=ri===0;
@@ -361,9 +360,17 @@ function renderOrders(data){
             <span class="item-qty-lbl">qty</span>
           </div>
         </li>`).join('');
+
       const statusPill=isReady
         ?`<div class="rstatus ready"><div class="rstatus-dot"></div>Ready</div>`
         :`<div class="rstatus prep" onclick="markReady('${order.id}')" title="Tap to mark ready"><div class="rstatus-dot"></div>Preparing</div>`;
+
+      // KOT button per round
+      const kotBtn=`<button class="btn-kot-round" onclick="printKOT('${order.id}')" title="Print KOT for this round">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        KOT
+      </button>`;
+
       return `<div class="round ${isReady?'ready':'preparing'}">
         <div class="round-head">
           <div class="round-head-left">
@@ -373,11 +380,15 @@ function renderOrders(data){
               ${sid}${mins!==null?` · ${mins}m ago`:''}
             </span>
           </div>
-          ${statusPill}
+          <div class="round-head-right">
+            ${statusPill}
+            ${kotBtn}
+          </div>
         </div>
         <ul class="items-list">${itemsHTML||'<li class="item-row"><span class="item-name" style="color:var(--w30)">No items recorded</span></li>'}</ul>
       </div>`;
     }).join('');
+    // ─────────────────────────────────────────────────────────────────────────
 
     card.innerHTML=`
       <div class="ocard-head">
@@ -406,14 +417,8 @@ function renderOrders(data){
           </div>
         </div>
       </div>
-      <div class="ocard-rounds">${roundsHTML}</div>
-      <div class="card-footer">
-        <button class="btn-kot" onclick="printKOT('${firstOrderId}')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-          Print KOT
-        </button>
-      </div>
-    `;
+      <div class="ocard-rounds">${roundsHTML}</div>`;
+
     grid.appendChild(card);
   });
 }
