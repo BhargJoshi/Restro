@@ -318,6 +318,7 @@ btn.addEventListener("click", () => {
       timestamp: Date.now()
     };
     localStorage.setItem("currentOrderInfo", JSON.stringify(orderInfo));
+    localStorage.removeItem("currentOrderId");
     window.location.href = "menu.html"; 
   }
 });
