@@ -1005,7 +1005,17 @@ function processPayment() {
   if (orderType === "dinein" && prevOrderId) {
     db.ref("orders/" + prevOrderId).once("value", snap => {
       const prevOrder = snap.val();
-      if (prevOrder && prevOrder.status !== "Completed" && prevOrder.status !== "Cancelled" && prevOrder.tableNumber) {
+      // Only reuse the same table if it's genuinely the same customer adding more items:
+      // - previous order must still be active (not Completed/Cancelled)
+      // - must have a tableNumber already assigned
+      // - customer name must match (same person ordering another round)
+      const sameCustomer = prevOrder &&
+        prevOrder.status !== "Completed" &&
+        prevOrder.status !== "Cancelled" &&
+        prevOrder.tableNumber &&
+        (prevOrder.customerName || "").trim().toLowerCase() === customerName.trim().toLowerCase();
+
+      if (sameCustomer) {
         createNewOrder(prevOrder.tableNumber, true);
       } else {
         createNewOrder(null, false);
