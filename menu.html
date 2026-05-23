@@ -793,13 +793,26 @@ const menuData = {
 
 let cart = {};
 
-window.onload = () => {
-  setTimeout(() => {
-    document.getElementById('intro-wrapper').classList.add('exit');
+document.addEventListener("DOMContentLoaded", () => {
+  const introWrapper = document.getElementById('intro-wrapper');
+  let isExited = false;
+
+  const dismissIntro = () => {
+    if (isExited) return;
+    isExited = true;
+    introWrapper.classList.add('exit');
+    
+    // Automatically select the first category
     const firstSubItem = document.querySelector('.sub-item');
-    showSection('starters', firstSubItem);
-  }, 5500);
-};
+    if (firstSubItem) showSection('starters', firstSubItem);
+  };
+
+  // Start the timer immediately without waiting for Firebase/images to load
+  setTimeout(dismissIntro, 5500);
+
+  // FAILSAFE: Tap anywhere on the intro screen to skip it
+  introWrapper.addEventListener('click', dismissIntro);
+});
 
 function moveIndicator(el) {
   const indicator = document.getElementById('nav-indicator');
