@@ -1,1171 +1,1315 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>Emerald Menu - Premium Mobile</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EMERALD — Manager</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@700;800&family=JetBrains+Mono:wght@300;400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <style>
-:root {
-  --primary: #ffcc00;
-  --primary-dark: #cc9900;
-  --bg-light: #f7f7f7;
-  --text-dark: #111;
-  --surface: #ffffff;
-  --intro-beige: #d2b48c; 
+:root{
+  --black:#07080d;
+  --s1:rgba(8,10,16,0.55);
+  --s2:rgba(14,17,26,0.38);
+  --s3:rgba(20,24,38,0.28);
+  --border:rgba(255,255,255,0.09);
+  --border-hi:rgba(255,255,255,0.16);
+  --blue:#5aabf8;
+  --blue-d:rgba(90,171,248,0.10);
+  --blue-b:rgba(90,171,248,0.18);
+  --green:#2dd4aa;
+  --green-d:rgba(45,212,170,0.10);
+  --green-b:rgba(45,212,170,0.18);
+  --red:#f4614f;
+  --red-d:rgba(244,97,79,0.10);
+  --red-b:rgba(244,97,79,0.18);
+  --gold:#f0b429;
+  --gold-d:rgba(240,180,41,0.09);
+  --w80:rgba(255,255,255,0.80);
+  --w55:rgba(255,255,255,0.55);
+  --w30:rgba(255,255,255,0.30);
+  --w12:rgba(255,255,255,0.12);
+  --w06:rgba(255,255,255,0.06);
+  --r8:8px;--r12:12px;--r16:16px;--r20:20px;--r28:28px;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html{scroll-behavior:smooth;}
+body{font-family:'Space Grotesk',sans-serif;background:var(--black);color:var(--w80);min-height:100vh;overflow-x:hidden;}
+
+.bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+.bg-orb{position:absolute;border-radius:50%;filter:blur(160px);opacity:0.18;animation:drift 22s ease-in-out infinite alternate;}
+.bg-orb:nth-child(1){width:800px;height:800px;background:#060f22;top:-220px;left:-200px;animation-duration:28s;}
+.bg-orb:nth-child(2){width:600px;height:600px;background:#04160a;top:38%;right:-160px;animation-duration:20s;animation-delay:-11s;}
+.bg-orb:nth-child(3){width:520px;height:520px;background:#180510;bottom:-110px;left:42%;animation-duration:25s;animation-delay:-7s;}
+@keyframes drift{0%{transform:translate(0,0) scale(1);}100%{transform:translate(55px,75px) scale(1.12);}}
+.bg-grid{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:linear-gradient(rgba(255,255,255,0.018) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,0.018) 1px,transparent 1px);
+  background-size:64px 64px;}
+
+#app{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;}
+
+.nav{
+  display:flex;align-items:center;justify-content:space-between;
+  height:60px;padding:0 28px;
+  background:rgba(7,8,13,0.5);
+  border-bottom:1px solid rgba(255,255,255,0.09);
+  backdrop-filter:blur(40px) saturate(180%);
+  -webkit-backdrop-filter:blur(40px) saturate(180%);
+  position:sticky;top:0;z-index:200;flex-shrink:0;
+}
+.nav-brand{display:flex;align-items:baseline;gap:14px;}
+.nav-logo{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:#ffffff;letter-spacing:6px;}
+.nav-role{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--w30);letter-spacing:2.5px;text-transform:uppercase;border-left:1px solid var(--border-hi);padding-left:12px;}
+.nav-tabs{display:flex;gap:2px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);border-radius:var(--r8);padding:3px;}
+.nav-tab{padding:7px 18px;border:none;border-radius:6px;background:transparent;font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:500;color:var(--w30);cursor:pointer;transition:all .2s;letter-spacing:.3px;}
+.nav-tab.active{background:rgba(255,255,255,0.09);color:var(--w80);box-shadow:0 1px 6px rgba(0,0,0,.4);}
+.nav-tab:not(.active):hover{color:var(--w55);background:rgba(255,255,255,0.05);}
+
+.nav-right{display:flex;align-items:center;gap:18px;}
+.nav-clock{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--w30);letter-spacing:1.5px;}
+
+.hamburger-menu { position: relative; }
+.hamb-btn {
+  background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+  color: #fff; font-size: 16px; padding: 6px 10px; border-radius: 6px;
+  cursor: pointer; transition: all 0.2s;
+}
+.hamb-btn:hover { background: rgba(255,255,255,0.15); }
+.hamb-dropdown {
+  position: absolute; right: 0; top: 120%; width: 200px;
+  background: rgba(12, 14, 22, 0.95); border: 1px solid var(--border);
+  border-radius: var(--r8); box-shadow: 0 8px 24px rgba(0,0,0,0.8);
+  display: none; flex-direction: column; overflow: hidden; backdrop-filter: blur(20px);
+}
+.hamb-dropdown.active { display: flex; }
+.hamb-dropdown a {
+  padding: 12px 16px; font-size: 12px; color: var(--w80);
+  cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); transition: background 0.2s;
+}
+.hamb-dropdown a:hover { background: rgba(90,171,248,0.1); color: #fff; }
+.hamb-dropdown a:last-child { border-bottom: none; }
+
+.main{flex:1;padding:26px 28px;max-width:1440px;margin:0 auto;width:100%;}
+.tab-panel{display:none;}.tab-panel.active{display:block;}
+
+.slabel{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.slabel-txt{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;color:var(--w30);letter-spacing:3px;text-transform:uppercase;white-space:nowrap;}
+.slabel-line{flex:1;height:1px;background:rgba(255,255,255,0.07);}
+.slabel-pill{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--blue);background:rgba(90,171,248,0.08);border:1px solid rgba(90,171,248,0.18);padding:2px 9px;border-radius:20px;}
+
+.g{
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.11);
+  border-radius:var(--r16);
+  backdrop-filter:blur(48px) saturate(160%);
+  -webkit-backdrop-filter:blur(48px) saturate(160%);
+  box-shadow:0 4px 24px rgba(0,0,0,0.3),inset 0 1px 0 rgba(255,255,255,0.07);
+  transition:border-color .25s,box-shadow .25s,transform .2s;
+}
+.g:hover{
+  border-color:rgba(255,255,255,0.17);
+  box-shadow:0 16px 44px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,0.10);
+  transform:translateY(-1px);
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(272px,1fr));gap:14px;margin-bottom:36px;}
 
-body {
-  font-family: 'Inter', sans-serif;
-  background-color: #111;
-  color: var(--text-dark);
-  height: 100vh;
-  display: flex;
-  overflow: hidden;
+.tcard{position:relative; cursor:pointer;}
+.tcard.drag-over { border-color:var(--blue); box-shadow:0 0 20px rgba(90,171,248,0.4); transform:scale(1.02); }
+.tcard-inner{overflow:hidden; border-radius:inherit; height:100%; display:flex; flex-direction:column;}
+.tcard.occupied{border-color:rgba(240,180,41,0.2);}
+
+/* Next Order Notification (Red) */
+.next-notif {
+  position:absolute; top:-10px; right:-10px; width:28px;
+  height:28px; border-radius:50%;
+  background:var(--red); color:#fff; display:flex; align-items:center; justify-content:center;
+  font-size:14px; cursor:grab; z-index:10; box-shadow:0 4px 10px rgba(0,0,0,0.6); transition:transform 0.2s;
 }
+.next-notif:hover { transform:scale(1.1); }
 
-#intro-wrapper {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  background: var(--intro-beige);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  transition: transform 0.8s cubic-bezier(0.7, 0, 0.3, 1);
-}
-#intro-wrapper.exit { transform: translateX(-100%); }
-
-.brand-header {
-  position: absolute;
-  top: 60px;
-  font-family: 'Arial Black', serif;
-  font-size: 32px;
-  letter-spacing: 4px;
-  color: #3d2b1f;
-  text-transform: uppercase;
+/* Addon Notification (Green) */
+.addon-badge {
+  position:absolute; top:-10px; left:-10px; width:28px; height:28px;
+  border-radius:50%; background:var(--green); color:#000;
+  display:flex; align-items:center; justify-content:center;
+  font-size:12px; font-weight:800; box-shadow:0 4px 10px rgba(0,0,0,0.6); z-index:10;
 }
 
-.animation-container {
-  position: relative;
-  width: 350px;
-  height: 250px;
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  padding-bottom: 60px;
+.tcard-top{
+  padding:16px 18px 14px;display:flex;align-items:flex-start;justify-content:space-between;
+  border-bottom:1px solid rgba(255,255,255,0.07);
+  background:rgba(255,255,255,0.02);
 }
+.tcard-num{font-family:'Syne',sans-serif;font-size:32px;font-weight:800;color:var(--red);line-height:1;letter-spacing:-1px;}
+.tcard-numlabel{font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--w30);letter-spacing:2px;text-transform:uppercase;margin-top:3px;}
+.tcard-status{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;border:1px solid;}
+.tcard-status.free{color:var(--green);background:rgba(45,212,170,0.08);border-color:rgba(45,212,170,.18);}
+.tcard-status.occ{color:var(--red);background:rgba(244,97,79,0.08);border-color:rgba(244,97,79,.2);}
+.sdot{width:5px;height:5px;border-radius:50%;background:currentColor;animation:blink 2.5s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.25;}}
 
-.plate-side {
-  width: 180px;
-  height: 8px;
-  background: #ffffff;
-  border-radius: 0 0 15px 15px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  position: relative;
-  z-index: 10;
-  animation: slidePlate 0.7s ease-out forwards;
-}
+.tcard-meta{padding:10px 18px;border-bottom:1px solid rgba(255,255,255,0.07);display:flex;gap:4px;align-items:center;}
+.tcard-meta-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--w30);letter-spacing:2px;text-transform:uppercase;}
+.tcard-meta-val{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--blue);margin-left:6px;}
 
-@keyframes slidePlate {
-  0% { transform: translateX(100vw); }
-  100% { transform: translateX(0); }
-}
+.tcard-cust{padding:14px 18px;border-bottom:1px solid rgba(255,255,255,0.07);background:rgba(45,212,170,0.02);flex:1;}
+.tcard-cust-name{font-family:'Instrument Serif',serif;font-style:italic;font-size:18px;color:var(--green);line-height:1.2;margin-bottom:8px;}
+.tcard-cust-chips{display:flex;gap:12px;}
+.chip{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--w30);display:flex;align-items:center;gap:4px;}
+.chip svg{width:10px;height:10px;opacity:.5;flex-shrink:0;}
 
-.falling-item { position: absolute; font-size: 40px; opacity: 0; z-index: 5; }
-.item-burger { animation: dropIn 0.5s 0.8s forwards; left: 85px; }
-.item-fries  { animation: dropIn 0.5s 1.1s forwards; left: 125px; }
-.item-salad  { animation: dropIn 0.5s 1.4s forwards; left: 160px; }
-.item-wine   { animation: dropIn 0.5s 1.7s forwards; left: 200px; } 
+.tcard-actions{padding:12px 18px;display:flex;gap:8px;}
 
-@keyframes dropIn {
-  0% { transform: translateY(-300px); opacity: 0; }
-  100% { transform: translateY(-8px); opacity: 1; }
-}
+/* Addon Highlights */
+.highlight-new { background: rgba(45,212,170,0.15) !important; position: relative; }
+.highlight-new td { border-top: 1px solid rgba(45,212,170,0.4); border-bottom: 1px solid rgba(45,212,170,0.4); }
+.highlight-new td:first-child { border-left: 3px solid var(--green); }
 
-.intro-text-container {
-  margin-top: 20px;
-  height: 50px;
-  text-align: center;
-  font-family: 'Times New Roman', serif;
-  font-size: 24px;
-  position: relative;
-  width: 100%;
-}
+.tkgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(272px,1fr));gap:14px;margin-bottom:36px;}
+.tkcard{overflow:hidden;border-radius:var(--r16);border-color:rgba(90,171,248,0.16);}
+.tkcard-top{padding:14px 18px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.07);background:rgba(90,171,248,0.02);}
+.tkcard-id{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--red);font-weight:500;}
+.tkcard-badge{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:1.5px;text-transform:uppercase;color:var(--blue);background:rgba(90,171,248,0.08);border:1px solid rgba(90,171,248,0.18);padding:3px 9px;border-radius:20px;}
+.tkcard-body{padding:14px 18px;}
+.tkcard-name{font-family:'Instrument Serif',serif;font-style:italic;font-size:18px;color:var(--green);margin-bottom:3px;}
+.tkcard-time{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--blue);opacity:.7;margin-bottom:12px;}
+.tkcard-items{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:var(--r8);padding:9px 12px;margin-bottom:12px;}
+.tkcard-item-row{display:flex;justify-content:space-between;padding:3px 0;font-size:12px;border-bottom:1px solid rgba(255,255,255,0.04);}
+.tkcard-item-row:last-child{border-bottom:none;}
+.tkcard-iname{color:var(--w55);}
+.tkcard-iqty{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gold);}
+.tkcard-total-lbl{font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--w30);letter-spacing:2px;text-transform:uppercase;display:block;margin-bottom:2px;}
+.tkcard-total{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--red);margin-bottom:12px;}
+.tkcard-cancel{background:none;border:none;color:var(--red);cursor:pointer;font-size:16px;margin-left:auto;}
 
-.text-msg { position: absolute; width: 100%; left: 0; opacity: 0; }
-.msg-1 { animation: textFlow 2s 2.7s forwards; }
-.msg-2 { animation: textFlow 2s 4.7s forwards; }
+.qlist{display:flex;flex-direction:column;gap:8px;margin-bottom:36px;}
+.qcard{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-radius:var(--r12);border-color:rgba(240,180,41,0.14); cursor:grab;}
+.qcard:active{cursor:grabbing;}
+.qcard-left{display:flex;align-items:center;gap:14px;}
+.qidx{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--w30);width:18px;}
+.qname{font-family:'Instrument Serif',serif;font-style:italic;font-size:17px;color:var(--green);}
+.qcard-right{display:flex;align-items:center;gap:16px;}
+.qwait{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--blue);}
+.qpeople{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--w30);}
+.qcancel{background:none;border:none;color:var(--red);cursor:pointer;font-size:14px;padding-left:10px;}
 
-@keyframes textFlow {
-  0% { opacity: 0; transform: translateX(30px); }
-  20%, 80% { opacity: 1; transform: translateX(0); }
-  100% { opacity: 0; transform: translateX(-30px); }
-}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:8px 14px;border-radius:var(--r8);border:1px solid transparent;font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:600;letter-spacing:.3px;cursor:pointer;transition:all .18s;white-space:nowrap;}
+.btn-gold{background:rgba(240,180,41,0.1);color:var(--gold);border-color:rgba(240,180,41,0.22);}
+.btn-gold:hover{background:rgba(240,180,41,0.18);border-color:var(--gold);}
+.btn-red{background:rgba(244,97,79,0.1);color:var(--red);border-color:rgba(244,97,79,0.22);}
+.btn-red:hover{background:rgba(244,97,79,0.18);border-color:var(--red);}
+.btn-blue{background:rgba(90,171,248,0.1);color:var(--blue);border-color:rgba(90,171,248,0.22);}
+.btn-blue:hover{background:rgba(90,171,248,0.18);border-color:var(--blue);}
+.btn-ghost{background:rgba(255,255,255,0.05);color:var(--w55);border-color:rgba(255,255,255,0.1);}
+.btn-ghost:hover{background:rgba(255,255,255,0.1);color:var(--w80);}
+.btn-white{background:rgba(255,255,255,0.08);color:#ffffff;border-color:rgba(255,255,255,0.18);backdrop-filter:blur(10px);}
+.btn-white:hover{background:rgba(255,255,255,0.14);border-color:rgba(255,255,255,0.30);transform:translateY(-1px);}
+.btn-sm{padding:7px 12px;font-size:11px;}
+.btn-lg{padding:13px 22px;font-size:14px;font-weight:700;}
+.btn-full{width:100%;}
 
-/* SIDEBAR & NESTED NAV */
-.sidebar { 
-  width: 90px;
-  background: #1a1a1a; 
-  display: flex; 
-  flex-direction: column; 
-  align-items: center; 
-  padding-top: 15px;
-  padding-bottom: 100px;
-  position: relative; 
-  overflow-y: auto; 
-  height: 100vh;
-  border-right: 1px solid rgba(255,255,255,0.1); 
-  scrollbar-width: none;
-  -webkit-overflow-scrolling: touch;
-}
-.sidebar::-webkit-scrollbar { display: none; }
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:56px 20px;gap:10px;grid-column:1/-1;}
+.empty-ico{font-size:36px;opacity:.25;filter:grayscale(1);}
+.empty-txt{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2.5px;color:var(--w30);text-transform:uppercase;}
 
-.nav-indicator { 
-  position: absolute; 
-  left: 10px;
-  width: 70px; 
-  height: 70px; 
-  background: var(--primary); 
-  border-radius: 12px;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
-  z-index: 1;
-}
+.hist-toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:20px;}
+.htlabel{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--w30);letter-spacing:2px;text-transform:uppercase;white-space:nowrap;}
+.date-in{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);color:var(--w80);padding:8px 12px;border-radius:var(--r8);font-family:'JetBrains Mono',monospace;font-size:11px;outline:none;cursor:pointer;transition:border-color .2s;backdrop-filter:blur(20px);}
+.date-in:focus{border-color:var(--blue);}
+.date-in::-webkit-calendar-picker-indicator{filter:invert(.55);cursor:pointer;}
+.vdiv{width:1px;height:22px;background:rgba(255,255,255,0.08);}
 
-.nav-group { width: 100%; display: flex; flex-direction: column; align-items: center; margin-bottom: 5px; }
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:10px;margin-bottom:20px;}
+.stile{padding:16px 18px;display:flex;flex-direction:column;gap:4px;}
+.stile-lbl{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:2.5px;text-transform:uppercase;color:var(--w30);}
+.stile-val{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:var(--red);line-height:1;}
+.stile-val.blue{color:var(--blue);}.stile-val.green{color:var(--green);}.stile-val.gold{color:var(--gold);}
+.stile-sub{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--w30);}
 
-.nav-item { 
-  width: 70px; 
-  height: 70px;
-  margin-bottom: 5px; 
-  border-radius: 12px; 
-  display: flex; 
-  flex-direction: column; 
-  align-items: center;
-  justify-content: center; 
-  cursor: pointer; 
-  position: relative; 
-  z-index: 2;
-  transition: color 0.3s ease; 
-  color: rgba(255,255,255,0.6); 
-  flex-shrink: 0; 
-}
+.export-bar{display:flex;gap:8px;align-items:center;margin-bottom:18px;flex-wrap:wrap;}
+.ebtn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--r8);border:1px solid;font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:600;cursor:pointer;transition:all .18s;}
+.ebtn svg{width:13px;height:13px;fill:currentColor;flex-shrink:0;}
+.ebtn-pdf{background:rgba(244,97,79,0.10);color:var(--red);border-color:rgba(244,97,79,.2);}
+.ebtn-pdf:hover{background:rgba(244,97,79,0.18);}
+.ebtn-xl{background:rgba(45,212,170,0.10);color:var(--green);border-color:rgba(45,212,170,.2);}
+.ebtn-xl:hover{background:rgba(45,212,170,0.18);}
+.esp{display:none;width:11px;height:11px;border:2px solid rgba(255,255,255,.25);border-top-color:currentColor;border-radius:50%;animation:spin .6s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.ebtn.loading .esp{display:block;}.ebtn.loading .eico{display:none;}
+#expNote{display:none;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--w30);}
 
-.nav-item.active { color: #000; }
-.nav-item span { font-size: 22px; margin-bottom: 4px; }
-.nav-item label { font-size: 9px; font-weight: 700; text-transform: uppercase; text-align: center; pointer-events: none; }
+.hist-wrap{border:1px solid rgba(255,255,255,0.09);border-radius:var(--r12);overflow:hidden;margin-bottom:20px;backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px);}
+.htable{width:100%;border-collapse:collapse;}
+.htable thead{background:rgba(255,255,255,0.03);border-bottom:1px solid rgba(255,255,255,0.1);}
+.htable th{text-align:left;font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;color:var(--w30);padding:12px 14px;}
+.htable th:last-child{text-align:right;}
+.htable td{padding:12px 14px;font-size:12px;border-bottom:1px solid rgba(255,255,255,0.05);background:rgba(255,255,255,0.02);vertical-align:middle;transition:background .15s;}
+.htable td:last-child{text-align:right;}
+.htable tbody tr:last-child td{border-bottom:none;}
+.htable tbody tr:hover td{background:rgba(255,255,255,0.04);cursor:pointer;}
+.hcust{font-family:'Instrument Serif',serif;font-style:italic;font-size:14px;color:var(--green);}
+.hdate{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--blue);font-weight:500;}
+.hdatesub{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--w30);}
+.hamt{font-family:'Syne',sans-serif;font-size:15px;font-weight:800;color:var(--red);}
 
-.submenu {
-  width: 100%;
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.4s ease-out;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background: rgba(255, 204, 0, 0.07);
-  border-left: 2px solid rgba(255, 204, 0, 0.18);
-  border-right: 2px solid rgba(255, 204, 0, 0.18);
-  border-radius: 0 0 10px 10px;
-}
-.nav-group.expanded .submenu { max-height: 700px; padding-bottom: 10px; }
+.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:500;letter-spacing:1.2px;text-transform:uppercase;border:1px solid;}
+.bg-green{color:var(--green);background:rgba(45,212,170,0.08);border-color:rgba(45,212,170,.18);}
+.bg-red{color:var(--red);background:rgba(244,97,79,0.08);border-color:rgba(244,97,79,.18);}
+.bg-blue{color:var(--blue);background:rgba(90,171,248,0.08);border-color:rgba(90,171,248,.18);}
+.bg-gold{color:var(--gold);background:rgba(240,180,41,0.08);border-color:rgba(240,180,41,.18);}
 
-.sub-item {
-  width: 60px;
-  height: 55px;
-  margin-top: 8px;
-  border-radius: 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  z-index: 2;
-  color: rgba(255,255,255,0.55);
-  transition: all 0.3s ease;
-  background: rgba(255,255,255,0.04);
-}
-.sub-item.active { color: #000; }
-.sub-item span { font-size: 16px; }
-.sub-item label { font-size: 7px; font-weight: 600; text-transform: uppercase; margin-top: 2px; pointer-events: none; }
+.drow td{padding:0 14px 14px;background:rgba(0,0,0,.2)!important;}
+.drow-inner{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:var(--r8);padding:12px 14px;margin-top:4px;}
+.ditem{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:11px;}
+.ditem:last-child{border-bottom:none;}
+.ditem-name{color:var(--w55);}
+.ditem-qty{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--blue);}
+.ditem-amt{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--green);}
+.dtotals{margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.07);display:flex;flex-direction:column;gap:4px;}
+.dtr{display:flex;justify-content:space-between;font-size:11px;}
+.dtr-grand{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:var(--red);}
 
-/* MAIN CONTENT */
-.main-content { flex: 1; display: flex; flex-direction: column; background: var(--bg-light); border-top-left-radius: 25px; overflow: hidden; }
-.hero-header { padding: 15px 20px; background: #fff; border-bottom: 1px solid #eee; text-align: center; position: relative; display: flex; align-items: center; justify-content: center; }
-#section-name { font-family: 'Playfair Display', serif; font-size: 16px; background: var(--primary); color: #000; display: inline-block; padding: 5px 12px; border-radius: 8px; box-shadow: 0 4px 10px rgba(255, 204, 0, 0.2); }
+.pagi{display:flex;justify-content:center;gap:5px;margin-bottom:36px;}
+.pgbtn{font-family:'JetBrains Mono',monospace;font-size:11px;padding:6px 11px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:var(--w55);border-radius:var(--r8);cursor:pointer;transition:all .18s;}
+.pgbtn:hover{border-color:var(--blue);color:var(--blue);}
+.pgbtn.active{background:var(--blue);border-color:var(--blue);color:#fff;}
+.pgbtn:disabled{opacity:.2;cursor:not-allowed;}
 
-.search-container { position: absolute; right: 15px; display: flex; align-items: center; }
-#search-input { width: 0; opacity: 0; padding: 8px 0; border: none; border-bottom: 2px solid var(--primary); outline: none; transition: all 0.3s ease; font-size: 14px; }
-#search-input.active { width: 120px; opacity: 1; padding: 8px 10px; margin-right: 5px; }
-.search-icon-btn { background: none; border: none; font-size: 20px; cursor: pointer; }
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.82);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);z-index:999;display:none;align-items:flex-start;justify-content:center;padding:36px 16px;overflow-y:auto;}
+.overlay.open{display:flex;}
+.bmodal{
+  background:rgba(12,14,22,0.70);
+  border:1px solid rgba(255,255,255,0.13);
+  border-radius:var(--r28);
+  width:100%;max-width:660px;margin:auto;overflow:hidden;
+  box-shadow:0 40px 100px rgba(0,0,0,.8),inset 0 1px 0 rgba(255,255,255,0.09);
+  backdrop-filter:blur(60px) saturate(180%);
+  -webkit-backdrop-filter:blur(60px) saturate(180%);
+}
+.bmodal-head{padding:22px 26px 18px;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;justify-content:space-between;align-items:flex-start;background:rgba(255,255,255,0.02);}
+.bmodal-title{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--gold);letter-spacing:.5px;margin-bottom:4px;}
+.bmodal-sub{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--blue);letter-spacing:.5px;}
+.bmodal-close{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:var(--w55);font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.bmodal-close:hover{background:rgba(244,97,79,0.12);color:var(--red);border-color:rgba(244,97,79,.3);}
+.bmodal-body{padding:20px 26px;}
+.bmodal-footer{padding:14px 26px 26px;display:flex;gap:8px;}
+.modal-slbl{font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--w30);letter-spacing:2.5px;text-transform:uppercase;margin-bottom:8px;}
 
-.menu-container { flex: 1; overflow-y: auto; padding: 12px; padding-bottom: 100px; }
-.items-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.msearch{width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);color:var(--w80);padding:10px 14px;border-radius:var(--r8);font-family:'Space Grotesk',sans-serif;font-size:13px;outline:none;transition:border-color .2s;}
+.msearch::placeholder{color:var(--w30);}
+.msearch:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(90,171,248,0.07);}
+.mresults{display:none;margin-top:5px;background:rgba(10,12,20,0.9);border:1px solid rgba(255,255,255,0.12);border-radius:var(--r8);overflow:hidden;max-height:190px;overflow-y:auto;backdrop-filter:blur(40px);}
+.mresult{display:flex;justify-content:space-between;align-items:center;padding:9px 13px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,0.06);transition:background .14s;font-size:12px;}
+.mresult:last-child{border-bottom:none;}
+.mresult:hover{background:rgba(90,171,248,0.08);}
+.mr-name{color:var(--w80);}
+.mr-price{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--green);}
 
-.food-card { background: #fff; border-radius: 16px; padding: 8px; display: flex; flex-direction: column; position: relative; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-.food-card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 12px; margin-bottom: 8px; }
-.food-card h4 { font-size: 12px; line-height: 1.2; margin-bottom: 4px; height: 32px; overflow: hidden; }
-.price { font-weight: 700; color: #555; font-size: 14px; margin-bottom: 8px; }
+.btable{width:100%;border-collapse:collapse;margin-bottom:4px;}
+.btable th{text-align:left;font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--w30);padding:6px 8px;border-bottom:1px solid rgba(255,255,255,0.07);}
+.btable td{padding:7px 8px;border-bottom:1px solid rgba(255,255,255,0.04);vertical-align:middle;font-size:12px;}
+.btable tbody tr:last-child td{border-bottom:none;}
 
-.cart-badge {
-  position: absolute;
-  top: -5px;
-  right: -5px;
-  background: #ff4444;
-  color: white;
-  font-size: 10px;
-  font-weight: bold;
-  padding: 2px 6px;
-  border-radius: 10px;
-  border: 2px solid white;
-  display: none;
-  z-index: 15;
-}
+.item-name-in{background:transparent;border:none;border-bottom:1px dashed rgba(255,255,255,.10);color:var(--w80);font-family:'Space Grotesk',sans-serif;font-size:12px;width:100%;min-width:120px;outline:none;padding:2px 3px;}
+.item-name-in:focus{border-bottom-color:var(--blue);}
+.qrow{display:flex;align-items:center;gap:4px;}
+.qbtn{width:20px;height:20px;border-radius:4px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:var(--w55);font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .14s;}
+.qbtn:hover{background:rgba(90,171,248,0.1);border-color:var(--blue);color:var(--blue);}
+.qval{font-family:'JetBrains Mono',monospace;font-size:12px;min-width:22px;text-align:center;color:var(--w80);}
+.rate-in{background:transparent;border:none;border-bottom:1px dashed rgba(255,255,255,0.10);color:var(--green);font-family:'JetBrains Mono',monospace;font-size:11px;width:64px;text-align:right;outline:none;padding:2px 3px;}
+.rate-in:focus{border-bottom-color:var(--green);}
+.iamt{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--blue);}
+.rmbtn{background:none;border:none;color:rgba(244,97,79,.35);cursor:pointer;padding:3px;border-radius:4px;font-size:11px;transition:all .14s;}
+.rmbtn:hover{color:var(--red);background:rgba(244,97,79,0.1);}
+.ebill-msg{text-align:center;color:var(--w30);padding:24px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;}
 
-.add-initial { width: 100%; padding: 8px; background: #111; color: #fff; border: none; border-radius: 8px; font-weight: 600; font-size: 12px; cursor: pointer; }
-.qty-controls { display: none; align-items: center; justify-content: space-between; background: #f0f0f0; border-radius: 8px; padding: 2px; }
-.btn-qty { width: 28px; height: 28px; border: none; background: #fff; border-radius: 6px; font-weight: 700; cursor: pointer; }
+.tbox{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.09);border-radius:var(--r12);padding:14px 16px;}
+.tline{display:flex;justify-content:space-between;align-items:center;padding:5px 0;}
+.tline-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--w30);letter-spacing:1px;text-transform:uppercase;}
+.tline-val{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--blue);}
+.hdiv{border:none;border-top:1px solid rgba(255,255,255,0.07);margin:5px 0;}
+.disc-row{display:flex;align-items:center;gap:8px;padding:5px 0;}
+.disc-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--w30);text-transform:uppercase;letter-spacing:1px;min-width:60px;}
+.disc-toggle{display:flex;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:6px;overflow:hidden;}
+.disc-toggle button{padding:4px 11px;font-family:'JetBrains Mono',monospace;font-size:10px;border:none;background:transparent;color:var(--w30);cursor:pointer;transition:all .2s;}
+.disc-toggle button.active{background:var(--gold);color:#050300;}
+.disc-in{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:var(--w80);font-family:'JetBrains Mono',monospace;font-size:12px;padding:4px 9px;border-radius:6px;width:76px;text-align:center;outline:none;}
+.disc-in:focus{border-color:var(--gold);}
+.disc-amt{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--red);}
+.grand-row{display:flex;justify-content:space-between;align-items:baseline;padding:10px 0 3px;}
+.grand-lbl{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--w55);}
+.grand-val{font-family:'Syne',sans-serif;font-size:30px;font-weight:800;color:var(--red);line-height:1;}
 
-.cart-bar { position: fixed; bottom: 15px; left: 105px; right: 15px; background: #28a745; height: 50px; border-radius: 12px; display: none; align-items: center; justify-content: space-between; padding: 0 15px; color: #fff; font-weight: 700; z-index: 1000; cursor: pointer; }
-.cart-popup { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: flex-end; z-index: 2000; }
-.cart-content { width: 100%; max-width: 500px; background: #fff; border-top-left-radius: 25px; border-top-right-radius: 25px; padding: 25px; max-height: 80vh; overflow-y: auto; }
+@media print{body>*:not(#parea){display:none!important;}#parea{display:block!important;}}
+#parea{display:none;font-family:'Courier New',monospace;max-width:320px;margin:0 auto;color:#000;background:#fff;}
+.pr{text-align:center;margin-bottom:10px;}
+.pr-brand{font-size:22px;font-weight:900;letter-spacing:4px;}
+.pr-tag{font-size:10px;color:#555;}
+.pr-div{border:none;border-top:1px dashed #999;margin:8px 0;}
+.pr-row{display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px;}
+.pr-ih{display:flex;justify-content:space-between;font-size:9px;font-weight:900;text-transform:uppercase;margin:5px 0 3px;}
+.pr-ir{display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;}
+.pr-ir-n{flex:1;}.pr-ir-q{width:28px;text-align:center;}.pr-ir-p{width:56px;text-align:right;}
+.pr-tr{display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px;}
+.pr-gr{display:flex;justify-content:space-between;font-size:15px;font-weight:900;margin-top:4px;}
+.pr-ft{text-align:center;font-size:10px;margin-top:10px;color:#555;}
+.pr-ty{font-size:14px;font-weight:900;text-align:center;margin:8px 0 4px;}
 
-.cart-item-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #eee; }
-.cart-item-info { flex: 1; }
-.cart-item-info h5 { font-size: 14px; margin-bottom: 2px; }
-.cart-item-info p { font-size: 12px; color: #777; }
-.cart-item-actions { display: flex; align-items: center; gap: 10px; }
+.mob-tabs{display:none;gap:3px;margin-bottom:18px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);border-radius:var(--r8);padding:3px;}
+.mob-tab{flex:1;padding:8px;text-align:center;border:none;border-radius:6px;font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:500;color:var(--w30);background:transparent;cursor:pointer;transition:all .2s;}
+.mob-tab.active{background:rgba(255,255,255,0.09);color:var(--w80);}
 
-.pay-btn { width: 100%; padding: 16px; background: #28a745; color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 700; margin-top: 20px; cursor: pointer; }
-
-/* ORDER CONFIRMATION OVERLAY */
-#order-confirm-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.75);
-  display: none;
-  justify-content: center;
-  align-items: center;
-  z-index: 9000;
+@media(max-width:768px){
+  .nav{padding:0 16px;}.nav-tabs{display:none;}
+  .main{padding:16px;}
+  .tgrid,.tkgrid{grid-template-columns:1fr;}
+  .bmodal-body{padding:14px;}.bmodal-footer{flex-direction:column;padding:12px 14px 22px;}
+  .stats{grid-template-columns:repeat(2,1fr);}
+  .mob-tabs{display:flex;}
 }
-#order-confirm-overlay.visible { display: flex; }
-.order-confirm-box {
-  background: #fff;
-  border-radius: 24px;
-  padding: 40px 30px;
-  text-align: center;
-  width: 85%;
-  max-width: 340px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-  animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-}
-@keyframes popIn {
-  0% { transform: scale(0.7); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
-}
-.order-confirm-icon { font-size: 52px; margin-bottom: 12px; }
-.order-confirm-title { font-family: 'Playfair Display', serif; font-size: 22px; color: #111; margin-bottom: 20px; }
-.order-timer-ring {
-  position: relative;
-  width: 130px;
-  height: 130px;
-  margin: 0 auto 20px;
-}
-.order-timer-ring svg { transform: rotate(-90deg); }
-.timer-track { fill: none; stroke: #f0f0f0; stroke-width: 8; }
-.timer-progress {
-  fill: none;
-  stroke: #28a745;
-  stroke-width: 8;
-  stroke-linecap: round;
-  stroke-dasharray: 339.29;
-  stroke-dashoffset: 0;
-  transition: stroke-dashoffset 1s linear;
-}
-.timer-label {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 28px;
-  font-weight: 800;
-  color: #111;
-}
-.order-ready-text {
-  font-size: 15px;
-  color: #555;
-  font-weight: 600;
-  margin-bottom: 24px;
-}
-.order-confirm-close {
-  background: #111;
-  color: #fff;
-  border: none;
-  border-radius: 12px;
-  padding: 12px 32px;
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-}
-#order-ready-banner {
-  display: none;
-  margin-bottom: 18px;
-  animation: readyPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-}
-#order-ready-banner.visible { display: block; }
-.order-ready-badge {
-  background: #28a745;
-  color: #fff;
-  font-size: 20px;
-  font-weight: 800;
-  padding: 10px 24px;
-  border-radius: 50px;
-  display: inline-block;
-  letter-spacing: 0.5px;
-}
-@keyframes readyPop {
-  0% { transform: scale(0.5); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
-}
-.token-box {
-  background: #fff8e1;
-  border: 2px dashed #ffcc00;
-  border-radius: 12px;
-  padding: 10px 18px;
-  margin: 0 auto 20px;
-  display: inline-block;
-  text-align: center;
-}
-.token-label {
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: #888;
-  letter-spacing: 1.5px;
-  margin-bottom: 4px;
-}
-.token-number {
-  font-size: 28px;
-  font-weight: 800;
-  color: #111;
-  letter-spacing: 3px;
-  font-family: 'Courier New', monospace;
-}
-
-/* TRACK ORDER BUTTON */
-#track-order-btn {
-  display: none;
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background: #e00000;
-  color: #fff;
-  border: none;
-  border-radius: 14px;
-  padding: 13px 20px;
-  font-size: 13px;
-  font-weight: 700;
-  cursor: pointer;
-  z-index: 8000;
-  box-shadow: 0 4px 18px rgba(220,0,0,0.45);
-  letter-spacing: 0.5px;
-}
-#track-order-btn.visible { display: block; }
-@keyframes trackShake {
-  0%, 100% { transform: translateX(0) rotate(0deg); }
-  15%       { transform: translateX(-5px) rotate(-3deg); }
-  30%       { transform: translateX(5px) rotate(3deg); }
-  45%       { transform: translateX(-4px) rotate(-2deg); }
-  60%       { transform: translateX(4px) rotate(2deg); }
-  75%       { transform: translateX(-2px) rotate(-1deg); }
-  90%       { transform: translateX(2px) rotate(1deg); }
-}
-#track-order-btn.shake { animation: trackShake 0.6s ease; }
 </style>
+
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-analytics-compat.js"></script>
 <script>
-const firebaseConfig = {
-  apiKey: "AIzaSyC_LUKzINx6H4XE7uWoCpeLSldpIp-DR80",
-  authDomain: "restro-4db49.firebaseapp.com",
-  databaseURL: "https://restro-4db49-default-rtdb.firebaseio.com",
-  projectId: "restro-4db49",
-  storageBucket: "restro-4db49.firebasestorage.app",
-  messagingSenderId: "860567729744",
-  appId: "1:860567729744:web:773f5a315af7340d950355",
-  measurementId: "G-D9CJCYZJF4"
-};
+const firebaseConfig={apiKey:"AIzaSyC_LUKzINx6H4XE7uWoCpeLSldpIp-DR80",authDomain:"restro-4db49.firebaseapp.com",databaseURL:"https://restro-4db49-default-rtdb.firebaseio.com",projectId:"restro-4db49",storageBucket:"restro-4db49.firebasestorage.app",messagingSenderId:"860567729744",appId:"1:860567729744:web:773f5a315af7340d950355",measurementId:"G-D9CJCYZJF4"};
 firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
-const analytics = firebase.analytics();
+const db=firebase.database();firebase.analytics();
+
+window.tableLastOpened = window.tableLastOpened || {};
+
+db.ref("tables").on("value",s=>{
+  const raw=s.val();
+  if(raw){
+    allTables=[];
+    if(Array.isArray(raw)) raw.forEach(t=>{if(t)allTables.push(t);});
+    else Object.values(raw).forEach(t=>{if(t)allTables.push(t);});
+  }
+  renderDash();
+});
+
+db.ref("orders").on("value",s=>{
+  const d=s.val();
+  const ordersArr=d?Object.values(d):[];
+  window.allActiveOrders = ordersArr;
+  allTkw=ordersArr.filter(o=>o.orderType==='takeaway'&&(o.status==='pending'||o.status==='Preparing'));
+  renderTkw();
+  updateTrackerStats(ordersArr);
+  syncDineInOrdersToTables(ordersArr);
+  renderDash();
+});
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
 
-<div id="intro-wrapper">
-  <div class="brand-header">EMERALD</div>
-  <div class="animation-container">
-    <div class="plate-side"></div>
-    <div class="falling-item item-burger">🍔</div>
-    <div class="falling-item item-fries">🍟</div>
-    <div class="falling-item item-salad">🥗</div>
-    <div class="falling-item item-wine">🍷</div>
-  </div>
-  <div class="intro-text-container">
-    <div class="text-msg msg-1">Prioritizing Taste</div>
-    <div class="text-msg msg-2">Serving With Speed</div>
-  </div>
-</div>
+<div class="bg"><div class="bg-orb"></div><div class="bg-orb"></div><div class="bg-orb"></div></div>
+<div class="bg-grid"></div>
 
-<div class="sidebar" id="sidebar">
-  <div class="nav-indicator" id="nav-indicator"></div>
-  <div class="nav-group expanded" id="group-starters">
-    <div class="nav-item active" onclick="toggleGroup('starters', this)">
-      <span>🍢</span><label>Starters</label>
+<div id="app">
+  <nav class="nav">
+    <div class="nav-brand">
+      <span class="nav-logo">EMERALD</span>
+      <span class="nav-role">Manager Console</span>
     </div>
-    <div class="submenu">
-      <div class="sub-item" onclick="showSection('starters', this)"><span>🍽️</span><label>Indian</label></div>
-      <div class="sub-item" onclick="showSection('snacks', this)"><span>🍕</span><label>Snacks</label></div>
-      <div class="sub-item" onclick="showSection('salads', this)"><span>🥗</span><label>Salads</label></div>
+    <div class="nav-tabs">
+      <button class="nav-tab active" id="tab-live" onclick="switchTab('live')">Live Dashboard</button>
+      <button class="nav-tab" id="tab-history" onclick="switchTab('history')">Bill History</button>
+      <button class="nav-tab" id="tab-tracker" onclick="switchTab('tracker')">Order Tracking</button>
     </div>
-  </div>
-  <div class="nav-group" id="group-main">
-    <div class="nav-item" onclick="toggleGroup('main', this)">
-      <span>🫕</span><label>Main</label>
-    </div>
-    <div class="submenu">
-      <div class="sub-item" onclick="showSection('paneer', this)"><span>🧀</span><label>Paneer</label></div>
-      <div class="sub-item" onclick="showSection('indian_curry', this)"><span>🍛</span><label>Curries</label></div>
-      <div class="sub-item" onclick="showSection('dal', this)"><span>🍲</span><label>Dal</label></div>
-      <div class="sub-item" onclick="showSection('rice_merged', this)"><span>🍚</span><label>Rice</label></div>
-    </div>
-  </div>
-  <div class="nav-group" id="group-breads">
-    <div class="nav-item" onclick="toggleGroup('breads', this)">
-      <span>🍞</span><label>Breads</label>
-    </div>
-    <div class="submenu">
-      <div class="sub-item" onclick="showSection('tandoor', this)"><span>🔥</span><label>Tandoor</label></div>
-      <div class="sub-item" onclick="showSection('kofta', this)"><span>🫓</span><label>Kofta</label></div>
-    </div>
-  </div>
-  <div class="nav-group">
-    <div class="nav-item" onclick="showSection('chinese_merged', this)"><span>🍜</span><label>Chinese</label></div>
-  </div>
-  <div class="nav-group" id="group-soups">
-    <div class="nav-item" onclick="toggleGroup('soups', this)">
-      <span>🥣</span><label>Soups</label>
-    </div>
-    <div class="submenu">
-      <div class="sub-item" onclick="showSection('soups', this)"><span>🍲</span><label>Soups</label></div>
-    </div>
-  </div>
-  <div class="nav-group">
-    <div class="nav-item" onclick="showSection('sizzlers', this)"><span>🍝</span><label>Sizzlers</label></div>
-  </div>
-  <div class="nav-group">
-    <div class="nav-item" onclick="showSection('continental', this)"><span>🍝</span><label>Continental</label></div>
-  </div>
-  <div class="nav-group" id="group-beverages">
-    <div class="nav-item" onclick="toggleGroup('beverages', this)">
-      <span>🥤</span><label>Drinks</label>
-    </div>
-    <div class="submenu">
-      <div class="sub-item" onclick="showSection('drinks', this)"><span>🍷</span><label>Beverages</label></div>
-      <div class="sub-item" onclick="showSection('shakes', this)"><span>🥛</span><label>Shakes</label></div>
-      <div class="sub-item" onclick="showSection('ice_cream', this)"><span>🍦</span><label>Desserts</label></div>
-    </div>
-  </div>
-</div>
-
-<div class="main-content">
-  <div class="hero-header">
-    <h1 id="section-name">Starters</h1>
-    <div class="search-container">
-      <input type="text" id="search-input" placeholder="Search item..." oninput="handleSearch()">
-      <button class="search-icon-btn" onclick="toggleSearch()">🔍</button>
-    </div>
-  </div>
-  <div class="menu-container"><div class="items-grid" id="menu-grid"></div></div>
-</div>
-
-<div class="cart-bar" id="cart-bar" onclick="toggleCart()">
-  <span id="cart-item-count">0 Items</span>
-  <span id="cart-total-price">₹0.00</span>
-  <span>View Cart →</span>
-</div>
-
-<div class="cart-popup" id="cart-popup">
-  <div class="cart-content">
-    <div style="display:flex; justify-content:space-between; margin-bottom:15px">
-      <h3>Your Basket</h3>
-      <button onclick="toggleCart()" style="background:none; border:none; color:#999; font-size:20px">✕</button>
-    </div>
-    <div id="cart-items-list"></div>
-    <div style="background: #f9f9f9; padding: 15px; border-radius: 12px; margin-top: 15px;">
-      <div style="display: flex; justify-content: space-between; font-weight: 800; font-size: 20px;">
-        <span>Total</span><span id="cart-total-price-popup">₹0.00</span>
+    <div class="nav-right">
+      <div class="nav-clock" id="clock">--:--:--</div>
+      <div class="hamburger-menu">
+        <button class="hamb-btn" onclick="toggleMenu()">☰ Menu</button>
+        <div class="hamb-dropdown" id="hambDrop">
+          <a onclick="switchTab('live'); toggleMenu()">Live Dashboard</a>
+          <a onclick="switchTab('history'); toggleMenu()">Bill History</a>
+          <a onclick="switchTab('tracker'); toggleMenu()">Order Tracking Dashboard</a>
+        </div>
       </div>
     </div>
-    <button class="pay-btn" onclick="processPayment()">Place Order</button>
-  </div>
-</div>
+  </nav>
 
-<div id="order-confirm-overlay">
-  <div class="order-confirm-box">
-    <div class="order-confirm-icon">🍽️</div>
-    <div class="order-confirm-title">Order Placed!</div>
-    <div style="text-align:center; margin-bottom: 18px;">
-      <div class="token-box">
-        <div class="token-label">🎫 Your Token Number</div>
-        <div class="token-number" id="order-token-number">#---</div>
+  <main class="main">
+    <div class="mob-tabs">
+      <button class="mob-tab active" id="mtab-live" onclick="switchTab('live')">Live</button>
+      <button class="mob-tab" id="mtab-history" onclick="switchTab('history')">History</button>
+      <button class="mob-tab" id="mtab-tracker" onclick="switchTab('tracker')">Tracker</button>
+    </div>
+
+    <div class="tab-panel active" id="panel-live">
+      <div class="slabel"><span class="slabel-txt">Tables</span><span class="slabel-line"></span><span class="slabel-pill" id="tcount">0</span></div>
+      <div class="tgrid" id="tgrid"></div>
+
+      <div class="slabel" style="margin-top:4px;"><span class="slabel-txt">Takeaway Orders</span><span class="slabel-line"></span><span class="slabel-pill" id="tkcount">0</span></div>
+      <div class="tkgrid" id="tkgrid"></div>
+
+      <div class="slabel" style="margin-top:4px;"><span class="slabel-txt">Waiting Queue</span><span class="slabel-line"></span><span class="slabel-pill" id="qcount">0</span></div>
+      <div class="qlist" id="qlist"></div>
+    </div>
+
+    <div class="tab-panel" id="panel-history">
+      <div class="hist-toolbar">
+        <span class="htlabel">From</span>
+        <input type="date" class="date-in" id="hFrom">
+        <span class="htlabel">→</span>
+        <input type="date" class="date-in" id="hTo">
+        <div class="vdiv"></div>
+        <button class="btn btn-blue btn-sm" onclick="applyF()">Apply</button>
+        <button class="btn btn-ghost btn-sm" onclick="setMonth()">This Month</button>
+        <button class="btn btn-ghost btn-sm" onclick="setToday()">Today</button>
+        <button class="btn btn-ghost btn-sm" onclick="clearF()">All Time</button>
+      </div>
+
+      <div class="stats">
+        <div class="g stile"><span class="stile-lbl">Total Orders</span><span class="stile-val" id="st1">—</span><span class="stile-sub">Completed</span></div>
+        <div class="g stile"><span class="stile-lbl">Revenue</span><span class="stile-val" id="st2">—</span><span class="stile-sub">Grand total</span></div>
+        <div class="g stile"><span class="stile-lbl">Avg Bill</span><span class="stile-val blue" id="st3">—</span><span class="stile-sub">Per order</span></div>
+        <div class="g stile"><span class="stile-lbl">Discounts</span><span class="stile-val gold" id="st4">—</span><span class="stile-sub">Given away</span></div>
+        <div class="g stile"><span class="stile-lbl">Dine-In</span><span class="stile-val blue" id="st5">—</span><span class="stile-sub">Table orders</span></div>
+        <div class="g stile"><span class="stile-lbl">Takeaway</span><span class="stile-val green" id="st6">—</span><span class="stile-sub">Pickup</span></div>
+      </div>
+
+      <div class="export-bar">
+        <span class="htlabel">Export</span>
+        <button class="ebtn ebtn-pdf" id="expPdf" onclick="exportPDF()">
+          <span class="eico"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 1.5L18.5 9H13V3.5zM8.5 17H8v1H7v-4h1.5a1.5 1.5 0 0 1 0 3zm4-.5a2 2 0 0 1-2 2H10v-4h.5a2 2 0 0 1 2 2zm4-1.5h-1.5v1H17v1h-1.5V19H14v-4h3v1zm-7.5 0H8v1h.5a.5.5 0 0 0 0-1zm3 0h-.5v2h.5a1 1 0 0 0 0-2z"/></svg></span>
+          <span class="esp"></span>PDF
+        </button>
+        <button class="ebtn ebtn-xl" id="expXl" onclick="exportExcel()">
+          <span class="eico"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 1.5L18.5 9H13V3.5zM7 19l2-3-2-3h1.5l1.25 2 1.25-2H12.5l-2 3 2 3H11l-1.25-2L8.5 19H7zm6.5 0v-6H15v5h2v1h-3.5z"/></svg></span>
+          <span class="esp"></span>Excel
+        </button>
+        <span id="expNote"><span id="expCount">0</span> records</span>
+      </div>
+
+      <div class="hist-wrap">
+        <table class="htable">
+          <thead><tr><th>#</th><th>Date / Time</th><th>Customer</th><th>Type</th><th>Table</th><th>Items</th><th>Status</th><th>Total</th></tr></thead>
+          <tbody id="hbody"><tr><td colspan="8" class="ebill-msg">Loading…</td></tr></tbody>
+        </table>
+      </div>
+      <div class="pagi" id="hpagi"></div>
+    </div>
+
+    <div class="tab-panel" id="panel-tracker">
+      <div class="slabel"><span class="slabel-txt">Order Tracking Overview</span><span class="slabel-line"></span></div>
+      <div class="stats" id="trackerStats">
+        <div class="g stile"><span class="stile-lbl">Total Orders</span><span class="stile-val" id="trk-total">0</span><span class="stile-sub">Active &amp; Served</span></div>
+        <div class="g stile"><span class="stile-lbl">Waiting to Serve</span><span class="stile-val gold" id="trk-wait">0</span><span class="stile-sub">Pending / In Queue</span></div>
+        <div class="g stile"><span class="stile-lbl">In Kitchen</span><span class="stile-val red" id="trk-cook">0</span><span class="stile-sub">Cooking Process</span></div>
+        <div class="g stile"><span class="stile-lbl">Served / Ready</span><span class="stile-val green" id="trk-served">0</span><span class="stile-sub">Completed</span></div>
       </div>
     </div>
-    <div class="order-timer-ring">
-      <svg width="130" height="130" viewBox="0 0 130 130">
-        <circle class="timer-track" cx="65" cy="65" r="54"/>
-        <circle class="timer-progress" id="timer-progress-circle" cx="65" cy="65" r="54"/>
-      </svg>
-      <div class="timer-label" id="timer-display">15:00</div>
+  </main>
+</div>
+
+<div class="overlay" id="viewOrderModal" onclick="if(event.target==this)closeViewOrder()">
+  <div class="bmodal" style="max-width:500px;">
+    <div class="bmodal-head">
+      <div><div class="bmodal-title">Current Order Details</div><div class="bmodal-sub" id="voSub">—</div></div>
+      <button class="bmodal-close" onclick="closeViewOrder()">✕</button>
     </div>
-    <div class="order-ready-text" id="order-ready-subtext">Your order will be ready in 15 minutes</div>
-    <div id="order-ready-banner"><span class="order-ready-badge">🍴 Order Ready !</span></div>
-    <button class="order-confirm-close" onclick="closeOrderConfirm()">Got it!</button>
+    <div class="bmodal-body">
+      <table class="btable">
+        <thead><tr><th>Item</th><th>Qty</th><th>Price</th><th style="text-align:right;">Total</th></tr></thead>
+        <tbody id="voItems"></tbody>
+      </table>
+      <div class="tbox" style="margin-top:16px;">
+        <div class="grand-row">
+          <span class="grand-lbl">Order Total</span>
+          <span class="grand-val" id="voTotal">₹0.00</span>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
-<button id="track-order-btn" onclick="goToTrackOrder()">🛵 Track Order</button>
+<div class="overlay" id="nextOrderModal" onclick="if(event.target==this)closeNextOrder()">
+  <div class="bmodal" style="max-width:400px;">
+    <div class="bmodal-head">
+      <div><div class="bmodal-title">Waiting Order</div><div class="bmodal-sub" id="nextOrderSub">—</div></div>
+      <button class="bmodal-close" onclick="closeNextOrder()">✕</button>
+    </div>
+    <div class="bmodal-body">
+      <table class="btable">
+        <thead><tr><th>Item</th><th>Qty</th></tr></thead>
+        <tbody id="nextOrderItems"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="billModal">
+  <div class="bmodal">
+    <div class="bmodal-head">
+      <div><div class="bmodal-title">Generate Bill</div><div class="bmodal-sub" id="bsub">—</div></div>
+      <button class="bmodal-close" onclick="closeBill()">✕</button>
+    </div>
+    <div class="bmodal-body">
+      <div style="margin-bottom:16px;">
+        <div class="modal-slbl">Add Items</div>
+        <input type="text" class="msearch" id="msearch" placeholder="Search menu items…" oninput="srchMenu()">
+        <div class="mresults" id="mresults"></div>
+      </div>
+      <div style="margin-bottom:16px;">
+        <div class="modal-slbl">Order Items</div>
+        <table class="btable">
+          <thead><tr><th>Item</th><th>Qty</th><th>Rate ₹</th><th>Amt ₹</th><th></th></tr></thead>
+          <tbody id="bitems"><tr><td colspan="5" class="ebill-msg">No items yet</td></tr></tbody>
+        </table>
+      </div>
+      <div class="tbox">
+        <div class="tline"><span class="tline-lbl">Subtotal</span><span class="tline-val" id="bsub2">₹0.00</span></div>
+        <div class="disc-row">
+          <span class="disc-lbl">Discount</span>
+          <div class="disc-toggle">
+            <button id="dPct" class="active" onclick="setDisc('pct')">%</button>
+            <button id="dRup" onclick="setDisc('rs')">₹</button>
+          </div>
+          <input type="number" class="disc-in" id="dVal" placeholder="0" min="0" oninput="recalc()">
+          <span class="disc-amt" id="dAmt">−₹0.00</span>
+        </div>
+        <hr class="hdiv">
+        <div class="grand-row">
+          <span class="grand-lbl">Total Payable</span>
+          <span class="grand-val" id="bgrand">₹0.00</span>
+        </div>
+      </div>
+    </div>
+    <div class="bmodal-footer">
+      <button class="btn btn-ghost" onclick="saveOnly()">Save Only</button>
+      <button class="btn btn-white btn-lg" style="flex:1;" onclick="printBill()" id="pbtn">Print Bill & Close</button>
+    </div>
+  </div>
+</div>
+
+<div id="parea"></div>
 
 <script>
-const menuData = {
-  starters: [
-    { id: 'st1',  name: 'Corn Tikki',                  price: 200.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnMSoDPqbSHVRvP9UUOfUXeQmo2cHT-_TPtUZ3YJRXKf8o38sRbov1ICUmpA&s' },
-    { id: 'st2',  name: 'Paneer Tikka Dry',            price: 235.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQLGilZUsB-UT5Fg1yIFJYN2dzc-ctilFBpzVYPiRlRvGNKCxo4Hus6uDl2Zrg&s' },
-    { id: 'st3',  name: 'Paneer Phudina Tikka',        price: 235.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHPW-1_J3YuQ8umbCW6ZvQ1chf-w9c2RAXcwqVwVvSakhp3Ua-W7zqcIvszY4&s' },
-    { id: 'st4',  name: 'Paneer Lahsuni Tikka',        price: 235.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSaK7iaUGqo5RGmx1gPMSJSwCWdYn-gd8zmsuEQ9r_FQRwCIYGxIQ_rwmgy660&s' },
-    { id: 'st5',  name: 'Hara Bhara Kabab',            price: 200.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQvEdtCyriAu9hZPb3iXzI7hQb9UZU9iXi6iUBA8UcuHjR1ULg_tdI00-QyYw&s' },
-    { id: 'st6',  name: 'Raja Kabab',                  price: 210.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTd3XlcCjYFtIKVur7D10WD97WpOGOLlic7pAeumvMNPADhHDAQh5lck-ck4Q&s' },
-    { id: 'st7',  name: 'Veg. Sheekh Kabab',           price: 230.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUZ9k9eehKgTjP9SjmhEDkuW8YNzEdDgMbrBH8rEhDntEJgKhKyJnXYx7rU7A&s' },
-    { id: 'st8',  name: 'Paneer Sheekh Kabab',         price: 260.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPVJK_eKYv-A8Cf29C0PeFm0IhtuI5sphRqy3UVxr8mxTKykkhYx4O7um5Lxs&s' },
-    { id: 'st9',  name: 'Veg. Brice Kabab',            price: 200.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX1eCH5sW_OqxyeVuci48XeoKgSz2vzX8CZbK9dBSopgMjEf-6ezXNCXPFSQ&s' },
-    { id: 'st10', name: 'Veg. Dilruba Sheekh Kabab',   price: 260.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRjm5xJKeHPP5KVP_MnaM1Ge-ar-Zkx4cuLASlykXS_j3l63fM3o6ioGm0G8CI&s' },
-    { id: 'st11', name: 'Dahi Kabab',                  price: 190.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTs8qU1I9cJMvKSJPmdzVwyBcOyvN_RRF6LPgiin1ChAYPZ7P6aenjM9rMsPRA&s' },
-    { id: 'st12', name: 'Jahangiri Tikka',             price: 230.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRyZoBs7nOJyMXCegt8puFzSWIDb_kep2QtT6_UNsglPLHC59ZaSahcOTFTww&s' },
-    { id: 'st13', name: 'Tandoori Plater',             price: 285.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTh_9O4lCssUkRfWcTPlNTXtsboJRNaIYaIhtHz-w5Y-F1GOTwv9bfS-Iye0tg&s' }
+setInterval(()=>{const n=new Date(),pad=x=>String(x).padStart(2,'0');document.getElementById('clock').textContent=`${pad(n.getHours())}:${pad(n.getMinutes())}:${pad(n.getSeconds())}`;},1000);
+
+const menuData={
+  starters:[
+    {id:'st1',name:'Corn Tikki',price:200},{id:'st2',name:'Paneer Tikka Dry',price:235},
+    {id:'st3',name:'Paneer Phudina Tikka',price:235},{id:'st4',name:'Paneer Lahsuni Tikka',price:235},
+    {id:'st5',name:'Hara Bhara Kabab',price:200},{id:'st6',name:'Raja Kabab',price:210},
+    {id:'st7',name:'Veg. Sheekh Kabab',price:230},{id:'st8',name:'Paneer Sheekh Kabab',price:260},
+    {id:'st9',name:'Veg. Brice Kabab',price:200},{id:'st10',name:'Veg. Dilruba Sheekh Kabab',price:260},
+    {id:'st11',name:'Dahi Kabab',price:190},{id:'st12',name:'Jahangiri Tikka',price:230},
+    {id:'st13',name:'Tandoori Plater',price:285}
   ],
-  snacks: [
-    { id: 'sn1', name: 'Veg. Pizza',           price: 135.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcZbS_g1y4mcyqDyffzQ1em9LxESjjv_XboKDdb3dFi1KjY6JUi8RDtGowvA&s' },
-    { id: 'sn2', name: 'Italian Pizza',        price: 135.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJiAJiyeCBwrKH9QGXwjmHcAK8N_N6pGV47gitT1a8II32wuTPl2OB98ju6x4&s' },
-    { id: 'sn3', name: 'Cheese Pizza',         price: 150.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXfxisbWZ3dactVTVbzhllrSZFDxim-Vrtv9l16MI2TNQqVBAhTVgamAnS8A&s' },
-    { id: 'sn4', name: 'Jain Pizza',           price: 120.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9gHkBz7Rqsdr8ONpnwPTzSwrxmJsmAaFNHrjhky3D-U6fE-YAhKyGYWKYYxU&s' },
-    { id: 'sn5', name: 'Veg. Club Sandwich',   price: 90.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQheZ7bqoOvbwsoztSEKj26v_jRiuDpbUGQ1xmklkNve00dCBrsVYkfaV19iKU&s' },
-    { id: 'sn6', name: 'Veg. Sandwich',        price: 80.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcToM5d8P8Uv2HNeCCTZFMVE-EPyS_BsFmoLro8SNetCuWvu1xwF7BBKEtMs6A&s' },
-    { id: 'sn7', name: 'Cheese Sandwich',      price: 80.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjb5DmJICAgE99DpNRr4PEdfE9fpp6xa49COhcEqao3kZlZhI2X30HBuqxXug&s' },
-    { id: 'sn8', name: 'Cheese Jam Sandwich',  price: 90.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOgXouOb8XZS_uo3K9TbvxO9wcnf-fHbkRjG6n7ATThkKrbnz-HGbD9K8Wmw&s' },
-    { id: 'sn9', name: 'Bread Butter',         price: 55.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTCjaFXXRZfGg0loRiNy0IgPtttFEDaWd-H_LVAoUakfTeVt01CjO8jNe6D75I&s' },
-    { id: 'sn10',name: 'French Fries',         price: 100.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQMhzEnJCL7mXaVf_4Dsm01mZXmpTuIFURvjQxQaX3sZpeIpWpLLUVX85QrqQ&s' }
+  snacks:[
+    {id:'sn1',name:'Veg. Pizza',price:135},{id:'sn2',name:'Italian Pizza',price:135},
+    {id:'sn3',name:'Cheese Pizza',price:150},{id:'sn4',name:'Jain Pizza',price:120},
+    {id:'sn5',name:'Veg. Club Sandwich',price:90},{id:'sn6',name:'Veg. Sandwich',price:80},
+    {id:'sn7',name:'Cheese Sandwich',price:80},{id:'sn8',name:'Cheese Jam Sandwich',price:90},
+    {id:'sn9',name:'Bread Butter',price:55},{id:'sn10',name:'French Fries',price:100}
   ],
-  paneer: [
-    { id: 'pn1',  name: 'Emerald Sp. Paneer',          price: 240.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQZ1NZRI0qF1uVzh3cHKrlV5ws8AzWEXNmr1wi_09jdFV9H_3-uauxLkbn2_Q&s' },
-    { id: 'pn2',  name: 'Paneer Sizzling',             price: 245.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTENXelHAQVN1o1El1uyXXlLt2sBzAXzikGoHMVWAug8tBM52wifobxgIQeLA&s' },
-    { id: 'pn3',  name: 'Paneer Kathiyawadi',          price: 230.00, img: 'https://encrypted-tbn0.GcSwoTP1i4WHoSkkRDHcBUMjdAWvmDTmwcZrfljrsrKwZLCJEvZz1cihiZuWkQ&s' },
-    { id: 'pn4',  name: 'Paneer Darwar',               price: 230.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTqGTAsBD1JR_ZXKpQzWDolO5dziF1DyaCkgDtyeKAgoCoM7fenbwStizfNFA&s' },
-    { id: 'pn5',  name: 'Paneer Tiranga',              price: 235.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhXqrGjVSrLeU93WHYDSR-EfRXRPIxZxn4oV_zQ70_5I7sU4EjGCFvhcA_Cw&s' },
-    { id: 'pn6',  name: 'Cheese Butter Masala',        price: 235.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKlyiDm0odqlRKurnQH-qfCF_4lXoI_WnG6nKqWtQfz0o4it89F9PRTiajXuo&s' },
-    { id: 'pn7',  name: 'Cheese Angoori',              price: 235.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxhIdaj-9HLlHepdg26np0FMO1eMPPYTnv8zUUo1MIZKn5dK1YwBM3UFDjMA&s' },
-    { id: 'pn8',  name: 'Paneer Mushroom Masala',      price: 230.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRYUwRncHgwsQfHX0l01zaldNbkKYoPX4QOIQWSupDnGNt-m4qI_F3MpQDcww&s' },
-    { id: 'pn9',  name: 'Paneer Butter Masala',        price: 210.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT-DKI6IZznGQYyEdIs8Pz9yuHJMF_ZdyUVVNisCbAZkBZ5uEILxnZBtZm_GxA&s' },
-    { id: 'pn10', name: 'Paneer Tikka Masala',         price: 220.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTA8kS6uIoiT-0d3uMOiEpGBWJx5poogJhhj9kB2F4hCvxM2G4cJNK0QjWtGm0&s' },
-    { id: 'pn11', name: 'Paneer Kankani',              price: 220.00, img: 'https://encrypted-tbn0.GcSzoz_nUT7f9BddMaE1fYuj4bKZSEcQ5mNW3RoCUUwhe3brMwJvY28EhXAi-w&s' },
-    { id: 'pn12', name: 'Paneer Diwani Handi',         price: 220.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSV7HAYYhfdndeaKgsVe2KBHuwDz8GCZGkzVHQbRc-eMNJoEHz3SJH6Ezepe64&s' },
-    { id: 'pn13', name: 'Paneer Lajawab',              price: 220.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMJzClOsFlc9fL2LDvD2PkKnSveiweQcaaqyTVlnUG1rEJPwEhTdMAw1W4fA&s' },
-    { id: 'pn14', name: 'Paneer Kalimirch',            price: 220.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZT7hbYQPZWQS8EiPPQFUVHJRub8CrwyReuXc1-wmATrzMQyEokUfb_nlIkg&s' },
-    { id: 'pn15', name: 'Paneer Kadai',                price: 220.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRebYK9td9pnUuP4KBg2BjQA3WkFMqxsQG5WEjCx_azeFF8CR_V6ejMkN_5V1M&s' },
-    { id: 'pn16', name: 'Paneer Handi',                price: 220.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpvTNMgzQEACbdSiR7M8Aw6khIVZDvXPb2b6-9YTGbGUK-hVWfQNHpG7YTqQ&s' },
-    { id: 'pn17', name: 'Balti Paneer',                price: 220.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRSBx2YwfjmqRmziJNb-TJxxI8YOZtSVP_FzpOKHyM5cjxWnaxVrmSYLby8gQ&s' },
-    { id: 'pn18', name: 'Tawa Paneer',                 price: 220.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTylUM036lj8Xm_gfyqp9nhp0aBlEF-z8w_K2-hhMXZRHOH6QpBHwESNb2RLw&s' },
-    { id: 'pn19', name: 'Paneer Toofani',              price: 220.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsqrRnuUw1M4Ez-IbDTtXR5zVPSBAYSxXqTvS1GkyexbE7uSEQ--mApcDxYA&s' },
-    { id: 'pn20', name: 'Paneer Hara Masala',          price: 220.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT2uJ8s9UanvXFg1A7BCBxo49HcJZ6omi4wnORDSRs7km3wayEGTqTmZnUPdA&s' },
-    { id: 'pn21', name: 'Paneer Shahi Korma',          price: 220.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTD5awf2CJlTf8hfHOpvprTV00_8EdpEd0nfgQmPJ8sxT3Gw05i7_ZLuQXS-g&s' },
-    { id: 'pn22', name: 'Paneer Bhurjee',              price: 230.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnohiVvfV6tw7Jgrme55F5ql8gZ5zhDy7jpNwiLDKL76XwO9I9SvNPrHIpwoM&s' },
-    { id: 'pn23', name: 'Paneer Pasanda',              price: 225.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKPHEmr3Dz4JAG21aIpV_ryUombNLNCk2quT1yNLC8VucQaCNRASkrB9iiHA&s' },
-    { id: 'pn24', name: 'Mutter Paneer',               price: 200.00, img: 'https://encrypted-tbn0.GcSXdxMrCZ-IhHiDvVN--E6AUxBIe8zqUXFCaEHMf6-MDxhTTkDiHpLKn6vdUDs&s' },
-    { id: 'pn25', name: 'Palak Paneer',                price: 200.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKSB61FcG0jywiAX4_aRFWKmrwoiBYrmsrq76QMcnDA0DEbN8_R63T9QOSPA&s' },
-    { id: 'pn26', name: 'Methi Paneer Masala',         price: 220.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRvN7tPVw9DpOADOpZ3Qg9AF6mTrNPII3KYfPuYiACbVCxnGpa2YsKdWpX3xWg&s' },
-    { id: 'pn27', name: 'Kaju Paneer Masala',          price: 245.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRo8Uy8AutD9fjV-YtsnqdQT2rkYACD8rvwiLc-mYCmvqTuxynHyJxpGe9oDu4&s' },
-    { id: 'pn28', name: 'Khoya Kaju (sweet)',          price: 240.00, img: 'https://encrypted-tbn0.GcSvj8SGZmE8PWPGw2qf0ZJLU1xbotrSgM2rIk4X4xByA3zAx-citw1e_VhSbuA&s' },
-    { id: 'pn29', name: 'Kaju Balti Masala',           price: 245.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSDYpgFi8rUHoXXS0_Dcj8WeHkzCGrTO8T_BpfmhCMhI2XkxlDW5rhaBDc49lQ&s' }
+  salads:[
+    {id:'sl1',name:'Cream of Fruit Salad',price:125},{id:'sl2',name:'Fresh Green Salad',price:80},
+    {id:'sl3',name:'Russian Salad',price:125},{id:'sl4',name:'Kachumber Salad',price:70},
+    {id:'sl5',name:'Pineapple Raita',price:95},{id:'sl6',name:'Veg. Raita',price:85},
+    {id:'sl7',name:'Cucumber Raita',price:85},{id:'sl8',name:'Boondi Raita',price:85},
+    {id:'sl9',name:'Curd',price:65},{id:'sl10',name:'Papad Roasted',price:25},
+    {id:'sl11',name:'Papad Fried',price:27},{id:'sl12',name:'Papad Masala',price:45},
+    {id:'sl13',name:'Papad Cheese Masala',price:60}
   ],
-  indian_curry: [
-    { id: 'in1',  name: 'Emerald Sp. Veg.',            price: 210.00, img: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=400' },
-    { id: 'in2',  name: 'Veg. Mastani',                price: 215.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJken_OHzMdXzslUAgVF-OSzDKfxJfqYHUODZfD4snErypwhDpBmjiFjm8PdU&s' },
-    { id: 'in3',  name: 'Veg. Jawalamukhi',            price: 215.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4iDXY1HwoY9OrCw9yLJ0KC9WWkW_d17O9eIXz4OTV7BSzC6KzvPLEPRKZQA&s' },
-    { id: 'in4',  name: 'Veg. Sizzling',               price: 220.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT9B-Rj54fQEMbx191I65tb9Nt-ZvopEFVugHwya7UdZdySG6_4W9HHSc0t_w&s' },
-    { id: 'in5',  name: 'Veg. Tawa Masala',            price: 200.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAK8ADLVGpL8bYcbB6qAbq7wjy-DAb61nEdZX1fGu9PF8FqOn36Cm_UewIfA&s' },
-    { id: 'in6',  name: 'Veg. Kadai',                  price: 200.00, img: 'https://encrypted-tbn0.GcSij1FeNHj-2YA4Y72JVA5IgvGid-VO-BKan0AgUYp6c_DuTiJtMg3w0-6VMQ&s' },
-    { id: 'in7',  name: 'Veg. Kolhapuri',              price: 200.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcToXzED7p4Qq6O-KagGUB_JjJDvrIGbFapk7GC_9mpOQNhu0QIPBZI9FA2g1g&s' },
-    { id: 'in8',  name: 'Veg. Makhanwala',             price: 200.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1LUq1bH4isfxxbroZA4ULybVvEJxr8iYnhPrgI00MyfbZpVNBC-s64S6NTb8&s' },
-    { id: 'in9',  name: 'Veg. Jaipuri',                price: 200.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTP6xHIvQ0gQZHxVI9oSgvduCzj_WWS05K94IMZWiT1ZRnZ58RXrDT6wHu2Lsw&s' },
-    { id: 'in10', name: 'Veg. Singapuri',              price: 200.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQ57ovk-MqhRi-pTlYLG6RwgBa2R5_nKyXURh_sYDG8mW8m-LkMS9QhR0WNA&s' },
-    { id: 'in11', name: 'Veg. Handi',                  price: 200.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQoZcZF_rYeSkYKgZEQTAsghzq43cpCx6LC0SgXIUzbOcrUqlXOLqpdiGDpDqg&s' },
-    { id: 'in12', name: 'Veg. Jalfrezi',               price: 200.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTpmPm6oAUd4jRmFpq9tLBU8L4n7HfpnClrABa47BTfsUaXcGrUR27J5yl1wQ&s' },
-    { id: 'in13', name: 'Veg. Shahi Korma',            price: 200.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDmtuafszLhm4mgMTxDD13bVRqxvf0hEQJ9pD2cyomzS_Da-QFJ_AIkw5VWfA&s' },
-    { id: 'in14', name: 'Veg. Toofani',                price: 200.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSmXe4d4xyXOZgVgOYIVMcrwoF7-e-lDTfQeDplAXQTHivQ33dONphajA_shnY&s' },
-    { id: 'in15', name: 'Veg. Hyderabadi',             price: 200.00, img: 'https://encrypted-tbn0.GcSFE9HIpvhPpDDn0mg_j5KnQsx1Xwaqki-0nPtw4SlkCSMWpPgES7HEoHMV--M&s' },
-    { id: 'in16', name: 'Palak Corn Capsicum',         price: 200.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcREqJYS60btuPrCqTo0oJPHtwXQm-HqOCgUqu2Va2mmro6CA2SpK2CBRjNeLA&s' },
-    { id: 'in17', name: 'Mutter Methi Malai',          price: 215.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR5I2RJPVH6u-9wYKGsxNCky_5DsYQLld6gJQEyAUC3Yi90kgocTyavlBQjVw&s' },
-    { id: 'in18', name: 'Baby Corn Makhanwala',        price: 215.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTX410m7LpHjDoM3r_vqP6uIt4j0t_4noEaMQI9LXUDrsNQ9PJ1El3ZkM7cA5U&s' },
-    { id: 'in19', name: 'Navaratan Korma',             price: 215.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLi9_6ksSOOZzX36L0OES0fZV0di7XjmPbevDZketQfx0zsVOHB_Ts2FnSU6Y&s' },
-    { id: 'in20', name: 'Corn Tomato Bhartha',         price: 200.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcREf03T4qEJWZj5KUyqhdv114Exh-K1AXDtwFTqAUcr0PkbJ-Ysmw-jAm9uTEc&s' },
-    { id: 'in21', name: 'Mutter Mushroom',             price: 215.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR5MtO-yHpfNO_A5BlQPzGtiq5L_88Vd2smHCQZVsZiPYUtv1eZ9TJcz0LaQPY&s' },
-    { id: 'in22', name: 'Mushroom Masala',             price: 215.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQRjqX-1J2tDkic0eM9HgKNeP-Tdn4FHZeify82jXsjfm5oQ7_TjlV40i2qJLA&s' },
-    { id: 'in23', name: 'Mix Vegetable',               price: 190.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR87kdrOanfilj1Tvij9hNEK6b9kVk0OZu5rK3NndJqmcaJdEZxnn_AhC9bjKo&s' },
-    { id: 'in24', name: 'Chana Masala',                price: 190.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRViB5mkcMJiQQLdNsMLUpadxknye9fGQiqUMPtZHFX8kOuPnx511_2eBngHs0&s' },
-    { id: 'in25', name: 'Aloo Masala',                 price: 190.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQrBQjeDOSKgkNjzSXS6WKBCrH-EE3rrIHnFbXQOTeBngN_hBJ00vpw5l6HZw&s' },
-    { id: 'in26', name: 'Dum Aloo',                    price: 190.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQS26r1lTLNKX6bdCAUgovAJSim9uoqiAFJG_nlWgdyBhINWwvx56PeHRPs1g&s' },
-    { id: 'in27', name: 'Aloo Methi',                  price: 155.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3l5FgCh1jM3M5NQvwwI7Aw1b6O1DILhONvCEr-uZb0Ch1k342dAhzPq3PJw&s' },
-    { id: 'in28', name: 'Jeera Aloo',                  price: 155.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQh5q0nN3Jlq9yVxs6WpTiC9SJ7L34LXvXkJwXS7j1pMJ020miRpzEMdyxSUg&s' }
+  paneer:[
+    {id:'pn1',name:'Emerald Sp. Paneer',price:240},{id:'pn2',name:'Paneer Sizzling',price:245},
+    {id:'pn3',name:'Paneer Kathiyawadi',price:230},{id:'pn4',name:'Paneer Darwar',price:230},
+    {id:'pn5',name:'Paneer Tiranga',price:235},{id:'pn6',name:'Cheese Butter Masala',price:235},
+    {id:'pn7',name:'Cheese Angoori',price:235},{id:'pn8',name:'Paneer Mushroom Masala',price:230},
+    {id:'pn9',name:'Paneer Butter Masala',price:210},{id:'pn10',name:'Paneer Tikka Masala',price:220},
+    {id:'pn11',name:'Paneer Kankani',price:220},{id:'pn12',name:'Paneer Diwani Handi',price:220},
+    {id:'pn13',name:'Paneer Lajawab',price:220},{id:'pn14',name:'Paneer Kalimirch',price:220},
+    {id:'pn15',name:'Paneer Kadai',price:220},{id:'pn16',name:'Paneer Handi',price:220},
+    {id:'pn17',name:'Balti Paneer',price:220},{id:'pn18',name:'Tawa Paneer',price:220},
+    {id:'pn19',name:'Paneer Toofani',price:220},{id:'pn20',name:'Paneer Hara Masala',price:220},
+    {id:'pn21',name:'Paneer Shahi Korma',price:220},{id:'pn22',name:'Paneer Bhurjee',price:230},
+    {id:'pn23',name:'Paneer Pasanda',price:225},{id:'pn24',name:'Mutter Paneer',price:200},
+    {id:'pn25',name:'Palak Paneer',price:200},{id:'pn26',name:'Methi Paneer Masala',price:220},
+    {id:'pn27',name:'Kaju Paneer Masala',price:245},{id:'pn28',name:'Khoya Kaju (sweet)',price:240},
+    {id:'pn29',name:'Kaju Balti Masala',price:245}
   ],
-  dal: [
-    { id: 'da1', name: 'Dal Fry',        price: 115.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQz3YmEz-ixbsaPM1A-y-ikrxJ4jlaxbn1NhSphHfrc8srCw9WLLurGbesfSw&s' },
-    { id: 'da2', name: 'Dal Fry Butter', price: 120.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1-WK5fyJ9AnMFXsrzlAJ8ZgOkV1AQn4_UyNOFenA576oB5x58C6VcjvVeQPI&s' },
-    { id: 'da3', name: 'Dal Fry Tadka',  price: 140.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnuR-kW3Rc9D2no5JYcNqrxD1rNimPXDhhhkBcbQS6u1Qq8qGy92frN1BYng&s' },
-    { id: 'da4', name: 'Dal Palak',      price: 145.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJWRvY4cMb5Ffu_P8k6OyIvdVbEoTMmb1CqrEtq_x6XZMtb_x0G9cFkIsIS3w&s' }
+  indian_curry:[
+    {id:'in1',name:'Emerald Sp. Veg.',price:210},{id:'in2',name:'Veg. Mastani',price:215},
+    {id:'in3',name:'Veg. Jawalamukhi',price:215},{id:'in4',name:'Veg. Sizzling',price:220},
+    {id:'in5',name:'Veg. Tawa Masala',price:200},{id:'in6',name:'Veg. Kadai',price:200},
+    {id:'in7',name:'Veg. Kolhapuri',price:200},{id:'in8',name:'Veg. Makhanwala',price:200},
+    {id:'in9',name:'Veg. Jaipuri',price:200},{id:'in10',name:'Veg. Singapuri',price:200},
+    {id:'in11',name:'Veg. Handi',price:200},{id:'in12',name:'Veg. Jalfrezi',price:200},
+    {id:'in13',name:'Veg. Shahi Korma',price:200},{id:'in14',name:'Veg. Toofani',price:200},
+    {id:'in15',name:'Veg. Hyderabadi',price:200},{id:'in16',name:'Palak Corn Capsicum',price:200},
+    {id:'in17',name:'Mutter Methi Malai',price:215},{id:'in18',name:'Baby Corn Makhanwala',price:215},
+    {id:'in19',name:'Navaratan Korma',price:215},{id:'in20',name:'Corn Tomato Bhartha',price:200},
+    {id:'in21',name:'Mutter Mushroom',price:215},{id:'in22',name:'Mushroom Masala',price:215},
+    {id:'in23',name:'Mix Vegetable',price:190},{id:'in24',name:'Chana Masala',price:190},
+    {id:'in25',name:'Aloo Masala',price:190},{id:'in26',name:'Dum Aloo',price:190},
+    {id:'in27',name:'Aloo Methi',price:155},{id:'in28',name:'Jeera Aloo',price:155}
   ],
-  rice_merged: [
-    { id: 'ba1',  name: 'Emerald Sp. Biryani',      price: 199.00, img: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=400' },
-    { id: 'ba2',  name: 'Veg. Biryani',             price: 150.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRMrPvVVI_p51wmimkIOKW1vivFUbC_pD49cBrT8Qetko8WRW61m6OnP3JJhmo&s' },
-    { id: 'ba3',  name: 'Hyderabadi Biryani',       price: 165.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT4Wj8lV9gZkLGeSWxqyihCaG1WBSdJalfLcNw0c0f4ctpGasUTPrPDQG27yQ&s' },
-    { id: 'ba4',  name: 'Handi Biryani',            price: 165.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRWLsJJguNISxQLUHALM_VLsWojdnlh9cBOeQdMaNg9xyWX3UPWXNp5SGy2Kek&s' },
-    { id: 'ba5',  name: 'Veg. Pulav',               price: 130.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYxzbc70NiAtkueNnlBVc55fyI9yLE_4rM3_bF3VrFsA-l-_P44BMPpqErRd4&s' },
-    { id: 'ba6',  name: 'Peas Pulav',               price: 130.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUrMpCoaeFZT2FDPxgTafhSSKLVn1azF3L2N97DDdGQ1U3QPAUruL-l_JjcA&s' },
-    { id: 'ba7',  name: 'Kashmiri Pulav',           price: 170.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTe1_D4BSZa-P722NmGagGAytQbFqx_En-IubCm0xZDyxasPhpDkrlZ-k3pi3M&s' },
-    { id: 'ba8',  name: 'Jeera Rice',               price: 125.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcABEZQtmF-chKF2G637YT_qV42M6taWnfjTFoM7K4FMWHT455sVn36d9tzkw&s' },
-    { id: 'ba9',  name: 'Steamed Rice',             price: 95.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTA5vHz9AWNwXCVIAUEiHyIq_uW4LJ_6dPBYGeA10eoo339IjsT0JsuTkSXkQ&s' },
-    { id: 'ba10', name: 'Mint Rice',                price: 190.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR5cDoj1sm6c96yB5v56mL3ADZGLaQpsVLiVKlkOzidSKcMpFz6N-8VExMTtmw&s' },
-    { id: 'ba11', name: 'Corn Rice',                price: 190.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0N6oVtKCd1mU7pFGkL1w95YC3yg5g9nFfTmifbwwsx35044oU6jLzfhEO4Q&s' },
-    { id: 'ri1', name: 'Mushroom Fry Rice',          price: 195.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4jymona75F3B9EIYmK9sCNAQYPDhvr3sK1P9-XpAJy4jodmvGKp34GV96Kg&s' },
-    { id: 'ri2', name: 'Chinese Bhel',              price: 190.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcROOeB4BsRgKyqoam4VV0zTvgsG313zvd9cftgBZBiwj4EN2RLTsSM8dSRUAA&s' },
-    { id: 'ri3', name: 'American Chopsuey',         price: 190.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQCeXU7fixnVy0_Uz4BLui2r3BF5IreNNesB8XttYdJ7v-YxAtstMhSJgdQMXo&s' },
-    { id: 'ri4', name: 'Veg. Triple Fried Rice',    price: 210.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTi8F6l2aowfD4UAz2VXoe3s-cPzzC451OvQNBR_FTgAfQjOxaVdTidICTXL3M&s' },
-    { id: 'ri5', name: 'Veg. Fried Rice',           price: 185.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRIItrz76aFxyRWjQ9fJ7Hamlt05YoQOWZpkW9KmC6Vlhuy32XZO5YUTinPUQ&s' },
-    { id: 'ri6', name: 'Schezwan Fried Rice',       price: 185.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUE8D7f3AI6VhuH_QGfoekuBlxz4VrM5fmNW5Yu1nZSLhCaAWbHuzQB7AFyQ&s' }
+  dal:[
+    {id:'da1',name:'Dal Fry',price:115},{id:'da2',name:'Dal Fry Butter',price:120},
+    {id:'da3',name:'Dal Fry Tadka',price:140},{id:'da4',name:'Dal Palak',price:145}
   ],
-  kofta: [
-    { id: 'ko1', name: 'Cheese Kofta',          price: 225.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTz6SjYMJmZJYKylGEGFEVjK_Lhuek0lp2Omnh2U6QYCFeZy9Uiw1l7Z-oqHX0&s' },
-    { id: 'ko2', name: 'Malai Kofta',           price: 220.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStZp15hcWu3_F5UtuYx46XkcDiz3q2KbyP6L8a4dzarG6xUPNrz3Pky5049w&s' },
-    { id: 'ko3', name: 'Veg. Kofta',            price: 200.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3W03iE8rsEd0yms9BZBdsjwX8h70qxlexq5ENmopDmFYXlaHEqX8ElxumBw&s' },
-    { id: 'ko4', name: 'Paneer Kofta',          price: 215.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRSKT-v8uo9kv5vfvAeFHC168NrANkAzpFQ6fGWkB3BkggYSgW6Bkz1GC2yUA&s' },
-    { id: 'ko5', name: 'Kashmiri Kofta',        price: 215.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT2eSXIeHsV-6-_0uWktGf4Kzyhvs2QQ7ZHZYPiGgNS4dVOUY2EHrZQAAj67dk&s' },
-    { id: 'ko6', name: 'Nargisi Kofta',         price: 205.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQU3jd1HNJyF0mSpQ-4pYnSD1hB3uH4313RJGp1COptabkF6iUMLN60oh-FyQ&s' },
-    { id: 'ko7', name: 'Kadai Kofta',           price: 210.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAlQUx51gdmKbAqYGsAOxqBCJGZ9Iko2ecCJkK7QvH85fyhHHpdsWVu-0FVZs&s' },
-    { id: 'ko8', name: 'Kaju Kofta',            price: 225.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIrpk1gWUI0HHns2P-wEnORCPaNtRd4CrFFjMMdwBgujE9ONto7Rf8Rt-nKFE&s' }
+  rice_merged:[
+    {id:'ba1',name:'Emerald Sp. Biryani',price:199},{id:'ba2',name:'Veg. Biryani',price:150},
+    {id:'ba3',name:'Hyderabadi Biryani',price:165},{id:'ba4',name:'Handi Biryani',price:165},
+    {id:'ba5',name:'Veg. Pulav',price:130},{id:'ba6',name:'Peas Pulav',price:130},
+    {id:'ba7',name:'Kashmiri Pulav',price:170},{id:'ba8',name:'Jeera Rice',price:125},
+    {id:'ba9',name:'Steamed Rice',price:95},{id:'ba10',name:'Mint Rice',price:190},
+    {id:'ba11',name:'Corn Rice',price:190},{id:'ri1',name:'Mushroom Fry Rice',price:195},
+    {id:'ri2',name:'Chinese Bhel',price:190},{id:'ri3',name:'American Chopsuey',price:190},
+    {id:'ri4',name:'Veg. Triple Fried Rice',price:210},{id:'ri5',name:'Veg. Fried Rice',price:185},
+    {id:'ri6',name:'Schezwan Fried Rice',price:185}
   ],
-  tandoor: [
-    { id: 'ta1',  name: 'Roti - Plain',             price: 25.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRASLfl7eQ6yo_5x2RAm7K50NkiqJa4pRoRaaCuCh-nO7-oaFPecwjyRYljIQ&s' },
-    { id: 'ta2',  name: 'Roti - Butter',            price: 28.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8zgs_vMZS-m8AaHi6oqMcc89HEuhOlpu2JhhW8-B9oXq9Gx7qOPLUcD5ZvQ&s' },
-    { id: 'ta3',  name: 'Paratha',                  price: 40.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTGOYJh0ycbnLcO-LuKPROrR8p7HqHIoOW_cD2I2W5eK8gJocILeL4Qe0abtw&s' },
-    { id: 'ta4',  name: 'Paratha Butter',           price: 55.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWM1KJVZ-SSn83NfgA5OwC51dc61K5hq3v8NpOvQEej3okOj0QVBW2n5HGGw&s' },
-    { id: 'ta5',  name: 'Lachha Paratha',           price: 60.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTheDXfXj0AF59FI5LbffwpUGzIyJ5QmVSqzenr0uLT9ODtV_lLe4hYYFPsyw&s' },
-    { id: 'ta6',  name: 'Paratha Stuffed',          price: 65.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmUfJ5qUQ_slFjWGoV5zGPbvlN3-iasiV6mJ3cCUlfFEGNqDJV21XlTwVyxw&s' },
-    { id: 'ta7',  name: 'Paratha Phudina',          price: 65.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5xmo3h3zGXy9rAfRgB8YLy_jt0pLEDmu7DeGn7lVHL2t8or0jvivBGT7NOkk&s' },
-    { id: 'ta8',  name: 'Paneer Paratha',           price: 99.00,  img: 'https://encrypted-tbn0.GcS4zZadWsG_YlMZQc5W0g2qlqA1aRvn2sOPLmiViA-2OoWEZgofxMmxpdJLkOI&s' },
-    { id: 'ta9',  name: 'Paneer Cheese Paratha',    price: 110.00, img: 'https://encrypted-tbn0.GcSbpZk7HrC7QZQUeYyuKnvT8gzawzztm1-wmVo94HY0yNrzjOpAiUl9_FeF2g&s' },
-    { id: 'ta10', name: 'Naan',                     price: 50.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQd1N1Y4d9C6r_uIqLAVbfv1bdATFS7vgbm9LN4PlAzeM0euXZlv380FySvvQ&s' },
-    { id: 'ta11', name: 'Naan Butter',              price: 55.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTnUEF57S2trussmAMuQv6KTtd5KYgXoznpDgLO4x9CZbSFVz9ndhB8irLjWU&s' },
-    { id: 'ta12', name: 'Naan Stuffed',             price: 80.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyTTBVSnPtTmfhnsJzoDQQfkqMmW-AR-5zovcE50nFieEWm6xUfKdXKN_XeA&s' },
-    { id: 'ta13', name: 'Naan Kashmiri',            price: 90.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQrybUsfulbzurOesDhrk11uHlgtPSq6zJ5-1egnJ9BK0_z0bcpPHqL_tZAyQ&s' },
-    { id: 'ta14', name: 'Naan Garlic',              price: 90.00,  img: 'https://encrypted-tbn0.GcS557btQaA6U395Mmer33zLFkxpC3YIazuiheg3nCgGz6GKn6cLO97RZ4nQ0A&s' },
-    { id: 'ta15', name: 'Naan Cheese',              price: 99.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQJkM5q0jbkuKuHzVx-nXh5_L23JvVa4NLsOXm5mNRml7N9U8yln2MtR5MXA&s' },
-    { id: 'ta16', name: 'Hariyali Naan',            price: 99.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbt-VlE8VilJ1QOu3cCTL0uBrXOkC6FONNTIJqMHP1mIS9WdTG2dI1m-c8CA&s' },
-    { id: 'ta17', name: 'Naan Cheese Garlic',       price: 105.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6nHIrI9Pa9v4j0eegeotv6C2gcHZFs7iIZxuQP3EwV3U7AorOny81ncOY9a0&s' },
-    { id: 'ta18', name: 'Family Naan',              price: 125.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTVcOTdM9eiM1sgfC0H6HtRyzKpwDjSWMDjF1MXM6ZDFz23A5jXTslo0KPWIQ&s' },
-    { id: 'ta19', name: 'Kulcha',                   price: 45.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRK1RV9agN-0pttHpx6sqKaFMQwT5UsjLpP6VRrVfMZqEb45U_if88hVRd1ug&s' },
-    { id: 'ta20', name: 'Kulcha Butter',            price: 55.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQD9vEShKzHYzpfhDmV8-cqPucHtS4CZlJxK_l0FfHcteJfG7oWJ641rn1HmA&s' },
-    { id: 'ta21', name: 'Kulcha Stuffed',           price: 70.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTekETb_whlhAsYUEUGQAfVbFyPzABjm5vK5UV-u58x2R-RjV7fgoLT9KbgkA&s' },
-    { id: 'ta22', name: 'Onion Kulcha',             price: 70.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0ylgoz7y_k3AtSxvaDCjPb1Fj9dDo7-0EmnuSzxOgjFuu1iPaOKDtbTuRfA&s' },
-    { id: 'ta23', name: 'Missi Roti',               price: 32.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQeIHg52BZmtq5AxFfXkxqtPXadmfOXnS68MH0k1-pcgdk4s_smfGBx08bY5Q&s' }
+  kofta:[
+    {id:'ko1',name:'Cheese Kofta',price:225},{id:'ko2',name:'Malai Kofta',price:220},
+    {id:'ko3',name:'Veg. Kofta',price:200},{id:'ko4',name:'Paneer Kofta',price:215},
+    {id:'ko5',name:'Kashmiri Kofta',price:215},{id:'ko6',name:'Nargisi Kofta',price:205},
+    {id:'ko7',name:'Kadai Kofta',price:210},{id:'ko8',name:'Kaju Kofta',price:225}
   ],
-  chinese_merged: [
-    { id: 'cs1',  name: 'Oriental Crispy Vegetables',       price: 200.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSVGJB38RiIVf7iU4MN_YoeucVxPjkqBG9IVwWuyzm9eoR3Mmp83P10P2m8CNE&s' },
-    { id: 'cs2',  name: 'Baby Corn Chilli Fried',           price: 200.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQbOVJqtFib_CiEJkse9XY0cyegvVP-BdWFBA5HBx3UmaZX6kQiC_UKoqJ2an8&s' },
-    { id: 'cs3',  name: 'Schezwan Paneer',                  price: 225.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQAtONj6_wcUBzCF3gOewavdOpDvr1kLE11FFgcLV9awYzzaVlXZq4ymaY0fYg&s' },
-    { id: 'cs4',  name: 'Paneer Chilly (Dry / Gravy)',      price: 225.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSb-iM-omRNmhunWRotYHptxnQhB2Bxskea6oBXAfGp0yOGMUpSZY6mJTIxOg&s' },
-    { id: 'cs5',  name: 'Paneer Manchurian (Dry / Gravy)',  price: 220.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcXdavS0xeX-oa5qTTn2Y_RyF227Q2raV4GvS4bZ8g6mmB7eSKZAQu-f1KI-I&s' },
-    { id: 'cs6',  name: 'Paneer 65',                        price: 225.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQgF9UQ7XEpa_hzoB4vqImJNxhtoXo1bSkxXXYNGSrJI7XQx7luoS0Ny9cp3iw&s' },
-    { id: 'cs7',  name: 'Veg. Manchurian (Dry / Gravy)',    price: 200.00, img: 'https://encrypted-tbn0.GcS-T08wN9wEcv7K69YunK_KpkJI2JqwxoHp7KD6Tam4CZrzr79paeiQ_KXgYYw&s' },
-    { id: 'cs8',  name: 'Veg. Spring Roll',                 price: 210.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9e71ZRaUf1eyTgPi-2DNdSRhvmCo_FQZs5az96-Kbh15ySvvhHtDcaLdn9Ho&s' },
-    { id: 'cs9',  name: 'Veg. Lollipop',                   price: 220.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnHONXWkJZesco0moCnyRYWi9TSZbWvlDTMwYNjK1xv7DJRjTO2PyeAt5FDA&s' },
-    { id: 'cs10', name: 'Mushroom Chilly Fry',              price: 225.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTqTP7ncN-WIfRGMzbykjoIJyAU2iFO2LV01XUhGslMqCs-mALo4yZyiuZ_Ia0&s' },
-    { id: 'no1', name: 'Veg. Chow Mein',                price: 180.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0i6lo6r8E6jBEwnRff4kEwRIfiGoPsEEP0UUPR-bnovLZ-HlcCudxPbz6cU4&s' },
-    { id: 'no2', name: 'Veg. Hakka Noodles',            price: 190.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEMZ4JpLRuSa_REGClx1HXFOn7xk5WzUpmsAY0hK3GnzOUFjPIDpFh9Hc07Mo&s' },
-    { id: 'no3', name: 'Schezwan Noodles',              price: 190.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwUPw_NlnJTWTLK5FEmnl9u01xEQOAq7vb6rPBn2ayEAGaiv_GHU3mykC9Z-8&s' },
-    { id: 'no4', name: 'Chilly Garlic Noodles',         price: 190.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT112W7k7LfbXy-JuWSi1ZO0kbDt8iuB7weVztEfMlTEQQhadfhVHQqsWU7Wg&s' },
-    { id: 'no5', name: 'Veg. Manchurian With Noodles',  price: 190.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTCStge8hAfSjPp-wHhPCSyWx-RyBLehGLKgTd5J41dUxjnnDHUDtVibo-HeY&s' }
+  tandoor:[
+    {id:'ta1',name:'Roti - Plain',price:25},{id:'ta2',name:'Roti - Butter',price:28},
+    {id:'ta3',name:'Paratha',price:40},{id:'ta4',name:'Paratha Butter',price:55},
+    {id:'ta5',name:'Lachha Paratha',price:60},{id:'ta6',name:'Paratha Stuffed',price:65},
+    {id:'ta7',name:'Paratha Phudina',price:65},{id:'ta8',name:'Paneer Paratha',price:99},
+    {id:'ta9',name:'Paneer Cheese Paratha',price:110},{id:'ta10',name:'Naan',price:50},
+    {id:'ta11',name:'Naan Butter',price:55},{id:'ta12',name:'Naan Stuffed',price:80},
+    {id:'ta13',name:'Naan Kashmiri',price:90},{id:'ta14',name:'Naan Garlic',price:90},
+    {id:'ta15',name:'Naan Cheese',price:99},{id:'ta16',name:'Hariyali Naan',price:99},
+    {id:'ta17',name:'Naan Cheese Garlic',price:105},{id:'ta18',name:'Family Naan',price:125},
+    {id:'ta19',name:'Kulcha',price:45},{id:'ta20',name:'Kulcha Butter',price:55},
+    {id:'ta21',name:'Kulcha Stuffed',price:70},{id:'ta22',name:'Onion Kulcha',price:70},
+    {id:'ta23',name:'Missi Roti',price:32}
   ],
-  soups: [
-    { id: 'sp1',  name: 'Cream of Tomato',              price: 100.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhVcyucgQyRU-6gf5VLl2wSkhJCo1QswUcjGp4pGOd5oJNWwV-RPw_0GD-hc8&s' },
-    { id: 'sp2',  name: 'Minestrone Soup',              price: 115.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjXwyRiOKV7X8Ka5SOV6zrhHvrXj8my110S6Ar0I9MRxU4PfJAhdNCfAc_-w&s' },
-    { id: 'sp3',  name: 'Sweet Corn Veg. Soup',         price: 100.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTBezZIreKezhrRagk-otaTRjdJydAaNY-k3WbIQQqmEQYNCnzjWAGXcYw8vQk&s' },
-    { id: 'sp4',  name: 'Veg. Hot & Sour Soup',         price: 115.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR252ppRRUXE-oXOa6n_Ma_SUEKBq44yyXfzj1-NiX3dj73kHQBoUFQHYlcUrM&s' },
-    { id: 'sp5',  name: 'Veg. Manchow Soup',            price: 115.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXHUZbTvLv856SjtYAuIoDOfEqODqLHqe9J0CxMhlTj0i_ePxldvBntPqFEss&s' },
-    { id: 'sp6',  name: 'Lemon Coriander Soup',         price: 115.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR2bmb6BphHnxlflDhKxxQp34v5IKfBveenyJLGYmndbv7bU0L5VDEaLyk0-w&s' },
-    { id: 'sp7',  name: 'Palak Phudina Soup',           price: 115.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRH6zlUbe8n5OB24hH6fC0x1CfruI4X8OK4YIVHTkRxEX7LXi_ohz5erutb1PU&s' },
-    { id: 'sp8',  name: 'Veg. Mushroom Soup',           price: 120.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSDqiFfKY-dRTzl9MeMoP5sIoxkBMQ2gcjdKwkZtBcDnQfgjq5rBs6glw62yA&s' },
-    { id: 'sp9',  name: 'Clear Soup (Veg / Noodles)',   price: 100.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsrQW6uBdAqf0tU5YvunqAlvngV9rChETaV9HPFOHw0kjRvbSUFH72ZgrpsFU&s' },
-    { id: 'sp10', name: 'Cheese Corn Tomato Soup',      price: 120.00, img: 'https://encrypted-tbn0.GcSLA0NVQKGKhVKZpvSyCu6wA5MDu84hpHVHN7r4VqmBf7Yu-ZYQNKCRbPyDHQ&s' }
+  chinese_merged:[
+    {id:'cs1',name:'Oriental Crispy Vegetables',price:200},{id:'cs2',name:'Baby Corn Chilli Fried',price:200},
+    {id:'cs3',name:'Schezwan Paneer',price:225},{id:'cs4',name:'Paneer Chilly (Dry / Gravy)',price:225},
+    {id:'cs5',name:'Paneer Manchurian (Dry / Gravy)',price:220},{id:'cs6',name:'Paneer 65',price:225},
+    {id:'cs7',name:'Veg. Manchurian (Dry / Gravy)',price:200},{id:'cs8',name:'Veg. Spring Roll',price:210},
+    {id:'cs9',name:'Veg. Lollipop',price:220},{id:'cs10',name:'Mushroom Chilly Fry',price:225},
+    {id:'no1',name:'Veg. Chow Mein',price:180},{id:'no2',name:'Veg. Hakka Noodles',price:190},
+    {id:'no3',name:'Schezwan Noodles',price:190},{id:'no4',name:'Chilly Garlic Noodles',price:190},
+    {id:'no5',name:'Veg. Manchurian With Noodles',price:190}
   ],
-  salads: [
-    { id: 'sl1',  name: 'Cream of Fruit Salad',             price: 125.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdYPV0I5AhQgs7GHBAu7j6DDIa3ZYSu8NIJsPNSL77WH4C-kWBvcmCRSSghw&s' },
-    { id: 'sl2',  name: 'Fresh Green Salad',                price: 80.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjRrWGoNl45Unb2FjG9GIQh-395tZqaaXNehe7KJQn87hWz8NJbxMnSl5bMDQ&s' },
-    { id: 'sl3',  name: 'Russian Salad',                    price: 125.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDcpbHfcda5cP0HuKqWeA6Y6nqEan367FBZ3-mXS6-xeuOSgcvbbQ7znMmCw&s' },
-    { id: 'sl4',  name: 'Kachumber Salad',                  price: 70.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDFdMp-l7wAy_GTXG25mtega4Abw1hBqXs8xXZ7Dft_HZbI2jumxDWiX5hLw&s' },
-    { id: 'sl5',  name: 'Pineapple Raita',                  price: 95.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQljzEF3tlLQHGDS0X_1U2Jxb6mcoq3B9yGbcFpYLnSzQv4EhNuqKr-y-oqxtQ&s' },
-    { id: 'sl6',  name: 'Veg. Raita',                       price: 85.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4bXlFE4dJwtcOE11BOplH9MMy9XB96w5NBKP8OeNeBOyW5v9dpwYRyAE3Cw&s' },
-    { id: 'sl7',  name: 'Cucumber Raita',                   price: 85.00,  img: 'https://encrypted-tbn0.GcSXxOyenOXcVD5pe7PSafk_8r1mbcD-VEbpAyq25SLIJ4sG4df5jM3WNB7aos8&s' },
-    { id: 'sl8',  name: 'Boondi Raita',                     price: 85.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2W-0dtojnRC-yQN3EYNQyCt7yUG0bDy2g_6nRfpAmej33_vpYUF7fWH2inFQ&s' },
-    { id: 'sl9',  name: 'Curd',                             price: 65.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQs8asBPpIjmluNqnmtMFg8VpjIwbrgWVCBL6cZLN2xpZPnR1A7GxP0kF1mhg&s' },
-    { id: 'sl10', name: 'Papad Roasted',                    price: 25.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSMOpdTJr-WbAL1W_HYktzAE3OqCNnCVK3qEPiE5LuEUFsCzGnJkJUvGhL8c-k&s' },
-    { id: 'sl11', name: 'Papad Fried',                      price: 27.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR56gsgRwitwucyFaDTiooUwQIvnZ9fzblauSjoObkbUky8mSdU-5CvKjvsLQ&s' },
-    { id: 'sl12', name: 'Papad Masala',                     price: 45.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRMF4qjJcmXxI8UYlYYMD-aQnUf642CU77KknfePxKeJYam-xql2SJay6mOXA&s' },
-    { id: 'sl13', name: 'Papad Cheese Masala',              price: 60.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRtTftYDmZvyB31TdH6u9IpacwT37Kk2VC1wVSiRBgbmUMjuV8Xp9LevVaP2g&s' }
+  soups:[
+    {id:'sp1',name:'Cream of Tomato',price:100},{id:'sp2',name:'Minestrone Soup',price:115},
+    {id:'sp3',name:'Sweet Corn Veg. Soup',price:100},{id:'sp4',name:'Veg. Hot & Sour Soup',price:115},
+    {id:'sp5',name:'Veg. Manchow Soup',price:115},{id:'sp6',name:'Lemon Coriander Soup',price:115},
+    {id:'sp7',name:'Palak Phudina Soup',price:115},{id:'sp8',name:'Veg. Mushroom Soup',price:120},
+    {id:'sp9',name:'Clear Soup (Veg / Noodles)',price:100},{id:'sp10',name:'Cheese Corn Tomato Soup',price:120}
   ],
-  sizzlers: [
-    { id: 'sz1', name: 'Mix Grilled Sizzler', price: 330.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNhXpjk4v0z5qnJiv5NZQiTvHJzw74HW3WIVZGjhPrmB6aKincBlLmZZPwd_Y&s' },
-    { id: 'sz2', name: 'Chinese Sizzler',     price: 340.00, img: 'https://encrypted-tbn0.GcSxV54mJHwjNySJqYrpGMTA0y7m0Sb7v_KESr16JgQ_NfABg-QFzerN30gnhg&s' },
-    { id: 'sz3', name: 'Paneer Shaslik',      price: 340.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQuLOv1AGTjm7niu7pJVoNLJiv5DAmsAKUb9UoaWgAmi_ju9GjnNRQWkO5EFEE&s' },
-    { id: 'sz4', name: 'Paneer Stick',        price: 340.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFaRXtioc6Bn525TLUYTvQ1rttLzoD3OVsYTTa3VB9YN4ldj3YlOU1bXjhUQ&s' }
+  sizzlers:[
+    {id:'sz1',name:'Mix Grilled Sizzler',price:330},{id:'sz2',name:'Chinese Sizzler',price:340},
+    {id:'sz3',name:'Paneer Shaslik',price:340},{id:'sz4',name:'Paneer Stick',price:340}
   ],
-  continental: [
-    { id: 'con1', name: 'Baked Macaroni with Pineapple', price: 205.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTVVJX4CejaVCf1__nhScf76SUT2rehI1hxnFmFoFKENFhuwQgurQmwFThpH2s&s' },
-    { id: 'con2', name: 'Baked Spaghetti with Pineapple', price: 205.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSPIEUNdiU_3D_05lLNx7_LJOZAfINTL6iKkRddmTCCAyq-MnNSSQWzedUHXvs&s' },
-    { id: 'con3', name: 'Baked Vegetable with Pineapple', price: 205.00, img: 'https://encrypted-tbn0.GcSq2IpgUk_IKO3kRU_WDdKj_vygon6dS-c6t6xRGkplMQBwKfDgWBCnd6cbEpM&s' }
+  continental:[
+    {id:'con1',name:'Baked Macaroni with Pineapple',price:205},
+    {id:'con2',name:'Baked Spaghetti with Pineapple',price:205},
+    {id:'con3',name:'Baked Vegetable with Pineapple',price:205}
   ],
-  drinks: [
-    { id: 'dr1',  name: 'Jal Jeera Water',                  price: 40.00,  img: 'https://encrypted-tbn0.GcSf0cAsq5HqaujK5x77DRVlG3b9BvqnyfxCXmTrTV9JlslsE5Woth3Q5mI_MA&s' },
-    { id: 'dr2',  name: 'Fresh Lime Soda',                  price: 40.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRjA3RR-0gcYfV-BdT_8pHkqzrfoGBcVR_K2etJ6rBNn3AsrZus7oCypAUSsw&s' },
-    { id: 'dr3',  name: 'Fresh Lime Water (Sweet / Salted)', price: 40.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjOVDQ-Otf9GbsrU-LN4sm6mAIc_diVTI7NMZDw9AQLQ8GKgPLy7gl35TUFoI&s' },
-    { id: 'dr4',  name: 'Soft Drinks (MRP)',                price: 20.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMiph65hMwBbzoSwSDfcoIuBpild2iFYczJIcL2bTfwAiYJU7rfBb9RtmtJOU&s' },
-    { id: 'dr5',  name: 'Lassi (Sweet / Salted)',           price: 80.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYkV_QCDRXajyMpyOTcHwXhYc8s8L02lrHfLrTgoEYf9UkXWjL9SC0UDz-EA&s' },
-    { id: 'dr6',  name: 'Special Lassi',                    price: 100.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTpOgUouoKjVWADPVRthgzfFAjRQmfYqq-vxfEcR3kgT1qyKCODWfnuglFMvCE&s' },
-    { id: 'dr7',  name: 'Mineral Water (MRP)',              price: 20.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUroTdaIvq6L8nK91XZawA7DQ_sReJ2Q7oWKQVBtdhiRb8c7bLlX40jX7A2Q&s' },
-    { id: 'dr8',  name: 'Fruit Punch',                      price: 70.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR29_XVWmX4oIJXhj_CSfWHLszTjoPZw6_beNMxafKWMH2aoVPLmha_lkhUYw&s' },
-    { id: 'dr9',  name: 'Butter Milk',                      price: 30.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRYpSPn1saRpuyGeS3UyVQWiN3qyzffJmg9AwwZyDAjT92T1vJtl5on4l4kBc0&s' },
-    { id: 'dr10', name: 'Masala Butter Milk',               price: 35.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRr5T8Xa2RWHMWT32eb_DymnN4ltCsFEGg2ZzvxKEyMdwbnhNn3P2Uqds4SEQ&s' }
+  drinks:[
+    {id:'dr1',name:'Jal Jeera Water',price:40},{id:'dr2',name:'Fresh Lime Soda',price:40},
+    {id:'dr3',name:'Fresh Lime Water (Sweet / Salted)',price:40},{id:'dr4',name:'Soft Drinks (MRP)',price:20},
+    {id:'dr5',name:'Lassi (Sweet / Salted)',price:80},{id:'dr6',name:'Special Lassi',price:100},
+    {id:'dr7',name:'Mineral Water (MRP)',price:20},{id:'dr8',name:'Fruit Punch',price:70},
+    {id:'dr9',name:'Butter Milk',price:30},{id:'dr10',name:'Masala Butter Milk',price:35}
   ],
-  shakes: [
-    { id: 'sh1',   name: 'Vanilla Milk Shake',                        price: 99.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQW9zETUU7svE5NKX_Tpp6GSCbkov4QO7Irxqfb5EmcSRLsD7MzVrYd2GFRkIk&s' },
-    { id: 'sh1ic', name: 'Vanilla Milk Shake (with Ice Cream)',        price: 110.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR07uPg02xlm0S2qZ2KE9SawbyKN2j1_Dtf8IM-_Aon5lmVK36GwAhmKgXNYHA&s' },
-    { id: 'sh2',   name: 'Strawberry Milk Shake',                     price: 99.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsOt3GSgSnpyqmRKK_kwINygnlAOcTAmBh3t_N7nOJVZv08UhnDuntxvwd3Uk&s' },
-    { id: 'sh2ic', name: 'Strawberry Milk Shake (with Ice Cream)',     price: 110.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRex-x2KcskrW9DppN_cDMaJw-yNOccyaF58tNhYfER_52nBnA3IjHjRKcOqKM&s' },
-    { id: 'sh3',   name: 'Chocolate Milk Shake',                      price: 99.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRWGF8p_V1X6UaGYI_vQ7guVfluMoDTQb856snp2n2q_Vv4IwK6q3CjooII1Q&s' },
-    { id: 'sh3ic', name: 'Chocolate Milk Shake (with Ice Cream)',      price: 115.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdWXPNQlIm5qYNZlDgd5h6zk8PDACwgjsz86ngV5UluLRNouebNqOVGNKr-60&s' },
-    { id: 'sh4',   name: 'Kesar Pista Milk Shake',                    price: 110.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQZu3zt4SGqgkFpZRe9gPXkGyeLpxrtQY1SGftOpME8xxLQYVgw9yaKvrImGQ&s' },
-    { id: 'sh4ic', name: 'Kesar Pista Milk Shake (with Ice Cream)',    price: 120.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzgvQjBCJCdA6jGdVG3Z5tFXNgzS0ehQ9U7F0NQx8hIRKq4cmJ0MQ2FyzmDLU&s' },
-    { id: 'sh5',   name: 'Kaju Draksh Milk Shake',                    price: 110.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQMBhqouZQQrDyiWp9Qt6en4zqm7HwFVLjDHoAsVZnLE3te1h19kowiycZymY&s' },
-    { id: 'sh5ic', name: 'Kaju Draksh Milk Shake (with Ice Cream)',    price: 120.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVqp-qtz0wCWOh6rRIQ1oAUMtn-y5K7q-WSGyWwj7QWrBv2e3cxdcxrOnYlBA&s' },
-    { id: 'sh6',   name: 'Mango Milk Shake',                          price: 110.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbkhiKyv9z2nmYPyN_kTS1IILprknUv6J-0AHAxEr5DPiLLHb7U4NVpev_dg&s' },
-    { id: 'sh6ic', name: 'Mango Milk Shake (with Ice Cream)',          price: 120.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQu3_GpeR3B-p-dLLpF55JUtE3IvS2pGx3NbYFQLal8XWKwvnZp7m2fDOSEKA&s' },
-    { id: 'sh7',   name: 'Cold Coffee',                               price: 99.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTmUwVs_XeD4MZZ4tVCoshIE0Kn2D7y_jpSp9csBBZc-ltPbtNc1qYA5c1G6Ho&s' },
-    { id: 'sh7ic', name: 'Cold Coffee (with Ice Cream)',               price: 115.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRmiZWgxBPAKm0abDszJm1CN2oBwKsqt3VJs5v3yLjcgDQFFVjGi4Dae9Ml8A&s' }
+  shakes:[
+    {id:'sh1',name:'Vanilla Milk Shake',price:99},{id:'sh1ic',name:'Vanilla Milk Shake (with Ice Cream)',price:110},
+    {id:'sh2',name:'Strawberry Milk Shake',price:99},{id:'sh2ic',name:'Strawberry Milk Shake (with Ice Cream)',price:110},
+    {id:'sh3',name:'Chocolate Milk Shake',price:99},{id:'sh3ic',name:'Chocolate Milk Shake (with Ice Cream)',price:115},
+    {id:'sh4',name:'Kesar Pista Milk Shake',price:110},{id:'sh4ic',name:'Kesar Pista Milk Shake (with Ice Cream)',price:120},
+    {id:'sh5',name:'Kaju Draksh Milk Shake',price:110},{id:'sh5ic',name:'Kaju Draksh Milk Shake (with Ice Cream)',price:120},
+    {id:'sh6',name:'Mango Milk Shake',price:110},{id:'sh6ic',name:'Mango Milk Shake (with Ice Cream)',price:120},
+    {id:'sh7',name:'Cold Coffee',price:99},{id:'sh7ic',name:'Cold Coffee (with Ice Cream)',price:115}
   ],
-  ice_cream: [
-    { id: 'ic1',  name: 'Gulab Jamun',                                price: 50.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsJA1SQdg5_BIZ9RrLGkTu6kJL5oOStSP89vBKB64KRpconDmKy2cqUfdYrg&s' },
-    { id: 'ic2',  name: 'Rajbhog',                                    price: 99.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT2xZCICdx4jD8LaY17IUhVsYea_QhCND6GuZaShhQAbjUu4qRxjCXt6RzWrQ&s' },
-    { id: 'ic3',  name: 'Vanilla Ice Cream',                          price: 80.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJCqFbb7Kys8VQXS-w3ccgUrsu0ENVkT2ltx0ctymJTd55cIpUus7o16nnv1A&s' },
-    { id: 'ic4',  name: 'Strawberry Ice Cream',                       price: 80.00,  img: 'https://encrypted-tbn0.GcS_IiLaxDUz-XqJTCPB5mEaOZM9SG79epWEw-UI3rAvJn1Ab43gTGexw0eeFhY&s' },
-    { id: 'ic5',  name: 'Cheery Berry Ice Cream',                     price: 80.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcTwbZKqR7zLwpAy7n5AzAZQJ0o8OxHZLYP_qHhUDFbBQAz1GeowDyBQ3ZGnc&s' },
-    { id: 'ic6',  name: 'Mango Ice Cream',                            price: 80.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3pxk78iTaHADhDtQkGm0PP0sMzs_bo3uGdF2hDHXIZfU7zwS7XAnFaKaMgw&s' },
-    { id: 'ic7',  name: 'Kesar Pista Ice Cream',                      price: 90.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTasoYFvxW6_4a7zWT146t5hQwxzK8vB8L6-n2z8Vxmg_xqV3BsLREGLQsa11U&s' },
-    { id: 'ic8',  name: 'Kaju Draksh Ice Cream',                      price: 90.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIgY1vPl82wSeksM93GfkZ5WSWQps7w7qIg6ywEmIKnRYMX-lAMsqZPqpx26c&s' },
-    { id: 'ic9',  name: 'Butter Scotch Ice Cream',                    price: 90.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDe-rPhT2qd8R9iVqfrMdtlRVbyZn7T3YLylzxyxAhIs0zJZLf4ZC640iXSw&s' },
-    { id: 'ic10', name: 'Chocolate Ice Cream',                        price: 90.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtRQfL6mM1ULa42AMgt8skn0Pyr4w3h5Qq_MMnHaaVo3l2LFZUL80mm1clYbw&s' },
-    { id: 'ic11', name: 'Fruit Salad with Ice Cream',                 price: 140.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQbTrudasoK2XNCkuOqxAyOChwT_yarZLJA72QAhhtV3SO74XgLVVf5WWaBzw&s' },
-    { id: 'ic12', name: 'American Nut',                               price: 99.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhXpPuia6sOViPa3XvY4PhIcgs0d3FxjG2K1LeBtL_ExZMXZ5A5KRE1C_ieA&s' }
+  ice_cream:[
+    {id:'ic1',name:'Gulab Jamun',price:50},{id:'ic2',name:'Rajbhog',price:99},
+    {id:'ic3',name:'Vanilla Ice Cream',price:80},{id:'ic4',name:'Strawberry Ice Cream',price:80},
+    {id:'ic5',name:'Cheery Berry Ice Cream',price:80},{id:'ic6',name:'Mango Ice Cream',price:80},
+    {id:'ic7',name:'Kesar Pista Ice Cream',price:90},{id:'ic8',name:'Kaju Draksh Ice Cream',price:90},
+    {id:'ic9',name:'Butter Scotch Ice Cream',price:90},{id:'ic10',name:'Chocolate Ice Cream',price:90},
+    {id:'ic11',name:'Fruit Salad with Ice Cream',price:140},{id:'ic12',name:'American Nut',price:99}
   ]
 };
+const allMenu=Object.values(menuData).flat();
 
-let cart = {};
-window.onload = () => {
-  setTimeout(() => {
-    document.getElementById('intro-wrapper').classList.add('exit');
-    const firstSubItem = document.querySelector('.sub-item');
-    showSection('starters', firstSubItem);
-  }, 5500);
+let allTables=[],allQueue=[],allTkw=[];
+let billItems=[],curOids=[],curOid=null,curTnum=null,curTkey=null,dMode='pct';
+
+db.ref("tables").once("value",s=>{
+  if(!s.exists()){
+    const d=[];
+    for(let i=1;i<=10;i++) d.push({number:i,capacity:i<=4?2:i<=8?4:6,occupied:false,current:null,nextOrder:null});
+    db.ref("tables").set(d);
+  }
+});
+
+function syncDineInOrdersToTables(ordersArr){
+  if(!ordersArr||!allTables.length) return;
+  const activeDineIn = ordersArr.filter(o=>
+    o.orderType==='dinein' &&
+    o.status!=='Completed' && o.status!=='Cancelled' &&
+    o.tableNumber
+  );
+  if(!activeDineIn.length) return;
+
+  db.ref("tables").once("value", s=>{
+    const raw = s.val(); if(!raw) return;
+    activeDineIn.forEach(order=>{
+      let tableKey=null, tableVal=null;
+      Object.entries(raw).forEach(([k,v])=>{
+        if(v && v.number == order.tableNumber){ tableKey=k; tableVal=v; }
+      });
+      if(!tableKey) return;
+      if(!tableVal.occupied){
+        db.ref("tables/"+tableKey).update({
+          occupied: true,
+          current: {
+            name: order.customerName || order.name || 'Guest',
+            people: order.people || 1,
+            since: order.createdAt ? new Date(order.createdAt).getTime() : Date.now(),
+            orderId: order.id
+          }
+        });
+      }
+    });
+  });
+}
+
+function renderDash(){
+  const g=document.getElementById('tgrid'),q=document.getElementById('qlist');
+  if(!g)return;
+  g.innerHTML='';q.innerHTML='';
+  const occ=allTables.filter(t=>t.occupied).length;
+  document.getElementById('tcount').textContent=`${occ}/${allTables.length}`;
+
+  allQueue=[];
+  allTables.forEach(t=>{
+    if(t.occupied&&t.nextOrder) allQueue.push({...t.nextOrder,sourceTable:t.number});
+  });
+  document.getElementById('qcount').textContent=allQueue.length;
+
+  if(!allTables.length){g.innerHTML=`<div class="empty"><div class="empty-ico">🪑</div><div class="empty-txt">No tables configured</div></div>`;return;}
+
+  allTables.forEach(t=>{
+    const el=document.createElement('div');
+    el.className=`g tcard${t.occupied?' occupied':''}`;
+    el.setAttribute('ondragover',"event.preventDefault(); this.classList.add('drag-over')");
+    el.setAttribute('ondragleave',"this.classList.remove('drag-over')");
+    el.setAttribute('ondrop',`dropOnTable(event,${t.number}); this.classList.remove('drag-over')`);
+    el.setAttribute('onclick',`viewOrderDetails(${t.number})`);
+
+    let addonBadgeHtml = '';
+    let cust='';
+    if(t.current){
+      const m=Math.floor((Date.now()-t.current.since)/60000);
+      cust=`<div class="tcard-cust">
+        <div class="tcard-cust-name">${t.current.name||'Guest'}</div>
+        <div class="tcard-cust-chips">
+          <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>${t.current.people} ${t.current.people===1?'person':'people'}</span>
+          <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>${m} min</span>
+        </div>
+      </div>
+      <div class="tcard-actions">
+        <button class="btn btn-gold btn-sm" style="flex:1;" onclick="event.stopPropagation(); openBill(${t.number})">Generate Bill</button>
+        <button class="btn btn-red btn-sm" onclick="event.stopPropagation(); freeTable(${t.number})">Free</button>
+      </div>`;
+
+      if (window.allActiveOrders) {
+          const tOrders = window.allActiveOrders.filter(o => 
+             (o.tableNumber == t.number || o.id === t.current.orderId) &&
+             o.status !== 'Completed' && o.status !== 'Cancelled'
+          );
+          tOrders.sort((a,b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+          
+          if (tOrders.length > 1) {
+              const lastOpen = window.tableLastOpened[t.number] || 0;
+              const newAddons = tOrders.slice(1).filter(o => new Date(o.createdAt).getTime() > lastOpen);
+              if (newAddons.length > 0) {
+                  const addonQty = newAddons.reduce((sum, o) => sum + (Array.isArray(o.items) ? o.items.length : Object.values(o.items||{}).length), 0);
+                  addonBadgeHtml = `<div class="addon-badge">${addonQty}</div>`;
+              }
+          }
+      }
+    }
+
+    let nextNotif='';
+    if(t.nextOrder){
+      nextNotif=`
+      <div class="next-notif" id="notif-${t.number}" draggable="true"
+           ondragstart="event.stopPropagation(); event.dataTransfer.setData('text/plain', JSON.stringify({type:'table', tNum:${t.number}}))"
+           onclick="event.stopPropagation(); viewNextOrderDetails(${t.number})">
+        🔔
+      </div>`;
+    }
+
+    el.innerHTML=`
+      ${addonBadgeHtml}
+      <div class="tcard-inner">
+        <div class="tcard-top">
+          <div><div class="tcard-num">${t.number}</div><div class="tcard-numlabel">Table</div></div>
+          <div class="tcard-status ${t.occupied?'occ':'free'}"><div class="sdot"></div>${t.occupied?'Occupied':'Free'}</div>
+        </div>
+        <div class="tcard-meta"><span class="tcard-meta-lbl">Capacity</span><span class="tcard-meta-val">${t.capacity} seats</span></div>
+        ${cust}
+      </div>
+      ${nextNotif}`;
+    g.appendChild(el);
+  });
+
+  if(!allQueue.length){
+    q.innerHTML=`<div class="empty" style="grid-column:unset;"><div class="empty-ico">📋</div><div class="empty-txt">Queue is empty</div></div>`;
+  } else {
+    allQueue.forEach((qu,i)=>{
+      const m=Math.floor((Date.now()-(qu.since||Date.now()))/60000);
+      const el=document.createElement('div');
+      el.className='g qcard';
+      el.setAttribute('draggable','true');
+      el.setAttribute('ondragstart',`event.dataTransfer.setData('text/plain', JSON.stringify({type:'table', tNum:${qu.sourceTable}}))`);
+      el.innerHTML=`<div class="qcard-left"><span class="qidx">${i+1}</span><span class="qname">${qu.name||'Guest'}</span></div>
+        <div class="qcard-right"><span class="qpeople">${qu.people} pax (T${qu.sourceTable})</span><span class="qwait">${m} min wait</span><button class="qcancel" onclick="event.stopPropagation(); cancelQueue(${qu.sourceTable})" title="Remove from Queue">✕</button></div>`;
+      q.appendChild(el);
+    });
+  }
+}
+
+function toggleMenu(){document.getElementById('hambDrop').classList.toggle('active');}
+document.addEventListener('click',e=>{if(!e.target.closest('.hamburger-menu'))document.getElementById('hambDrop')?.classList.remove('active');});
+
+window.viewNextOrderDetails = function(n) {
+  db.ref("tables").once("value", s => {
+    const raw = s.val();
+    let t = null;
+    Object.values(raw||{}).forEach(v => { if (v && v.number === n) t = v; });
+    if (!t || !t.nextOrder) return;
+    
+    document.getElementById('nextOrderSub').textContent = `Waiting for Table ${n} · ${t.nextOrder.name} · ${t.nextOrder.people} pax`;
+    
+    if (t.nextOrder.orderId) {
+       db.ref("orders/" + t.nextOrder.orderId).once("value", snap => {
+           const ord = snap.val();
+           let html = '';
+           if(ord && ord.items) {
+               const arr = Array.isArray(ord.items) ? ord.items : Object.values(ord.items);
+               html = arr.map(i => `<tr><td>${i.name}</td><td>${i.qty}</td></tr>`).join('');
+           } else {
+               html = '<tr><td colspan="2" class="ebill-msg">No items recorded.</td></tr>';
+           }
+           document.getElementById('nextOrderItems').innerHTML = html;
+       });
+    } else {
+       document.getElementById('nextOrderItems').innerHTML = '<tr><td colspan="2" class="ebill-msg">No items recorded.</td></tr>';
+    }
+    
+    document.getElementById('nextOrderModal').classList.add('open');
+  });
 };
 
-function moveIndicator(el) {
-  const indicator = document.getElementById('nav-indicator');
-  const sidebar = document.getElementById('sidebar');
-  const rect = el.getBoundingClientRect();
-  const sidebarRect = sidebar.getBoundingClientRect();
-  const relativeTop = rect.top - sidebarRect.top + sidebar.scrollTop;
-  indicator.style.top = `${relativeTop}px`;
-  indicator.style.height = `${rect.height}px`;
-  indicator.style.width = `${rect.width}px`;
-  indicator.style.left = `${el.offsetLeft}px`;
-}
+window.closeNextOrder = function() {
+  document.getElementById('nextOrderModal').classList.remove('open');
+};
 
-let _togglePendingTimer = null;
+window.dropOnTable=function(e,targetTnum){
+  e.preventDefault();
+  try{
+    const data=JSON.parse(e.dataTransfer.getData('text/plain'));
+    db.ref("tables").once("value",s=>{
+      const tablesRaw=s.val();
+      let targetKey=null,sourceKey=null;
+      Object.entries(tablesRaw).forEach(([k,v])=>{
+        if(v&&v.number===targetTnum) targetKey=k;
+        if(data.type==='table'&&v&&v.number===data.tNum) sourceKey=k;
+      });
 
-function toggleGroup(groupId, el) {
-  triggerHaptic();
-  if (_togglePendingTimer !== null) {
-    clearTimeout(_togglePendingTimer);
-    _togglePendingTimer = null;
-  }
-  const allGroups = document.querySelectorAll('.nav-group');
-  const clickedGroup = el.closest('.nav-group');
-  const isExpanded = clickedGroup.classList.contains('expanded');
-  allGroups.forEach(g => g.classList.remove('expanded'));
-  if (!isExpanded) {
-    clickedGroup.classList.add('expanded');
-    _togglePendingTimer = setTimeout(() => {
-      _togglePendingTimer = null;
-      if (clickedGroup.classList.contains('expanded')) {
-        const firstSub = clickedGroup.querySelector('.sub-item');
-        if (firstSub) {
-          const sectionName = firstSub.getAttribute('onclick').match(/'([^']+)'/)[1];
-          showSection(sectionName, firstSub);
-        } else {
-          moveIndicator(el);
-        }
-      } 
-      else {
-        moveIndicator(el);
-      }
-    }, 400);
-  } else {
-    moveIndicator(el);
-  }
-}
+      const targetTable=tablesRaw[targetKey];
 
-function showSection(section, el) {
-  triggerHaptic();
-  const grid = document.getElementById('menu-grid');
-  const nameDisplay = document.getElementById('section-name');
-  const menuContainer = document.querySelector('.menu-container');
-  document.querySelectorAll('.nav-item, .sub-item').forEach(i => i.classList.remove('active'));
-  el.classList.add('active');
-  moveIndicator(el);
-  nameDisplay.innerText = section.replace(/_/g, ' ').toUpperCase().replace('Merged', '');
-  const items = menuData[section] || [];
-  grid.innerHTML = items.map(item => `
-    <div class="food-card">
-      <div class="cart-badge" id="badge-${item.id}">0</div>
-      <img src="${item.img}" alt="${item.name}">
-      <h4>${item.name}</h4>
-      <div class="price">&#8377;${item.price.toFixed(2)}</div>
-      <button class="add-initial" id="add-btn-${item.id}" onclick="addToCart('${section}', '${item.id}')">ADD</button>
-      <div class="qty-controls" id="qty-ctrl-${item.id}">
-        <button class="btn-qty" onclick="updateQty('${item.id}', -1)">-</button>
-        <span id="qty-val-${item.id}">0</span>
-        <button class="btn-qty" onclick="updateQty('${item.id}', 1)">+</button>
-      </div>
-    </div>
-  `).join('');
-  menuContainer.scrollTop = 0;
-  syncCartUI();
-}
-
-function addToCart(sec, id) {
-  triggerHaptic();
-  let item;
-  if (sec === 'search') {
-    Object.values(menuData).forEach(cat => {
-      const found = cat.find(i => i.id === id);
-      if (found) item = found;
-    });
-  } else {
-    item = menuData[sec].find(i => i.id === id);
-  }
-  if (item && !cart[id]) cart[id] = { ...item, qty: 1 };
-  syncCartUI();
-}
-
-function updateQty(id, delta) {
-  triggerHaptic();
-  if (cart[id]) {
-    cart[id].qty += delta;
-    if (cart[id].qty <= 0) delete cart[id];
-  }
-  syncCartUI();
-}
-
-function syncCartUI() {
-  let totalItems = 0;
-  let subtotal = 0;
-  document.querySelectorAll('.add-initial').forEach(b => b.style.display = 'block');
-  document.querySelectorAll('.qty-controls').forEach(c => c.style.display = 'none');
-  document.querySelectorAll('.cart-badge').forEach(b => b.style.display = 'none');
-  const cartList = document.getElementById('cart-items-list');
-  cartList.innerHTML = '';
-  Object.keys(cart).forEach(id => {
-    const item = cart[id];
-    totalItems += item.qty;
-    subtotal += item.price * item.qty;
-    const addBtn = document.getElementById(`add-btn-${id}`);
-    const qtyCtrl = document.getElementById(`qty-ctrl-${id}`);
-    const qtyVal = document.getElementById(`qty-val-${id}`);
-    const badge = document.getElementById(`badge-${id}`);
-    if (addBtn) {
-      addBtn.style.display = 'none';
-      qtyCtrl.style.display = 'flex';
-      qtyVal.innerText = item.qty;
-      badge.style.display = 'block';
-      badge.innerText = item.qty;
-    }
-    cartList.innerHTML += `
-      <div class="cart-item-row">
-        <div class="cart-item-info">
-          <h5>${item.name}</h5>
-          <p>&#8377;${(item.price * item.qty).toFixed(2)}</p>
-        </div>
-        <div class="cart-item-actions">
-           <button class="btn-qty" onclick="updateQty('${item.id}', -1)">-</button>
-           <span style="font-weight:700">${item.qty}</span>
-           <button class="btn-qty" onclick="updateQty('${item.id}', 1)">+</button>
-        </div>
-      </div>
-    `;
-  });
-  const bar = document.getElementById('cart-bar');
-  if (totalItems > 0) {
-    bar.style.display = 'flex';
-    document.getElementById('cart-item-count').innerText = `${totalItems} Items`;
-    document.getElementById('cart-total-price').innerText = `₹${subtotal.toFixed(2)}`;
-    document.getElementById('cart-total-price-popup').innerText = `₹${subtotal.toFixed(2)}`;
-  } else {
-    bar.style.display = 'none';
-    cartList.innerHTML = '<p style="text-align:center; color:#999; padding:20px;">Your basket is empty</p>';
-  }
-}
-
-function toggleCart() {
-  const p = document.getElementById('cart-popup');
-  p.style.display = (p.style.display === 'flex') ? 'none' : 'flex';
-}
-
-function toggleSearch() {
-  document.getElementById('search-input').classList.toggle('active');
-}
-
-function triggerHaptic() { if (window.navigator.vibrate) window.navigator.vibrate(10); }
-
-let orderTimerInterval = null;
-const TOTAL_SECONDS = 15 * 60;
-const CIRCUMFERENCE = 2 * Math.PI * 54;
-function processPayment() {
-  triggerHaptic();
-  
-  const currentOrderInfo = JSON.parse(localStorage.getItem("currentOrderInfo") || "{}");
-  const orderType = currentOrderInfo.orderType || "takeaway";
-  const customerName = currentOrderInfo.name || "Customer";
-  const peopleCount = parseInt(currentOrderInfo.people) || 1;
-  const tablePref = currentOrderInfo.tablePref || "";
-  const prevOrderId = localStorage.getItem("currentOrderId");
-
-  const createNewOrder = (assignedTableNum, bypassAssign) => {
-    const orderId = "ORD" + Date.now();
-    const order = {
-      id: orderId,
-      tableNumber: assignedTableNum || null,
-      customerName: customerName,
-      people: peopleCount,
-      items: Object.values(cart),
-      total: Object.values(cart).reduce((sum, item) => sum + (item.price * item.qty), 0),
-      status: "Preparing",
-      diet: "Regular",
-      orderType: orderType,
-      createdAt: new Date().toISOString()
-    };
-    db.ref("orders/" + orderId).set(order).then(() => {
-      localStorage.setItem("currentOrderId", orderId);
-      cart = {};
-      syncCartUI();
-
-      if (orderType === "dinein" && !bypassAssign) {
-        assignTable(customerName, peopleCount, orderId, tablePref);
-      }
-      showOrderConfirm();
-    }).catch((error) => {
-      console.error("Error placing order:", error);
-      alert("Error placing order. Please try again.");
-    });
-  };
-
-  if (orderType === "dinein" && prevOrderId) {
-    db.ref("orders/" + prevOrderId).once("value", snap => {
-      const prevOrder = snap.val();
-      if (prevOrder && prevOrder.status !== "Completed" && prevOrder.status !== "Cancelled" && prevOrder.tableNumber) {
-        createNewOrder(prevOrder.tableNumber, true);
-      } else {
-        createNewOrder(null, false);
-      }
-    });
-  } else {
-    createNewOrder(null, false);
-  }
-}
-
-function assignTable(name, people, orderId, tablePref) {
-  db.ref("tables").once("value", (snapshot) => {
-    const raw = snapshot.val();
-    let tables = raw ? Object.values(raw) : [];
-    let tableKeys = raw ? Object.keys(raw) : [];
-
-    if (tables.length === 0) {
-      for (let i = 1; i <= 10; i++) {
-        tables.push({
-          number: i,
-          capacity: i <= 4 ? 2 : i <= 8 ? 4 : 6,
-          occupied: false,
-          current: null
-        });
-        tableKeys.push(String(i - 1));
-      }
-      db.ref("tables").set(tables);
-    }
-
-    let selectedTable = null;
-    if (tablePref && tablePref.trim() !== "" && !isNaN(tablePref)) {
-      selectedTable = tables.find(t => t.number === parseInt(tablePref));
-    }
-
-    if (!selectedTable || (selectedTable.occupied && selectedTable.nextOrder)) {
-      let emptyTables = tables.filter(t => !t.occupied);
-      if (emptyTables.length > 0) {
-        selectedTable = emptyTables[Math.floor(Math.random() * emptyTables.length)];
-      } else {
-        let noNextOrderTables = tables.filter(t => t.occupied && !t.nextOrder);
-        if (noNextOrderTables.length > 0) {
-          selectedTable = noNextOrderTables[Math.floor(Math.random() * noNextOrderTables.length)];
-        } else {
-          db.ref("queue").once("value", qSnap => {
-            let q = qSnap.val() ? Object.values(qSnap.val()) : [];
-            q.push({ name: name, people: people, orderId: orderId, time: Date.now() });
-            db.ref("queue").set(q);
+      const handleMove=(item)=>{
+        if(!targetTable.occupied){
+          db.ref("tables/"+targetKey).update({
+            occupied:true,
+            current:{name:item.name,people:item.people,since:item.since||Date.now(),orderId:item.orderId||null}
           });
-          return;
+          if(item.orderId) db.ref("orders/"+item.orderId).update({tableNumber:targetTable.number});
+        } else if(targetTable.nextOrder){
+          if(!confirm(`Table ${targetTnum} already has a next order (${targetTable.nextOrder.name}). Replace it?`)) return;
+          db.ref("tables/"+targetKey).update({nextOrder:item});
+          if(item.orderId) db.ref("orders/"+item.orderId).update({tableNumber:targetTable.number});
+        } else {
+          db.ref("tables/"+targetKey).update({nextOrder:item});
+          if(item.orderId) db.ref("orders/"+item.orderId).update({tableNumber:targetTable.number});
+        }
+      };
+
+      if(data.type==='table'){
+        if(sourceKey&&targetKey&&sourceKey!==targetKey){
+          const itemToMove=tablesRaw[sourceKey].nextOrder;
+          if(itemToMove){
+            db.ref("tables/"+sourceKey).update({nextOrder:null});
+            handleMove(itemToMove);
+          }
         }
       }
+    });
+  } catch(err){console.error("Drag drop error",err);}
+};
+
+window.viewOrderDetails=function(n){
+  db.ref("tables").once("value",s=>{
+    const raw=s.val();
+    let t=null;
+    Object.values(raw||{}).forEach(v=>{if(v&&v.number===n)t=v;});
+    if(!t||!t.occupied||!t.current)return;
+
+    db.ref("orders").once("value",os=>{
+      const allOrders=os.val()?Object.values(os.val()):[];
+      const tableOrders=allOrders.filter(o=>
+        (o.tableNumber==n||o.id===t.current.orderId)&&
+        o.status!=='Completed'&&o.status!=='Cancelled'
+      );
+      
+      tableOrders.sort((a,b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+
+      document.getElementById('voSub').textContent=`Table ${n} · ${t.current.name} · ${t.current.people} pax`;
+
+      if(!tableOrders.length){
+        document.getElementById('voItems').innerHTML=`<tr><td colspan="4" class="ebill-msg">No active items.</td></tr>`;
+        document.getElementById('voTotal').textContent=`₹0.00`;
+      } else {
+        let html=''; let grandTotal=0;
+        let lastViewed = window.tableLastOpened[n] || 0;
+
+        tableOrders.forEach((o, i)=>{
+          const isAddon = i > 0 && new Date(o.createdAt).getTime() > lastViewed;
+          const rowCls = isAddon ? 'class="highlight-new"' : '';
+          const items=Array.isArray(o.items)?o.items:(o.items&&typeof o.items==='object'?Object.values(o.items):[]);
+          items.forEach(item=>{
+            html += `<tr ${rowCls}><td>${item.name}</td><td>${item.qty}</td><td>₹${item.price.toFixed(2)}</td><td style="text-align:right;">₹${(item.price*item.qty).toFixed(2)}</td></tr>`;
+          });
+          grandTotal+=(o.total||0);
+        });
+        document.getElementById('voItems').innerHTML=html;
+        document.getElementById('voTotal').textContent=`₹${grandTotal.toFixed(2)}`;
+        
+        window.tableLastOpened[n] = Date.now();
+        renderDash(); 
+      }
+      document.getElementById('viewOrderModal').classList.add('open');
+    });
+  });
+};
+
+window.closeViewOrder=function(){document.getElementById('viewOrderModal').classList.remove('open');};
+
+function renderTkw(){
+  const g=document.getElementById('tkgrid');if(!g)return;
+  document.getElementById('tkcount').textContent=allTkw.length;
+  if(!allTkw.length){g.innerHTML=`<div class="empty"><div class="empty-ico">🛍️</div><div class="empty-txt">No pending takeaways</div></div>`;return;}
+  g.innerHTML=allTkw.map(o=>{
+    const items=Array.isArray(o.items)?o.items:(o.items&&typeof o.items==='object'?Object.values(o.items):[]);
+    const preview=items.slice(0,4).map(i=>`<div class="tkcard-item-row"><span class="tkcard-iname">${i.name}</span><span class="tkcard-iqty">×${i.qty}</span></div>`).join('')+(items.length>4?`<div class="tkcard-item-row" style="opacity:.4"><span class="tkcard-iname">+${items.length-4} more</span></div>`:'');
+    const m=o.createdAt?Math.floor((Date.now()-new Date(o.createdAt).getTime())/60000):'?';
+    const sid=(o.id||'').replace('ORD','');
+    return `<div class="g tkcard">
+      <div class="tkcard-top">
+        <span class="tkcard-id">#${sid}</span>
+        <span class="tkcard-badge">Takeaway</span>
+        <button class="tkcard-cancel" onclick="cancelTakeaway('${o.id}')" title="Cancel Takeaway">✕</button>
+      </div>
+      <div class="tkcard-body"><div class="tkcard-name">${o.customerName||'Customer'}</div><div class="tkcard-time">${m} min ago</div>
+      <div class="tkcard-items">${preview||'<span style="color:var(--w30)">No items</span>'}</div>
+      <span class="tkcard-total-lbl">Total</span><div class="tkcard-total">₹${(o.total||0).toFixed(2)}</div>
+      <button class="btn btn-blue btn-full" onclick="openTkwBill('${o.id}')">Print Bill & Complete</button></div></div>`;
+  }).join('');
+}
+
+window.cancelTakeaway=function(oid){
+  if(confirm("Are you sure you want to cancel this takeaway order?")) db.ref("orders/"+oid).update({status:'Cancelled'});
+};
+
+window.cancelQueue=function(tNum){
+  if(confirm("Remove this customer from the queue?")){
+    db.ref("tables").once("value",s=>{
+      let raw=s.val(),key=null;
+      Object.entries(raw).forEach(([k,v])=>{if(v&&v.number===tNum)key=k;});
+      if(key!==null) db.ref("tables/"+key).update({nextOrder:null});
+    });
+  }
+};
+
+function freeTable(n){
+  db.ref("tables").once("value",s=>{
+    const raw=s.val();if(!raw)return;
+    let k=null;
+    Object.entries(raw).forEach(([ki,v])=>{if(v&&v.number===n)k=ki;});
+    if(k===null)return;
+    const t=raw[k];
+
+    if (window.allActiveOrders) {
+        const activeForTable = window.allActiveOrders.filter(o =>
+            (o.tableNumber == n || (t.current && o.id === t.current.orderId)) &&
+            o.status !== 'Completed' && o.status !== 'Cancelled'
+        );
+        activeForTable.forEach(o => db.ref("orders/" + o.id).update({status: 'Completed'}));
     }
 
-    if (selectedTable) {
-      const arrayIndex = tables.findIndex(t => t.number === selectedTable.number);
-      const tableKey = tableKeys[arrayIndex];
-
-      if (selectedTable.occupied) {
-        db.ref("tables/" + tableKey).update({
-          nextOrder: { name: name, people: people, since: Date.now(), orderId: orderId }
-        });
-      } else {
-        db.ref("tables/" + tableKey).update({
-          occupied: true,
-          current: { name: name, people: people, since: Date.now(), orderId: orderId }
-        });
-        db.ref("orders/" + orderId).update({ tableNumber: selectedTable.number });
-      }
+    if(t.nextOrder){
+      db.ref("tables/"+k).update({
+        occupied:true,
+        current:{name:t.nextOrder.name,people:t.nextOrder.people,since:Date.now(),orderId:t.nextOrder.orderId||null},
+        nextOrder:null
+      });
+      if(t.nextOrder.orderId) db.ref("orders/"+t.nextOrder.orderId).update({tableNumber:t.number});
+    } else {
+      db.ref("tables/"+k).update({occupied:false,current:null});
     }
   });
 }
 
-function showOrderConfirm() {
-  const overlay = document.getElementById('order-confirm-overlay');
-  document.getElementById('order-ready-subtext').style.display = 'block';
-  document.getElementById('order-ready-banner').classList.remove('visible');
-  const token = Math.floor(100 + Math.random() * 900);
-  document.getElementById('order-token-number').textContent = '#' + token;
-  overlay.classList.add('visible');
-  startOrderTimer();
+function openBill(n){
+  curTnum=n;billItems=[];curOids=[];curOid=null;
+  document.getElementById('dVal').value='';document.getElementById('msearch').value='';
+  document.getElementById('mresults').style.display='none';setDisc('pct');
+  document.getElementById('pbtn').textContent='Print Bill & Free Table';
+  db.ref("tables").once("value",s=>{
+    const raw=s.val();if(!raw)return;
+    let k=null,t=null;
+    Object.entries(raw).forEach(([ki,v])=>{if(v&&v.number===n){k=ki;t=v;}});
+    curTkey=k;
+    document.getElementById('bsub').textContent=`Table ${n} · ${t?.current?.name||'Guest'} · ${t?.current?.people||1} pax`;
+
+    db.ref("orders").once("value",os=>{
+      const d=os.val();
+      if(d){
+        Object.entries(d).forEach(([oid,o])=>{
+          if((o.tableNumber==n||oid===t.current.orderId)&&o.status!=='Completed'&&o.status!=='Cancelled'){
+            curOids.push(oid);
+            const arr=Array.isArray(o.items)?o.items:(o.items&&typeof o.items==='object'?Object.values(o.items):[]);
+            arr.forEach(i=>{
+              let ex=billItems.find(b=>b.name===i.name);
+              if(ex) ex.qty+=i.qty;
+              else billItems.push({id:i.id||'i'+Math.random(),name:i.name,qty:i.qty,price:i.price});
+            });
+          }
+        });
+      }
+      renderBItems();recalc();document.getElementById('billModal').classList.add('open');
+    });
+  });
 }
 
-function closeOrderConfirm() {
-  const overlay = document.getElementById('order-confirm-overlay');
-  overlay.classList.remove('visible');
-  if (orderTimerInterval) { clearInterval(orderTimerInterval); orderTimerInterval = null; }
-  const trackBtn = document.getElementById('track-order-btn');
-  trackBtn.classList.add('visible');
-  triggerTrackShake();
-  if (window._trackShakeInterval) clearInterval(window._trackShakeInterval);
-  window._trackShakeInterval = setInterval(triggerTrackShake, 5000);
+function openTkwBill(oid){
+  curOid=oid;curOids=[];curTnum=null;curTkey=null;billItems=[];
+  document.getElementById('dVal').value='';document.getElementById('msearch').value='';
+  document.getElementById('mresults').style.display='none';setDisc('pct');
+  document.getElementById('pbtn').textContent='Print Bill & Complete';
+  db.ref("orders/"+oid).once("value",s=>{
+    const o=s.val();if(!o){alert("Order not found.");return;}
+    const arr=Array.isArray(o.items)?o.items:(o.items&&typeof o.items==='object'?Object.values(o.items):[]);
+    billItems=arr.map(i=>({id:i.id||'i'+Math.random(),name:i.name,qty:i.qty,price:i.price}));
+    document.getElementById('bsub').textContent=`Takeaway · ${o.customerName||'Customer'} · #${(o.id||'').replace('ORD','')}`;
+    renderBItems();recalc();document.getElementById('billModal').classList.add('open');
+  });
 }
 
-function triggerTrackShake() {
-  const trackBtn = document.getElementById('track-order-btn');
-  trackBtn.classList.remove('shake');
-  void trackBtn.offsetWidth;
-  trackBtn.classList.add('shake');
+function closeBill(){document.getElementById('billModal').classList.remove('open');curOids=[];curOid=null;curTnum=null;curTkey=null;billItems=[];}
+
+function renderBItems(){
+  const b=document.getElementById('bitems');
+  if(!billItems.length){b.innerHTML=`<tr><td colspan="5" class="ebill-msg">No items. Search above to add.</td></tr>`;return;}
+  b.innerHTML=billItems.map((it,i)=>`<tr>
+    <td><input class="item-name-in" value="${it.name}" onchange="billItems[${i}].name=this.value"></td>
+    <td><div class="qrow"><button class="qbtn" onclick="adjQ(${i},-1)">−</button><span class="qval">${it.qty}</span><button class="qbtn" onclick="adjQ(${i},1)">+</button></div></td>
+    <td><input class="rate-in" type="number" value="${it.price.toFixed(2)}" onchange="billItems[${i}].price=parseFloat(this.value)||0;renderBItems();recalc()"></td>
+    <td class="iamt">₹${(it.price*it.qty).toFixed(2)}</td>
+    <td><button class="rmbtn" onclick="billItems.splice(${i},1);renderBItems();recalc()">✕</button></td>
+  </tr>`).join('');
+}
+function adjQ(i,d){billItems[i].qty=Math.max(1,billItems[i].qty+d);renderBItems();recalc();}
+
+function srchMenu(){
+  const q=document.getElementById('msearch').value.toLowerCase().trim();
+  const r=document.getElementById('mresults');
+  if(!q){r.style.display='none';return;}
+  const f=allMenu.filter(i=>i.name.toLowerCase().includes(q)).slice(0,10);
+  if(!f.length){r.style.display='none';return;}
+  r.style.display='block';
+  r.innerHTML=f.map(i=>`<div class="mresult" onclick="addItem('${i.id}','${i.name.replace(/'/g,"\\'")}',${i.price})"><span class="mr-name">${i.name}</span><span class="mr-price">₹${i.price}</span></div>`).join('');
+}
+function addItem(id,name,price){const ex=billItems.find(i=>i.id===id);if(ex)ex.qty++;else billItems.push({id,name,qty:1,price});document.getElementById('msearch').value='';document.getElementById('mresults').style.display='none';renderBItems();recalc();}
+document.addEventListener('click',e=>{if(!e.target.closest('.msearch')&&!e.target.closest('.mresults'))document.getElementById('mresults').style.display='none';});
+
+function setDisc(m){dMode=m;document.getElementById('dPct').classList.toggle('active',m==='pct');document.getElementById('dRup').classList.toggle('active',m==='rs');recalc();}
+
+function recalc(){
+  const sub=billItems.reduce((s,i)=>s+i.price*i.qty,0);
+  const v=parseFloat(document.getElementById('dVal').value)||0;
+  const disc=dMode==='pct'?Math.min(sub,sub*v/100):Math.min(sub,v);
+  document.getElementById('bsub2').textContent=`₹${sub.toFixed(2)}`;
+  document.getElementById('dAmt').textContent=`−₹${disc.toFixed(2)}`;
+  document.getElementById('bgrand').textContent=`₹${(sub-disc).toFixed(2)}`;
 }
 
-function startOrderTimer() {
-  if (orderTimerInterval) { clearInterval(orderTimerInterval); }
-  let secondsLeft = TOTAL_SECONDS;
-  const display = document.getElementById('timer-display');
-  const circle = document.getElementById('timer-progress-circle');
-  circle.style.strokeDasharray = CIRCUMFERENCE;
-  circle.style.strokeDashoffset = 0;
-  function updateTimer() {
-    const mins = Math.floor(secondsLeft / 60);
-    const secs = secondsLeft % 60;
-    display.textContent = `${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
-    const progress = (TOTAL_SECONDS - secondsLeft) / TOTAL_SECONDS;
-    circle.style.strokeDashoffset = CIRCUMFERENCE * progress;
-    if (secondsLeft <= 0) {
-      clearInterval(orderTimerInterval);
-      orderTimerInterval = null;
-      display.textContent = '00:00';
-      circle.style.strokeDashoffset = CIRCUMFERENCE;
-      document.getElementById('order-ready-subtext').style.display = 'none';
-      const banner = document.getElementById('order-ready-banner');
-      banner.classList.add('visible');
-    } else {
-      secondsLeft--;
+function saveOnly(){
+  const sub=billItems.reduce((s,i)=>s+i.price*i.qty,0);
+  if(curOids&&curOids.length>0){
+    db.ref("orders/"+curOids[0]).update({items:billItems,total:sub});
+    for(let i=1;i<curOids.length;i++){
+      db.ref("orders/"+curOids[i]).update({items:[],total:0,isSubRound:true});
     }
+  } else if(curOid){
+    db.ref("orders/"+curOid).update({items:billItems,total:sub}).then(closeBill);
+  } else {
+    closeBill();
   }
-  updateTimer();
-  orderTimerInterval = setInterval(updateTimer, 1000);
 }
 
-function handleSearch() {
-  const query = document.getElementById('search-input').value.toLowerCase();
-  const grid = document.getElementById('menu-grid');
-  let allItems = [];
-  Object.values(menuData).forEach(cat => allItems = [...allItems, ...cat]);
-  const filtered = allItems.filter(i => i.name.toLowerCase().includes(query));
-  if (query === "") {
-    const activeItem = document.querySelector('.nav-item.active, .sub-item.active');
-    if (activeItem) {
-      const onclickAttr = activeItem.getAttribute('onclick');
-      const match = onclickAttr.match(/'([^']+)'/);
-      if (match) showSection(match[1], activeItem);
+function printBill(){
+  const sub=billItems.reduce((s,i)=>s+i.price*i.qty,0);
+  const v=parseFloat(document.getElementById('dVal').value)||0;
+  const disc=dMode==='pct'?Math.min(sub,sub*v/100):Math.min(sub,v);
+  const grand=sub-disc;
+  const now=new Date(),on=(curOids&&curOids.length>0)?curOids[0].replace('ORD',''):(curOid?(curOid.replace('ORD','')):Date.now());
+  const dstr=now.toLocaleDateString('en-IN'),tstr=now.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+  const ih=billItems.map(i=>`<div class="pr-ir"><span class="pr-ir-n">${i.name}</span><span class="pr-ir-q">x${i.qty}</span><span class="pr-ir-p">${(i.price*i.qty).toFixed(2)}</span></div>`).join('');
+  const dh=disc>0?`<div class="pr-tr"><span>${dMode==='pct'?`Discount (${v}%)`:'Discount'}</span><span>-${disc.toFixed(2)}</span></div>`:'';
+  document.getElementById('parea').innerHTML=`<div class="pr"><div class="pr-brand">EMERALD</div><div class="pr-tag">Fine Dining & Hospitality</div></div><hr class="pr-div"><div class="pr-row"><span>Order No:</span><span>#${on}</span></div><div class="pr-row"><span>Table:</span><span>${curTnum||'—'}</span></div><div class="pr-row"><span>Date:</span><span>${dstr}</span></div><div class="pr-row"><span>Time:</span><span>${tstr}</span></div><hr class="pr-div"><div class="pr-ih"><span style="flex:1">Item</span><span style="width:28px;text-align:center">Qty</span><span style="width:56px;text-align:right">Amt</span></div><hr class="pr-div">${ih}<hr class="pr-div"><div class="pr-tr"><span>Subtotal</span><span>₹${sub.toFixed(2)}</span></div>${dh}<hr class="pr-div"><div class="pr-gr"><span>TOTAL</span><span>₹${grand.toFixed(2)}</span></div><hr class="pr-div"><div class="pr-ty">Thank You! 🙏</div><div class="pr-ft">Visit us again • EMERALD Restaurant</div>`;
+
+  const upd={status:'Completed',items:billItems,total:sub,grandTotal:grand,discount:disc,billedAt:new Date().toISOString()};
+
+  if(curOids&&curOids.length>0){
+    db.ref("orders/"+curOids[0]).update(upd);
+    for(let i=1;i<curOids.length;i++){
+      db.ref("orders/"+curOids[i]).update({status:'Completed',isSubRound:true,billedAt:new Date().toISOString()});
     }
-    return;
+  } else if(curOid){
+    db.ref("orders/"+curOid).update(upd);
   }
-  grid.innerHTML = filtered.map(item => `
-    <div class="food-card">
-      <div class="cart-badge" id="badge-${item.id}">${cart[item.id] ? cart[item.id].qty : 0}</div>
-      <img src="${item.img}" alt="${item.name}">
-      <h4>${item.name}</h4>
-      <div class="price">&#8377;${item.price.toFixed(2)}</div>
-      <button class="add-initial" id="add-btn-${item.id}" onclick="addToCart('search', '${item.id}')" style="display: ${cart[item.id] ? 'none' : 'block'}">ADD</button>
-      <div class="qty-controls" id="qty-ctrl-${item.id}" style="display: ${cart[item.id] ? 'flex' : 'none'}">
-        <button class="btn-qty" onclick="updateQty('${item.id}', -1)">-</button>
-        <span id="qty-val-${item.id}">${cart[item.id] ? cart[item.id].qty : 0}</span>
-        <button class="btn-qty" onclick="updateQty('${item.id}', 1)">+</button>
-      </div>
-    </div>
-  `).join('');
+
+  const tn=curTnum,tk=curTkey,isTkw=!tk&&!tn;
+  closeBill();window.print();
+  if(!isTkw&&tk!==null) setTimeout(()=>freeTable(tn),500);
 }
 
-function goToTrackOrder() {
-  window.location.href = 'track.html';
+function updateTrackerStats(ordersArr){
+  if(!ordersArr)return;
+  const total=ordersArr.filter(o=>o.status!=='Cancelled').length;
+  const wait=allQueue.length;
+  const cook=ordersArr.filter(o=>o.status==='Preparing').length;
+  const served=ordersArr.filter(o=>o.status==='Completed'||o.status==='Ready').length;
+  const elTotal=document.getElementById('trk-total');
+  const elWait=document.getElementById('trk-wait');
+  const elCook=document.getElementById('trk-cook');
+  const elServed=document.getElementById('trk-served');
+  if(elTotal)elTotal.textContent=total;
+  if(elWait)elWait.textContent=wait;
+  if(elCook)elCook.textContent=cook;
+  if(elServed)elServed.textContent=served;
 }
+
+function switchTab(n){
+  ['live','history','tracker'].forEach(x=>{
+    document.getElementById('tab-'+x)?.classList.toggle('active',x===n);
+    document.getElementById('mtab-'+x)?.classList.toggle('active',x===n);
+    document.getElementById('panel-'+x)?.classList.toggle('active',x===n);
+  });
+  if(n==='history')loadHist();
+}
+
+let hData=[],hFilt=[],hPage=1;const HPGSZ=20;
+(()=>{const n=new Date(),y=n.getFullYear(),m=String(n.getMonth()+1).padStart(2,'0');document.getElementById('hFrom').value=`${y}-${m}-01`;document.getElementById('hTo').value=n.toISOString().split('T')[0];})();
+
+function setMonth(){const n=new Date(),y=n.getFullYear(),m=String(n.getMonth()+1).padStart(2,'0');document.getElementById('hFrom').value=`${y}-${m}-01`;document.getElementById('hTo').value=n.toISOString().split('T')[0];applyF();}
+function setToday(){const t=new Date().toISOString().split('T')[0];document.getElementById('hFrom').value=t;document.getElementById('hTo').value=t;applyF();}
+function clearF(){document.getElementById('hFrom').value='';document.getElementById('hTo').value='';applyF();}
+
+function loadHist(){
+  db.ref("orders").once("value",s=>{
+    const d=s.val();
+    hData=d?Object.values(d).filter(o=>!o.isSubRound&&(o.billedAt||o.status==='Completed'||o.status==='Cancelled')).sort((a,b)=>{const ta=a.billedAt?new Date(a.billedAt).getTime():(a.timestamp||0);const tb=b.billedAt?new Date(b.billedAt).getTime():(b.timestamp||0);return tb-ta;}):[]; 
+    applyF();
+  });
+}
+
+function applyF(){
+  const fr=document.getElementById('hFrom').value,to=document.getElementById('hTo').value;
+  hFilt=hData.filter(o=>{const raw=o.billedAt||(o.timestamp?new Date(o.timestamp).toISOString():null);if(!raw)return false;const ds=new Date(raw).toISOString().split('T')[0];if(fr&&ds<fr)return false;if(to&&ds>to)return false;return true;});
+  hPage=1;renderStats();renderHist();updExp();
+}
+
+function renderStats(){
+  const c=hFilt.filter(o=>o.status==='Completed');
+  const rev=c.reduce((s,o)=>s+(o.grandTotal||o.total||0),0);
+  const disc=c.reduce((s,o)=>s+(o.discount||0),0);
+  const avg=c.length?rev/c.length:0;
+  const di=c.filter(o=>o.orderType==='dinein').reduce((s,o)=>s+(o.grandTotal||o.total||0),0);
+  const tk=c.filter(o=>o.orderType==='takeaway').reduce((s,o)=>s+(o.grandTotal||o.total||0),0);
+  document.getElementById('st1').textContent=c.length;
+  document.getElementById('st2').textContent=c.length?'₹'+rev.toFixed(0):'—';
+  document.getElementById('st3').textContent=c.length?'₹'+avg.toFixed(0):'—';
+  document.getElementById('st4').textContent='₹'+disc.toFixed(0);
+  document.getElementById('st5').textContent=di?'₹'+di.toFixed(0):'₹0';
+  document.getElementById('st6').textContent=tk?'₹'+tk.toFixed(0):'₹0';
+}
+
+function renderHist(){
+  const b=document.getElementById('hbody'),p=document.getElementById('hpagi');
+  if(!hFilt.length){b.innerHTML=`<tr><td colspan="8"><div class="empty" style="grid-column:unset;padding:36px;"><div class="empty-ico">📭</div><div class="empty-txt">No orders found</div></div></td></tr>`;p.innerHTML='';return;}
+  const pages=Math.ceil(hFilt.length/HPGSZ),st=(hPage-1)*HPGSZ,sl=hFilt.slice(st,st+HPGSZ);
+  b.innerHTML=sl.map((o,i)=>{
+    const raw=o.billedAt||(o.timestamp?new Date(o.timestamp).toISOString():null);
+    const d=raw?new Date(raw):null;
+    const ds=d?d.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'2-digit'}):'—';
+    const ts=d?d.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'}):'';
+    const ic=Array.isArray(o.items)?o.items.length:(o.items&&typeof o.items==='object'?Object.keys(o.items).length:'—');
+    const tot=(o.grandTotal||o.total||0);const id=o.id||'';
+    return `<tr onclick="togDet('${id}')" style="cursor:pointer;">
+      <td><span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--w30);">${st+i+1}</span></td>
+      <td><div class="hdate">${ds}</div><div class="hdatesub">${ts}</div></td>
+      <td><span class="hcust">${o.customerName||o.name||'Guest'}</span></td>
+      <td>${o.orderType==='dinein'?'<span class="badge bg-gold">Dine-In</span>':'<span class="badge bg-blue">Takeaway</span>'}</td>
+      <td style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--blue);">${o.orderType==='dinein'?(o.tableNumber||'—'):'—'}</td>
+      <td style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--w30);">${ic} item${ic!==1?'s':''}</td>
+      <td>${o.status==='Completed'?'<span class="badge bg-green">Completed</span>':'<span class="badge bg-red">Cancelled</span>'}</td>
+      <td><span class="hamt">₹${tot.toFixed(2)}</span></td>
+    </tr>
+    <tr id="det-${id}" class="drow" style="display:none;"><td colspan="8">${buildDet(o)}</td></tr>`;
+  }).join('');
+
+  if(pages<=1){p.innerHTML='';return;}
+  let pg=`<button class="pgbtn" onclick="goP(${hPage-1})" ${hPage===1?'disabled':''}>‹</button>`;
+  for(let i=1;i<=pages;i++){if(i===1||i===pages||Math.abs(i-hPage)<=1)pg+=`<button class="pgbtn ${i===hPage?'active':''}" onclick="goP(${i})">${i}</button>`;else if(Math.abs(i-hPage)===2)pg+=`<span style="color:var(--w30);padding:0 3px;">…</span>`;}
+  pg+=`<button class="pgbtn" onclick="goP(${hPage+1})" ${hPage===pages?'disabled':''}>›</button>`;
+  p.innerHTML=pg;
+}
+
+function goP(p){const pg=Math.ceil(hFilt.length/HPGSZ);if(p<1||p>pg)return;hPage=p;renderHist();document.getElementById('panel-history').scrollIntoView({behavior:'smooth'});}
+
+function buildDet(order){
+  const items=Array.isArray(order.items)?order.items:(order.items&&typeof order.items==='object'?Object.values(order.items):[]);
+  const sub=items.reduce((s,i)=>s+i.price*i.qty,0),disc=order.discount||0,grand=order.grandTotal||order.total||sub;
+  const rows=items.length?items.map(i=>`<div class="ditem"><span class="ditem-name">${i.name}</span><span class="ditem-qty">× ${i.qty}</span><span class="ditem-amt">₹${(i.price*i.qty).toFixed(2)}</span></div>`).join(''):'<div class="ditem"><span style="color:var(--w30)">No item details</span></div>';
+  return `<div class="drow-inner">${rows}<div class="dtotals">
+    <div class="dtr"><span style="color:var(--w30)">Subtotal</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--blue);">₹${sub.toFixed(2)}</span></div>
+    ${disc>0?`<div class="dtr"><span style="color:var(--w30)">Discount</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--red);">−₹${disc.toFixed(2)}</span></div>`:''}
+    <div class="dtr"><span style="color:var(--w80);font-weight:600;">Grand Total</span><span class="dtr-grand">₹${grand.toFixed(2)}</span></div>
+  </div></div>`;
+}
+
+function togDet(id){const r=document.getElementById('det-'+id);if(!r)return;const open=r.style.display!=='none';document.querySelectorAll('.drow').forEach(x=>x.style.display='none');if(!open)r.style.display='table-row';}
+function updExp(){const n=document.getElementById('expNote'),c=document.getElementById('expCount');n.style.display=hFilt.length?'inline':'none';if(c)c.textContent=hFilt.length;}
+
+function getRows(){return hFilt.map((o,i)=>{const items=Array.isArray(o.items)?o.items:(o.items&&typeof o.items==='object'?Object.values(o.items):[]);const raw=o.billedAt||o.createdAt||null;const d=raw?new Date(raw):null;return{'#':i+1,'Order ID':o.id||'—','Date':d?d.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}):'—','Time':d?d.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'}):'','Customer':o.customerName||o.name||'Guest','Type':o.orderType==='dinein'?'Dine-In':'Takeaway','Table':o.orderType==='dinein'?(o.tableNumber||'—'):'—','Items':items.map(i=>`${i.name} x${i.qty}`).join(', ')||'—','Item Count':items.length,'Subtotal (₹)':(o.total||0).toFixed(2),'Discount (₹)':(o.discount||0).toFixed(2),'Grand Total (₹)':(o.grandTotal||o.total||0).toFixed(2),'Status':o.status||'pending'}});}
+function getSumm(){const c=hFilt.filter(o=>o.status==='Completed'),rev=c.reduce((s,o)=>s+(o.grandTotal||o.total||0),0),di=c.filter(o=>o.orderType==='dinein').reduce((s,o)=>s+(o.grandTotal||o.total||0),0),tk=c.filter(o=>o.orderType==='takeaway').reduce((s,o)=>s+(o.grandTotal||o.total||0),0),disc=c.reduce((s,o)=>s+(o.discount||0),0),avg=c.length?rev/c.length:0;return[{'Metric':'Period From','Value':document.getElementById('hFrom').value||'All'},{'Metric':'Period To','Value':document.getElementById('hTo').value||'All'},{'Metric':'Total Orders','Value':c.length},{'Metric':'Total Revenue (₹)','Value':rev.toFixed(2)},{'Metric':'Dine-In Revenue (₹)','Value':di.toFixed(2)},{'Metric':'Takeaway Revenue (₹)','Value':tk.toFixed(2)},{'Metric':'Total Discount (₹)','Value':disc.toFixed(2)},{'Metric':'Avg Bill (₹)','Value':avg.toFixed(2)}];}
+function rlabel(){const fr=document.getElementById('hFrom').value,to=document.getElementById('hTo').value;if(fr&&to)return fr+'_to_'+to;if(fr)return 'from_'+fr;if(to)return 'till_'+to;return 'all_time';}
+
+function exportExcel(){if(!hFilt.length){alert('No data.');return;}const b=document.getElementById('expXl');b.classList.add('loading');setTimeout(()=>{try{const wb=XLSX.utils.book_new();const ws1=XLSX.utils.json_to_sheet(getRows());ws1['!cols']=[{wch:4},{wch:18},{wch:12},{wch:8},{wch:18},{wch:10},{wch:6},{wch:50},{wch:8},{wch:12},{wch:12},{wch:14},{wch:10}];XLSX.utils.book_append_sheet(wb,ws1,'Orders');const ws2=XLSX.utils.json_to_sheet(getSumm());ws2['!cols']=[{wch:28},{wch:20}];XLSX.utils.book_append_sheet(wb,ws2,'Summary');XLSX.writeFile(wb,'Emerald_Revenue_'+rlabel()+'.xlsx');}catch(e){alert('Export failed: '+e.message);}b.classList.remove('loading');},50);}
+
+function exportPDF(){if(!hFilt.length){alert('No data.');return;}const b=document.getElementById('expPdf');b.classList.add('loading');setTimeout(()=>{try{const rows=getRows(),summ=getSumm(),fr=document.getElementById('hFrom').value||'All',to=document.getElementById('hTo').value||'';const w=window.open('','_blank','width=900,height=700');if(!w){alert('Pop-up blocked.');b.classList.remove('loading');return;}const sh=summ.map(r=>`<tr><td style="padding:5px 10px;color:#555;font-size:12px;">${r['Metric']}</td><td style="padding:5px 10px;font-weight:700;font-size:13px;text-align:right;">${r['Value']}</td></tr>`).join('');const oh=rows.map(r=>`<tr><td>${r['#']}</td><td>${r['Order ID']}</td><td>${r['Date']}<br><span style="color:#888;font-size:10px;">${r['Time']}</span></td><td>${r['Customer']}</td><td>${r['Type']}</td><td>${r['Table']}</td><td style="font-size:10px;max-width:140px;">${r['Items']}</td><td style="text-align:right;">₹${r['Subtotal (₹)']}</td><td style="text-align:right;color:#e53e3e;">-₹${r['Discount (₹)']}</td><td style="text-align:right;font-weight:700;">₹${r['Grand Total (₹)']}</td><td>${r['Status']}</td></tr>`).join('');w.document.write(`<!DOCTYPE html><html><head><title>Emerald Report</title><style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:'Segoe UI',sans-serif;color:#111;padding:28px;}.rh{display:flex;justify-content:space-between;border-bottom:3px solid #f0b429;padding-bottom:16px;margin-bottom:24px;}.br{font-size:32px;font-weight:900;letter-spacing:3px;}.rm{text-align:right;font-size:12px;color:#555;}h2{font-size:14px;font-weight:800;text-transform:uppercase;color:#555;margin:20px 0 10px;border-left:3px solid #f0b429;padding-left:10px;}.st{width:380px;border-collapse:collapse;background:#f9f9f9;border:1px solid #eee;}.ot{width:100%;border-collapse:collapse;font-size:11px;}.ot thead{background:#f0b429;}.ot th{padding:7px 8px;text-align:left;font-size:10px;font-weight:800;text-transform:uppercase;}.ot td{padding:6px 8px;border-bottom:1px solid #f0f0f0;vertical-align:top;}.ot tr:nth-child(even){background:#f9f9f9;}.ft{margin-top:24px;padding-top:12px;border-top:1px solid #eee;font-size:11px;color:#888;text-align:center;}@media print{body{padding:14px;}}</style></head><body><div class="rh"><div><div class="br">EMERALD</div><div style="font-size:13px;color:#555;margin-top:4px;">Revenue Report</div></div><div class="rm"><strong>Period: ${to?fr+' → '+to:fr}</strong><br>Generated: ${new Date().toLocaleString('en-IN')}<br>Records: ${rows.length}</div></div><h2>Summary</h2><table class="st">${sh}</table><h2>Orders</h2><table class="ot"><thead><tr><th>#</th><th>Order ID</th><th>Date</th><th>Customer</th><th>Type</th><th>Table</th><th>Items</th><th>Subtotal</th><th>Discount</th><th>Total</th><th>Status</th></tr></thead><tbody>${oh}</tbody></table><div class="ft">EMERALD Restaurant • ${new Date().toLocaleDateString('en-IN')}</div><script>window.onload=function(){setTimeout(function(){window.print();},400);};<\/script></body></html>`);w.document.close();}catch(e){alert('Export failed: '+e.message);}b.classList.remove('loading');},50);}
 </script>
 </body>
 </html>
