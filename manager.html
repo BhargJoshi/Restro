@@ -48,7 +48,6 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--black);color:var(--
 
 #app{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;}
 
-/* NAVBAR */
 .nav{
   display:flex;align-items:center;justify-content:space-between;
   height:60px;padding:0 28px;
@@ -69,7 +68,6 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--black);color:var(--
 .nav-right{display:flex;align-items:center;gap:18px;}
 .nav-clock{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--w30);letter-spacing:1.5px;}
 
-/* Hamburger Menu CSS */
 .hamburger-menu { position: relative; }
 .hamb-btn {
   background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
@@ -81,14 +79,12 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--black);color:var(--
   position: absolute; right: 0; top: 120%; width: 200px;
   background: rgba(12, 14, 22, 0.95); border: 1px solid var(--border);
   border-radius: var(--r8); box-shadow: 0 8px 24px rgba(0,0,0,0.8);
-  display: none; flex-direction: column;
-  overflow: hidden; backdrop-filter: blur(20px);
+  display: none; flex-direction: column; overflow: hidden; backdrop-filter: blur(20px);
 }
 .hamb-dropdown.active { display: flex; }
 .hamb-dropdown a {
   padding: 12px 16px; font-size: 12px; color: var(--w80);
-  cursor: pointer;
-  border-bottom: 1px solid rgba(255,255,255,0.05); transition: background 0.2s;
+  cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); transition: background 0.2s;
 }
 .hamb-dropdown a:hover { background: rgba(90,171,248,0.1); color: #fff; }
 .hamb-dropdown a:last-child { border-bottom: none; }
@@ -96,13 +92,11 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--black);color:var(--
 .main{flex:1;padding:26px 28px;max-width:1440px;margin:0 auto;width:100%;}
 .tab-panel{display:none;}.tab-panel.active{display:block;}
 
-/* SECTION LABEL */
 .slabel{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
 .slabel-txt{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;color:var(--w30);letter-spacing:3px;text-transform:uppercase;white-space:nowrap;}
 .slabel-line{flex:1;height:1px;background:rgba(255,255,255,0.07);}
 .slabel-pill{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--blue);background:rgba(90,171,248,0.08);border:1px solid rgba(90,171,248,0.18);padding:2px 9px;border-radius:20px;}
 
-/* TRUE GLASS BASE */
 .g{
   background:rgba(255,255,255,0.04);
   border:1px solid rgba(255,255,255,0.11);
@@ -118,7 +112,6 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--black);color:var(--
   transform:translateY(-1px);
 }
 
-/* TABLES GRID */
 .tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(272px,1fr));gap:14px;margin-bottom:36px;}
 
 .tcard{position:relative; cursor:pointer;}
@@ -126,21 +119,22 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--black);color:var(--
 .tcard-inner{overflow:hidden; border-radius:inherit; height:100%; display:flex; flex-direction:column;}
 .tcard.occupied{border-color:rgba(240,180,41,0.2);}
 
-/* Next Order Notification */
+/* Next Order Notification (Red) */
 .next-notif {
   position:absolute; top:-10px; right:-10px; width:28px;
   height:28px; border-radius:50%;
-  background:var(--gold); color:#000; display:flex; align-items:center; justify-content:center;
+  background:var(--red); color:#fff; display:flex; align-items:center; justify-content:center;
   font-size:14px; cursor:grab; z-index:10; box-shadow:0 4px 10px rgba(0,0,0,0.6); transition:transform 0.2s;
 }
 .next-notif:hover { transform:scale(1.1); }
-.next-tooltip {
-  position:absolute; top:34px; right:0; background:rgba(10,12,20,0.95); border:1px solid var(--border);
-  padding:10px; border-radius:var(--r8); min-width:120px; font-family:'JetBrains Mono',monospace; font-size:10px;
-  color:var(--w80); z-index:20; display:none;
-  box-shadow:0 4px 12px rgba(0,0,0,0.5); text-align:left;
+
+/* Addon Notification (Green) */
+.addon-badge {
+  position:absolute; top:-10px; left:-10px; width:28px; height:28px;
+  border-radius:50%; background:var(--green); color:#000;
+  display:flex; align-items:center; justify-content:center;
+  font-size:12px; font-weight:800; box-shadow:0 4px 10px rgba(0,0,0,0.6); z-index:10;
 }
-.next-notif.show-tooltip .next-tooltip { display:block; }
 
 .tcard-top{
   padding:16px 18px 14px;display:flex;align-items:flex-start;justify-content:space-between;
@@ -167,7 +161,11 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--black);color:var(--
 
 .tcard-actions{padding:12px 18px;display:flex;gap:8px;}
 
-/* TAKEAWAY GRID */
+/* Addon Highlights */
+.highlight-new { background: rgba(45,212,170,0.15) !important; position: relative; }
+.highlight-new td { border-top: 1px solid rgba(45,212,170,0.4); border-bottom: 1px solid rgba(45,212,170,0.4); }
+.highlight-new td:first-child { border-left: 3px solid var(--green); }
+
 .tkgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(272px,1fr));gap:14px;margin-bottom:36px;}
 .tkcard{overflow:hidden;border-radius:var(--r16);border-color:rgba(90,171,248,0.16);}
 .tkcard-top{padding:14px 18px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.07);background:rgba(90,171,248,0.02);}
@@ -185,7 +183,6 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--black);color:var(--
 .tkcard-total{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--red);margin-bottom:12px;}
 .tkcard-cancel{background:none;border:none;color:var(--red);cursor:pointer;font-size:16px;margin-left:auto;}
 
-/* QUEUE */
 .qlist{display:flex;flex-direction:column;gap:8px;margin-bottom:36px;}
 .qcard{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-radius:var(--r12);border-color:rgba(240,180,41,0.14); cursor:grab;}
 .qcard:active{cursor:grabbing;}
@@ -197,7 +194,6 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--black);color:var(--
 .qpeople{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--w30);}
 .qcancel{background:none;border:none;color:var(--red);cursor:pointer;font-size:14px;padding-left:10px;}
 
-/* BUTTONS */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:8px 14px;border-radius:var(--r8);border:1px solid transparent;font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:600;letter-spacing:.3px;cursor:pointer;transition:all .18s;white-space:nowrap;}
 .btn-gold{background:rgba(240,180,41,0.1);color:var(--gold);border-color:rgba(240,180,41,0.22);}
 .btn-gold:hover{background:rgba(240,180,41,0.18);border-color:var(--gold);}
@@ -213,12 +209,10 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--black);color:var(--
 .btn-lg{padding:13px 22px;font-size:14px;font-weight:700;}
 .btn-full{width:100%;}
 
-/* EMPTY STATE */
 .empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:56px 20px;gap:10px;grid-column:1/-1;}
 .empty-ico{font-size:36px;opacity:.25;filter:grayscale(1);}
 .empty-txt{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2.5px;color:var(--w30);text-transform:uppercase;}
 
-/* HISTORY PANEL */
 .hist-toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:20px;}
 .htlabel{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--w30);letter-spacing:2px;text-transform:uppercase;white-space:nowrap;}
 .date-in{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);color:var(--w80);padding:8px 12px;border-radius:var(--r8);font-family:'JetBrains Mono',monospace;font-size:11px;outline:none;cursor:pointer;transition:border-color .2s;backdrop-filter:blur(20px);}
@@ -226,7 +220,6 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--black);color:var(--
 .date-in::-webkit-calendar-picker-indicator{filter:invert(.55);cursor:pointer;}
 .vdiv{width:1px;height:22px;background:rgba(255,255,255,0.08);}
 
-/* Stats strip */
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:10px;margin-bottom:20px;}
 .stile{padding:16px 18px;display:flex;flex-direction:column;gap:4px;}
 .stile-lbl{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:2.5px;text-transform:uppercase;color:var(--w30);}
@@ -234,7 +227,6 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--black);color:var(--
 .stile-val.blue{color:var(--blue);}.stile-val.green{color:var(--green);}.stile-val.gold{color:var(--gold);}
 .stile-sub{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--w30);}
 
-/* Export */
 .export-bar{display:flex;gap:8px;align-items:center;margin-bottom:18px;flex-wrap:wrap;}
 .ebtn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--r8);border:1px solid;font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:600;cursor:pointer;transition:all .18s;}
 .ebtn svg{width:13px;height:13px;fill:currentColor;flex-shrink:0;}
@@ -247,7 +239,6 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--black);color:var(--
 .ebtn.loading .esp{display:block;}.ebtn.loading .eico{display:none;}
 #expNote{display:none;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--w30);}
 
-/* History table */
 .hist-wrap{border:1px solid rgba(255,255,255,0.09);border-radius:var(--r12);overflow:hidden;margin-bottom:20px;backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px);}
 .htable{width:100%;border-collapse:collapse;}
 .htable thead{background:rgba(255,255,255,0.03);border-bottom:1px solid rgba(255,255,255,0.1);}
@@ -285,7 +276,6 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--black);color:var(--
 .pgbtn.active{background:var(--blue);border-color:var(--blue);color:#fff;}
 .pgbtn:disabled{opacity:.2;cursor:not-allowed;}
 
-/* MODALS */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.82);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);z-index:999;display:none;align-items:flex-start;justify-content:center;padding:36px 16px;overflow-y:auto;}
 .overlay.open{display:flex;}
 .bmodal{
@@ -351,7 +341,6 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--black);color:var(--
 .grand-lbl{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--w55);}
 .grand-val{font-family:'Syne',sans-serif;font-size:30px;font-weight:800;color:var(--red);line-height:1;}
 
-/* Print */
 @media print{body>*:not(#parea){display:none!important;}#parea{display:block!important;}}
 #parea{display:none;font-family:'Courier New',monospace;max-width:320px;margin:0 auto;color:#000;background:#fff;}
 .pr{text-align:center;margin-bottom:10px;}
@@ -389,6 +378,8 @@ const firebaseConfig={apiKey:"AIzaSyC_LUKzINx6H4XE7uWoCpeLSldpIp-DR80",authDomai
 firebase.initializeApp(firebaseConfig);
 const db=firebase.database();firebase.analytics();
 
+window.tableLastOpened = window.tableLastOpened || {};
+
 db.ref("tables").on("value",s=>{
   const raw=s.val();
   if(raw){
@@ -402,10 +393,12 @@ db.ref("tables").on("value",s=>{
 db.ref("orders").on("value",s=>{
   const d=s.val();
   const ordersArr=d?Object.values(d):[];
+  window.allActiveOrders = ordersArr;
   allTkw=ordersArr.filter(o=>o.orderType==='takeaway'&&(o.status==='pending'||o.status==='Preparing'));
   renderTkw();
   updateTrackerStats(ordersArr);
   syncDineInOrdersToTables(ordersArr);
+  renderDash();
 });
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -534,6 +527,21 @@ db.ref("orders").on("value",s=>{
   </div>
 </div>
 
+<div class="overlay" id="nextOrderModal" onclick="if(event.target==this)closeNextOrder()">
+  <div class="bmodal" style="max-width:400px;">
+    <div class="bmodal-head">
+      <div><div class="bmodal-title">Waiting Order</div><div class="bmodal-sub" id="nextOrderSub">—</div></div>
+      <button class="bmodal-close" onclick="closeNextOrder()">✕</button>
+    </div>
+    <div class="bmodal-body">
+      <table class="btable">
+        <thead><tr><th>Item</th><th>Qty</th></tr></thead>
+        <tbody id="nextOrderItems"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
 <div class="overlay" id="billModal">
   <div class="bmodal">
     <div class="bmodal-head">
@@ -583,7 +591,6 @@ db.ref("orders").on("value",s=>{
 <script>
 setInterval(()=>{const n=new Date(),pad=x=>String(x).padStart(2,'0');document.getElementById('clock').textContent=`${pad(n.getHours())}:${pad(n.getMinutes())}:${pad(n.getSeconds())}`;},1000);
 
-// ── FIX 1: Menu data now matches menu.html exactly (same IDs, names, prices) ─
 const menuData={
   starters:[
     {id:'st1',name:'Corn Tikki',price:200},{id:'st2',name:'Paneer Tikka Dry',price:235},
@@ -730,7 +737,6 @@ const menuData={
   ]
 };
 const allMenu=Object.values(menuData).flat();
-// ─────────────────────────────────────────────────────────────────────────────
 
 let allTables=[],allQueue=[],allTkw=[];
 let billItems=[],curOids=[],curOid=null,curTnum=null,curTkey=null,dMode='pct';
@@ -743,11 +749,8 @@ db.ref("tables").once("value",s=>{
   }
 });
 
-
-// ── Sync dine-in orders onto tables if they somehow missed the tables listener ─
 function syncDineInOrdersToTables(ordersArr){
   if(!ordersArr||!allTables.length) return;
-  // Find active dine-in orders that have a tableNumber assigned
   const activeDineIn = ordersArr.filter(o=>
     o.orderType==='dinein' &&
     o.status!=='Completed' && o.status!=='Cancelled' &&
@@ -758,13 +761,11 @@ function syncDineInOrdersToTables(ordersArr){
   db.ref("tables").once("value", s=>{
     const raw = s.val(); if(!raw) return;
     activeDineIn.forEach(order=>{
-      // Find if this table is already marked occupied in Firebase
       let tableKey=null, tableVal=null;
       Object.entries(raw).forEach(([k,v])=>{
         if(v && v.number == order.tableNumber){ tableKey=k; tableVal=v; }
       });
       if(!tableKey) return;
-      // If the table is NOT occupied but we have an active order for it, fix it
       if(!tableVal.occupied){
         db.ref("tables/"+tableKey).update({
           occupied: true,
@@ -779,7 +780,6 @@ function syncDineInOrdersToTables(ordersArr){
     });
   });
 }
-// ─────────────────────────────────────────────────────────────────────────────
 
 function renderDash(){
   const g=document.getElementById('tgrid'),q=document.getElementById('qlist');
@@ -804,6 +804,7 @@ function renderDash(){
     el.setAttribute('ondrop',`dropOnTable(event,${t.number}); this.classList.remove('drag-over')`);
     el.setAttribute('onclick',`viewOrderDetails(${t.number})`);
 
+    let addonBadgeHtml = '';
     let cust='';
     if(t.current){
       const m=Math.floor((Date.now()-t.current.since)/60000);
@@ -818,6 +819,23 @@ function renderDash(){
         <button class="btn btn-gold btn-sm" style="flex:1;" onclick="event.stopPropagation(); openBill(${t.number})">Generate Bill</button>
         <button class="btn btn-red btn-sm" onclick="event.stopPropagation(); freeTable(${t.number})">Free</button>
       </div>`;
+
+      if (window.allActiveOrders) {
+          const tOrders = window.allActiveOrders.filter(o => 
+             (o.tableNumber == t.number || o.id === t.current.orderId) &&
+             o.status !== 'Completed' && o.status !== 'Cancelled'
+          );
+          tOrders.sort((a,b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+          
+          if (tOrders.length > 1) {
+              const lastOpen = window.tableLastOpened[t.number] || 0;
+              const newAddons = tOrders.slice(1).filter(o => new Date(o.createdAt).getTime() > lastOpen);
+              if (newAddons.length > 0) {
+                  const addonQty = newAddons.reduce((sum, o) => sum + (Array.isArray(o.items) ? o.items.length : Object.values(o.items||{}).length), 0);
+                  addonBadgeHtml = `<div class="addon-badge">${addonQty}</div>`;
+              }
+          }
+      }
     }
 
     let nextNotif='';
@@ -825,16 +843,13 @@ function renderDash(){
       nextNotif=`
       <div class="next-notif" id="notif-${t.number}" draggable="true"
            ondragstart="event.stopPropagation(); event.dataTransfer.setData('text/plain', JSON.stringify({type:'table', tNum:${t.number}}))"
-           onclick="event.stopPropagation(); toggleNextTooltip(${t.number})">
+           onclick="event.stopPropagation(); viewNextOrderDetails(${t.number})">
         🔔
-        <div class="next-tooltip">
-          <span style="color:var(--gold);font-weight:bold;margin-bottom:4px;display:block;">Next in line:</span>
-          Name: ${t.nextOrder.name}<br/>Pax: ${t.nextOrder.people}
-        </div>
       </div>`;
     }
 
     el.innerHTML=`
+      ${addonBadgeHtml}
       <div class="tcard-inner">
         <div class="tcard-top">
           <div><div class="tcard-num">${t.number}</div><div class="tcard-numlabel">Table</div></div>
@@ -866,16 +881,39 @@ function renderDash(){
 function toggleMenu(){document.getElementById('hambDrop').classList.toggle('active');}
 document.addEventListener('click',e=>{if(!e.target.closest('.hamburger-menu'))document.getElementById('hambDrop')?.classList.remove('active');});
 
-window.toggleNextTooltip=function(tNum){
-  document.querySelectorAll('.next-notif').forEach(n=>{if(n.id!=='notif-'+tNum)n.classList.remove('show-tooltip');});
-  const n=document.getElementById('notif-'+tNum);
-  if(n)n.classList.toggle('show-tooltip');
+window.viewNextOrderDetails = function(n) {
+  db.ref("tables").once("value", s => {
+    const raw = s.val();
+    let t = null;
+    Object.values(raw||{}).forEach(v => { if (v && v.number === n) t = v; });
+    if (!t || !t.nextOrder) return;
+    
+    document.getElementById('nextOrderSub').textContent = `Waiting for Table ${n} · ${t.nextOrder.name} · ${t.nextOrder.people} pax`;
+    
+    if (t.nextOrder.orderId) {
+       db.ref("orders/" + t.nextOrder.orderId).once("value", snap => {
+           const ord = snap.val();
+           let html = '';
+           if(ord && ord.items) {
+               const arr = Array.isArray(ord.items) ? ord.items : Object.values(ord.items);
+               html = arr.map(i => `<tr><td>${i.name}</td><td>${i.qty}</td></tr>`).join('');
+           } else {
+               html = '<tr><td colspan="2" class="ebill-msg">No items recorded.</td></tr>';
+           }
+           document.getElementById('nextOrderItems').innerHTML = html;
+       });
+    } else {
+       document.getElementById('nextOrderItems').innerHTML = '<tr><td colspan="2" class="ebill-msg">No items recorded.</td></tr>';
+    }
+    
+    document.getElementById('nextOrderModal').classList.add('open');
+  });
 };
-document.addEventListener('click',e=>{
-  if(!e.target.closest('.next-notif')) document.querySelectorAll('.next-notif').forEach(n=>n.classList.remove('show-tooltip'));
-});
 
-// ── FIX 2: dropOnTable guards against overwriting an existing nextOrder ───────
+window.closeNextOrder = function() {
+  document.getElementById('nextOrderModal').classList.remove('open');
+};
+
 window.dropOnTable=function(e,targetTnum){
   e.preventDefault();
   try{
@@ -898,7 +936,6 @@ window.dropOnTable=function(e,targetTnum){
           });
           if(item.orderId) db.ref("orders/"+item.orderId).update({tableNumber:targetTable.number});
         } else if(targetTable.nextOrder){
-          // Guard: confirm before overwriting an existing nextOrder
           if(!confirm(`Table ${targetTnum} already has a next order (${targetTable.nextOrder.name}). Replace it?`)) return;
           db.ref("tables/"+targetKey).update({nextOrder:item});
           if(item.orderId) db.ref("orders/"+item.orderId).update({tableNumber:targetTable.number});
@@ -920,7 +957,6 @@ window.dropOnTable=function(e,targetTnum){
     });
   } catch(err){console.error("Drag drop error",err);}
 };
-// ─────────────────────────────────────────────────────────────────────────────
 
 window.viewOrderDetails=function(n){
   db.ref("tables").once("value",s=>{
@@ -935,6 +971,8 @@ window.viewOrderDetails=function(n){
         (o.tableNumber==n||o.id===t.current.orderId)&&
         o.status!=='Completed'&&o.status!=='Cancelled'
       );
+      
+      tableOrders.sort((a,b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
 
       document.getElementById('voSub').textContent=`Table ${n} · ${t.current.name} · ${t.current.people} pax`;
 
@@ -942,17 +980,23 @@ window.viewOrderDetails=function(n){
         document.getElementById('voItems').innerHTML=`<tr><td colspan="4" class="ebill-msg">No active items.</td></tr>`;
         document.getElementById('voTotal').textContent=`₹0.00`;
       } else {
-        let allItems=[],grandTotal=0;
-        tableOrders.forEach(o=>{
+        let html=''; let grandTotal=0;
+        let lastViewed = window.tableLastOpened[n] || 0;
+
+        tableOrders.forEach((o, i)=>{
+          const isAddon = i > 0 && new Date(o.createdAt).getTime() > lastViewed;
+          const rowCls = isAddon ? 'class="highlight-new"' : '';
           const items=Array.isArray(o.items)?o.items:(o.items&&typeof o.items==='object'?Object.values(o.items):[]);
           items.forEach(item=>{
-            let existing=allItems.find(i=>i.name===item.name);
-            if(existing){existing.qty+=item.qty;} else {allItems.push({...item});}
+            html += `<tr ${rowCls}><td>${item.name}</td><td>${item.qty}</td><td>₹${item.price.toFixed(2)}</td><td style="text-align:right;">₹${(item.price*item.qty).toFixed(2)}</td></tr>`;
           });
           grandTotal+=(o.total||0);
         });
-        document.getElementById('voItems').innerHTML=allItems.map(i=>`<tr><td>${i.name}</td><td>${i.qty}</td><td>₹${i.price.toFixed(2)}</td><td style="text-align:right;">₹${(i.price*i.qty).toFixed(2)}</td></tr>`).join('');
+        document.getElementById('voItems').innerHTML=html;
         document.getElementById('voTotal').textContent=`₹${grandTotal.toFixed(2)}`;
+        
+        window.tableLastOpened[n] = Date.now();
+        renderDash(); 
       }
       document.getElementById('viewOrderModal').classList.add('open');
     });
@@ -1004,6 +1048,15 @@ function freeTable(n){
     Object.entries(raw).forEach(([ki,v])=>{if(v&&v.number===n)k=ki;});
     if(k===null)return;
     const t=raw[k];
+
+    if (window.allActiveOrders) {
+        const activeForTable = window.allActiveOrders.filter(o =>
+            (o.tableNumber == n || (t.current && o.id === t.current.orderId)) &&
+            o.status !== 'Completed' && o.status !== 'Cancelled'
+        );
+        activeForTable.forEach(o => db.ref("orders/" + o.id).update({status: 'Completed'}));
+    }
+
     if(t.nextOrder){
       db.ref("tables/"+k).update({
         occupied:true,
@@ -1022,7 +1075,6 @@ function openBill(n){
   document.getElementById('dVal').value='';document.getElementById('msearch').value='';
   document.getElementById('mresults').style.display='none';setDisc('pct');
   document.getElementById('pbtn').textContent='Print Bill & Free Table';
-
   db.ref("tables").once("value",s=>{
     const raw=s.val();if(!raw)return;
     let k=null,t=null;
@@ -1102,7 +1154,6 @@ function recalc(){
   document.getElementById('bgrand').textContent=`₹${(sub-disc).toFixed(2)}`;
 }
 
-// ── FIX 3: saveOnly now clears sub-round items to avoid double-counting ───────
 function saveOnly(){
   const sub=billItems.reduce((s,i)=>s+i.price*i.qty,0);
   if(curOids&&curOids.length>0){
@@ -1116,7 +1167,6 @@ function saveOnly(){
     closeBill();
   }
 }
-// ─────────────────────────────────────────────────────────────────────────────
 
 function printBill(){
   const sub=billItems.reduce((s,i)=>s+i.price*i.qty,0);
