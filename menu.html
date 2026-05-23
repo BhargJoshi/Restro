@@ -753,4 +753,419 @@ const menuData = {
     { id: 'dr4',  name: 'Soft Drinks (MRP)',                price: 20.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMiph65hMwBbzoSwSDfcoIuBpild2iFYczJIcL2bTfwAiYJU7rfBb9RtmtJOU&s' },
     { id: 'dr5',  name: 'Lassi (Sweet / Salted)',           price: 80.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYkV_QCDRXajyMpyOTcHwXhYc8s8L02lrHfLrTgoEYf9UkXWjL9SC0UDz-EA&s' },
     { id: 'dr6',  name: 'Special Lassi',                    price: 100.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTpOgUouoKjVWADPVRthgzfFAjRQmfYqq-vxfEcR3kgT1qyKCODWfnuglFMvCE&s' },
-    { id: 'dr7',
+    { id: 'dr7',  name: 'Mineral Water (MRP)',              price: 20.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUroTdaIvq6L8nK91XZawA7DQ_sReJ2Q7oWKQVBtdhiRb8c7bLlX40jX7A2Q&s' },
+    { id: 'dr8',  name: 'Fruit Punch',                      price: 70.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR29_XVWmX4oIJXhj_CSfWHLszTjoPZw6_beNMxafKWMH2aoVPLmha_lkhUYw&s' },
+    { id: 'dr9',  name: 'Butter Milk',                      price: 30.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRYpSPn1saRpuyGeS3UyVQWiN3qyzffJmg9AwwZyDAjT92T1vJtl5on4l4kBc0&s' },
+    { id: 'dr10', name: 'Masala Butter Milk',               price: 35.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRr5T8Xa2RWHMWT32eb_DymnN4ltCsFEGg2ZzvxKEyMdwbnhNn3P2Uqds4SEQ&s' }
+  ],
+  shakes: [
+    { id: 'sh1',   name: 'Vanilla Milk Shake',                        price: 99.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQW9zETUU7svE5NKX_Tpp6GSCbkov4QO7Irxqfb5EmcSRLsD7MzVrYd2GFRkIk&s' },
+    { id: 'sh1ic', name: 'Vanilla Milk Shake (with Ice Cream)',        price: 110.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR07uPg02xlm0S2qZ2KE9SawbyKN2j1_Dtf8IM-_Aon5lmVK36GwAhmKgXNYHA&s' },
+    { id: 'sh2',   name: 'Strawberry Milk Shake',                     price: 99.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsOt3GSgSnpyqmRKK_kwINygnlAOcTAmBh3t_N7nOJVZv08UhnDuntxvwd3Uk&s' },
+    { id: 'sh2ic', name: 'Strawberry Milk Shake (with Ice Cream)',     price: 110.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRex-x2KcskrW9DppN_cDMaJw-yNOccyaF58tNhYfER_52nBnA3IjHjRKcOqKM&s' },
+    { id: 'sh3',   name: 'Chocolate Milk Shake',                      price: 99.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRWGF8p_V1X6UaGYI_vQ7guVfluMoDTQb856snp2n2q_Vv4IwK6q3CjooII1Q&s' },
+    { id: 'sh3ic', name: 'Chocolate Milk Shake (with Ice Cream)',      price: 115.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdWXPNQlIm5qYNZlDgd5h6zk8PDACwgjsz86ngV5UluLRNouebNqOVGNKr-60&s' },
+    { id: 'sh4',   name: 'Kesar Pista Milk Shake',                    price: 110.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQZu3zt4SGqgkFpZRe9gPXkGyeLpxrtQY1SGftOpME8xxLQYVgw9yaKvrImGQ&s' },
+    { id: 'sh4ic', name: 'Kesar Pista Milk Shake (with Ice Cream)',    price: 120.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzgvQjBCJCdA6jGdVG3Z5tFXNgzS0ehQ9U7F0NQx8hIRKq4cmJ0MQ2FyzmDLU&s' },
+    { id: 'sh5',   name: 'Kaju Draksh Milk Shake',                    price: 110.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQMBhqouZQQrDyiWp9Qt6en4zqm7HwFVLjDHoAsVZnLE3te1h19kowiycZymY&s' },
+    { id: 'sh5ic', name: 'Kaju Draksh Milk Shake (with Ice Cream)',    price: 120.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVqp-qtz0wCWOh6rRIQ1oAUMtn-y5K7q-WSGyWwj7QWrBv2e3cxdcxrOnYlBA&s' },
+    { id: 'sh6',   name: 'Mango Milk Shake',                          price: 110.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbkhiKyv9z2nmYPyN_kTS1IILprknUv6J-0AHAxEr5DPiLLHb7U4NVpev_dg&s' },
+    { id: 'sh6ic', name: 'Mango Milk Shake (with Ice Cream)',          price: 120.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQu3_GpeR3B-p-dLLpF55JUtE3IvS2pGx3NbYFQLal8XWKwvnZp7m2fDOSEKA&s' },
+    { id: 'sh7',   name: 'Cold Coffee',                               price: 99.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTmUwVs_XeD4MZZ4tVCoshIE0Kn2D7y_jpSp9csBBZc-ltPbtNc1qYA5c1G6Ho&s' },
+    { id: 'sh7ic', name: 'Cold Coffee (with Ice Cream)',               price: 115.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRmiZWgxBPAKm0abDszJm1CN2oBwKsqt3VJs5v3yLjcgDQFFVjGi4Dae9Ml8A&s' }
+  ],
+  ice_cream: [
+    { id: 'ic1',  name: 'Gulab Jamun',                                price: 50.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsJA1SQdg5_BIZ9RrLGkTu6kJL5oOStSP89vBKB64KRpconDmKy2cqUfdYrg&s' },
+    { id: 'ic2',  name: 'Rajbhog',                                    price: 99.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT2xZCICdx4jD8LaY17IUhVsYea_QhCND6GuZaShhQAbjUu4qRxjCXt6RzWrQ&s' },
+    { id: 'ic3',  name: 'Vanilla Ice Cream',                          price: 80.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJCqFbb7Kys8VQXS-w3ccgUrsu0ENVkT2ltx0ctymJTd55cIpUus7o16nnv1A&s' },
+    { id: 'ic4',  name: 'Strawberry Ice Cream',                       price: 80.00,  img: 'https://encrypted-tbn0.GcS_IiLaxDUz-XqJTCPB5mEaOZM9SG79epWEw-UI3rAvJn1Ab43gTGexw0eeFhY&s' },
+    { id: 'ic5',  name: 'Cheery Berry Ice Cream',                     price: 80.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcTwbZKqR7zLwpAy7n5AzAZQJ0o8OxHZLYP_qHhUDFbBQAz1GeowDyBQ3ZGnc&s' },
+    { id: 'ic6',  name: 'Mango Ice Cream',                            price: 80.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3pxk78iTaHADhDtQkGm0PP0sMzs_bo3uGdF2hDHXIZfU7zwS7XAnFaKaMgw&s' },
+    { id: 'ic7',  name: 'Kesar Pista Ice Cream',                      price: 90.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTasoYFvxW6_4a7zWT146t5hQwxzK8vB8L6-n2z8Vxmg_xqV3BsLREGLQsa11U&s' },
+    { id: 'ic8',  name: 'Kaju Draksh Ice Cream',                      price: 90.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIgY1vPl82wSeksM93GfkZ5WSWQps7w7qIg6ywEmIKnRYMX-lAMsqZPqpx26c&s' },
+    { id: 'ic9',  name: 'Butter Scotch Ice Cream',                    price: 90.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDe-rPhT2qd8R9iVqfrMdtlRVbyZn7T3YLylzxyxAhIs0zJZLf4ZC640iXSw&s' },
+    { id: 'ic10', name: 'Chocolate Ice Cream',                        price: 90.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtRQfL6mM1ULa42AMgt8skn0Pyr4w3h5Qq_MMnHaaVo3l2LFZUL80mm1clYbw&s' },
+    { id: 'ic11', name: 'Fruit Salad with Ice Cream',                 price: 140.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQbTrudasoK2XNCkuOqxAyOChwT_yarZLJA72QAhhtV3SO74XgLVVf5WWaBzw&s' },
+    { id: 'ic12', name: 'American Nut',                               price: 99.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhXpPuia6sOViPa3XvY4PhIcgs0d3FxjG2K1LeBtL_ExZMXZ5A5KRE1C_ieA&s' }
+  ]
+};
+
+let cart = {};
+window.onload = () => {
+  setTimeout(() => {
+    document.getElementById('intro-wrapper').classList.add('exit');
+    const firstSubItem = document.querySelector('.sub-item');
+    showSection('starters', firstSubItem);
+  }, 5500);
+};
+
+function moveIndicator(el) {
+  const indicator = document.getElementById('nav-indicator');
+  const sidebar = document.getElementById('sidebar');
+  const rect = el.getBoundingClientRect();
+  const sidebarRect = sidebar.getBoundingClientRect();
+  const relativeTop = rect.top - sidebarRect.top + sidebar.scrollTop;
+  indicator.style.top = `${relativeTop}px`;
+  indicator.style.height = `${rect.height}px`;
+  indicator.style.width = `${rect.width}px`;
+  indicator.style.left = `${el.offsetLeft}px`;
+}
+
+let _togglePendingTimer = null;
+
+function toggleGroup(groupId, el) {
+  triggerHaptic();
+  if (_togglePendingTimer !== null) {
+    clearTimeout(_togglePendingTimer);
+    _togglePendingTimer = null;
+  }
+  const allGroups = document.querySelectorAll('.nav-group');
+  const clickedGroup = el.closest('.nav-group');
+  const isExpanded = clickedGroup.classList.contains('expanded');
+  allGroups.forEach(g => g.classList.remove('expanded'));
+  if (!isExpanded) {
+    clickedGroup.classList.add('expanded');
+    _togglePendingTimer = setTimeout(() => {
+      _togglePendingTimer = null;
+      if (clickedGroup.classList.contains('expanded')) {
+        const firstSub = clickedGroup.querySelector('.sub-item');
+        if (firstSub) {
+          const sectionName = firstSub.getAttribute('onclick').match(/'([^']+)'/)[1];
+          showSection(sectionName, firstSub);
+        } else {
+          moveIndicator(el);
+        }
+      } 
+      else {
+        moveIndicator(el);
+      }
+    }, 400);
+  } else {
+    moveIndicator(el);
+  }
+}
+
+function showSection(section, el) {
+  triggerHaptic();
+  const grid = document.getElementById('menu-grid');
+  const nameDisplay = document.getElementById('section-name');
+  const menuContainer = document.querySelector('.menu-container');
+  document.querySelectorAll('.nav-item, .sub-item').forEach(i => i.classList.remove('active'));
+  el.classList.add('active');
+  moveIndicator(el);
+  nameDisplay.innerText = section.replace(/_/g, ' ').toUpperCase().replace('Merged', '');
+  const items = menuData[section] || [];
+  grid.innerHTML = items.map(item => `
+    <div class="food-card">
+      <div class="cart-badge" id="badge-${item.id}">0</div>
+      <img src="${item.img}" alt="${item.name}">
+      <h4>${item.name}</h4>
+      <div class="price">&#8377;${item.price.toFixed(2)}</div>
+      <button class="add-initial" id="add-btn-${item.id}" onclick="addToCart('${section}', '${item.id}')">ADD</button>
+      <div class="qty-controls" id="qty-ctrl-${item.id}">
+        <button class="btn-qty" onclick="updateQty('${item.id}', -1)">-</button>
+        <span id="qty-val-${item.id}">0</span>
+        <button class="btn-qty" onclick="updateQty('${item.id}', 1)">+</button>
+      </div>
+    </div>
+  `).join('');
+  menuContainer.scrollTop = 0;
+  syncCartUI();
+}
+
+function addToCart(sec, id) {
+  triggerHaptic();
+  let item;
+  if (sec === 'search') {
+    Object.values(menuData).forEach(cat => {
+      const found = cat.find(i => i.id === id);
+      if (found) item = found;
+    });
+  } else {
+    item = menuData[sec].find(i => i.id === id);
+  }
+  if (item && !cart[id]) cart[id] = { ...item, qty: 1 };
+  syncCartUI();
+}
+
+function updateQty(id, delta) {
+  triggerHaptic();
+  if (cart[id]) {
+    cart[id].qty += delta;
+    if (cart[id].qty <= 0) delete cart[id];
+  }
+  syncCartUI();
+}
+
+function syncCartUI() {
+  let totalItems = 0;
+  let subtotal = 0;
+  document.querySelectorAll('.add-initial').forEach(b => b.style.display = 'block');
+  document.querySelectorAll('.qty-controls').forEach(c => c.style.display = 'none');
+  document.querySelectorAll('.cart-badge').forEach(b => b.style.display = 'none');
+  const cartList = document.getElementById('cart-items-list');
+  cartList.innerHTML = '';
+  Object.keys(cart).forEach(id => {
+    const item = cart[id];
+    totalItems += item.qty;
+    subtotal += item.price * item.qty;
+    const addBtn = document.getElementById(`add-btn-${id}`);
+    const qtyCtrl = document.getElementById(`qty-ctrl-${id}`);
+    const qtyVal = document.getElementById(`qty-val-${id}`);
+    const badge = document.getElementById(`badge-${id}`);
+    if (addBtn) {
+      addBtn.style.display = 'none';
+      qtyCtrl.style.display = 'flex';
+      qtyVal.innerText = item.qty;
+      badge.style.display = 'block';
+      badge.innerText = item.qty;
+    }
+    cartList.innerHTML += `
+      <div class="cart-item-row">
+        <div class="cart-item-info">
+          <h5>${item.name}</h5>
+          <p>&#8377;${(item.price * item.qty).toFixed(2)}</p>
+        </div>
+        <div class="cart-item-actions">
+           <button class="btn-qty" onclick="updateQty('${item.id}', -1)">-</button>
+           <span style="font-weight:700">${item.qty}</span>
+           <button class="btn-qty" onclick="updateQty('${item.id}', 1)">+</button>
+        </div>
+      </div>
+    `;
+  });
+  const bar = document.getElementById('cart-bar');
+  if (totalItems > 0) {
+    bar.style.display = 'flex';
+    document.getElementById('cart-item-count').innerText = `${totalItems} Items`;
+    document.getElementById('cart-total-price').innerText = `₹${subtotal.toFixed(2)}`;
+    document.getElementById('cart-total-price-popup').innerText = `₹${subtotal.toFixed(2)}`;
+  } else {
+    bar.style.display = 'none';
+    cartList.innerHTML = '<p style="text-align:center; color:#999; padding:20px;">Your basket is empty</p>';
+  }
+}
+
+function toggleCart() {
+  const p = document.getElementById('cart-popup');
+  p.style.display = (p.style.display === 'flex') ? 'none' : 'flex';
+}
+
+function toggleSearch() {
+  document.getElementById('search-input').classList.toggle('active');
+}
+
+function triggerHaptic() { if (window.navigator.vibrate) window.navigator.vibrate(10); }
+
+let orderTimerInterval = null;
+const TOTAL_SECONDS = 15 * 60;
+const CIRCUMFERENCE = 2 * Math.PI * 54;
+function processPayment() {
+  triggerHaptic();
+  
+  const currentOrderInfo = JSON.parse(localStorage.getItem("currentOrderInfo") || "{}");
+  const orderType = currentOrderInfo.orderType || "takeaway";
+  const customerName = currentOrderInfo.name || "Customer";
+  const peopleCount = parseInt(currentOrderInfo.people) || 1;
+  const tablePref = currentOrderInfo.tablePref || "";
+  const prevOrderId = localStorage.getItem("currentOrderId");
+
+  const createNewOrder = (assignedTableNum, bypassAssign) => {
+    const orderId = "ORD" + Date.now();
+    const order = {
+      id: orderId,
+      tableNumber: assignedTableNum || null,
+      customerName: customerName,
+      people: peopleCount,
+      items: Object.values(cart),
+      total: Object.values(cart).reduce((sum, item) => sum + (item.price * item.qty), 0),
+      status: "Preparing",
+      diet: "Regular",
+      orderType: orderType,
+      createdAt: new Date().toISOString()
+    };
+    db.ref("orders/" + orderId).set(order).then(() => {
+      localStorage.setItem("currentOrderId", orderId);
+      cart = {};
+      syncCartUI();
+
+      if (orderType === "dinein" && !bypassAssign) {
+        assignTable(customerName, peopleCount, orderId, tablePref);
+      }
+      showOrderConfirm();
+    }).catch((error) => {
+      console.error("Error placing order:", error);
+      alert("Error placing order. Please try again.");
+    });
+  };
+
+  if (orderType === "dinein" && prevOrderId) {
+    db.ref("orders/" + prevOrderId).once("value", snap => {
+      const prevOrder = snap.val();
+      if (prevOrder && prevOrder.status !== "Completed" && prevOrder.status !== "Cancelled" && prevOrder.tableNumber) {
+        createNewOrder(prevOrder.tableNumber, true);
+      } else {
+        createNewOrder(null, false);
+      }
+    });
+  } else {
+    createNewOrder(null, false);
+  }
+}
+
+function assignTable(name, people, orderId, tablePref) {
+  db.ref("tables").once("value", (snapshot) => {
+    const raw = snapshot.val();
+    let tables = raw ? Object.values(raw) : [];
+    let tableKeys = raw ? Object.keys(raw) : [];
+
+    if (tables.length === 0) {
+      for (let i = 1; i <= 10; i++) {
+        tables.push({
+          number: i,
+          capacity: i <= 4 ? 2 : i <= 8 ? 4 : 6,
+          occupied: false,
+          current: null
+        });
+        tableKeys.push(String(i - 1));
+      }
+      db.ref("tables").set(tables);
+    }
+
+    let selectedTable = null;
+    if (tablePref && tablePref.trim() !== "" && !isNaN(tablePref)) {
+      selectedTable = tables.find(t => t.number === parseInt(tablePref));
+    }
+
+    if (!selectedTable || (selectedTable.occupied && selectedTable.nextOrder)) {
+      let emptyTables = tables.filter(t => !t.occupied);
+      if (emptyTables.length > 0) {
+        selectedTable = emptyTables[Math.floor(Math.random() * emptyTables.length)];
+      } else {
+        let noNextOrderTables = tables.filter(t => t.occupied && !t.nextOrder);
+        if (noNextOrderTables.length > 0) {
+          selectedTable = noNextOrderTables[Math.floor(Math.random() * noNextOrderTables.length)];
+        } else {
+          db.ref("queue").once("value", qSnap => {
+            let q = qSnap.val() ? Object.values(qSnap.val()) : [];
+            q.push({ name: name, people: people, orderId: orderId, time: Date.now() });
+            db.ref("queue").set(q);
+          });
+          return;
+        }
+      }
+    }
+
+    if (selectedTable) {
+      const arrayIndex = tables.findIndex(t => t.number === selectedTable.number);
+      const tableKey = tableKeys[arrayIndex];
+
+      if (selectedTable.occupied) {
+        db.ref("tables/" + tableKey).update({
+          nextOrder: { name: name, people: people, since: Date.now(), orderId: orderId }
+        });
+      } else {
+        db.ref("tables/" + tableKey).update({
+          occupied: true,
+          current: { name: name, people: people, since: Date.now(), orderId: orderId }
+        });
+        db.ref("orders/" + orderId).update({ tableNumber: selectedTable.number });
+      }
+    }
+  });
+}
+
+function showOrderConfirm() {
+  const overlay = document.getElementById('order-confirm-overlay');
+  document.getElementById('order-ready-subtext').style.display = 'block';
+  document.getElementById('order-ready-banner').classList.remove('visible');
+  const token = Math.floor(100 + Math.random() * 900);
+  document.getElementById('order-token-number').textContent = '#' + token;
+  overlay.classList.add('visible');
+  startOrderTimer();
+}
+
+function closeOrderConfirm() {
+  const overlay = document.getElementById('order-confirm-overlay');
+  overlay.classList.remove('visible');
+  if (orderTimerInterval) { clearInterval(orderTimerInterval); orderTimerInterval = null; }
+  const trackBtn = document.getElementById('track-order-btn');
+  trackBtn.classList.add('visible');
+  triggerTrackShake();
+  if (window._trackShakeInterval) clearInterval(window._trackShakeInterval);
+  window._trackShakeInterval = setInterval(triggerTrackShake, 5000);
+}
+
+function triggerTrackShake() {
+  const trackBtn = document.getElementById('track-order-btn');
+  trackBtn.classList.remove('shake');
+  void trackBtn.offsetWidth;
+  trackBtn.classList.add('shake');
+}
+
+function startOrderTimer() {
+  if (orderTimerInterval) { clearInterval(orderTimerInterval); }
+  let secondsLeft = TOTAL_SECONDS;
+  const display = document.getElementById('timer-display');
+  const circle = document.getElementById('timer-progress-circle');
+  circle.style.strokeDasharray = CIRCUMFERENCE;
+  circle.style.strokeDashoffset = 0;
+  function updateTimer() {
+    const mins = Math.floor(secondsLeft / 60);
+    const secs = secondsLeft % 60;
+    display.textContent = `${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+    const progress = (TOTAL_SECONDS - secondsLeft) / TOTAL_SECONDS;
+    circle.style.strokeDashoffset = CIRCUMFERENCE * progress;
+    if (secondsLeft <= 0) {
+      clearInterval(orderTimerInterval);
+      orderTimerInterval = null;
+      display.textContent = '00:00';
+      circle.style.strokeDashoffset = CIRCUMFERENCE;
+      document.getElementById('order-ready-subtext').style.display = 'none';
+      const banner = document.getElementById('order-ready-banner');
+      banner.classList.add('visible');
+    } else {
+      secondsLeft--;
+    }
+  }
+  updateTimer();
+  orderTimerInterval = setInterval(updateTimer, 1000);
+}
+
+function handleSearch() {
+  const query = document.getElementById('search-input').value.toLowerCase();
+  const grid = document.getElementById('menu-grid');
+  let allItems = [];
+  Object.values(menuData).forEach(cat => allItems = [...allItems, ...cat]);
+  const filtered = allItems.filter(i => i.name.toLowerCase().includes(query));
+  if (query === "") {
+    const activeItem = document.querySelector('.nav-item.active, .sub-item.active');
+    if (activeItem) {
+      const onclickAttr = activeItem.getAttribute('onclick');
+      const match = onclickAttr.match(/'([^']+)'/);
+      if (match) showSection(match[1], activeItem);
+    }
+    return;
+  }
+  grid.innerHTML = filtered.map(item => `
+    <div class="food-card">
+      <div class="cart-badge" id="badge-${item.id}">${cart[item.id] ? cart[item.id].qty : 0}</div>
+      <img src="${item.img}" alt="${item.name}">
+      <h4>${item.name}</h4>
+      <div class="price">&#8377;${item.price.toFixed(2)}</div>
+      <button class="add-initial" id="add-btn-${item.id}" onclick="addToCart('search', '${item.id}')" style="display: ${cart[item.id] ? 'none' : 'block'}">ADD</button>
+      <div class="qty-controls" id="qty-ctrl-${item.id}" style="display: ${cart[item.id] ? 'flex' : 'none'}">
+        <button class="btn-qty" onclick="updateQty('${item.id}', -1)">-</button>
+        <span id="qty-val-${item.id}">${cart[item.id] ? cart[item.id].qty : 0}</span>
+        <button class="btn-qty" onclick="updateQty('${item.id}', 1)">+</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function goToTrackOrder() {
+  window.location.href = 'track.html';
+}
+</script>
+</body>
+</html>
