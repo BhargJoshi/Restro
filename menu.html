@@ -197,7 +197,7 @@ body {
 .hero-header { padding: 15px 20px; background: #fff; border-bottom: 1px solid #eee; text-align: center; position: relative; display: flex; align-items: center; justify-content: center; }
 #section-name { font-family: 'Playfair Display', serif; font-size: 16px; background: var(--primary); color: #000; display: inline-block; padding: 5px 12px; border-radius: 8px; box-shadow: 0 4px 10px rgba(255, 204, 0, 0.2); }
 
-.search-container { position: absolute; right: 15px; display: flex; align-items: center; }
+.search-container { display: flex; align-items: center; }
 #search-input { width: 0; opacity: 0; padding: 8px 0; border: none; border-bottom: 2px solid var(--primary); outline: none; transition: all 0.3s ease; font-size: 14px; }
 #search-input.active { width: 120px; opacity: 1; padding: 8px 10px; margin-right: 5px; }
 .search-icon-btn { background: none; border: none; font-size: 20px; cursor: pointer; }
@@ -386,58 +386,185 @@ body {
 }
 #track-order-btn.shake { animation: trackShake 0.6s ease; }
 
-/* PREVIOUS ORDER HISTORY BADGE */
-#prev-order-badge {
-  display: none;
-  background: #fff8e1;
-  border: 2px dashed #ffcc00;
-  border-radius: 12px;
-  padding: 12px 14px;
-  margin-top: 14px;
+/* HEADER HAMBURGER MENU */
+.header-actions {
+  position: absolute;
+  right: 15px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
-#prev-order-badge.visible { display: block; }
-.pob-header {
+.hamb-menu-wrap { position: relative; }
+.hamb-icon-btn {
+  background: #f0f0f0;
+  border: none;
+  border-radius: 10px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.2s;
+  position: relative;
+}
+.hamb-icon-btn:active { background: #e0e0e0; }
+.hamb-notif-dot {
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  width: 10px;
+  height: 10px;
+  background: #ff4444;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  display: none;
+}
+.hamb-notif-dot.visible { display: block; }
+.hamb-dropdown {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  width: 180px;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+  border: 1px solid #eee;
+  overflow: hidden;
+  display: none;
+  z-index: 3000;
+}
+.hamb-dropdown.open { display: block; }
+.hamb-drop-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #111;
+  cursor: pointer;
+  border-bottom: 1px solid #f5f5f5;
+  transition: background 0.15s;
+}
+.hamb-drop-item:last-child { border-bottom: none; }
+.hamb-drop-item:active { background: #f9f9f9; }
+.hamb-drop-item span { font-size: 16px; }
+
+/* PREVIOUS ORDERS SIDE PANEL */
+#prev-orders-panel {
+  position: fixed;
+  inset: 0;
+  z-index: 5000;
+  display: none;
+}
+#prev-orders-panel.open { display: block; }
+.pop-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+}
+.pop-sheet {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: min(340px, 92vw);
+  height: 100%;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  box-shadow: -8px 0 40px rgba(0,0,0,0.18);
+  transform: translateX(100%);
+  transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
+}
+#prev-orders-panel.open .pop-sheet { transform: translateX(0); }
+.pop-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 8px;
+  padding: 20px 20px 14px;
+  border-bottom: 1px solid #eee;
+  background: #fff;
 }
-.pob-title {
+.pop-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #111;
+}
+.pop-close {
+  background: #f0f0f0;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pop-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+}
+.pop-empty {
+  text-align: center;
+  color: #bbb;
+  font-size: 13px;
+  margin-top: 60px;
+}
+.prev-order-card {
+  background: #fafafa;
+  border: 1px solid #eee;
+  border-radius: 14px;
+  padding: 14px;
+  margin-bottom: 12px;
+}
+.poc-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.poc-round {
   font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1px;
   color: #888;
+  background: #f0f0f0;
+  padding: 3px 8px;
+  border-radius: 6px;
 }
-.pob-toggle {
-  background: none;
-  border: none;
+.poc-time {
   font-size: 11px;
   color: #aaa;
-  cursor: pointer;
-  font-weight: 600;
 }
-.pob-item-row {
+.poc-item-row {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   font-size: 12px;
-  color: #555;
-  padding: 3px 0;
-  border-bottom: 1px solid #f0e8c8;
+  color: #444;
+  padding: 4px 0;
+  border-bottom: 1px solid #f0f0f0;
 }
-.pob-item-row:last-child { border-bottom: none; }
-.pob-item-name { flex: 1; }
-.pob-item-qty { font-weight: 700; color: #888; margin: 0 8px; }
-.pob-item-price { color: #333; font-weight: 600; }
-.pob-total-row {
+.poc-item-row:last-of-type { border-bottom: none; }
+.poc-item-name { flex: 1; }
+.poc-item-qty { color: #888; margin: 0 8px; font-weight: 600; }
+.poc-item-price { font-weight: 700; color: #333; }
+.poc-total {
   display: flex;
   justify-content: space-between;
   font-size: 13px;
   font-weight: 800;
-  margin-top: 8px;
+  margin-top: 10px;
   padding-top: 8px;
-  border-top: 2px solid #e6d98a;
-  color: #333;
+  border-top: 2px solid var(--primary);
+  color: #111;
 }
 </style>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -540,9 +667,25 @@ const analytics = firebase.analytics();
 <div class="main-content">
   <div class="hero-header">
     <h1 id="section-name">Starters</h1>
-    <div class="search-container">
-      <input type="text" id="search-input" placeholder="Search item..." oninput="handleSearch()">
-      <button class="search-icon-btn" onclick="toggleSearch()">🔍</button>
+    <div class="header-actions">
+      <div class="search-container" style="position:static;">
+        <input type="text" id="search-input" placeholder="Search item..." oninput="handleSearch()">
+        <button class="search-icon-btn" onclick="toggleSearch()">🔍</button>
+      </div>
+      <div class="hamb-menu-wrap">
+        <button class="hamb-icon-btn" onclick="toggleHeaderMenu(event)" id="hamb-icon-btn" aria-label="Menu options">
+          ☰
+          <span class="hamb-notif-dot" id="hamb-notif-dot"></span>
+        </button>
+        <div class="hamb-dropdown" id="hamb-dropdown">
+          <div class="hamb-drop-item" onclick="openPrevOrdersPanel(); closeHeaderMenu()">
+            <span>📋</span> Previous Orders
+          </div>
+          <div class="hamb-drop-item" onclick="goToTrackOrder(); closeHeaderMenu()">
+            <span>🛵</span> Track Order
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <div class="menu-container"><div class="items-grid" id="menu-grid"></div></div>
@@ -561,20 +704,26 @@ const analytics = firebase.analytics();
       <button onclick="toggleCart()" style="background:none; border:none; color:#999; font-size:20px">✕</button>
     </div>
     <div id="cart-items-list"></div>
-    <div id="prev-order-badge">
-      <div class="pob-header">
-        <span class="pob-title">✅ Previous Order</span>
-        <button class="pob-toggle" onclick="togglePrevOrderDetail()">Show ▾</button>
-      </div>
-      <div id="pob-items" style="display:none;"></div>
-      <div class="pob-total-row"><span>Ordered Total</span><span id="pob-total">₹0.00</span></div>
-    </div>
     <div style="background: #f9f9f9; padding: 15px; border-radius: 12px; margin-top: 15px;">
       <div style="display: flex; justify-content: space-between; font-weight: 800; font-size: 20px;">
         <span>Total</span><span id="cart-total-price-popup">₹0.00</span>
       </div>
     </div>
     <button class="pay-btn" onclick="processPayment()">Place Order</button>
+  </div>
+</div>
+
+<!-- PREVIOUS ORDERS SIDE PANEL -->
+<div id="prev-orders-panel">
+  <div class="pop-backdrop" onclick="closePrevOrdersPanel()"></div>
+  <div class="pop-sheet">
+    <div class="pop-head">
+      <span class="pop-title">Previous Orders</span>
+      <button class="pop-close" onclick="closePrevOrdersPanel()">✕</button>
+    </div>
+    <div class="pop-body" id="prev-orders-body">
+      <div class="pop-empty">No orders placed yet this session.</div>
+    </div>
   </div>
 </div>
 
@@ -1070,11 +1219,11 @@ function processPayment() {
     db.ref("orders/" + orderId).set(order).then(() => {
       localStorage.setItem("currentOrderId", orderId);
 
-      // CHANGE 1 FIX: Save previous order items for the badge, then clear cart
+      // CHANGE 1 FIX: Save previous order items for the panel, then clear cart
       _previousOrderItems = cartSnapshot;
       cart = {};
       syncCartUI();
-      showPrevOrderBadge(_previousOrderItems);
+      addPrevOrderRound(_previousOrderItems);
 
       if (orderType === "dinein" && !bypassAssign) {
         assignTable(customerName, peopleCount, orderId, tablePref);
@@ -1090,20 +1239,52 @@ function processPayment() {
     });
   };
 
+  // ── Real-time scenario logic ──────────────────────────────────────────────
+  // When a dine-in customer orders a second round, we check their previous order.
+  // We ONLY reuse the existing table assignment if ALL of these are true:
+  //   1. The previous order still exists in Firebase
+  //   2. Its status is still active (not Completed / Cancelled)
+  //   3. It has a tableNumber assigned
+  //   4. That table is STILL marked occupied in Firebase (not freed since)
+  //   5. The customer name matches
+  // If ANY check fails, treat this as a brand-new customer session — full fresh assignment.
   if (orderType === "dinein" && prevOrderId) {
     db.ref("orders/" + prevOrderId).once("value", snap => {
       const prevOrder = snap.val();
-      const sameCustomer = prevOrder &&
+
+      const isStillActive = prevOrder &&
         prevOrder.status !== "Completed" &&
         prevOrder.status !== "Cancelled" &&
         prevOrder.tableNumber &&
         (prevOrder.customerName || "").trim().toLowerCase() === customerName.trim().toLowerCase();
 
-      if (sameCustomer) {
-        createNewOrder(prevOrder.tableNumber, true);
-      } else {
+      if (!isStillActive) {
+        // Previous order is done or cancelled — fresh session
         createNewOrder(null, false);
+        return;
       }
+
+      // Double-check the table itself is still occupied in Firebase
+      // (manager may have freed it since the last order)
+      db.ref("tables").once("value", tSnap => {
+        const tables = tSnap.val();
+        let tableStillOccupied = false;
+        if (tables) {
+          Object.values(tables).forEach(t => {
+            if (t && t.number == prevOrder.tableNumber && t.occupied) {
+              tableStillOccupied = true;
+            }
+          });
+        }
+
+        if (tableStillOccupied) {
+          // Same customer, same active session — attach to existing table
+          createNewOrder(prevOrder.tableNumber, true);
+        } else {
+          // Table has been freed — this is a new visit, assign fresh
+          createNewOrder(null, false);
+        }
+      });
     });
   } else {
     createNewOrder(null, false);
@@ -1111,46 +1292,85 @@ function processPayment() {
 }
 // ─────────────────────────────────────────────────────────────────────────────
 
-// CHANGE 1: Show previous order summary badge in cart popup
-function showPrevOrderBadge(items) {
-  const badge = document.getElementById('prev-order-badge');
-  const pobItems = document.getElementById('pob-items');
-  const pobTotal = document.getElementById('pob-total');
-  if (!badge || !items || !items.length) return;
+// ── PREVIOUS ORDERS PANEL (hamburger menu) ─────────────────────────────────
+// Each placed order is stored as a round in this array
+let _prevOrderRounds = [];
 
-  const total = items.reduce((s, i) => s + (i.price * i.qty), 0);
-  pobItems.innerHTML = items.map(i =>
-    `<div class="pob-item-row">
-      <span class="pob-item-name">${i.name}</span>
-      <span class="pob-item-qty">×${i.qty}</span>
-      <span class="pob-item-price">₹${(i.price * i.qty).toFixed(2)}</span>
-    </div>`
-  ).join('');
-  pobTotal.textContent = `₹${total.toFixed(2)}`;
-  badge.classList.add('visible');
-
-  // Reset toggle to collapsed
-  const toggleBtn = badge.querySelector('.pob-toggle');
-  if (toggleBtn) toggleBtn.textContent = 'Show ▾';
-  pobItems.style.display = 'none';
+function addPrevOrderRound(items) {
+  if (!items || !items.length) return;
+  _prevOrderRounds.push({ items: items.map(i => ({...i})), time: new Date() });
+  // Show the red dot on the hamburger icon to signal new history
+  const dot = document.getElementById('hamb-notif-dot');
+  if (dot) dot.classList.add('visible');
 }
 
-function togglePrevOrderDetail() {
-  const pobItems = document.getElementById('pob-items');
-  const toggleBtn = document.querySelector('.pob-toggle');
-  if (!pobItems) return;
-  const showing = pobItems.style.display !== 'none';
-  pobItems.style.display = showing ? 'none' : 'block';
-  if (toggleBtn) toggleBtn.textContent = showing ? 'Show ▾' : 'Hide ▴';
+function openPrevOrdersPanel() {
+  const panel = document.getElementById('prev-orders-panel');
+  const body  = document.getElementById('prev-orders-body');
+  if (!panel || !body) return;
+
+  // Clear notification dot
+  const dot = document.getElementById('hamb-notif-dot');
+  if (dot) dot.classList.remove('visible');
+
+  if (!_prevOrderRounds.length) {
+    body.innerHTML = '<div class="pop-empty">No orders placed yet this session.</div>';
+  } else {
+    body.innerHTML = _prevOrderRounds.map((round, idx) => {
+      const total = round.items.reduce((s, i) => s + i.price * i.qty, 0);
+      const timeStr = round.time.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+      const itemRows = round.items.map(i =>
+        `<div class="poc-item-row">
+          <span class="poc-item-name">${i.name}</span>
+          <span class="poc-item-qty">×${i.qty}</span>
+          <span class="poc-item-price">₹${(i.price * i.qty).toFixed(2)}</span>
+        </div>`
+      ).join('');
+      return `<div class="prev-order-card">
+        <div class="poc-header">
+          <span class="poc-round">Round ${idx + 1}</span>
+          <span class="poc-time">${timeStr}</span>
+        </div>
+        ${itemRows}
+        <div class="poc-total"><span>Round Total</span><span>₹${total.toFixed(2)}</span></div>
+      </div>`;
+    }).join('');
+  }
+
+  panel.classList.add('open');
 }
+
+function closePrevOrdersPanel() {
+  const panel = document.getElementById('prev-orders-panel');
+  if (panel) panel.classList.remove('open');
+}
+
+function toggleHeaderMenu(e) {
+  e.stopPropagation();
+  document.getElementById('hamb-dropdown').classList.toggle('open');
+}
+
+function closeHeaderMenu() {
+  document.getElementById('hamb-dropdown').classList.remove('open');
+}
+
+// Close hamburger dropdown when clicking elsewhere
+document.addEventListener('click', function(e) {
+  const drop = document.getElementById('hamb-dropdown');
+  const btn  = document.getElementById('hamb-icon-btn');
+  if (drop && !drop.contains(e.target) && e.target !== btn) {
+    drop.classList.remove('open');
+  }
+});
+// ──────────────────────────────────────────────────────────────────────────────
 
 // ─── CHANGE 3 FIX: Proper table allocation using Firebase key-value pairs ──────
 function assignTable(name, people, orderId, tablePref) {
   db.ref("tables").once("value", (snapshot) => {
     const raw = snapshot.val();
 
-    // If no tables exist at all, initialize them (should be done by manager page,
-    // but as a safety net we do it here too and retry after a short delay)
+    // No tables node exists yet — initialize with a clean fixed array of 10 tables
+    // (manager.html will have done this already; this is a safety net only)
     if (!raw) {
       const initTables = [];
       for (let i = 1; i <= 10; i++) {
