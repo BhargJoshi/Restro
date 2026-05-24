@@ -460,9 +460,10 @@ db.ref("orders").on("value",s=>{
   allTkw=ordersArr.filter(o=>o.orderType==='takeaway'&&(o.status==='pending'||o.status==='Preparing'));
   renderTkw();
   updateTrackerStats(ordersArr);
-  // CHANGE 3 FIX: No longer call syncDineInOrdersToTables here —
-  // that function was overriding correct Firebase table data on each refresh
-  // and causing orders to always land on table 1. Removed.
+  // CHANGE 3 FIX: Also re-render the dashboard when orders change so the
+  // green addon-notification badge appears immediately when a seated customer
+  // places an additional order (new order in Firebase without a tables update).
+  renderDash();
 });
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
