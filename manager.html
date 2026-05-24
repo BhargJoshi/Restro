@@ -823,10 +823,12 @@ const allMenu=Object.values(menuData).flat();
 let allTables=[],allQueue=[],allTkw=[];
 let billItems=[],curOids=[],curOid=null,curTnum=null,curTkey=null,dMode='pct';
 
-// CHANGE 3 FIX: Only initialize tables if they truly don't exist.
-// We use a once() check so we NEVER overwrite existing data.
+// Tables are permanent physical fixtures (Table 1–10 always exist in the dashboard).
+// We only create the /tables node if it is completely absent — never overwrite existing data.
+// Individual table entries are NEVER deleted; they are only reset to their clean state.
 db.ref("tables").once("value",s=>{
   if(!s.exists()||!s.val()){
+    // First time setup: build a clean fixed array of 10 tables
     const d=[];
     for(let i=1;i<=10;i++) d.push({number:i,capacity:i<=4?2:i<=8?4:6,occupied:false,current:null,nextOrder:null});
     db.ref("tables").set(d);
@@ -1153,12 +1155,14 @@ function freeTable(n){
     Object.entries(raw).forEach(([ki,v])=>{if(v&&v.number===n)k=ki;});
     if(k===null)return;
     const t=raw[k];
-    // Also clear seenOrders for this table so the next customer starts fresh
+
+    // Clear seen-orders tracking for this table so next customer starts fresh
     const seen=getSeenOrders();
     delete seen[n];
     setSeenOrders(seen);
 
     if(t.nextOrder){
+      // A customer is waiting for this table — seat them immediately
       db.ref("tables/"+k).update({
         occupied:true,
         current:{name:t.nextOrder.name,people:t.nextOrder.people,since:Date.now(),orderId:t.nextOrder.orderId||null},
@@ -1166,7 +1170,14 @@ function freeTable(n){
       });
       if(t.nextOrder.orderId) db.ref("orders/"+t.nextOrder.orderId).update({tableNumber:t.number});
     } else {
-      db.ref("tables/"+k).update({occupied:false,current:null});
+      // No one waiting — RESET the table back to its clean empty state.
+      // We NEVER delete the table node; tables are permanent physical fixtures.
+      // Only customer data is cleared so the table shows as Free in the dashboard.
+      db.ref("tables/"+k).update({
+        occupied: false,
+        current: null,
+        nextOrder: null
+      });
     }
   });
 }
