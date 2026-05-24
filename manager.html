@@ -450,25 +450,30 @@ db.ref("tables").on("value",s=>{
 
   if(!_tablesInitDone){
     _tablesInitDone=true;
-    // Deduplicate and canonicalize to exactly 10 tables.
-    // On the write-back the listener fires again — that second call does the real render.
-    const byNum={};
-    if(raw){
-      const vals=Array.isArray(raw)?raw.filter(Boolean):Object.values(raw).filter(Boolean);
-      vals.forEach(t=>{
-        if(t&&t.number!=null){
-          const n=t.number;
-          if(!byNum[n]||(t.occupied&&!byNum[n].occupied)) byNum[n]=t;
-        }
-      });
+    // Check if data is already a canonical array of exactly 10 tables
+    const isAlreadyCanonical = Array.isArray(raw) && raw.length === 10 && raw.every(t=>t&&t.number!=null);
+    if(!isAlreadyCanonical){
+      // Deduplicate and canonicalize to exactly 10 tables.
+      // On the write-back the listener fires again — that second call does the real render.
+      const byNum={};
+      if(raw){
+        const vals=Array.isArray(raw)?raw.filter(Boolean):Object.values(raw).filter(Boolean);
+        vals.forEach(t=>{
+          if(t&&t.number!=null){
+            const n=t.number;
+            if(!byNum[n]||(t.occupied&&!byNum[n].occupied)) byNum[n]=t;
+          }
+        });
+      }
+      const canonical=[];
+      for(let i=1;i<=10;i++){
+        const saved=byNum[i];
+        canonical.push({number:i,capacity:i<=4?2:i<=8?4:6,occupied:saved?.occupied||false,current:saved?.current||null,nextOrder:saved?.nextOrder||null});
+      }
+      db.ref("tables").set(canonical);
+      return; // do NOT render yet — wait for the clean write-back to come back
     }
-    const canonical=[];
-    for(let i=1;i<=10;i++){
-      const saved=byNum[i];
-      canonical.push({number:i,capacity:i<=4?2:i<=8?4:6,occupied:saved?.occupied||false,current:saved?.current||null,nextOrder:saved?.nextOrder||null});
-    }
-    db.ref("tables").set(canonical);
-    return; // do NOT render yet — wait for the clean write-back to come back
+    // Already canonical — fall through to render immediately
   }
 
   allTables=[];
@@ -878,7 +883,11 @@ function getAddonCount(tableNum, allOrdersObj){
   let count=0;
   Object.entries(allOrdersObj).forEach(([oid,o])=>{
     if((o.tableNumber==tableNum)&&o.status!=='Completed'&&o.status!=='Cancelled'&&!o.isSubRound){
-      if(!seenSet.has(oid)) count++;
+      if(!seenSet.has(oid)){
+        // Count total item quantities in this unseen order
+        const items=Array.isArray(o.items)?o.items:(o.items&&typeof o.items==='object'?Object.values(o.items):[]);
+        items.forEach(item=>{ count+=(item.qty||1); });
+      }
     }
   });
   return count;
