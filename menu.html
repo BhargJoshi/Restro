@@ -1202,40 +1202,43 @@ function processPayment() {
   const prevOrderId = localStorage.getItem("currentOrderId");
 
   const createNewOrder = (assignedTableNum, bypassAssign) => {
-    const orderId = "ORD" + Date.now();
+    // Record session start BEFORE writing the order so current.since <= createdAt always.
+    // If we set since=Date.now() inside assignTable (which runs after the DB write),
+    // since ends up AFTER createdAt and the sessionSince guard excludes the first order.
+    const sessionStartTime = Date.now();
+    const orderId = "ORD" + sessionStartTime;
     const order = {
       id: orderId,
       tableNumber: assignedTableNum || null,
       customerName: customerName,
       people: peopleCount,
-      items: cartSnapshot,          // CHANGE 2 FIX: use snapshot, not live cart
-      total: cartTotal,             // CHANGE 2 FIX: use snapshot total
+      items: cartSnapshot,
+      total: cartTotal,
       status: "Preparing",
       diet: "Regular",
       orderType: orderType,
-      createdAt: new Date().toISOString()
+      createdAt: new Date(sessionStartTime).toISOString()
     };
 
     db.ref("orders/" + orderId).set(order).then(() => {
       localStorage.setItem("currentOrderId", orderId);
 
-      // CHANGE 1 FIX: Save previous order items for the panel, then clear cart
       _previousOrderItems = cartSnapshot;
       cart = {};
       syncCartUI();
       addPrevOrderRound(_previousOrderItems);
 
       if (orderType === "dinein" && !bypassAssign) {
-        assignTable(customerName, peopleCount, orderId, tablePref);
+        // Pass sessionStartTime so assignTable sets current.since = sessionStartTime,
+        // which is guaranteed <= createdAt (same millisecond or earlier)
+        assignTable(customerName, peopleCount, orderId, tablePref, sessionStartTime);
       }
       showOrderConfirm();
-
-      // CHANGE 1 FIX: Release the lock only after confirmed success
       _orderingInProgress = false;
     }).catch((error) => {
       console.error("Error placing order:", error);
       alert("Error placing order. Please try again.");
-      _orderingInProgress = false; // release lock on error so user can retry
+      _orderingInProgress = false;
     });
   };
 
@@ -1365,7 +1368,11 @@ document.addEventListener('click', function(e) {
 // ──────────────────────────────────────────────────────────────────────────────
 
 // ─── CHANGE 3 FIX: Proper table allocation using Firebase key-value pairs ──────
-function assignTable(name, people, orderId, tablePref) {
+function assignTable(name, people, orderId, tablePref, sessionStartTime) {
+  // sessionStartTime is the timestamp captured before the order was written to Firebase.
+  // Using it as current.since guarantees: since <= createdAt, so the sessionSince
+  // guard in manager's viewOrderDetails/openBill correctly includes this first order.
+  const since = sessionStartTime || Date.now();
   db.ref("tables").once("value", (snapshot) => {
     const raw = snapshot.val();
 
@@ -1383,7 +1390,7 @@ function assignTable(name, people, orderId, tablePref) {
         });
       }
       db.ref("tables").set(initTables).then(() => {
-        setTimeout(() => assignTable(name, people, orderId, tablePref), 500);
+        setTimeout(() => assignTable(name, people, orderId, tablePref, sessionStartTime), 500);
       });
       return;
     }
@@ -1428,13 +1435,13 @@ function assignTable(name, people, orderId, tablePref) {
       if (selectedTable.occupied) {
         // Table is occupied — store as nextOrder (red badge)
         db.ref("tables/" + tableKey).update({
-          nextOrder: { name: name, people: people, since: Date.now(), orderId: orderId }
+          nextOrder: { name: name, people: people, since: since, orderId: orderId }
         });
       } else {
         // Table is free — assign directly
         db.ref("tables/" + tableKey).update({
           occupied: true,
-          current: { name: name, people: people, since: Date.now(), orderId: orderId }
+          current: { name: name, people: people, since: since, orderId: orderId }
         });
         db.ref("orders/" + orderId).update({ tableNumber: selectedTable.number });
       }
