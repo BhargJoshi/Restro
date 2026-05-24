@@ -848,43 +848,6 @@ const allMenu=Object.values(menuData).flat();
 let allTables=[],allQueue=[],allTkw=[];
 let billItems=[],curOids=[],curOid=null,curTnum=null,curTkey=null,dMode='pct';
 
-// Tables are permanent physical fixtures — always exactly 10, numbered 1–10.
-// On load: read whatever is in Firebase, deduplicate by table number (previous
-// push()-based writes may have created duplicates), preserve any occupied state,
-// then write back a clean canonical array of exactly 10 entries.
-db.ref("tables").once("value",s=>{
-  const raw=s.val();
-
-  // Build a map: tableNumber → best existing entry (prefer occupied ones)
-  const byNum={};
-  if(raw){
-    const vals=Array.isArray(raw)?raw.filter(Boolean):Object.values(raw).filter(Boolean);
-    vals.forEach(t=>{
-      if(t&&t.number!=null){
-        const n=t.number;
-        // Keep an occupied entry over a free one; otherwise first wins
-        if(!byNum[n]||(t.occupied&&!byNum[n].occupied)) byNum[n]=t;
-      }
-    });
-  }
-
-  // Build the canonical 10-table array, merging saved state where it exists
-  const canonical=[];
-  for(let i=1;i<=10;i++){
-    const saved=byNum[i];
-    canonical.push({
-      number: i,
-      capacity: i<=4?2:i<=8?4:6,
-      occupied: saved?.occupied||false,
-      current:  saved?.current||null,
-      nextOrder:saved?.nextOrder||null
-    });
-  }
-
-  // Write back as a clean indexed array — this wipes all duplicates and ghost entries
-  db.ref("tables").set(canonical);
-});
-
 // ── CHANGE 1: Track seen order IDs per table to detect new addons ──────────────
 // seenOrderIds[tableNum] = Set of order IDs that have been "opened/viewed" by manager
 // addonUnread[tableNum] = count of unread new rounds since last view
