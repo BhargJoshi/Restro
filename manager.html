@@ -823,16 +823,41 @@ const allMenu=Object.values(menuData).flat();
 let allTables=[],allQueue=[],allTkw=[];
 let billItems=[],curOids=[],curOid=null,curTnum=null,curTkey=null,dMode='pct';
 
-// Tables are permanent physical fixtures (Table 1–10 always exist in the dashboard).
-// We only create the /tables node if it is completely absent — never overwrite existing data.
-// Individual table entries are NEVER deleted; they are only reset to their clean state.
+// Tables are permanent physical fixtures — always exactly 10, numbered 1–10.
+// On load: read whatever is in Firebase, deduplicate by table number (previous
+// push()-based writes may have created duplicates), preserve any occupied state,
+// then write back a clean canonical array of exactly 10 entries.
 db.ref("tables").once("value",s=>{
-  if(!s.exists()||!s.val()){
-    // First time setup: build a clean fixed array of 10 tables
-    const d=[];
-    for(let i=1;i<=10;i++) d.push({number:i,capacity:i<=4?2:i<=8?4:6,occupied:false,current:null,nextOrder:null});
-    db.ref("tables").set(d);
+  const raw=s.val();
+
+  // Build a map: tableNumber → best existing entry (prefer occupied ones)
+  const byNum={};
+  if(raw){
+    const vals=Array.isArray(raw)?raw.filter(Boolean):Object.values(raw).filter(Boolean);
+    vals.forEach(t=>{
+      if(t&&t.number!=null){
+        const n=t.number;
+        // Keep an occupied entry over a free one; otherwise first wins
+        if(!byNum[n]||(t.occupied&&!byNum[n].occupied)) byNum[n]=t;
+      }
+    });
   }
+
+  // Build the canonical 10-table array, merging saved state where it exists
+  const canonical=[];
+  for(let i=1;i<=10;i++){
+    const saved=byNum[i];
+    canonical.push({
+      number: i,
+      capacity: i<=4?2:i<=8?4:6,
+      occupied: saved?.occupied||false,
+      current:  saved?.current||null,
+      nextOrder:saved?.nextOrder||null
+    });
+  }
+
+  // Write back as a clean indexed array — this wipes all duplicates and ghost entries
+  db.ref("tables").set(canonical);
 });
 
 // ── CHANGE 1: Track seen order IDs per table to detect new addons ──────────────
@@ -1054,10 +1079,16 @@ window.viewOrderDetails=function(n){
 
     db.ref("orders").once("value",os=>{
       const allOrders=os.val()?Object.entries(os.val()):[];
-      const tableOrderEntries=allOrders.filter(([oid,o])=>
-        (o.tableNumber==n||oid===t.current.orderId)&&
-        o.status!=='Completed'&&o.status!=='Cancelled'
-      );
+      // Only include orders placed AFTER this table session started
+      const sessionSince = t?.current?.since || 0;
+      const tableOrderEntries=allOrders.filter(([oid,o])=>{
+        const orderTime = o.createdAt ? new Date(o.createdAt).getTime() : (o.timestamp||0);
+        const isCurrentSession = orderTime >= sessionSince;
+        return (o.tableNumber==n||oid===t.current.orderId)
+          && o.status!=='Completed'
+          && o.status!=='Cancelled'
+          && isCurrentSession;
+      });
 
       // Determine which orders are "new" (unseen) before marking them seen
       const seen=getSeenOrders();
@@ -1161,24 +1192,43 @@ function freeTable(n){
     delete seen[n];
     setSeenOrders(seen);
 
-    if(t.nextOrder){
-      // A customer is waiting for this table — seat them immediately
-      db.ref("tables/"+k).update({
-        occupied:true,
-        current:{name:t.nextOrder.name,people:t.nextOrder.people,since:Date.now(),orderId:t.nextOrder.orderId||null},
-        nextOrder:null
-      });
-      if(t.nextOrder.orderId) db.ref("orders/"+t.nextOrder.orderId).update({tableNumber:t.number});
-    } else {
-      // No one waiting — RESET the table back to its clean empty state.
-      // We NEVER delete the table node; tables are permanent physical fixtures.
-      // Only customer data is cleared so the table shows as Free in the dashboard.
-      db.ref("tables/"+k).update({
-        occupied: false,
-        current: null,
-        nextOrder: null
-      });
-    }
+    // ── CRITICAL: Mark every active order for this table as Completed ─────────
+    // This prevents old "Preparing" orders from bleeding into the next customer's
+    // bill when the same table number is reused. Without this, any future order
+    // on table N would aggregate ALL previous "Preparing" orders for table N.
+    db.ref("orders").once("value",os=>{
+      const allOrders=os.val();
+      if(allOrders){
+        Object.entries(allOrders).forEach(([oid,o])=>{
+          if(o.tableNumber==n && o.status!=='Completed' && o.status!=='Cancelled'){
+            db.ref("orders/"+oid).update({
+              status:'Completed',
+              billedAt: new Date().toISOString(),
+              autoClosedOnTableFree: true
+            });
+          }
+        });
+      }
+
+      // Now reset the table itself
+      if(t.nextOrder){
+        // A customer is waiting — seat them immediately
+        db.ref("tables/"+k).update({
+          occupied:true,
+          current:{name:t.nextOrder.name,people:t.nextOrder.people,since:Date.now(),orderId:t.nextOrder.orderId||null},
+          nextOrder:null
+        });
+        if(t.nextOrder.orderId) db.ref("orders/"+t.nextOrder.orderId).update({tableNumber:t.number,status:'Preparing'});
+      } else {
+        // Reset to clean empty state — NEVER delete the table node
+        db.ref("tables/"+k).update({
+          occupied: false,
+          current: null,
+          nextOrder: null
+        });
+      }
+    });
+    // ─────────────────────────────────────────────────────────────────────────
   });
 }
 
@@ -1195,11 +1245,21 @@ function openBill(n){
     curTkey=k;
     document.getElementById('bsub').textContent=`Table ${n} · ${t?.current?.name||'Guest'} · ${t?.current?.people||1} pax`;
 
+    // The session start time for this table occupancy — used to exclude any
+    // orders that were placed before the current customer sat down
+    const sessionSince = t?.current?.since || 0;
+
     db.ref("orders").once("value",os=>{
       const d=os.val();
       if(d){
         Object.entries(d).forEach(([oid,o])=>{
-          if((o.tableNumber==n||oid===t.current.orderId)&&o.status!=='Completed'&&o.status!=='Cancelled'){
+          // Must match this table number AND be from the current session AND be active
+          const orderTime = o.createdAt ? new Date(o.createdAt).getTime() : (o.timestamp||0);
+          const isCurrentSession = orderTime >= sessionSince;
+          if((o.tableNumber==n||oid===t.current.orderId)
+            && o.status!=='Completed'
+            && o.status!=='Cancelled'
+            && isCurrentSession){
             curOids.push(oid);
             const arr=Array.isArray(o.items)?o.items:(o.items&&typeof o.items==='object'?Object.values(o.items):[]);
             arr.forEach(i=>{
