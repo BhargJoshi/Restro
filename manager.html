@@ -481,7 +481,7 @@ db.ref("tables").on("value",s=>{
     if(Array.isArray(raw)) raw.forEach(t=>{if(t)allTables.push(t);});
     else Object.values(raw).forEach(t=>{if(t)allTables.push(t);});
   }
-  renderDash();
+  renderDashDebounced();
 });
 
 db.ref("orders").on("value",s=>{
@@ -490,10 +490,10 @@ db.ref("orders").on("value",s=>{
   allTkw=ordersArr.filter(o=>o.orderType==='takeaway'&&(o.status==='pending'||o.status==='Preparing'));
   renderTkw();
   updateTrackerStats(ordersArr);
-  // CHANGE 3 FIX: Also re-render the dashboard when orders change so the
+  // Also re-render the dashboard when orders change so the
   // green addon-notification badge appears immediately when a seated customer
   // places an additional order (new order in Firebase without a tables update).
-  renderDash();
+  renderDashDebounced();
 });
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -852,6 +852,8 @@ const allMenu=Object.values(menuData).flat();
 
 let allTables=[],allQueue=[],allTkw=[];
 let billItems=[],curOids=[],curOid=null,curTnum=null,curTkey=null,dMode='pct';
+let _renderDashTimer=null;
+function renderDashDebounced(){clearTimeout(_renderDashTimer);_renderDashTimer=setTimeout(renderDash,40);}
 
 // ── CHANGE 1: Track seen order IDs per table to detect new addons ──────────────
 // seenOrderIds[tableNum] = Set of order IDs that have been "opened/viewed" by manager
@@ -971,8 +973,8 @@ function renderDash(){
       if(t.occupied && t.current){
         const addonCnt = getAddonCount(t.number, allOrdersObj);
         if(addonCnt > 0){
-          addonNotif=`<div class="addon-notif" onclick="event.stopPropagation(); viewOrderDetails(${t.number})" title="${addonCnt} new item round(s)">
-            <span class="addon-notif-count">${addonCnt}</span>
+          addonNotif=`<div class="addon-notif" onclick="event.stopPropagation(); viewOrderDetails(${t.number})" title="New items added">
+            <span class="addon-notif-count">＋</span>
           </div>`;
         }
       }
