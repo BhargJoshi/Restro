@@ -823,13 +823,23 @@ const allMenu=Object.values(menuData).flat();
 let allTables=[],allQueue=[],allTkw=[];
 let billItems=[],curOids=[],curOid=null,curTnum=null,curTkey=null,dMode='pct';
 
-// CHANGE 3 FIX: Only initialize tables if they truly don't exist.
-// We use a once() check so we NEVER overwrite existing data.
+// Initialize tables: create any of the 10 standard table numbers that don't yet exist.
+// Freed tables are deleted from Firebase, so we only add the ones that are missing.
+// We never overwrite existing (occupied) table entries.
 db.ref("tables").once("value",s=>{
-  if(!s.exists()||!s.val()){
-    const d=[];
-    for(let i=1;i<=10;i++) d.push({number:i,capacity:i<=4?2:i<=8?4:6,occupied:false,current:null,nextOrder:null});
-    db.ref("tables").set(d);
+  const raw=s.val()||{};
+  const existingNumbers=new Set(
+    Object.values(raw).filter(v=>v&&v.number!=null).map(v=>v.number)
+  );
+  const toAdd=[];
+  for(let i=1;i<=10;i++){
+    if(!existingNumbers.has(i)){
+      toAdd.push({number:i,capacity:i<=4?2:i<=8?4:6,occupied:false,current:null,nextOrder:null});
+    }
+  }
+  if(toAdd.length){
+    // Push each missing table as a new child node
+    toAdd.forEach(tbl=>db.ref("tables").push(tbl));
   }
 });
 
@@ -1153,12 +1163,14 @@ function freeTable(n){
     Object.entries(raw).forEach(([ki,v])=>{if(v&&v.number===n)k=ki;});
     if(k===null)return;
     const t=raw[k];
-    // Also clear seenOrders for this table so the next customer starts fresh
+
+    // Clear seen-orders tracking for this table
     const seen=getSeenOrders();
     delete seen[n];
     setSeenOrders(seen);
 
     if(t.nextOrder){
+      // If there is a next order waiting, seat them — update existing entry
       db.ref("tables/"+k).update({
         occupied:true,
         current:{name:t.nextOrder.name,people:t.nextOrder.people,since:Date.now(),orderId:t.nextOrder.orderId||null},
@@ -1166,7 +1178,9 @@ function freeTable(n){
       });
       if(t.nextOrder.orderId) db.ref("orders/"+t.nextOrder.orderId).update({tableNumber:t.number});
     } else {
-      db.ref("tables/"+k).update({occupied:false,current:null});
+      // No next order — DELETE the table entry completely from Firebase
+      // so it won't appear as a pre-occupied table on next page load
+      db.ref("tables/"+k).remove();
     }
   });
 }
