@@ -444,10 +444,35 @@ const firebaseConfig={apiKey:"AIzaSyC_LUKzINx6H4XE7uWoCpeLSldpIp-DR80",authDomai
 firebase.initializeApp(firebaseConfig);
 const db=firebase.database();firebase.analytics();
 
+let _tablesInitDone=false;
 db.ref("tables").on("value",s=>{
   const raw=s.val();
+
+  if(!_tablesInitDone){
+    _tablesInitDone=true;
+    // Deduplicate and canonicalize to exactly 10 tables.
+    // On the write-back the listener fires again — that second call does the real render.
+    const byNum={};
+    if(raw){
+      const vals=Array.isArray(raw)?raw.filter(Boolean):Object.values(raw).filter(Boolean);
+      vals.forEach(t=>{
+        if(t&&t.number!=null){
+          const n=t.number;
+          if(!byNum[n]||(t.occupied&&!byNum[n].occupied)) byNum[n]=t;
+        }
+      });
+    }
+    const canonical=[];
+    for(let i=1;i<=10;i++){
+      const saved=byNum[i];
+      canonical.push({number:i,capacity:i<=4?2:i<=8?4:6,occupied:saved?.occupied||false,current:saved?.current||null,nextOrder:saved?.nextOrder||null});
+    }
+    db.ref("tables").set(canonical);
+    return; // do NOT render yet — wait for the clean write-back to come back
+  }
+
+  allTables=[];
   if(raw){
-    allTables=[];
     if(Array.isArray(raw)) raw.forEach(t=>{if(t)allTables.push(t);});
     else Object.values(raw).forEach(t=>{if(t)allTables.push(t);});
   }
