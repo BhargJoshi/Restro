@@ -193,6 +193,8 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--black);color:var(--
 .tcard-status{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;border:1px solid;}
 .tcard-status.free{color:var(--green);background:rgba(45,212,170,0.08);border-color:rgba(45,212,170,.18);}
 .tcard-status.occ{color:var(--red);background:rgba(244,97,79,0.08);border-color:rgba(244,97,79,.2);}
+.tcard-status.occ-prep{color:var(--gold);background:rgba(240,180,41,0.08);border-color:rgba(240,180,41,.2);}
+.tcard-status.occ-dining{color:var(--green);background:rgba(45,212,170,0.08);border-color:rgba(45,212,170,.18);}
 .sdot{width:5px;height:5px;border-radius:50%;background:currentColor;animation:blink 2.5s ease-in-out infinite;}
 @keyframes blink{0%,100%{opacity:1;}50%{opacity:.25;}}
 
@@ -944,6 +946,22 @@ function renderDash(){
   db.ref("orders").once("value",s=>{
     const allOrdersObj = s.val() || {};
 
+    // Build kitchenDoneMap: tableNum -> true if ALL active orders for that table have kitchenDone:true
+    // and at least one order exists (i.e. kitchen has marked the full order as done)
+    const kitchenDoneMap = {};
+    allTables.forEach(t=>{
+      if(!t.occupied) return;
+      const tableOrders = Object.values(allOrdersObj).filter(o=>
+        o.tableNumber==t.number &&
+        o.status!=='Completed' && o.status!=='Cancelled'
+      );
+      if(tableOrders.length > 0 && tableOrders.every(o=>o.kitchenDone===true)){
+        kitchenDoneMap[t.number] = true;
+      } else {
+        kitchenDoneMap[t.number] = false;
+      }
+    });
+
     allTables.forEach(t=>{
       const el=document.createElement('div');
       el.className=`g tcard${t.occupied?' occupied':''}`;
@@ -994,7 +1012,7 @@ function renderDash(){
         <div class="tcard-inner">
           <div class="tcard-top">
             <div><div class="tcard-num">${t.number}</div><div class="tcard-numlabel">Table</div></div>
-            <div class="tcard-status ${t.occupied?'occ':'free'}"><div class="sdot"></div>${t.occupied?'Occupied':'Free'}</div>
+            <div class="tcard-status ${t.occupied?(kitchenDoneMap[t.number]?'occ-dining':'occ-prep'):'free'}"><div class="sdot"></div>${t.occupied?(kitchenDoneMap[t.number]?'Occupied · Dining':'Occupied · Preparing'):'Free'}</div>
           </div>
           <div class="tcard-meta"><span class="tcard-meta-lbl">Capacity</span><span class="tcard-meta-val">${t.capacity} seats</span></div>
           ${cust}
