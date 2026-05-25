@@ -352,7 +352,8 @@ const db=firebase.database();firebase.analytics();
       <span class="nav-role">Kitchen Display</span>
     </div>
     <div class="nav-right">
-      <button onclick="clearStaleOrders()" title="Remove stale/ghost orders from database" style="font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:600;color:var(--w30);background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.10);padding:5px 12px;border-radius:20px;cursor:pointer;letter-spacing:.5px;transition:all .2s;" onmouseover="this.style.color='var(--red)';this.style.borderColor='rgba(244,97,79,0.4)'" onmouseout="this.style.color='var(--w30)';this.style.borderColor='rgba(255,255,255,0.10)'">Clear Stale</button>
+      <button onclick="clearStaleOrders()" title="Remove stale/ghost orders from database" style="font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:600;color:var(--w30);background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.10);padding:5px 12px;border-radius:20px;cursor:pointer;letter-spacing:.5px;transition:all .2s;"
+      onmouseover="this.style.color='var(--red)';this.style.borderColor='rgba(244,97,79,0.4)'" onmouseout="this.style.color='var(--w30)';this.style.borderColor='rgba(255,255,255,0.10)'">Clear Stale</button>
       <div class="nav-live" id="liveCount"><div class="live-dot"></div><span>0 active</span></div>
       <div class="nav-clock" id="clock">--:--:--</div>
     </div>
@@ -372,7 +373,6 @@ const db=firebase.database();firebase.analytics();
 
 <script>
 setInterval(()=>{const n=new Date(),pad=x=>String(x).padStart(2,'0');document.getElementById('clock').textContent=`${pad(n.getHours())}:${pad(n.getMinutes())}:${pad(n.getSeconds())}`;},1000);
-
 db.ref("orders").on("value",s=>renderOrders(s.val()));
 
 function renderOrders(data){
@@ -383,7 +383,7 @@ function renderOrders(data){
     document.getElementById('liveCount').innerHTML=`<div class="live-dot"></div><span>0 active</span>`;
     return;
   }
-  const active=Object.values(data).filter(o=>o.status!=='Completed'&&o.status!=='Cancelled');
+  const active=Object.values(data).filter(o=>o.status!=='Completed'&&o.status!=='Cancelled'&&!o.kitchenDismissed);
   document.getElementById('liveCount').innerHTML=`<div class="live-dot"></div><span>${active.length} active</span>`;
   if(!active.length){grid.innerHTML=emptyState();return;}
 
@@ -401,13 +401,11 @@ function renderOrders(data){
     }
     groups[key].orders.push(order);
   });
-
   const sortedGroups = Object.values(groups).sort((a, b) => {
     const maxA = Math.max(...a.orders.map(o => o.createdAt ? new Date(o.createdAt).getTime() : 0));
     const maxB = Math.max(...b.orders.map(o => o.createdAt ? new Date(o.createdAt).getTime() : 0));
     return maxB - maxA;
   });
-
   sortedGroups.forEach(grp=>{
     grp.orders.sort((a,b)=>(a.createdAt?new Date(a.createdAt).getTime():0)-(b.createdAt?new Date(b.createdAt).getTime():0));
 
@@ -431,7 +429,6 @@ function renderOrders(data){
       const itemsArr = Array.isArray(order.items)?order.items:(order.items&&typeof order.items==='object'?Object.values(order.items):[]);
       const sid      = (order.id||'').slice(-10).toUpperCase();
       const mins     = order.createdAt ? Math.floor((Date.now()-new Date(order.createdAt).getTime())/60000) : null;
-
       const itemsHTML = itemsArr.map(i=>`
         <li class="item-row">
           <span class="item-name">${i.name}</span>
@@ -440,16 +437,13 @@ function renderOrders(data){
             <span class="item-qty-lbl">qty</span>
           </div>
         </li>`).join('');
-
       const statusPill = isReady
         ? `<div class="rstatus ready"><div class="rstatus-dot"></div>Ready</div>`
         : `<div class="rstatus prep" onclick="markReady('${order.id}')" title="Tap to mark ready"><div class="rstatus-dot"></div>Preparing</div>`;
-
       const kotBtn = `<button class="btn-kot-round" onclick="printKOT('${order.id}')" title="Print KOT for this round">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
         KOT
       </button>`;
-
       return `<div class="round ${isReady?'ready':'preparing'}">
         <div class="round-head">
           <div class="round-head-left">
@@ -479,7 +473,6 @@ function renderOrders(data){
     const markDoneCls = 'btn-mark-done' + (allDone ? ' btn-done-already' : '');
     const markDoneLbl = allDone ? 'Marked Done' : 'Mark Done';
     const customerRow = grp.customer ? '<div class="ocard-customer">'+grp.customer+'</div>' : '';
-
     card.innerHTML =
       '<div class="ocard-head">'
       +  '<div class="ocard-head-left">'
@@ -521,7 +514,6 @@ function renderOrders(data){
       +    'Print KOT'
       +  '</button>'
       +'</div>';
-
     grid.appendChild(card);
   });
 }
@@ -573,7 +565,7 @@ function clearStaleOrders(){
   });
 }
 
-// ── Change 1: Mark Done — marks ALL rounds for the group as Done
+// ── Mark Done — marks ALL rounds for the group as Done
 //    and sets kitchenDone:true so manager status + track page update ──────────
 function markAllDone(idsJson){
   let ids;
@@ -586,10 +578,9 @@ function markAllDone(idsJson){
     updates["orders/"+id+"/kitchenDoneAt"]=new Date().toISOString();
   });
   db.ref().update(updates).catch(e=>console.error(e));
-
   // Step 2: persist diningStatus:'dining' on the TABLE node so the manager
   // status button stays "Occupied · Dining" even after these order nodes are
-  // later deleted by the X button (dismiss). Without this, once order nodes
+  // later hidden by the X button (dismiss). Without this, once order nodes
   // are removed, the manager has no signal that food was served.
   db.ref("orders/"+ids[0]).once("value", s=>{
     const o = s.val();
@@ -604,16 +595,15 @@ function markAllDone(idsJson){
   });
 }
 
-// ── Dismiss: Remove all rounds from Firebase (only allowed after kitchenDone) ─
-// Orders with status "Done" have no bearing on billing (manager bills via
-// "Completed" status). Removing them purely clears the kitchen display so
-// finished tickets don't pile up alongside new ones.
+// ── Dismiss: Hide all rounds from Kitchen Display (only allowed after kitchenDone) ─
+// Orders are soft-deleted via kitchenDismissed:true so they disappear from here
+// but remain in the database so the manager can bill them correctly.
 function dismissOrder(idsJson){
   let ids;
   try{ ids = JSON.parse(idsJson); } catch(e){ return; }
   if(!ids||!ids.length) return;
   // Safety guard — re-verify from Firebase that all rounds are kitchenDone
-  // (or already status:Done from an older session) before deleting.
+  // (or already status:Done from an older session) before hiding.
   const fetches = ids.map(id=>db.ref("orders/"+id).once("value"));
   Promise.all(fetches).then(snaps=>{
     const allConfirmed = snaps.every(s=>{
@@ -625,21 +615,20 @@ function dismissOrder(idsJson){
       console.warn("dismissOrder: guard failed — not all rounds are done. Abort.");
       return;
     }
-    // Remove all order nodes from Firebase — this triggers the on("value")
-    // listener which re-renders the grid (card disappears).
-    // If this is the last order, Firebase will return null for the orders node
-    // which is already handled gracefully in renderOrders().
-    const removes = ids.map(id=>db.ref("orders/"+id).remove());
-    Promise.all(removes).catch(e=>console.error("dismissOrder remove error:",e));
+    // Soft-delete: Hide from kitchen but keep in DB for billing
+    const updates = {};
+    ids.forEach(id => {
+      updates["orders/"+id+"/kitchenDismissed"] = true;
+    });
+    db.ref().update(updates).catch(e=>console.error("dismissOrder update error:",e));
   }).catch(e=>console.error("dismissOrder fetch error:",e));
 }
 
-// ── Change 1: Print KOT for the whole card (all rounds merged) ───────────────
+// ── Print KOT for the whole card (all rounds merged) ───────────────
 function printKOTGroup(idsJson){
   let ids;
   try{ ids = JSON.parse(idsJson); } catch(e){ return; }
   if(!ids||!ids.length) return;
-
   // Fetch all orders then merge
   const fetches = ids.map(id=>db.ref("orders/"+id).once("value"));
   Promise.all(fetches).then(snaps=>{
@@ -666,10 +655,8 @@ function printKOTGroup(idsJson){
     const ih = Object.values(merged).length
       ? Object.values(merged).map(i=>`<div class="kt-ir"><span class="kt-ir-n">${i.name}</span><span class="kt-ir-q">×${i.qty}</span></div>`).join('')
       : '<div>No items</div>';
-
     const roundInfo = orders.length > 1 ? `${orders.length} rounds` : '1 round';
     const primaryId = (first.id||'').slice(-10).toUpperCase();
-
     document.getElementById('kotarea').innerHTML=`
       <div class="kt-brand">EMERALD</div>
       <div class="kt-title">— KITCHEN ORDER TICKET —</div>
