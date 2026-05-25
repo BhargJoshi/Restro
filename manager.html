@@ -946,19 +946,29 @@ function renderDash(){
   db.ref("orders").once("value",s=>{
     const allOrdersObj = s.val() || {};
 
-    // Build kitchenDoneMap: tableNum -> true if ALL active orders for that table have kitchenDone:true
-    // and at least one order exists (i.e. kitchen has marked the full order as done)
+    // Build kitchenDoneMap: tableNum -> true means "Occupied · Dining"
+    // Priority logic (real-world behaviour):
+    //   1. If table has active orders where kitchen hasn't marked done → Preparing
+    //   2. If all active orders are kitchenDone:true → Dining
+    //   3. If no active orders exist but table.diningStatus='dining' → Dining
+    //      (orders were dismissed from kitchen — food already served)
+    //   4. New additional order placed → active orders exist without kitchenDone → Preparing
+    // diningStatus on the table node is the persistent signal that survives order deletion.
     const kitchenDoneMap = {};
     allTables.forEach(t=>{
-      if(!t.occupied) return;
+      if(!t.occupied){ kitchenDoneMap[t.number] = false; return; }
+      // Check active (non-completed, non-cancelled) orders for this table
       const tableOrders = Object.values(allOrdersObj).filter(o=>
         o.tableNumber==t.number &&
         o.status!=='Completed' && o.status!=='Cancelled'
       );
-      if(tableOrders.length > 0 && tableOrders.every(o=>o.kitchenDone===true)){
-        kitchenDoneMap[t.number] = true;
+      if(tableOrders.length > 0){
+        // Active orders exist — kitchen is still working if any aren't done
+        kitchenDoneMap[t.number] = tableOrders.every(o=>o.kitchenDone===true);
       } else {
-        kitchenDoneMap[t.number] = false;
+        // No active order nodes — rely on table-level diningStatus flag
+        // (set by kitchen's Mark Done, persists after dismiss)
+        kitchenDoneMap[t.number] = (t.diningStatus === 'dining');
       }
     });
 
@@ -1233,7 +1243,8 @@ function freeTable(n){
         db.ref("tables/"+k).update({
           occupied:true,
           current:{name:t.nextOrder.name,people:t.nextOrder.people,since:Date.now(),orderId:t.nextOrder.orderId||null},
-          nextOrder:null
+          nextOrder:null,
+          diningStatus: null   // clear dining flag — new customer session starts fresh
         });
         if(t.nextOrder.orderId) db.ref("orders/"+t.nextOrder.orderId).update({tableNumber:t.number,status:'Preparing'});
       } else {
@@ -1241,7 +1252,8 @@ function freeTable(n){
         db.ref("tables/"+k).update({
           occupied: false,
           current: null,
-          nextOrder: null
+          nextOrder: null,
+          diningStatus: null   // clear dining flag for next customer
         });
       }
     });
