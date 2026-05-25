@@ -499,7 +499,9 @@ function renderOrders(data){
           </div>
           <button
             class="btn-dismiss${allDone?' dismissable':''}"
-            ${allDone?`onclick="dismissOrder('${allOrderIdsJson}')" title="Remove from kitchen"`:'title="Mark Done first to dismiss"'}
+            data-ids="${allOrderIdsJson}"
+            onclick="handleDismissClick(this)"
+            title="${allDone?'Remove from kitchen':'Mark Done first to dismiss'}"
           >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
           </button>
@@ -507,7 +509,7 @@ function renderOrders(data){
       </div>
       <div class="ocard-rounds">${roundsHTML}</div>
       <div class="ocard-footer">
-        <button class="btn-mark-done${allDone?' btn-done-already':''}" ${allDone?'disabled':''} onclick="${allDone?'':"markAllDone('${allOrderIdsJson}')"}">
+        <button class="btn-mark-done${allDone?' btn-done-already':''}" ${allDone?'disabled':''} data-ids="${allOrderIdsJson}" onclick="handleMarkDoneClick(this)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
           ${allDone?'Marked Done':'Mark Done'}
         </button>
@@ -524,6 +526,20 @@ function renderOrders(data){
 function emptyState(){return`<div class="empty"><div class="empty-ico">🍳</div><div class="empty-title">Kitchen is Clear</div><div class="empty-sub">No active orders</div></div>`;}
 
 function markReady(id){db.ref("orders/"+id).update({status:"Ready"}).catch(e=>console.error(e));}
+
+function handleMarkDoneClick(btn){
+  if(btn.disabled||btn.classList.contains('btn-done-already')) return;
+  const raw = btn.getAttribute('data-ids');
+  if(!raw) return;
+  try{ markAllDone(raw); } catch(e){ console.error(e); }
+}
+
+function handleDismissClick(btn){
+  if(!btn.classList.contains('dismissable')) return;
+  const raw = btn.getAttribute('data-ids');
+  if(!raw) return;
+  try{ dismissOrder(raw); } catch(e){ console.error(e); }
+}
 
 // ── Change 1: Mark Done — marks ALL rounds for the group as Done
 //    and sets kitchenDone:true so manager status + track page update ──────────
