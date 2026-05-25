@@ -850,14 +850,24 @@ const analytics = firebase.analytics();
   document.getElementById('order-id').textContent = '…';
   document.getElementById('success-order-id').textContent = '…';
 
+  // Helper: build display ID matching the manager terminal format
+  // Manager shows short ID (last 6 chars of orderId without "ORD") for takeaway,
+  // and "T-XX" for dine-in based on tableNumber once assigned.
+  function buildDisplayId(order, orderId) {
+    if (order && order.orderType === 'dinein' && order.tableNumber) {
+      return 'T-' + String(order.tableNumber).padStart(2, '0');
+    }
+    // Takeaway: use the trailing digits of the order ID (strip "ORD" prefix)
+    const raw = (orderId || '').replace('ORD', '');
+    return '#' + raw.slice(-6).toUpperCase();
+  }
+
   // Load order details from Firebase and update header
   if (currentOrderId) {
     db.ref("orders/" + currentOrderId).once("value", (snap) => {
       const order = snap.val();
       if (order) {
-        const displayId = order.orderType === 'dinein'
-          ? 'T-' + String(order.tableNumber || '?').padStart(2, '0')
-          : '#' + currentOrderId.slice(-4).toUpperCase();
+        const displayId = buildDisplayId(order, currentOrderId);
         document.getElementById('order-id').textContent = displayId;
         document.getElementById('success-order-id').textContent = displayId;
       }
@@ -995,11 +1005,25 @@ const analytics = firebase.analytics();
     }, 600);
   }
 
-  /* ─── FIREBASE REAL-TIME LISTENER — jumps to Ready when kitchen marks it ─── */
+  /* ─── FIREBASE REAL-TIME LISTENER — drives all 4 track steps ─────────────
+     Step 0 (Order Placed)     : immediate on page load — no Firebase needed
+     Step 1 (Order Confirmed)  : order exists in Firebase (status = "Preparing")
+     Step 2 (Order Processed)  : order is in kitchen — status = "Preparing" (same
+                                  moment as confirmed since kitchen sees orders instantly)
+     Step 3 (Ready to Pick Up) : kitchen clicks "Mark Done" → kitchenDone = true
+  ─────────────────────────────────────────────────────────────────────────── */
   if (currentOrderId) {
     db.ref("orders/" + currentOrderId).on("value", (snap) => {
       const order = snap.val();
-      if (order && order.status === "Ready" && !finished) {
+      if (!order) return;
+
+      // Update display ID in case tableNumber was assigned after order creation
+      const displayId = buildDisplayId(order, currentOrderId);
+      document.getElementById('order-id').textContent = displayId;
+      document.getElementById('success-order-id').textContent = displayId;
+
+      // ── Step 3: kitchen marked done ─────────────────────────────────────
+      if (order.kitchenDone === true && !finished) {
         finished = true;
         elapsed = TOTAL_SEC;
         activeStep = 3;
@@ -1008,6 +1032,27 @@ const analytics = firebase.analytics();
         updateProgress();
         showSuccess();
         clearInterval(ticker);
+        return;
+      }
+
+      // ── Step 2: order in kitchen (Preparing) ────────────────────────────
+      // Only advance if the timer hasn't naturally passed step 2 yet
+      if ((order.status === "Preparing" || order.status === "Ready") && !finished) {
+        if (activeStep < 2) {
+          activeStep = 2;
+          // Snap elapsed so progress reflects step 2 being reached
+          if (elapsed < STEP_AT[2]) elapsed = STEP_AT[2];
+          updateVisuals();
+          updateProgress();
+        }
+      }
+
+      // ── Step 1: order confirmed (exists in Firebase) ─────────────────────
+      if (!finished && activeStep < 1) {
+        activeStep = 1;
+        if (elapsed < STEP_AT[1]) elapsed = STEP_AT[1];
+        updateVisuals();
+        updateProgress();
       }
     });
   }
@@ -1939,14 +1984,24 @@ const analytics = firebase.analytics();
   document.getElementById('order-id').textContent = '…';
   document.getElementById('success-order-id').textContent = '…';
 
+  // Helper: build display ID matching the manager terminal format
+  // Manager shows short ID (last 6 chars of orderId without "ORD") for takeaway,
+  // and "T-XX" for dine-in based on tableNumber once assigned.
+  function buildDisplayId(order, orderId) {
+    if (order && order.orderType === 'dinein' && order.tableNumber) {
+      return 'T-' + String(order.tableNumber).padStart(2, '0');
+    }
+    // Takeaway: use the trailing digits of the order ID (strip "ORD" prefix)
+    const raw = (orderId || '').replace('ORD', '');
+    return '#' + raw.slice(-6).toUpperCase();
+  }
+
   // Load order details from Firebase and update header
   if (currentOrderId) {
     db.ref("orders/" + currentOrderId).once("value", (snap) => {
       const order = snap.val();
       if (order) {
-        const displayId = order.orderType === 'dinein'
-          ? 'T-' + String(order.tableNumber || '?').padStart(2, '0')
-          : '#' + currentOrderId.slice(-4).toUpperCase();
+        const displayId = buildDisplayId(order, currentOrderId);
         document.getElementById('order-id').textContent = displayId;
         document.getElementById('success-order-id').textContent = displayId;
       }
@@ -2084,11 +2139,25 @@ const analytics = firebase.analytics();
     }, 600);
   }
 
-  /* ─── FIREBASE REAL-TIME LISTENER — jumps to Ready when kitchen marks it ─── */
+  /* ─── FIREBASE REAL-TIME LISTENER — drives all 4 track steps ─────────────
+     Step 0 (Order Placed)     : immediate on page load — no Firebase needed
+     Step 1 (Order Confirmed)  : order exists in Firebase (status = "Preparing")
+     Step 2 (Order Processed)  : order is in kitchen — status = "Preparing" (same
+                                  moment as confirmed since kitchen sees orders instantly)
+     Step 3 (Ready to Pick Up) : kitchen clicks "Mark Done" → kitchenDone = true
+  ─────────────────────────────────────────────────────────────────────────── */
   if (currentOrderId) {
     db.ref("orders/" + currentOrderId).on("value", (snap) => {
       const order = snap.val();
-      if (order && order.status === "Ready" && !finished) {
+      if (!order) return;
+
+      // Update display ID in case tableNumber was assigned after order creation
+      const displayId = buildDisplayId(order, currentOrderId);
+      document.getElementById('order-id').textContent = displayId;
+      document.getElementById('success-order-id').textContent = displayId;
+
+      // ── Step 3: kitchen marked done ─────────────────────────────────────
+      if (order.kitchenDone === true && !finished) {
         finished = true;
         elapsed = TOTAL_SEC;
         activeStep = 3;
@@ -2097,6 +2166,27 @@ const analytics = firebase.analytics();
         updateProgress();
         showSuccess();
         clearInterval(ticker);
+        return;
+      }
+
+      // ── Step 2: order in kitchen (Preparing) ────────────────────────────
+      // Only advance if the timer hasn't naturally passed step 2 yet
+      if ((order.status === "Preparing" || order.status === "Ready") && !finished) {
+        if (activeStep < 2) {
+          activeStep = 2;
+          // Snap elapsed so progress reflects step 2 being reached
+          if (elapsed < STEP_AT[2]) elapsed = STEP_AT[2];
+          updateVisuals();
+          updateProgress();
+        }
+      }
+
+      // ── Step 1: order confirmed (exists in Firebase) ─────────────────────
+      if (!finished && activeStep < 1) {
+        activeStep = 1;
+        if (elapsed < STEP_AT[1]) elapsed = STEP_AT[1];
+        updateVisuals();
+        updateProgress();
       }
     });
   }
