@@ -223,6 +223,51 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--black);color:var(--
 .item-qty{font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:800;color:var(--w80);min-width:36px;text-align:right;line-height:1;}
 .item-qty-lbl{font-family:'Space Grotesk',sans-serif;font-size:8px;color:var(--w55);letter-spacing:1px;text-transform:uppercase;text-align:right;display:block;margin-top:1px;}
 
+/* ── CARD FOOTER ACTIONS (Change 1) ── */
+.ocard-footer{
+  padding:14px 20px;
+  border-top:1px solid rgba(255,255,255,0.07);
+  display:flex;gap:10px;
+  background:rgba(255,255,255,0.015);
+}
+.btn-mark-done{
+  flex:1;
+  display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  padding:11px 16px;border-radius:var(--r12);
+  background:rgba(45,212,170,0.10);
+  border:1px solid rgba(45,212,170,0.22);
+  color:var(--green);
+  font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;
+  letter-spacing:.4px;cursor:pointer;
+  transition:all .2s;
+}
+.btn-mark-done:hover{
+  background:rgba(45,212,170,0.20);
+  border-color:var(--green);
+  transform:translateY(-1px);
+  box-shadow:0 6px 18px rgba(45,212,170,0.18);
+}
+.btn-mark-done:active{transform:translateY(0);}
+.btn-mark-done svg{width:13px;height:13px;flex-shrink:0;}
+.btn-print-kot{
+  display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  padding:11px 16px;border-radius:var(--r12);
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.14);
+  color:var(--w55);
+  font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:600;
+  letter-spacing:.4px;cursor:pointer;
+  transition:all .2s;white-space:nowrap;
+}
+.btn-print-kot:hover{
+  background:rgba(255,255,255,0.12);
+  border-color:rgba(255,255,255,0.28);
+  color:#fff;
+  transform:translateY(-1px);
+}
+.btn-print-kot:active{transform:translateY(0);}
+.btn-print-kot svg{width:13px;height:13px;flex-shrink:0;}
+
 /* Empty state */
 .empty{
   display:flex;flex-direction:column;align-items:center;justify-content:center;
@@ -306,7 +351,7 @@ function renderOrders(data){
     document.getElementById('liveCount').innerHTML=`<div class="live-dot"></div><span>0 active</span>`;
     return;
   }
-  const active=Object.values(data).filter(o=>o.status!=='Completed'&&o.status!=='Cancelled');
+  const active=Object.values(data).filter(o=>o.status!=='Completed'&&o.status!=='Cancelled'&&o.status!=='Done');
   document.getElementById('liveCount').innerHTML=`<div class="live-dot"></div><span>${active.length} active</span>`;
   if(!active.length){grid.innerHTML=emptyState();return;}
 
@@ -344,7 +389,7 @@ function renderOrders(data){
     const allItems=grp.orders.flatMap(o=>Array.isArray(o.items)?o.items:(o.items&&typeof o.items==='object'?Object.values(o.items):[]));
     const totalQty=allItems.reduce((s,i)=>s+(i.qty||1),0);
 
-    // ── FIX: each round gets its own KOT button ───────────────────────────────
+    // Each round gets its own per-round KOT button (unchanged behaviour)
     const roundsHTML=grp.orders.map((order,ri)=>{
       const isReady=order.status==='Ready';
       const isFirst=ri===0;
@@ -365,7 +410,6 @@ function renderOrders(data){
         ?`<div class="rstatus ready"><div class="rstatus-dot"></div>Ready</div>`
         :`<div class="rstatus prep" onclick="markReady('${order.id}')" title="Tap to mark ready"><div class="rstatus-dot"></div>Preparing</div>`;
 
-      // KOT button per round
       const kotBtn=`<button class="btn-kot-round" onclick="printKOT('${order.id}')" title="Print KOT for this round">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
         KOT
@@ -388,7 +432,11 @@ function renderOrders(data){
         <ul class="items-list">${itemsHTML||'<li class="item-row"><span class="item-name" style="color:var(--w30)">No items recorded</span></li>'}</ul>
       </div>`;
     }).join('');
-    // ─────────────────────────────────────────────────────────────────────────
+
+    // Collect all order IDs in this group for Mark Done
+    const allOrderIds = grp.orders.map(o=>o.id).filter(Boolean);
+    // Collect all items across all rounds for Print KOT (full card)
+    const allOrderIdsJson = JSON.stringify(allOrderIds).replace(/"/g,'&quot;');
 
     card.innerHTML=`
       <div class="ocard-head">
@@ -417,7 +465,17 @@ function renderOrders(data){
           </div>
         </div>
       </div>
-      <div class="ocard-rounds">${roundsHTML}</div>`;
+      <div class="ocard-rounds">${roundsHTML}</div>
+      <div class="ocard-footer">
+        <button class="btn-mark-done" onclick="markAllDone('${allOrderIdsJson}')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+          Mark Done
+        </button>
+        <button class="btn-print-kot" onclick="printKOTGroup('${allOrderIdsJson}')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+          Print KOT
+        </button>
+      </div>`;
 
     grid.appendChild(card);
   });
@@ -427,6 +485,76 @@ function emptyState(){return`<div class="empty"><div class="empty-ico">🍳</div
 
 function markReady(id){db.ref("orders/"+id).update({status:"Ready"}).catch(e=>console.error(e));}
 
+// ── Change 1: Mark Done — marks ALL rounds for the group as Done
+//    and sets kitchenDone:true so manager status + track page update ──────────
+function markAllDone(idsJson){
+  let ids;
+  try{ ids = JSON.parse(idsJson); } catch(e){ return; }
+  if(!ids||!ids.length) return;
+  const updates={};
+  ids.forEach(id=>{
+    updates["orders/"+id+"/status"]="Done";
+    updates["orders/"+id+"/kitchenDone"]=true;
+    updates["orders/"+id+"/kitchenDoneAt"]=new Date().toISOString();
+  });
+  db.ref().update(updates).catch(e=>console.error(e));
+}
+
+// ── Change 1: Print KOT for the whole card (all rounds merged) ───────────────
+function printKOTGroup(idsJson){
+  let ids;
+  try{ ids = JSON.parse(idsJson); } catch(e){ return; }
+  if(!ids||!ids.length) return;
+
+  // Fetch all orders then merge
+  const fetches = ids.map(id=>db.ref("orders/"+id).once("value"));
+  Promise.all(fetches).then(snaps=>{
+    const orders = snaps.map(s=>s.val()).filter(Boolean);
+    if(!orders.length){alert("Orders not found.");return;}
+
+    const first = orders[0];
+    const tableLabel = first.orderType==='dinein'?`Table: ${first.tableNumber||'—'}`:'Takeaway';
+    const now = new Date();
+    const dtStr = now.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
+    const tmStr = now.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',hour12:true});
+
+    // Merge all items across rounds
+    const merged = {};
+    orders.forEach((o,ri)=>{
+      const itemsArr = Array.isArray(o.items)?o.items:(o.items&&typeof o.items==='object'?Object.values(o.items):[]);
+      itemsArr.forEach(i=>{
+        const key = i.name;
+        if(merged[key]) merged[key].qty += (i.qty||1);
+        else merged[key] = {name:i.name, qty:i.qty||1};
+      });
+    });
+
+    const ih = Object.values(merged).length
+      ? Object.values(merged).map(i=>`<div class="kt-ir"><span class="kt-ir-n">${i.name}</span><span class="kt-ir-q">×${i.qty}</span></div>`).join('')
+      : '<div>No items</div>';
+
+    const roundInfo = orders.length > 1 ? `${orders.length} rounds` : '1 round';
+    const primaryId = (first.id||'').slice(-10).toUpperCase();
+
+    document.getElementById('kotarea').innerHTML=`
+      <div class="kt-brand">EMERALD</div>
+      <div class="kt-title">— KITCHEN ORDER TICKET —</div>
+      <div class="kt-row"><span><strong>Order ID:</strong></span><span>${primaryId}</span></div>
+      <div class="kt-row"><span><strong>${tableLabel}</strong></span><span>${first.customerName||'—'}</span></div>
+      <div class="kt-row"><span><strong>Diet:</strong></span><span>${first.diet||'Regular'}</span></div>
+      <div class="kt-row"><span><strong>Type:</strong></span><span>${first.orderType==='dinein'?'Dine In':'Takeaway'} · ${roundInfo}</span></div>
+      <hr class="kt-div">
+      <div class="kt-ih"><span>Item</span><span>Qty</span></div>
+      <hr class="kt-div">
+      ${ih}
+      <hr class="kt-div">
+      <div class="kt-foot">*** KITCHEN COPY — FULL ORDER ***</div>
+      <div class="kt-ts">${dtStr} &nbsp; ${tmStr}</div>`;
+    window.print();
+  }).catch(e=>{console.error(e);alert("Error fetching orders for KOT.");});
+}
+
+// ── Original single-round KOT (unchanged) ────────────────────────────────────
 function printKOT(id){
   db.ref("orders/"+id).once("value",s=>{
     const o=s.val();if(!o){alert("Order not found.");return;}
