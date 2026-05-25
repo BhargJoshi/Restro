@@ -1172,22 +1172,17 @@ const CIRCUMFERENCE = 2 * Math.PI * 54;
 
 // ── ordering lock + immediate cart snapshot ─────────────────
 let _orderingInProgress = false;
-let _previousOrderItems = []; // store last placed order items for badge
+let _previousOrderItems = []; 
 
 function processPayment() {
   triggerHaptic();
   
-  // If an order is already being processed, do nothing.
-  // This prevents multiple taps from firing multiple DB writes.
   if (_orderingInProgress) return;
   
-  // Snapshot the cart IMMEDIATELY at the start, before any async.
-  // This ensures the exact items the user intended are saved, with no later mutations.
   const cartSnapshot = Object.values(cart).map(item => ({ ...item }));
   const cartTotal = cartSnapshot.reduce((sum, item) => sum + (item.price * item.qty), 0);
-  if (cartSnapshot.length === 0) return; // nothing to order
+  if (cartSnapshot.length === 0) return; 
 
-  // Lock immediately
   _orderingInProgress = true;
   const currentOrderInfo = JSON.parse(localStorage.getItem("currentOrderInfo") || "{}");
   const orderType = currentOrderInfo.orderType || "takeaway";
@@ -1196,10 +1191,8 @@ function processPayment() {
   const tablePref = currentOrderInfo.tablePref || "";
 
   const prevOrderId = localStorage.getItem("currentOrderId");
+  
   const createNewOrder = (assignedTableNum, bypassAssign) => {
-    // Record session start BEFORE writing the order so current.since <= createdAt always.
-    // If we set since=Date.now() inside assignTable (which runs after the DB write),
-    // since ends up AFTER createdAt and the sessionSince guard excludes the first order.
     const sessionStartTime = Date.now();
     const orderId = "ORD" + sessionStartTime;
     const order = {
@@ -1214,6 +1207,7 @@ function processPayment() {
       orderType: orderType,
       createdAt: new Date(sessionStartTime).toISOString()
     };
+    
     db.ref("orders/" + orderId).set(order).then(() => {
       localStorage.setItem("currentOrderId", orderId);
 
@@ -1223,8 +1217,6 @@ function processPayment() {
       addPrevOrderRound(_previousOrderItems);
 
       if (orderType === "dinein" && !bypassAssign) {
-        // Pass sessionStartTime so assignTable sets current.since = sessionStartTime,
-        // which is guaranteed <= createdAt (same millisecond or earlier)
         assignTable(customerName, peopleCount, orderId, tablePref, sessionStartTime);
       }
       showOrderConfirm();
@@ -1236,41 +1228,47 @@ function processPayment() {
     });
   };
 
-  // ── Real-time scenario logic ──────────────────────────────────────────────
-  // When a dine-in customer orders a second round, we check the tables node.
-  // We ONLY reuse the existing table assignment if:
-  //   1. The table is still marked occupied
-  //   2. The table's current session orderId matches this customer's initial orderId
-  // This securely links new orders to the physical table session, even if previous
-  // orders were hidden or modified by the kitchen display.
+  // ── Bulletproof Multi-Round Logic ─────────────────────────────────────────
+  // We check if the previous order's TABLE is still occupied by this customer,
+  // bypassing the strict ID check to allow for infinite continuous rounds.
   if (orderType === "dinein" && prevOrderId) {
-    db.ref("tables").once("value", tSnap => {
-      const tables = tSnap.val();
-      let tableStillOccupied = false;
-      let existingTableNum = null;
+    db.ref("orders/" + prevOrderId).once("value", snap => {
+      const prevOrder = snap.val();
 
-      if (tables) {
-        Object.values(tables).forEach(t => {
-          if (t && t.occupied && t.current && t.current.orderId === prevOrderId) {
-            tableStillOccupied = true;
-            existingTableNum = t.number;
-          }
-        });
-      }
+      const isStillActive = prevOrder &&
+        prevOrder.status !== "Completed" &&
+        prevOrder.status !== "Cancelled" &&
+        prevOrder.tableNumber &&
+        (prevOrder.customerName || "").trim().toLowerCase() === customerName.trim().toLowerCase();
 
-      if (tableStillOccupied) {
-        // Same active session — attach to existing table
-        createNewOrder(existingTableNum, true);
-      } else {
-        // Table has been freed — this is a new visit, assign fresh
+      if (!isStillActive) {
         createNewOrder(null, false);
+        return;
       }
+
+      db.ref("tables").once("value", tSnap => {
+        const tables = tSnap.val();
+        let tableStillOccupied = false;
+        
+        if (tables) {
+          Object.values(tables).forEach(t => {
+            if (t && t.number == prevOrder.tableNumber && t.occupied) {
+              tableStillOccupied = true;
+            }
+          });
+        }
+
+        if (tableStillOccupied) {
+          createNewOrder(prevOrder.tableNumber, true);
+        } else {
+          createNewOrder(null, false);
+        }
+      });
     });
   } else {
     createNewOrder(null, false);
   }
 }
-// ─────────────────────────────────────────────────────────────────────────────
 
 // ── PREVIOUS ORDERS PANEL (hamburger menu) ─────────────────────────────────
 // Each placed order is stored as a round in this array
@@ -1344,15 +1342,10 @@ document.addEventListener('click', function(e) {
 
 // ─── Proper table allocation using Firebase key-value pairs ──────
 function assignTable(name, people, orderId, tablePref, sessionStartTime) {
-  // sessionStartTime is the timestamp captured before the order was written to Firebase.
-  // Using it as current.since guarantees: since <= createdAt, so the sessionSince
-  // guard in manager's viewOrderDetails/openBill correctly includes this first order.
   const since = sessionStartTime || Date.now();
   db.ref("tables").once("value", (snapshot) => {
     const raw = snapshot.val();
 
-    // No tables node exists yet — initialize with a clean fixed array of 10 tables
-    // (manager.html will have done this already; this is a safety net only)
     if (!raw) {
       const initTables = [];
       for (let i = 1; i <= 10; i++) {
@@ -1370,34 +1363,27 @@ function assignTable(name, people, orderId, tablePref, sessionStartTime) {
       return;
     }
 
-    // Build an array of { key, table } pairs from Firebase object/array
-    // This correctly maps Firebase keys to table objects regardless of storage format
     const entries = Object.entries(raw)
       .map(([k, v]) => ({ key: k, table: v }))
       .filter(e => e.table && e.table.number != null);
     
-    // Find a preferred table by number if specified
     let selectedEntry = null;
     if (tablePref && tablePref.trim() !== "" && !isNaN(tablePref)) {
       selectedEntry = entries.find(e => e.table.number === parseInt(tablePref)) || null;
-      // Only use preference if the table is free or has no nextOrder
       if (selectedEntry && selectedEntry.table.occupied && selectedEntry.table.nextOrder) {
         selectedEntry = null;
       }
     }
 
     if (!selectedEntry) {
-      // Prefer a completely free (unoccupied) table
       const freeEntries = entries.filter(e => !e.table.occupied);
       if (freeEntries.length > 0) {
         selectedEntry = freeEntries[Math.floor(Math.random() * freeEntries.length)];
       } else {
-        // All occupied — find one without a nextOrder queued
         const noNextEntries = entries.filter(e => e.table.occupied && !e.table.nextOrder);
         if (noNextEntries.length > 0) {
           selectedEntry = noNextEntries[Math.floor(Math.random() * noNextEntries.length)];
         } else {
-          // Every table is full and has a nextOrder — add to queue node
           const queueRef = db.ref("queue").push();
           queueRef.set({ name: name, people: people, orderId: orderId, time: Date.now() });
           return;
@@ -1408,12 +1394,10 @@ function assignTable(name, people, orderId, tablePref, sessionStartTime) {
     if (selectedEntry) {
       const { key: tableKey, table: selectedTable } = selectedEntry;
       if (selectedTable.occupied) {
-        // Table is occupied — store as nextOrder (red badge)
         db.ref("tables/" + tableKey).update({
           nextOrder: { name: name, people: people, since: since, orderId: orderId }
         });
       } else {
-        // Table is free — assign directly
         db.ref("tables/" + tableKey).update({
           occupied: true,
           current: { name: name, people: people, since: since, orderId: orderId }
