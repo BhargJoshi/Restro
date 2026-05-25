@@ -713,7 +713,6 @@ const analytics = firebase.analytics();
   </div>
 </div>
 
-<!-- PREVIOUS ORDERS SIDE PANEL -->
 <div id="prev-orders-panel">
   <div class="pop-backdrop" onclick="closePrevOrdersPanel()"></div>
   <div class="pop-sheet">
@@ -911,13 +910,13 @@ const menuData = {
     { id: 'cs6',  name: 'Paneer 65',                        price: 225.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQgF9UQ7XEpa_hzoB4vqImJNxhtoXo1bSkxXXYNGSrJI7XQx7luoS0Ny9cp3iw&s' },
     { id: 'cs7',  name: 'Veg. Manchurian (Dry / Gravy)',    price: 200.00, img: 'https://encrypted-tbn0.GcS-T08wN9wEcv7K69YunK_KpkJI2JqwxoHp7KD6Tam4CZrzr79paeiQ_KXgYYw&s' },
     { id: 'cs8',  name: 'Veg. Spring Roll',                 price: 210.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9e71ZRaUf1eyTgPi-2DNdSRhvmCo_FQZs5az96-Kbh15ySvvhHtDcaLdn9Ho&s' },
-    { id: 'cs9',  name: 'Veg. Lollipop',                   price: 220.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnHONXWkJZesco0moCnyRYWi9TSZbWvlDTMwYNjK1xv7DJRjTO2PyeAt5FDA&s' },
+    { id: 'cs9',  name: 'Veg. Lollipop',                    price: 220.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnHONXWkJZesco0moCnyRYWi9TSZbWvlDTMwYNjK1xv7DJRjTO2PyeAt5FDA&s' },
     { id: 'cs10', name: 'Mushroom Chilly Fry',              price: 225.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTqTP7ncN-WIfRGMzbykjoIJyAU2iFO2LV01XUhGslMqCs-mALo4yZyiuZ_Ia0&s' },
-    { id: 'no1', name: 'Veg. Chow Mein',                price: 180.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0i6lo6r8E6jBEwnRff4kEwRIfiGoPsEEP0UUPR-bnovLZ-HlcCudxPbz6cU4&s' },
-    { id: 'no2', name: 'Veg. Hakka Noodles',            price: 190.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEMZ4JpLRuSa_REGClx1HXFOn7xk5WzUpmsAY0hK3GnzOUFjPIDpFh9Hc07Mo&s' },
-    { id: 'no3', name: 'Schezwan Noodles',              price: 190.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwUPw_NlnJTWTLK5FEmnl9u01xEQOAq7vb6rPBn2ayEAGaiv_GHU3mykC9Z-8&s' },
-    { id: 'no4', name: 'Chilly Garlic Noodles',         price: 190.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT112W7k7LfbXy-JuWSi1ZO0kbDt8iuB7weVztEfMlTEQQhadfhVHQqsWU7Wg&s' },
-    { id: 'no5', name: 'Veg. Manchurian With Noodles',  price: 190.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTCStge8hAfSjPp-wHhPCSyWx-RyBLehGLKgTd5J41dUxjnnDHUDtVibo-HeY&s' }
+    { id: 'no1', name: 'Veg. Chow Mein',                    price: 180.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0i6lo6r8E6jBEwnRff4kEwRIfiGoPsEEP0UUPR-bnovLZ-HlcCudxPbz6cU4&s' },
+    { id: 'no2', name: 'Veg. Hakka Noodles',                price: 190.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEMZ4JpLRuSa_REGClx1HXFOn7xk5WzUpmsAY0hK3GnzOUFjPIDpFh9Hc07Mo&s' },
+    { id: 'no3', name: 'Schezwan Noodles',                  price: 190.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwUPw_NlnJTWTLK5FEmnl9u01xEQOAq7vb6rPBn2ayEAGaiv_GHU3mykC9Z-8&s' },
+    { id: 'no4', name: 'Chilly Garlic Noodles',             price: 190.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT112W7k7LfbXy-JuWSi1ZO0kbDt8iuB7weVztEfMlTEQQhadfhVHQqsWU7Wg&s' },
+    { id: 'no5', name: 'Veg. Manchurian With Noodles',      price: 190.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTCStge8hAfSjPp-wHhPCSyWx-RyBLehGLKgTd5J41dUxjnnDHUDtVibo-HeY&s' }
   ],
   soups: [
     { id: 'sp1',  name: 'Cream of Tomato',              price: 100.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhVcyucgQyRU-6gf5VLl2wSkhJCo1QswUcjGp4pGOd5oJNWwV-RPw_0GD-hc8&s' },
@@ -986,23 +985,22 @@ const menuData = {
     { id: 'sh7ic', name: 'Cold Coffee (with Ice Cream)',               price: 115.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRmiZWgxBPAKm0abDszJm1CN2oBwKsqt3VJs5v3yLjcgDQFFVjGi4Dae9Ml8A&s' }
   ],
   ice_cream: [
-    { id: 'ic1',  name: 'Gulab Jamun',                  price: 50.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsJA1SQdg5_BIZ9RrLGkTu6kJL5oOStSP89vBKB64KRpconDmKy2cqUfdYrg&s' },
-    { id: 'ic2',  name: 'Rajbhog',                      price: 99.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT2xZCICdx4jD8LaY17IUhVsYea_QhCND6GuZaShhQAbjUu4qRxjCXt6RzWrQ&s' },
-    { id: 'ic3',  name: 'Vanilla Ice Cream',            price: 80.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJCqFbb7Kys8VQXS-w3ccgUrsu0ENVkT2ltx0ctymJTd55cIpUus7o16nnv1A&s' },
-    { id: 'ic4',  name: 'Strawberry Ice Cream',         price: 80.00,  img: 'https://encrypted-tbn0.GcS_IiLaxDUz-XqJTCPB5mEaOZM9SG79epWEw-UI3rAvJn1Ab43gTGexw0eeFhY&s' },
-    { id: 'ic5',  name: 'Cheery Berry Ice Cream',       price: 80.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcTwbZKqR7zLwpAy7n5AzAZQJ0o8OxHZLYP_qHhUDFbBQAz1GeowDyBQ3ZGnc&s' },
-    { id: 'ic6',  name: 'Mango Ice Cream',              price: 80.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3pxk78iTaHADhDtQkGm0PP0sMzs_bo3uGdF2hDHXIZfU7zwS7XAnFaKaMgw&s' },
-    { id: 'ic7',  name: 'Kesar Pista Ice Cream',        price: 90.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTasoYFvxW6_4a7zWT146t5hQwxzK8vB8L6-n2z8Vxmg_xqV3BsLREGLQsa11U&s' },
-    { id: 'ic8',  name: 'Kaju Draksh Ice Cream',        price: 90.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIgY1vPl82wSeksM93GfkZ5WSWQps7w7qIg6ywEmIKnRYMX-lAMsqZPqpx26c&s' },
-    { id: 'ic9',  name: 'Butter Scotch Ice Cream',      price: 90.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDe-rPhT2qd8R9iVqfrMdtlRVbyZn7T3YLylzxyxAhIs0zJZLf4ZC640iXSw&s' },
-    { id: 'ic10', name: 'Chocolate Ice Cream',          price: 90.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtRQfL6mM1ULa42AMgt8skn0Pyr4w3h5Qq_MMnHaaVo3l2LFZUL80mm1clYbw&s' },
-    { id: 'ic11', name: 'Fruit Salad with Ice Cream',   price: 140.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQbTrudasoK2XNCkuOqxAyOChwT_yarZLJA72QAhhtV3SO74XgLVVf5WWaBzw&s' },
-    { id: 'ic12', name: 'American Nut',                 price: 99.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhXpPuia6sOViPa3XvY4PhIcgs0d3FxjG2K1LeBtL_ExZMXZ5A5KRE1C_ieA&s' }
+    { id: 'ic1',  name: 'Gulab Jamun',                                 price: 50.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsJA1SQdg5_BIZ9RrLGkTu6kJL5oOStSP89vBKB64KRpconDmKy2cqUfdYrg&s' },
+    { id: 'ic2',  name: 'Rajbhog',                                     price: 99.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT2xZCICdx4jD8LaY17IUhVsYea_QhCND6GuZaShhQAbjUu4qRxjCXt6RzWrQ&s' },
+    { id: 'ic3',  name: 'Vanilla Ice Cream',                           price: 80.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJCqFbb7Kys8VQXS-w3ccgUrsu0ENVkT2ltx0ctymJTd55cIpUus7o16nnv1A&s' },
+    { id: 'ic4',  name: 'Strawberry Ice Cream',                        price: 80.00,  img: 'https://encrypted-tbn0.GcS_IiLaxDUz-XqJTCPB5mEaOZM9SG79epWEw-UI3rAvJn1Ab43gTGexw0eeFhY&s' },
+    { id: 'ic5',  name: 'Cheery Berry Ice Cream',                      price: 80.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcTwbZKqR7zLwpAy7n5AzAZQJ0o8OxHZLYP_qHhUDFbBQAz1GeowDyBQ3ZGnc&s' },
+    { id: 'ic6',  name: 'Mango Ice Cream',                             price: 80.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3pxk78iTaHADhDtQkGm0PP0sMzs_bo3uGdF2hDHXIZfU7zwS7XAnFaKaMgw&s' },
+    { id: 'ic7',  name: 'Kesar Pista Ice Cream',                       price: 90.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTasoYFvxW6_4a7zWT146t5hQwxzK8vB8L6-n2z8Vxmg_xqV3BsLREGLQsa11U&s' },
+    { id: 'ic8',  name: 'Kaju Draksh Ice Cream',                       price: 90.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIgY1vPl82wSeksM93GfkZ5WSWQps7w7qIg6ywEmIKnRYMX-lAMsqZPqpx26c&s' },
+    { id: 'ic9',  name: 'Butter Scotch Ice Cream',                     price: 90.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDe-rPhT2qd8R9iVqfrMdtlRVbyZn7T3YLylzxyxAhIs0zJZLf4ZC640iXSw&s' },
+    { id: 'ic10', name: 'Chocolate Ice Cream',                         price: 90.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtRQfL6mM1ULa42AMgt8skn0Pyr4w3h5Qq_MMnHaaVo3l2LFZUL80mm1clYbw&s' },
+    { id: 'ic11', name: 'Fruit Salad with Ice Cream',                  price: 140.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQbTrudasoK2XNCkuOqxAyOChwT_yarZLJA72QAhhtV3SO74XgLVVf5WWaBzw&s' },
+    { id: 'ic12', name: 'American Nut',                                price: 99.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhXpPuia6sOViPa3XvY4PhIcgs0d3FxjG2K1LeBtL_ExZMXZ5A5KRE1C_ieA&s' }
   ]
 };
 
 let cart = {};
-
 window.onload = () => {
   setTimeout(() => {
     document.getElementById('intro-wrapper').classList.add('exit');
@@ -1172,27 +1170,25 @@ let orderTimerInterval = null;
 const TOTAL_SECONDS = 15 * 60;
 const CIRCUMFERENCE = 2 * Math.PI * 54;
 
-// ── CHANGE 1 & 2 FIX: ordering lock + immediate cart snapshot ─────────────────
+// ── ordering lock + immediate cart snapshot ─────────────────
 let _orderingInProgress = false;
 let _previousOrderItems = []; // store last placed order items for badge
 
 function processPayment() {
   triggerHaptic();
-
-  // CHANGE 1 FIX: If an order is already being processed, do nothing.
+  
+  // If an order is already being processed, do nothing.
   // This prevents multiple taps from firing multiple DB writes.
   if (_orderingInProgress) return;
-
-  // CHANGE 2 FIX: Snapshot the cart IMMEDIATELY at the start, before any async.
+  
+  // Snapshot the cart IMMEDIATELY at the start, before any async.
   // This ensures the exact items the user intended are saved, with no later mutations.
   const cartSnapshot = Object.values(cart).map(item => ({ ...item }));
   const cartTotal = cartSnapshot.reduce((sum, item) => sum + (item.price * item.qty), 0);
-
   if (cartSnapshot.length === 0) return; // nothing to order
 
   // Lock immediately
   _orderingInProgress = true;
-
   const currentOrderInfo = JSON.parse(localStorage.getItem("currentOrderInfo") || "{}");
   const orderType = currentOrderInfo.orderType || "takeaway";
   const customerName = currentOrderInfo.name || "Customer";
@@ -1200,7 +1196,6 @@ function processPayment() {
   const tablePref = currentOrderInfo.tablePref || "";
 
   const prevOrderId = localStorage.getItem("currentOrderId");
-
   const createNewOrder = (assignedTableNum, bypassAssign) => {
     // Record session start BEFORE writing the order so current.since <= createdAt always.
     // If we set since=Date.now() inside assignTable (which runs after the DB write),
@@ -1219,7 +1214,6 @@ function processPayment() {
       orderType: orderType,
       createdAt: new Date(sessionStartTime).toISOString()
     };
-
     db.ref("orders/" + orderId).set(order).then(() => {
       localStorage.setItem("currentOrderId", orderId);
 
@@ -1243,51 +1237,34 @@ function processPayment() {
   };
 
   // ── Real-time scenario logic ──────────────────────────────────────────────
-  // When a dine-in customer orders a second round, we check their previous order.
-  // We ONLY reuse the existing table assignment if ALL of these are true:
-  //   1. The previous order still exists in Firebase
-  //   2. Its status is still active (not Completed / Cancelled)
-  //   3. It has a tableNumber assigned
-  //   4. That table is STILL marked occupied in Firebase (not freed since)
-  //   5. The customer name matches
-  // If ANY check fails, treat this as a brand-new customer session — full fresh assignment.
+  // When a dine-in customer orders a second round, we check the tables node.
+  // We ONLY reuse the existing table assignment if:
+  //   1. The table is still marked occupied
+  //   2. The table's current session orderId matches this customer's initial orderId
+  // This securely links new orders to the physical table session, even if previous
+  // orders were hidden or modified by the kitchen display.
   if (orderType === "dinein" && prevOrderId) {
-    db.ref("orders/" + prevOrderId).once("value", snap => {
-      const prevOrder = snap.val();
+    db.ref("tables").once("value", tSnap => {
+      const tables = tSnap.val();
+      let tableStillOccupied = false;
+      let existingTableNum = null;
 
-      const isStillActive = prevOrder &&
-        prevOrder.status !== "Completed" &&
-        prevOrder.status !== "Cancelled" &&
-        prevOrder.tableNumber &&
-        (prevOrder.customerName || "").trim().toLowerCase() === customerName.trim().toLowerCase();
-
-      if (!isStillActive) {
-        // Previous order is done or cancelled — fresh session
-        createNewOrder(null, false);
-        return;
+      if (tables) {
+        Object.values(tables).forEach(t => {
+          if (t && t.occupied && t.current && t.current.orderId === prevOrderId) {
+            tableStillOccupied = true;
+            existingTableNum = t.number;
+          }
+        });
       }
 
-      // Double-check the table itself is still occupied in Firebase
-      // (manager may have freed it since the last order)
-      db.ref("tables").once("value", tSnap => {
-        const tables = tSnap.val();
-        let tableStillOccupied = false;
-        if (tables) {
-          Object.values(tables).forEach(t => {
-            if (t && t.number == prevOrder.tableNumber && t.occupied) {
-              tableStillOccupied = true;
-            }
-          });
-        }
-
-        if (tableStillOccupied) {
-          // Same customer, same active session — attach to existing table
-          createNewOrder(prevOrder.tableNumber, true);
-        } else {
-          // Table has been freed — this is a new visit, assign fresh
-          createNewOrder(null, false);
-        }
-      });
+      if (tableStillOccupied) {
+        // Same active session — attach to existing table
+        createNewOrder(existingTableNum, true);
+      } else {
+        // Table has been freed — this is a new visit, assign fresh
+        createNewOrder(null, false);
+      }
     });
   } else {
     createNewOrder(null, false);
@@ -1298,7 +1275,6 @@ function processPayment() {
 // ── PREVIOUS ORDERS PANEL (hamburger menu) ─────────────────────────────────
 // Each placed order is stored as a round in this array
 let _prevOrderRounds = [];
-
 function addPrevOrderRound(items) {
   if (!items || !items.length) return;
   _prevOrderRounds.push({ items: items.map(i => ({...i})), time: new Date() });
@@ -1315,7 +1291,6 @@ function openPrevOrdersPanel() {
   // Clear notification dot
   const dot = document.getElementById('hamb-notif-dot');
   if (dot) dot.classList.remove('visible');
-
   if (!_prevOrderRounds.length) {
     body.innerHTML = '<div class="pop-empty">No orders placed yet this session.</div>';
   } else {
@@ -1367,7 +1342,7 @@ document.addEventListener('click', function(e) {
 });
 // ──────────────────────────────────────────────────────────────────────────────
 
-// ─── CHANGE 3 FIX: Proper table allocation using Firebase key-value pairs ──────
+// ─── Proper table allocation using Firebase key-value pairs ──────
 function assignTable(name, people, orderId, tablePref, sessionStartTime) {
   // sessionStartTime is the timestamp captured before the order was written to Firebase.
   // Using it as current.since guarantees: since <= createdAt, so the sessionSince
@@ -1400,7 +1375,7 @@ function assignTable(name, people, orderId, tablePref, sessionStartTime) {
     const entries = Object.entries(raw)
       .map(([k, v]) => ({ key: k, table: v }))
       .filter(e => e.table && e.table.number != null);
-
+    
     // Find a preferred table by number if specified
     let selectedEntry = null;
     if (tablePref && tablePref.trim() !== "" && !isNaN(tablePref)) {
