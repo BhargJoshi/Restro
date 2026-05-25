@@ -99,6 +99,7 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--black);color:var(--
 }
 .ocard.preparing{border-color:rgba(240,180,41,0.22);}
 .ocard.all-ready{border-color:rgba(45,212,170,0.22);}
+.ocard.all-done{border-color:rgba(45,212,170,0.40);background:rgba(45,212,170,0.04);}
 
 /* Top strip */
 .ocard-head{
@@ -137,6 +138,7 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--black);color:var(--
 }
 .ostatus.prep{color:var(--gold);background:rgba(240,180,41,0.08);border-color:rgba(240,180,41,.18);}
 .ostatus.ready{color:var(--green);background:rgba(45,212,170,0.08);border-color:rgba(45,212,170,.18);}
+.ostatus.done{color:var(--green);background:rgba(45,212,170,0.14);border-color:rgba(45,212,170,.30);font-weight:700;}
 .ostatus-dot{width:5px;height:5px;border-radius:50%;background:currentColor;animation:blink 2.2s ease-in-out infinite;}
 
 /* Rounds container */
@@ -276,6 +278,7 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--black);color:var(--
   box-shadow:0 6px 18px rgba(45,212,170,0.18);
 }
 .btn-mark-done:active{transform:translateY(0);}
+.btn-mark-done.btn-done-already{background:rgba(45,212,170,0.06);border-color:rgba(45,212,170,0.14);color:rgba(45,212,170,0.45);cursor:default;transform:none;box-shadow:none;}
 .btn-mark-done svg{width:13px;height:13px;flex-shrink:0;}
 .btn-print-kot{
   display:inline-flex;align-items:center;justify-content:center;gap:7px;
@@ -379,7 +382,7 @@ function renderOrders(data){
     document.getElementById('liveCount').innerHTML=`<div class="live-dot"></div><span>0 active</span>`;
     return;
   }
-  const active=Object.values(data).filter(o=>o.status!=='Completed'&&o.status!=='Cancelled'&&o.status!=='Done');
+  const active=Object.values(data).filter(o=>o.status!=='Completed'&&o.status!=='Cancelled');
   document.getElementById('liveCount').innerHTML=`<div class="live-dot"></div><span>${active.length} active</span>`;
   if(!active.length){grid.innerHTML=emptyState();return;}
 
@@ -408,7 +411,7 @@ function renderOrders(data){
     grp.orders.sort((a,b)=>(a.createdAt?new Date(a.createdAt).getTime():0)-(b.createdAt?new Date(b.createdAt).getTime():0));
     const anyPrep=grp.orders.some(o=>o.status!=='Ready');
     const card=document.createElement('div');
-    card.className=`ocard ${anyPrep?'preparing':'all-ready'}`;
+    card.className=`ocard ${allDone?'all-done':(anyPrep?'preparing':'all-ready')}`;
 
     let dietCls='blue';
     if(grp.diet==='Jain')dietCls='gold';
@@ -466,7 +469,8 @@ function renderOrders(data){
     // Collect all items across all rounds for Print KOT (full card)
     const allOrderIdsJson = JSON.stringify(allOrderIds).replace(/"/g,'&quot;');
     // Dismiss button is only active when every round has been marked done via kitchenDone
-    const allDone = grp.orders.length > 0 && grp.orders.every(o=>o.kitchenDone===true);
+    // allDone: true when every round is kitchenDone OR already has status Done (backwards compat)
+    const allDone = grp.orders.length > 0 && grp.orders.every(o=>o.kitchenDone===true || o.status==='Done');
 
     card.innerHTML=`
       <div class="ocard-head">
@@ -489,9 +493,9 @@ function renderOrders(data){
           </div>
         </div>
         <div class="ocard-overall">
-          <div class="ostatus ${anyPrep?'prep':'ready'}">
+          <div class="ostatus ${allDone?'done':(anyPrep?'prep':'ready')}">
             <div class="ostatus-dot"></div>
-            ${anyPrep?'In Progress':'All Ready'}
+            ${allDone?'Done':(anyPrep?'In Progress':'All Ready')}
           </div>
           <button
             class="btn-dismiss${allDone?' dismissable':''}"
@@ -503,9 +507,9 @@ function renderOrders(data){
       </div>
       <div class="ocard-rounds">${roundsHTML}</div>
       <div class="ocard-footer">
-        <button class="btn-mark-done" onclick="markAllDone('${allOrderIdsJson}')">
+        <button class="btn-mark-done${allDone?' btn-done-already':''}" ${allDone?'disabled':''} onclick="${allDone?'':"markAllDone('${allOrderIdsJson}')"}">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
-          Mark Done
+          ${allDone?'Marked Done':'Mark Done'}
         </button>
         <button class="btn-print-kot" onclick="printKOTGroup('${allOrderIdsJson}')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
@@ -527,9 +531,11 @@ function markAllDone(idsJson){
   let ids;
   try{ ids = JSON.parse(idsJson); } catch(e){ return; }
   if(!ids||!ids.length) return;
+  // Only set kitchenDone:true — do NOT change status to "Done".
+  // The card stays visible so staff can see it's ready.
+  // The X button (only active after this) is what removes the card.
   const updates={};
   ids.forEach(id=>{
-    updates["orders/"+id+"/status"]="Done";
     updates["orders/"+id+"/kitchenDone"]=true;
     updates["orders/"+id+"/kitchenDoneAt"]=new Date().toISOString();
   });
@@ -544,14 +550,23 @@ function dismissOrder(idsJson){
   let ids;
   try{ ids = JSON.parse(idsJson); } catch(e){ return; }
   if(!ids||!ids.length) return;
-  // Safety guard — only remove if all are kitchenDone
+  // Safety guard — re-verify from Firebase that all rounds are kitchenDone
+  // (or already status:Done from an older session) before deleting.
   const fetches = ids.map(id=>db.ref("orders/"+id).once("value"));
   Promise.all(fetches).then(snaps=>{
-    const allConfirmed = snaps.every(s=>{const v=s.val();return v&&v.kitchenDone===true;});
+    const allConfirmed = snaps.every(s=>{
+      const v=s.val();
+      // Allow dismiss if kitchenDone:true OR status is already "Done" (backwards compat)
+      return v && (v.kitchenDone===true || v.status==='Done');
+    });
     if(!allConfirmed){
-      console.warn("dismissOrder: not all orders are kitchenDone — abort.");
+      console.warn("dismissOrder: guard failed — not all rounds are done. Abort.");
       return;
     }
+    // Remove all order nodes from Firebase — this triggers the on("value")
+    // listener which re-renders the grid (card disappears).
+    // If this is the last order, Firebase will return null for the orders node
+    // which is already handled gracefully in renderOrders().
     const removes = ids.map(id=>db.ref("orders/"+id).remove());
     Promise.all(removes).catch(e=>console.error("dismissOrder remove error:",e));
   }).catch(e=>console.error("dismissOrder fetch error:",e));
