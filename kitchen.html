@@ -579,15 +579,29 @@ function markAllDone(idsJson){
   let ids;
   try{ ids = JSON.parse(idsJson); } catch(e){ return; }
   if(!ids||!ids.length) return;
-  // Only set kitchenDone:true — do NOT change status to "Done".
-  // The card stays visible so staff can see it's ready.
-  // The X button (only active after this) is what removes the card.
+  // Step 1: set kitchenDone:true on every order round — card stays visible.
   const updates={};
   ids.forEach(id=>{
     updates["orders/"+id+"/kitchenDone"]=true;
     updates["orders/"+id+"/kitchenDoneAt"]=new Date().toISOString();
   });
   db.ref().update(updates).catch(e=>console.error(e));
+
+  // Step 2: persist diningStatus:'dining' on the TABLE node so the manager
+  // status button stays "Occupied · Dining" even after these order nodes are
+  // later deleted by the X button (dismiss). Without this, once order nodes
+  // are removed, the manager has no signal that food was served.
+  db.ref("orders/"+ids[0]).once("value", s=>{
+    const o = s.val();
+    if(!o || !o.tableNumber || o.orderType !== 'dinein') return;
+    // Find the table key by number and write diningStatus
+    db.ref("tables").orderByChild("number").equalTo(o.tableNumber).once("value", ts=>{
+      const tdata = ts.val();
+      if(!tdata) return;
+      const tkey = Object.keys(tdata)[0];
+      if(tkey) db.ref("tables/"+tkey).update({ diningStatus: 'dining' });
+    });
+  });
 }
 
 // ── Dismiss: Remove all rounds from Firebase (only allowed after kitchenDone) ─
