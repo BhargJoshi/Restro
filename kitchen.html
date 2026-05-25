@@ -352,6 +352,7 @@ const db=firebase.database();firebase.analytics();
       <span class="nav-role">Kitchen Display</span>
     </div>
     <div class="nav-right">
+      <button onclick="clearStaleOrders()" title="Remove stale/ghost orders from database" style="font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:600;color:var(--w30);background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.10);padding:5px 12px;border-radius:20px;cursor:pointer;letter-spacing:.5px;transition:all .2s;" onmouseover="this.style.color='var(--red)';this.style.borderColor='rgba(244,97,79,0.4)'" onmouseout="this.style.color='var(--w30)';this.style.borderColor='rgba(255,255,255,0.10)'">Clear Stale</button>
       <div class="nav-live" id="liveCount"><div class="live-dot"></div><span>0 active</span></div>
       <div class="nav-clock" id="clock">--:--:--</div>
     </div>
@@ -409,26 +410,29 @@ function renderOrders(data){
 
   sortedGroups.forEach(grp=>{
     grp.orders.sort((a,b)=>(a.createdAt?new Date(a.createdAt).getTime():0)-(b.createdAt?new Date(b.createdAt).getTime():0));
-    const anyPrep=grp.orders.some(o=>o.status!=='Ready');
-    const card=document.createElement('div');
-    card.className=`ocard ${allDone?'all-done':(anyPrep?'preparing':'all-ready')}`;
+
+    // ── Compute all flags FIRST before they are used anywhere ──────────────
+    const anyPrep  = grp.orders.some(o=>o.status!=='Ready' && o.status!=='Done');
+    const allDone  = grp.orders.length > 0 && grp.orders.every(o=>o.kitchenDone===true || o.status==='Done');
+    const allOrderIds     = grp.orders.map(o=>o.id).filter(Boolean);
+    const allOrderIdsJson = JSON.stringify(allOrderIds).replace(/"/g,'&quot;');
 
     let dietCls='blue';
-    if(grp.diet==='Jain')dietCls='gold';
-    if(grp.diet==='Swaminarayan')dietCls='green';
+    if(grp.diet==='Jain')   dietCls='gold';
+    if(grp.diet==='Swaminarayan') dietCls='green';
 
-    const allItems=grp.orders.flatMap(o=>Array.isArray(o.items)?o.items:(o.items&&typeof o.items==='object'?Object.values(o.items):[]));
-    const totalQty=allItems.reduce((s,i)=>s+(i.qty||1),0);
+    const allItems  = grp.orders.flatMap(o=>Array.isArray(o.items)?o.items:(o.items&&typeof o.items==='object'?Object.values(o.items):[]));
+    const totalQty  = allItems.reduce((s,i)=>s+(i.qty||1),0);
 
-    // Each round gets its own per-round KOT button (unchanged behaviour)
-    const roundsHTML=grp.orders.map((order,ri)=>{
-      const isReady=order.status==='Ready';
-      const isFirst=ri===0;
-      const itemsArr=Array.isArray(order.items)?order.items:(order.items&&typeof order.items==='object'?Object.values(order.items):[]);
-      const sid=(order.id||'').slice(-10).toUpperCase();
-      const mins=order.createdAt?Math.floor((Date.now()-new Date(order.createdAt).getTime())/60000):null;
+    // ── Build rounds HTML ──────────────────────────────────────────────────
+    const roundsHTML = grp.orders.map((order,ri)=>{
+      const isReady  = order.status==='Ready' || order.status==='Done';
+      const isFirst  = ri===0;
+      const itemsArr = Array.isArray(order.items)?order.items:(order.items&&typeof order.items==='object'?Object.values(order.items):[]);
+      const sid      = (order.id||'').slice(-10).toUpperCase();
+      const mins     = order.createdAt ? Math.floor((Date.now()-new Date(order.createdAt).getTime())/60000) : null;
 
-      const itemsHTML=itemsArr.map(i=>`
+      const itemsHTML = itemsArr.map(i=>`
         <li class="item-row">
           <span class="item-name">${i.name}</span>
           <div style="text-align:right;">
@@ -437,11 +441,11 @@ function renderOrders(data){
           </div>
         </li>`).join('');
 
-      const statusPill=isReady
-        ?`<div class="rstatus ready"><div class="rstatus-dot"></div>Ready</div>`
-        :`<div class="rstatus prep" onclick="markReady('${order.id}')" title="Tap to mark ready"><div class="rstatus-dot"></div>Preparing</div>`;
+      const statusPill = isReady
+        ? `<div class="rstatus ready"><div class="rstatus-dot"></div>Ready</div>`
+        : `<div class="rstatus prep" onclick="markReady('${order.id}')" title="Tap to mark ready"><div class="rstatus-dot"></div>Preparing</div>`;
 
-      const kotBtn=`<button class="btn-kot-round" onclick="printKOT('${order.id}')" title="Print KOT for this round">
+      const kotBtn = `<button class="btn-kot-round" onclick="printKOT('${order.id}')" title="Print KOT for this round">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
         KOT
       </button>`;
@@ -449,10 +453,10 @@ function renderOrders(data){
       return `<div class="round ${isReady?'ready':'preparing'}">
         <div class="round-head">
           <div class="round-head-left">
-            <span class="round-label ${isFirst?'first':'additional'}">${isFirst?'Round 1 — Initial Order':`Round ${ri+1} — Additional`}</span>
+            <span class="round-label ${isFirst?'first':'additional'}">${isFirst?'Round 1 — Initial Order':'Round '+(ri+1)+' — Additional'}</span>
             <span class="round-id">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
-              ${sid}${mins!==null?` · ${mins}m ago`:''}
+              ${sid}${mins!==null?' · '+mins+'m ago':''}
             </span>
           </div>
           <div class="round-head-right">
@@ -464,60 +468,59 @@ function renderOrders(data){
       </div>`;
     }).join('');
 
-    // Collect all order IDs in this group for Mark Done / Dismiss
-    const allOrderIds = grp.orders.map(o=>o.id).filter(Boolean);
-    // Collect all items across all rounds for Print KOT (full card)
-    const allOrderIdsJson = JSON.stringify(allOrderIds).replace(/"/g,'&quot;');
-    // Dismiss button is only active when every round has been marked done via kitchenDone
-    // allDone: true when every round is kitchenDone OR already has status Done (backwards compat)
-    const allDone = grp.orders.length > 0 && grp.orders.every(o=>o.kitchenDone===true || o.status==='Done');
+    // ── Build card ─────────────────────────────────────────────────────────
+    const card = document.createElement('div');
+    card.className = 'ocard ' + (allDone ? 'all-done' : (anyPrep ? 'preparing' : 'all-ready'));
 
-    card.innerHTML=`
-      <div class="ocard-head">
-        <div class="ocard-head-left">
-          <div class="ocard-table">${grp.label}</div>
-          ${grp.customer?`<div class="ocard-customer">${grp.customer}</div>`:''}
-          <div class="ocard-chips">
-            <span class="chip ${dietCls}">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2z"/><path d="M9 12l2 2 4-4"/></svg>
-              ${grp.diet}
-            </span>
-            <span class="chip">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l3 3"/></svg>
-              ${grp.orders.length} round${grp.orders.length!==1?'s':''}
-            </span>
-            <span class="chip red">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-              ${totalQty} item${totalQty!==1?'s':''}
-            </span>
-          </div>
-        </div>
-        <div class="ocard-overall">
-          <div class="ostatus ${allDone?'done':(anyPrep?'prep':'ready')}">
-            <div class="ostatus-dot"></div>
-            ${allDone?'Done':(anyPrep?'In Progress':'All Ready')}
-          </div>
-          <button
-            class="btn-dismiss${allDone?' dismissable':''}"
-            data-ids="${allOrderIdsJson}"
-            onclick="handleDismissClick(this)"
-            title="${allDone?'Remove from kitchen':'Mark Done first to dismiss'}"
-          >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-          </button>
-        </div>
-      </div>
-      <div class="ocard-rounds">${roundsHTML}</div>
-      <div class="ocard-footer">
-        <button class="btn-mark-done${allDone?' btn-done-already':''}" ${allDone?'disabled':''} data-ids="${allOrderIdsJson}" onclick="handleMarkDoneClick(this)">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
-          ${allDone?'Marked Done':'Mark Done'}
-        </button>
-        <button class="btn-print-kot" onclick="printKOTGroup('${allOrderIdsJson}')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-          Print KOT
-        </button>
-      </div>`;
+    const statusLabel = allDone ? 'Done' : (anyPrep ? 'In Progress' : 'All Ready');
+    const statusCls   = allDone ? 'done' : (anyPrep ? 'prep' : 'ready');
+    const dismissCls  = allDone ? 'btn-dismiss dismissable' : 'btn-dismiss';
+    const dismissTip  = allDone ? 'Remove from kitchen' : 'Mark Done first to dismiss';
+    const markDoneCls = 'btn-mark-done' + (allDone ? ' btn-done-already' : '');
+    const markDoneLbl = allDone ? 'Marked Done' : 'Mark Done';
+    const customerRow = grp.customer ? '<div class="ocard-customer">'+grp.customer+'</div>' : '';
+
+    card.innerHTML =
+      '<div class="ocard-head">'
+      +  '<div class="ocard-head-left">'
+      +    '<div class="ocard-table">'+grp.label+'</div>'
+      +    customerRow
+      +    '<div class="ocard-chips">'
+      +      '<span class="chip '+dietCls+'">'
+      +        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2z"/><path d="M9 12l2 2 4-4"/></svg>'
+      +        grp.diet
+      +      '</span>'
+      +      '<span class="chip">'
+      +        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l3 3"/></svg>'
+      +        grp.orders.length+' round'+(grp.orders.length!==1?'s':'')
+      +      '</span>'
+      +      '<span class="chip red">'
+      +        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>'
+      +        totalQty+' item'+(totalQty!==1?'s':'')
+      +      '</span>'
+      +    '</div>'
+      +  '</div>'
+      +  '<div class="ocard-overall">'
+      +    '<div class="ostatus '+statusCls+'">'
+      +      '<div class="ostatus-dot"></div>'
+      +      statusLabel
+      +    '</div>'
+      +    '<button class="'+dismissCls+'" data-ids="'+allOrderIdsJson+'" onclick="handleDismissClick(this)" title="'+dismissTip+'">'
+      +      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'
+      +    '</button>'
+      +  '</div>'
+      +'</div>'
+      +'<div class="ocard-rounds">'+roundsHTML+'</div>'
+      +'<div class="ocard-footer">'
+      +  '<button class="'+markDoneCls+'"'+(allDone?' disabled':'')+' data-ids="'+allOrderIdsJson+'" onclick="handleMarkDoneClick(this)">'
+      +    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>'
+      +    markDoneLbl
+      +  '</button>'
+      +  '<button class="btn-print-kot" data-ids="'+allOrderIdsJson+'" onclick="handlePrintKOTGroupClick(this)">'
+      +    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>'
+      +    'Print KOT'
+      +  '</button>'
+      +'</div>';
 
     grid.appendChild(card);
   });
@@ -539,6 +542,35 @@ function handleDismissClick(btn){
   const raw = btn.getAttribute('data-ids');
   if(!raw) return;
   try{ dismissOrder(raw); } catch(e){ console.error(e); }
+}
+
+function handlePrintKOTGroupClick(btn){
+  const raw = btn.getAttribute('data-ids');
+  if(!raw) return;
+  try{ printKOTGroup(raw); } catch(e){ console.error(e); }
+}
+
+// ── Clear stale ghost orders (orders with no tableNumber and no items,
+//    or orders stuck from a previous session that were never completed) ──────
+function clearStaleOrders(){
+  if(!confirm('This will remove all orders that have no table number assigned and no items, or any order already marked Done. Real active orders will NOT be touched. Continue?')) return;
+  db.ref('orders').once('value', s=>{
+    const data = s.val();
+    if(!data){ alert('No orders in database.'); return; }
+    const toDelete = [];
+    Object.entries(data).forEach(([id, o])=>{
+      const hasTable  = o.tableNumber && o.tableNumber !== 0;
+      const hasItems  = o.items && Object.keys(o.items).length > 0;
+      const isDone    = o.status==='Done' || o.status==='Completed' || o.status==='Cancelled';
+      // Stale = already Done/Completed/Cancelled OR has neither a table nor items
+      if(isDone || (!hasTable && !hasItems)){
+        toDelete.push(id);
+      }
+    });
+    if(!toDelete.length){ alert('No stale orders found.'); return; }
+    const removes = toDelete.map(id=>db.ref('orders/'+id).remove());
+    Promise.all(removes).then(()=>alert('Cleared '+toDelete.length+' stale order(s).')).catch(e=>{ console.error(e); alert('Error clearing orders.'); });
+  });
 }
 
 // ── Change 1: Mark Done — marks ALL rounds for the group as Done
