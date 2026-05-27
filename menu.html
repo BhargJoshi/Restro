@@ -355,6 +355,27 @@ body {
   letter-spacing: 3px;
   font-family: 'Courier New', monospace;
 }
+/* Table number badge inside order confirm popup */
+#popup-table-badge {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #111;
+  color: #ffcc00;
+  border-radius: 50px;
+  padding: 10px 22px;
+  margin: 0 auto 18px;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  animation: tableIn 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards;
+}
+#popup-table-badge.visible { display: flex; }
+@keyframes tableIn {
+  from { transform: scale(0.7); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
 
 /* TRACK ORDER BUTTON */
 #track-order-btn {
@@ -735,6 +756,9 @@ const analytics = firebase.analytics();
         <div class="token-label">🎫 Your Token Number</div>
         <div class="token-number" id="order-token-number">#---</div>
       </div>
+    </div>
+    <div id="popup-table-badge">
+      🪑 Your Table: <span id="popup-table-number">—</span>
     </div>
     <div class="order-timer-ring">
       <svg width="130" height="130" viewBox="0 0 130 130">
@@ -1409,12 +1433,43 @@ function assignTable(name, people, orderId, tablePref, sessionStartTime) {
 }
 // ─────────────────────────────────────────────────────────────────────────────
 
+let _tableListener = null; // track any active Firebase listener so we can detach it
+
 function showOrderConfirm() {
   const overlay = document.getElementById('order-confirm-overlay');
   document.getElementById('order-ready-subtext').style.display = 'block';
   document.getElementById('order-ready-banner').classList.remove('visible');
   const token = Math.floor(100 + Math.random() * 900);
   document.getElementById('order-token-number').textContent = '#' + token;
+
+  // Reset table badge — hide until we get a table assignment from Firebase
+  const tableBadge = document.getElementById('popup-table-badge');
+  const tableNumEl = document.getElementById('popup-table-number');
+  tableBadge.classList.remove('visible');
+  tableNumEl.textContent = '—';
+
+  // For dine-in orders: listen on the order node in Firebase for tableNumber to be set
+  // assignTable() runs async after this call, so tableNumber may arrive 200-2000ms later
+  const currentOrderInfo = JSON.parse(localStorage.getItem('currentOrderInfo') || '{}');
+  if (currentOrderInfo.orderType === 'dinein') {
+    const orderId = localStorage.getItem('currentOrderId');
+    if (orderId) {
+      // Detach any previous listener
+      if (_tableListener) { db.ref('orders/' + _tableListener).off('value'); _tableListener = null; }
+      _tableListener = orderId;
+      db.ref('orders/' + orderId).on('value', snap => {
+        const order = snap.val();
+        if (order && order.tableNumber) {
+          tableNumEl.textContent = order.tableNumber;
+          tableBadge.classList.add('visible');
+          // Detach once we have the value — no need to keep listening here
+          db.ref('orders/' + orderId).off('value');
+          _tableListener = null;
+        }
+      });
+    }
+  }
+
   overlay.classList.add('visible');
   startOrderTimer();
 }
