@@ -125,6 +125,42 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--black);color:var(--
 .tcard.drag-over { border-color:var(--blue); box-shadow:0 0 20px rgba(90,171,248,0.4); transform:scale(1.02); }
 .tcard-inner{overflow:hidden; border-radius:inherit; height:100%; display:flex; flex-direction:column;}
 .tcard.occupied{border-color:rgba(240,180,41,0.2);}
+.tcard.tcard-cancelled{
+  border-color:rgba(244,97,79,0.7) !important;
+  background:rgba(244,97,79,0.07) !important;
+  animation:mgr-cancel-pulse 0.9s ease-in-out 4;
+}
+@keyframes mgr-cancel-pulse{
+  0%,100%{box-shadow:0 4px 24px rgba(244,97,79,0.15);}
+  50%{box-shadow:0 4px 48px rgba(244,97,79,0.6),0 0 0 4px rgba(244,97,79,0.2);}
+}
+.cancel-overlay-badge{
+  position:absolute;inset:0;border-radius:inherit;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+  background:rgba(229,57,53,0.92);
+  border-radius:16px;
+  z-index:20;
+  animation:mgr-cancel-badge-in 0.35s cubic-bezier(0.34,1.56,0.64,1) forwards;
+}
+@keyframes mgr-cancel-badge-in{
+  from{opacity:0;transform:scale(0.8);}
+  to{opacity:1;transform:scale(1);}
+}
+.cancel-overlay-badge .cob-title{
+  font-family:'Syne',sans-serif;font-size:18px;font-weight:800;
+  color:#fff;letter-spacing:2px;text-transform:uppercase;line-height:1.1;
+  text-align:center;
+}
+.cancel-overlay-badge .cob-icon{font-size:28px;}
+.cancel-overlay-badge .cob-sub{
+  font-family:'JetBrains Mono',monospace;font-size:9px;color:rgba(255,255,255,0.75);
+  letter-spacing:1.5px;text-transform:uppercase;
+}
+.cancel-overlay-badge .cob-countdown{
+  font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:#fff;
+  background:rgba(0,0,0,0.25);border-radius:50%;width:42px;height:42px;
+  display:flex;align-items:center;justify-content:center;margin-top:2px;
+}
 
 /* ── CHANGE 1: Addon (green) notification badge — LEFT side ── */
 .addon-notif {
