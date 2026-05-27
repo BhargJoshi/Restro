@@ -299,6 +299,29 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--black);color:var(--
 .btn-print-kot:active{transform:translateY(0);}
 .btn-print-kot svg{width:13px;height:13px;flex-shrink:0;}
 
+/* ── CANCELLED ORDER CARD ── */
+.ocard.cancelled{
+  border-color:rgba(244,97,79,0.55);
+  background:rgba(244,97,79,0.05);
+  animation:cancelledPulse 1.2s ease-in-out 3;
+}
+@keyframes cancelledPulse{
+  0%,100%{box-shadow:0 4px 24px rgba(244,97,79,0.18);}
+  50%{box-shadow:0 4px 40px rgba(244,97,79,0.55),0 0 0 4px rgba(244,97,79,0.18);}
+}
+.cancelled-banner{
+  display:flex;align-items:center;justify-content:center;gap:12px;
+  background:var(--red);
+  padding:14px 20px;
+  border-radius:var(--r12);
+  margin:14px 20px;
+}
+.cancelled-banner-text{
+  font-family:'Syne',sans-serif;font-size:22px;font-weight:800;
+  color:#fff;letter-spacing:2px;text-transform:uppercase;
+}
+.cancelled-banner-icon{font-size:24px;}
+
 /* Empty state */
 .empty{
   display:flex;flex-direction:column;align-items:center;justify-content:center;
@@ -383,12 +406,15 @@ function renderOrders(data){
     document.getElementById('liveCount').innerHTML=`<div class="live-dot"></div><span>0 active</span>`;
     return;
   }
-  const active=Object.values(data).filter(o=>o.status!=='Completed'&&o.status!=='Cancelled'&&!o.kitchenDismissed);
-  document.getElementById('liveCount').innerHTML=`<div class="live-dot"></div><span>${active.length} active</span>`;
+  const active=Object.values(data).filter(o=>o.status!=='Completed'&&!o.kitchenDismissed);
+  // Separate cancelled from normal active
+  const cancelled=active.filter(o=>o.status==='Cancelled');
+  const nonCancelled=active.filter(o=>o.status!=='Cancelled');
+  document.getElementById('liveCount').innerHTML=`<div class="live-dot"></div><span>${nonCancelled.length} active</span>`;
   if(!active.length){grid.innerHTML=emptyState();return;}
 
   const groups={};
-  active.forEach(order=>{
+  nonCancelled.forEach(order=>{
     const key=order.orderType==='dinein'?`T${order.tableNumber||0}`:`TKW_${order.id}`;
     if(!groups[key]){
       groups[key]={
@@ -513,6 +539,50 @@ function renderOrders(data){
       +    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>'
       +    'Print KOT'
       +  '</button>'
+      +'</div>';
+    grid.appendChild(card);
+  });
+
+  // ── Render cancelled orders as eye-catching cards ──────────────────────────
+  // Group cancelled orders by table/takeaway the same way
+  const cancelGroups={};
+  cancelled.forEach(order=>{
+    const key=order.orderType==='dinein'?`T${order.tableNumber||0}`:`TKW_${order.id}`;
+    if(!cancelGroups[key]){
+      cancelGroups[key]={
+        label:order.orderType==='dinein'?`Table ${order.tableNumber||'?'}`:'Takeaway',
+        customer:order.customerName||null,
+        orders:[]
+      };
+    }
+    cancelGroups[key].orders.push(order);
+  });
+
+  Object.values(cancelGroups).forEach(grp=>{
+    const allOrderIds=grp.orders.map(o=>o.id).filter(Boolean);
+    const allOrderIdsJson=JSON.stringify(allOrderIds).replace(/"/g,'&quot;');
+    const customerRow=grp.customer?'<div class="ocard-customer">'+grp.customer+'</div>':'';
+    const card=document.createElement('div');
+    card.className='ocard cancelled';
+    card.innerHTML=
+      '<div class="ocard-head">'
+      +  '<div class="ocard-head-left">'
+      +    '<div class="ocard-table">'+grp.label+'</div>'
+      +    customerRow
+      +  '</div>'
+      +  '<div class="ocard-overall">'
+      +    '<div class="ostatus" style="color:#f4614f;background:rgba(244,97,79,0.12);border-color:rgba(244,97,79,0.35);">'
+      +      '<div class="ostatus-dot" style="background:#f4614f;"></div>Cancelled'
+      +    '</div>'
+      +    '<button class="btn-dismiss dismissable" data-ids="'+allOrderIdsJson+'" onclick="handleDismissClick(this)" title="Remove from kitchen">'
+      +      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'
+      +    '</button>'
+      +  '</div>'
+      +'</div>'
+      +'<div class="cancelled-banner">'
+      +  '<span class="cancelled-banner-icon">🚫</span>'
+      +  '<span class="cancelled-banner-text">ORDER CANCELLED</span>'
+      +  '<span class="cancelled-banner-icon">🚫</span>'
       +'</div>';
     grid.appendChild(card);
   });
