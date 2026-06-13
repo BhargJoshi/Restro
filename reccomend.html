@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Let Us Recommend You</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* CSS Architecture borrowing components from Menu.html but uniquely themed */
+:root {
+  --theme-color: #ff6b6b; /* Default */
+  --bg-color: #fff0f0;
+  --text-dark: #111;
+  --glass: rgba(255,255,255,0.7);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); color: var(--text-dark); height: 100vh; display: flex; flex-direction: column; overflow: hidden; transition: background-color 0.5s ease; }
+
+.header-strip {
+  padding: 15px 20px;
+  background: var(--glass);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.header-strip h1 { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--text-dark); }
+.back-btn { background: #fff; border: none; padding: 8px 12px; border-radius: 8px; font-weight: 600; box-shadow: 0 2px 5px rgba(0,0,0,0.1); cursor: pointer;}
+
+.content {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.category-nav {
+  width: 110px;
+  background: rgba(255,255,255,0.4);
+  backdrop-filter: blur(15px);
+  border-right: 1px solid rgba(0,0,0,0.05);
+  overflow-y: auto;
+  padding: 10px 0;
+}
+.cat-btn {
+  width: 100%;
+  padding: 15px 10px;
+  text-align: center;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  color: #555;
+}
+.cat-btn.active { color: var(--text-dark); font-weight: 700; background: var(--glass); border-left: 4px solid var(--theme-color); }
+.cat-btn span { font-size: 24px; }
+.cat-btn p { font-size: 10px; text-transform: uppercase; font-weight: bold; }
+
+.recommendations {
+  flex: 1;
+  padding: 15px;
+  overflow-y: auto;
+  padding-bottom: 100px;
+}
+.event-banner {
+  background: var(--theme-color);
+  color: white;
+  padding: 20px;
+  border-radius: 16px;
+  margin-bottom: 15px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  transition: background 0.5s ease;
+}
+.event-banner h2 { font-family: 'Playfair Display', serif; font-size: 22px; margin-bottom: 5px; }
+.event-banner p { font-size: 12px; opacity: 0.9; }
+
+.combo-card {
+  background: rgba(255,255,255,0.85);
+  border-radius: 14px;
+  padding: 15px;
+  margin-bottom: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.combo-header { display: flex; justify-content: space-between; align-items: flex-start; }
+.combo-title { font-weight: 700; font-size: 15px; color: var(--theme-color); }
+.combo-price { font-weight: 800; font-size: 14px; }
+.combo-desc { font-size: 11px; color: #666; line-height: 1.4; }
+
+.add-btn {
+  background: var(--text-dark);
+  color: #fff;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.add-btn:active { transform: scale(0.95); }
+
+/* Reuse Cart Styles from Menu */
+.cart-bar { position: fixed; bottom: 15px; left: 15px; right: 15px; background: #28a745; height: 50px; border-radius: 12px; display: none; align-items: center; justify-content: space-between; padding: 0 15px; color: #fff; font-weight: 700; z-index: 1000; cursor: pointer; }
+.cart-popup { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: flex-end; z-index: 2000; }
+.cart-content { width: 100%; max-width: 500px; background: #fff; border-top-left-radius: 25px; border-top-right-radius: 25px; padding: 25px; max-height: 80vh; overflow-y: auto; }
+.cart-item-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #eee; }
+.btn-qty { width: 22px; height: 22px; border: none; background: #eee; border-radius: 5px; font-weight: 700; cursor: pointer; }
+.pay-btn { width: 100%; padding: 16px; background: #28a745; color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 700; margin-top: 20px; cursor: pointer; }
+
+/* Theming Classes */
+body.theme-date { --theme-color: #e84393; --bg-color: #ffeef4; }
+body.theme-family { --theme-color: #00b894; --bg-color: #e8f8f5; }
+body.theme-friends { --theme-color: #fdcb6e; --bg-color: #fff9e6; }
+body.theme-solo { --theme-color: #0984e3; --bg-color: #e6f2ff; }
+</style>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyC_LUKzINx6H4XE7uWoCpeLSldpIp-DR80",
+  authDomain: "restro-4db49.firebaseapp.com",
+  databaseURL: "https://restro-4db49-default-rtdb.firebaseio.com",
+  projectId: "restro-4db49"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+</script>
+</head>
+<body class="theme-date">
+  <div class="header-strip">
+    <button class="back-btn" onclick="window.location.href='index.html'">← Back</button>
+    <h1>Curated For You</h1>
+    <button class="back-btn" style="background:var(--theme-color); color:white; border:none;" onclick="window.location.href='menu.html'">Full Menu</button>
+  </div>
+  
+  <div class="content">
+    <div class="category-nav">
+      <button class="cat-btn active" onclick="switchTheme('date', this)"><span>🍷</span><p>Date Night</p></button>
+      <button class="cat-btn" onclick="switchTheme('family', this)"><span>👨‍👩‍👧‍👦</span><p>Family Dinner</p></button>
+      <button class="cat-btn" onclick="switchTheme('friends', this)"><span>🎉</span><p>With Friends</p></button>
+      <button class="cat-btn" onclick="switchTheme('solo', this)"><span>🎧</span><p>Solo Dining</p></button>
+    </div>
+    
+    <div class="recommendations" id="rec-container">
+      </div>
+  </div>
+
+  <div class="cart-bar" id="cart-bar" onclick="toggleCart()">
+    <span id="cart-item-count">0 Items</span>
+    <span id="cart-total-price">&#8377;0.00</span>
+    <span>View Cart →</span>
+  </div>
+
+  <div class="cart-popup" id="cart-popup">
+    <div class="cart-content">
+      <div style="display:flex;justify-content:space-between;margin-bottom:15px">
+        <h3>Your Basket</h3>
+        <button onclick="toggleCart()" style="background:none;border:none;color:#999;font-size:20px">&#x2715;</button>
+      </div>
+      <div id="cart-items-list"></div>
+      <div style="background:#f9f9f9;padding:15px;border-radius:12px;margin-top:15px;">
+        <div style="display:flex;justify-content:space-between;font-weight:800;font-size:20px;">
+          <span>Total</span><span id="cart-total-price-popup">&#8377;0.00</span>
+        </div>
+      </div>
+      <button class="pay-btn" onclick="processPayment()">Place Order</button>
+    </div>
+  </div>
+
+<script>
+let cart = {};
+
+const recData = {
+  date: {
+    title: "Romantic Evening", desc: "Perfect portions for two to share.",
+    bundles: [
+      { id: 'b1', name: "The Perfect Pair", desc: "1x Paneer Tikka Dry, 1x Emerald Sp. Paneer, 2x Naan Garlic, 2x Fruit Punch", price: 795, items: [{name:"Paneer Tikka Dry", qty:1, price:235}, {name:"Emerald Sp. Paneer", qty:1, price:240}, {name:"Naan Garlic", qty:2, price:90}, {name:"Fruit Punch", qty:2, price:70}] }
+    ]
+  },
+  family: {
+    title: "Family Feast", desc: "Generous combos that everyone will love.",
+    bundles: [
+      { id: 'b2', name: "Grand Family Combo", desc: "1x Tandoori Plater, 1x Paneer Butter Masala, 1x Mix Vegetable, 4x Butter Naan, 1x Veg Biryani", price: 1100, items: [{name:"Tandoori Plater", qty:1, price:285}, {name:"Paneer Butter Masala", qty:1, price:210}, {name:"Mix Vegetable", qty:1, price:190}, {name:"Naan Butter", qty:4, price:55}, {name:"Veg Biryani", qty:1, price:150}] }
+    ]
+  },
+  friends: {
+    title: "Hangout Bites", desc: "Snacks, sizzlers, and fast food to chill.",
+    bundles: [
+      { id: 'b3', name: "Pizza & Fries Party", desc: "2x Cheese Pizza, 2x French Fries, 4x Soft Drinks", price: 580, items: [{name:"Cheese Pizza", qty:2, price:150}, {name:"French Fries", qty:2, price:100}, {name:"Soft Drinks (MRP)", qty:4, price:20}] }
+    ]
+  },
+  solo: {
+    title: "Me Time", desc: "Comforting meals just for you.",
+    bundles: [
+      { id: 'b4', name: "Comfort Bowl", desc: "1x Chinese Bhel, 1x Cold Coffee", price: 289, items: [{name:"Chinese Bhel", qty:1, price:190}, {name:"Cold Coffee", qty:1, price:99}] }
+    ]
+  }
+};
+
+window.onload = () => {
+  try {
+    const savedCart = localStorage.getItem('emerald_cart');
+    if (savedCart) cart = JSON.parse(savedCart);
+  } catch(e) {}
+  renderSection('date');
+  syncCartUI();
+};
+
+function switchTheme(theme, btn) {
+  document.body.className = 'theme-' + theme;
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderSection(theme);
+}
+
+function renderSection(theme) {
+  const data = recData[theme];
+  let html = `<div class="event-banner"><h2>${data.title}</h2><p>${data.desc}</p></div>`;
+  
+  data.bundles.forEach(b => {
+    html += `
+      <div class="combo-card">
+        <div class="combo-header">
+          <div class="combo-title">${b.name}</div>
+          <div class="combo-price">₹${b.price}</div>
+        </div>
+        <div class="combo-desc">${b.desc}</div>
+        <button class="add-btn" onclick='addBundle(${JSON.stringify(b)})'>ADD BUNDLE</button>
+      </div>`;
+  });
+  document.getElementById('rec-container').innerHTML = html;
+}
+
+function addBundle(bundle) {
+  bundle.items.forEach(i => {
+    let id = 'item_' + i.name.replace(/\s+/g,'_');
+    if(cart[id]) { cart[id].qty += i.qty; } 
+    else { cart[id] = { id: id, name: i.name, price: i.price, qty: i.qty }; }
+  });
+  syncCartUI();
+}
+
+function updateQty(id, delta) {
+  if (cart[id]) { cart[id].qty += delta; if (cart[id].qty <= 0) delete cart[id]; }
+  syncCartUI();
+}
+
+function syncCartUI() {
+  let totalItems = 0, subtotal = 0;
+  const cartList = document.getElementById('cart-items-list');
+  cartList.innerHTML = '';
+  Object.keys(cart).forEach(id => {
+    const item = cart[id];
+    totalItems += item.qty; subtotal += item.price * item.qty;
+    cartList.innerHTML += `<div class="cart-item-row"><div><h5>${item.name}</h5><p>&#8377;${(item.price*item.qty).toFixed(2)}</p></div><div style="display:flex;gap:10px;"><button class="btn-qty" onclick="updateQty('${id}',-1)">-</button><span>${item.qty}</span><button class="btn-qty" onclick="updateQty('${id}',1)">+</button></div></div>`;
+  });
+  
+  const bar = document.getElementById('cart-bar');
+  if (totalItems > 0) {
+    bar.style.display = 'flex';
+    document.getElementById('cart-item-count').innerText = `${totalItems} Items`;
+    document.getElementById('cart-total-price').innerText = `₹${subtotal.toFixed(2)}`;
+    document.getElementById('cart-total-price-popup').innerText = `₹${subtotal.toFixed(2)}`;
+  } else {
+    bar.style.display = 'none';
+    cartList.innerHTML = '<p style="text-align:center;color:#999;padding:20px;">Your basket is empty</p>';
+  }
+  localStorage.setItem('emerald_cart', JSON.stringify(cart));
+}
+
+function toggleCart() { const p = document.getElementById('cart-popup'); p.style.display = (p.style.display==='flex') ? 'none' : 'flex'; }
+
+function processPayment() {
+  const cartSnapshot = Object.values(cart);
+  const cartTotal = cartSnapshot.reduce((sum, item) => sum + (item.price * item.qty), 0);
+  if (cartSnapshot.length === 0) return;
+
+  const currentOrderInfo = JSON.parse(localStorage.getItem('currentOrderInfo') || '{}');
+  const sessionStartTime = Date.now();
+  const orderId = 'ORD' + sessionStartTime;
+  
+  const order = { 
+    id: orderId, 
+    tableNumber: null, 
+    customerName: currentOrderInfo.name || 'Customer', 
+    people: parseInt(currentOrderInfo.people) || 1, 
+    items: cartSnapshot, 
+    total: cartTotal, 
+    status: 'Preparing', 
+    orderType: currentOrderInfo.orderType || 'takeaway', 
+    createdAt: new Date(sessionStartTime).toISOString() 
+  };
+  
+  db.ref('orders/' + orderId).set(order).then(() => {
+    localStorage.setItem('currentOrderId', orderId);
+    if(order.orderType === 'dinein') {
+      // FIFO Assignment request
+      db.ref('queue').push().set({
+        name: order.customerName,
+        people: order.people,
+        orderId: orderId,
+        time: sessionStartTime
+      });
+    }
+    cart = {};
+    syncCartUI();
+    window.location.href = 'track.html';
+  });
+}
+</script>
+</body>
+</html>
