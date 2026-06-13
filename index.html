@@ -57,7 +57,6 @@
     display: flex;
     flex-direction: column;
     margin-bottom: 100px;
-    transition: opacity 0.3s ease, transform 0.3s ease;
   }
   .card h2 {
     text-align: center;
@@ -161,31 +160,54 @@
     background: linear-gradient(transparent, rgba(0,0,0,0.4));
     z-index: 10;
   }
-  .btn {
+  
+  .action-grid {
+    display: flex;
+    gap: 12px;
     width: 100%;
-    padding: 20px;
-    border-radius: 40px;
+    transition: all 0.3s ease;
+  }
+  
+  .btn {
+    flex: 1;
+    padding: 18px 10px;
+    border-radius: 20px;
     border: none;
-    font-size: 18px;
+    font-size: 15px;
     font-weight: 700;
-    background: #e0e0e0;
     color: #999;        
+    background: #e0e0e0;
     cursor: not-allowed;
     box-shadow: 0 4px 0px #bcbcbc; 
     position: relative;
     top: 0;
     transition: all 0.3s ease;
+    text-align: center;
+    line-height: 1.2;
   }
-  .btn.active {
+  
+  .btn-purple.active {
+    background: #9b59b6; 
+    color: #fff;
+    cursor: pointer;
+    box-shadow: 0 6px 0px #703688, 0 10px 20px rgba(155, 89, 182, 0.4);
+  }
+  .btn-purple.active:active {
+    top: 4px;
+    box-shadow: 0 2px 0px #703688;
+  }
+
+  .btn-yellow.active {
     background: var(--primary-yellow); 
     color: #111;
     cursor: pointer;
     box-shadow: 0 6px 0px var(--primary-dark), 0 10px 20px rgba(255, 204, 0, 0.4);
   }
-  .btn.active:active {
+  .btn-yellow.active:active {
     top: 4px;
     box-shadow: 0 2px 0px var(--primary-dark);
   }
+
   .hours {
     text-align: center;
     color: #000000;
@@ -193,110 +215,25 @@
     opacity: 0.8;
     margin-top: 20px;
   }
-
-  /* ── MODE SELECTION SCREEN ── */
-  #mode-select {
+  
+  #resume-banner {
     display: none;
-    flex-direction: column;
-    opacity: 0;
-    transform: translateY(16px);
-    transition: opacity 0.35s ease, transform 0.35s ease;
-    background: var(--card-bg);
-    border-radius: 28px;
-    padding: 35px 25px;
-    box-shadow: 0 25px 60px rgba(0,0,0,0.45);
-    flex: 1;
-    margin-bottom: 80px;
-  }
-  #mode-select.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  .mode-select-header {
+    background: #28a745;
+    color: white;
+    padding: 12px;
+    border-radius: 12px;
     text-align: center;
-    margin-bottom: 28px;
-  }
-  .mode-select-header h2 {
+    font-size: 14px;
     font-weight: 600;
-    color: #111;
-    font-size: 18px;
-    margin-bottom: 6px;
-  }
-  .mode-select-header p {
-    font-size: 13px;
-    color: #777;
-  }
-  .mode-opt {
-    border-radius: 22px;
-    padding: 28px 22px;
-    text-align: center;
-    cursor: pointer;
-    margin-bottom: 16px;
-    position: relative;
-    top: 0;
-    transition: transform 0.12s ease, top 0.1s ease, box-shadow 0.1s ease;
-    border: none;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-  }
-  .mode-opt:active {
-    transform: scale(0.97);
-    top: 4px;
-  }
-  .purple-opt {
-    background: linear-gradient(145deg, #6B21A8 0%, #9333EA 100%);
-    color: #fff;
-    box-shadow: 0 8px 0px #4A1572, 0 14px 28px rgba(107,33,168,0.38);
-  }
-  .purple-opt:active {
-    box-shadow: 0 3px 0px #4A1572, 0 6px 14px rgba(107,33,168,0.25);
-  }
-  .yellow-opt {
-    background: var(--primary-yellow);
-    color: #111;
-    box-shadow: 0 8px 0px var(--primary-dark), 0 14px 28px rgba(255,204,0,0.38);
-  }
-  .yellow-opt:active {
-    box-shadow: 0 3px 0px var(--primary-dark), 0 6px 14px rgba(255,204,0,0.25);
-  }
-  .mode-ico {
-    font-size: 36px;
-    line-height: 1;
-  }
-  .mode-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 19px;
-    font-weight: 700;
-    line-height: 1.2;
-  }
-  .mode-sub {
-    font-size: 12px;
-    font-weight: 500;
-    opacity: 0.75;
-  }
-  .mode-back-btn {
-    background: none;
-    border: none;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-family: 'Inter', sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-    color: #888;
-    cursor: pointer;
-    padding: 0;
     margin-bottom: 20px;
-    transition: color 0.2s;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3);
   }
-  .mode-back-btn:hover { color: #444; }
-  .mode-back-btn svg { width: 16px; height: 16px; flex-shrink: 0; }
 
   @media (max-width: 480px) {
     .brand-name { font-size: 48px; } 
     .app-shell { padding: 15px; }
+    .btn { font-size: 14px; padding: 15px 8px; }
   }
 </style>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -316,6 +253,24 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 const analytics = firebase.analytics();
+
+// Session Persistence Check
+window.addEventListener('DOMContentLoaded', () => {
+  const currentOrderId = localStorage.getItem("currentOrderId");
+  if(currentOrderId) {
+    db.ref("orders/" + currentOrderId).once("value", snap => {
+      const order = snap.val();
+      if(order && (order.status === 'Completed' || order.status === 'Cancelled')) {
+        localStorage.removeItem("currentOrderId");
+        localStorage.removeItem("currentOrderInfo");
+        localStorage.removeItem("emerald_cart");
+        localStorage.removeItem("emerald_prevRounds");
+      } else if (order) {
+        document.getElementById('resume-banner').style.display = 'block';
+      }
+    });
+  }
+});
 </script>
 </head>
 <body>
@@ -323,9 +278,11 @@ const analytics = firebase.analytics();
   <header class="header">
     <div class="brand-name">EMERALD</div>
   </header>
-
-  <!-- ORIGINAL ORDER MODE SELECTION CARD -->
-  <main class="card" id="main-card">
+  <main class="card">
+    <div id="resume-banner" onclick="window.location.href='track.html'">
+      You have an active order. Click to Track!
+    </div>
+    
     <h2>Select Order Mode</h2>
     <div class="option" data-type="dinein" id="dinein-option">
       <div class="icon-box">
@@ -358,51 +315,17 @@ const analytics = firebase.analytics();
     </div>
     <div class="hours">Open daily: 12:00 PM - 11:00 PM</div>
   </main>
-
-  <!-- CHANGE 3: MODE SELECTION SCREEN (hidden initially) -->
-  <div id="mode-select">
-    <button class="mode-back-btn" id="mode-back-btn">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-      Back
-    </button>
-    <div class="mode-select-header">
-      <h2>How would you like to order?</h2>
-      <p>Pick a style that suits your mood</p>
-    </div>
-    <div class="mode-opt purple-opt" id="recommend-btn">
-      <div class="mode-ico">✨</div>
-      <div class="mode-title">Let us recommend you</div>
-      <div class="mode-sub">Smart picks curated for every occasion</div>
-    </div>
-    <div class="mode-opt yellow-opt" id="menu-btn">
-      <div class="mode-ico">🍽️</div>
-      <div class="mode-title">View Menu</div>
-      <div class="mode-sub">Browse and order from the full menu</div>
-    </div>
-  </div>
-
   <footer class="footer-action">
-    <button class="btn" id="viewMenuBtn">View Menu →</button>
+    <div class="action-grid">
+      <button class="btn btn-purple" id="recommendBtn">Let us recommend you</button>
+      <button class="btn btn-yellow" id="viewMenuBtn">View Menu</button>
+    </div>
   </footer>
 </div>
 <script>
-// ── CHANGE 4: Session ID generation on first visit ──────────────────────────
-function getOrCreateSessionId() {
-  let sid = localStorage.getItem('emeraldSessionId');
-  if (!sid) {
-    const ts = Date.now().toString(36);
-    const rand = Math.random().toString(36).substr(2, 9).toUpperCase();
-    sid = 'SES' + ts + rand;
-    localStorage.setItem('emeraldSessionId', sid);
-  }
-  return sid;
-}
-// Generate session ID on page load
-getOrCreateSessionId();
-
-// ── ORIGINAL LOGIC (unchanged) ──────────────────────────────────────────────
 const options = document.querySelectorAll(".option");
-const btn = document.getElementById("viewMenuBtn");
+const btnMenu = document.getElementById("viewMenuBtn");
+const btnRec = document.getElementById("recommendBtn");
 const dineinForm = document.getElementById("dinein-form");
 const nameInput = document.getElementById("userName");
 const countInput = document.getElementById("userCount");
@@ -411,24 +334,28 @@ let selected = null;
 
 function validateForm() {
   if (selected === "takeaway") {
-    btn.classList.add("active");
+    btnMenu.classList.add("active");
+    btnRec.classList.add("active");
   } else if (selected === "dinein") {
     if (nameInput.value.trim() !== "" && countInput.value.trim() !== "") {
-      btn.classList.add("active");
+      btnMenu.classList.add("active");
+      btnRec.classList.add("active");
     } else {
-      btn.classList.remove("active");
+      btnMenu.classList.remove("active");
+      btnRec.classList.remove("active");
     }
   } else {
-    btn.classList.remove("active");
+    btnMenu.classList.remove("active");
+    btnRec.classList.remove("active");
   }
 }
 
 options.forEach(option => {
   option.addEventListener("click", (e) => {
     if (option.id === "dinein-option" && selected === "dinein" && e.target.closest('#arrowToggle')) {
-      dineinForm.classList.toggle("active");
-      arrowToggle.classList.toggle("rotated");
-      return;
+        dineinForm.classList.toggle("active");
+        arrowToggle.classList.toggle("rotated");
+        return;
     }
     if (window.navigator && window.navigator.vibrate) {
       window.navigator.vibrate(15);
@@ -436,6 +363,7 @@ options.forEach(option => {
     options.forEach(o => o.classList.remove("selected"));
     option.classList.add("selected");
     selected = option.dataset.type;
+
     if (selected === "dinein") {
       dineinForm.classList.add("active");
       arrowToggle.classList.remove("rotated");
@@ -449,10 +377,7 @@ options.forEach(option => {
 nameInput.addEventListener("input", validateForm);
 countInput.addEventListener("input", validateForm);
 
-// ── CHANGE 3: Modified button to show mode selection instead of direct redirect ──
-btn.addEventListener("click", () => {
-  if (!btn.classList.contains("active")) return;
-
+function saveOrderInfo() {
   const orderInfo = {
     orderType: selected,
     name: selected === "dinein" ? nameInput.value.trim() : "Takeaway Customer",
@@ -460,48 +385,28 @@ btn.addEventListener("click", () => {
     timestamp: Date.now()
   };
   localStorage.setItem("currentOrderInfo", JSON.stringify(orderInfo));
-  localStorage.removeItem("currentOrderId");
+  // Don't remove currentOrderId here if we want session persistence, but we need to ensure 
+  // it's a new session if they explicitly fill this out and don't click resume.
+  // We cleared it on load if it was completed. If they start fresh, we clear it.
+  if(document.getElementById('resume-banner').style.display === 'none') {
+      localStorage.removeItem("currentOrderId");
+      localStorage.removeItem("emerald_cart");
+      localStorage.removeItem("emerald_prevRounds");
+  }
+}
 
-  // Animate main card out, then show mode selection
-  const mainCard = document.getElementById("main-card");
-  mainCard.style.opacity = "0";
-  mainCard.style.transform = "translateY(10px)";
-  setTimeout(() => {
-    mainCard.style.display = "none";
-    const modeSelect = document.getElementById("mode-select");
-    modeSelect.style.display = "flex";
-    // Trigger reflow then animate in
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        modeSelect.classList.add("visible");
-      });
-    });
-  }, 280);
+btnMenu.addEventListener("click", () => {
+  if (btnMenu.classList.contains("active")) {
+    saveOrderInfo();
+    window.location.href = "menu.html"; 
+  }
 });
 
-// CHANGE 3: Back button to return to main card
-document.getElementById("mode-back-btn").addEventListener("click", () => {
-  const modeSelect = document.getElementById("mode-select");
-  modeSelect.classList.remove("visible");
-  setTimeout(() => {
-    modeSelect.style.display = "none";
-    const mainCard = document.getElementById("main-card");
-    mainCard.style.display = "flex";
-    requestAnimationFrame(() => {
-      mainCard.style.opacity = "1";
-      mainCard.style.transform = "translateY(0)";
-    });
-  }, 300);
-});
-
-// CHANGE 3: Navigate to recommend or menu
-document.getElementById("recommend-btn").addEventListener("click", () => {
-  if (window.navigator && window.navigator.vibrate) window.navigator.vibrate(15);
-  window.location.href = "recommend.html";
-});
-document.getElementById("menu-btn").addEventListener("click", () => {
-  if (window.navigator && window.navigator.vibrate) window.navigator.vibrate(15);
-  window.location.href = "menu.html";
+btnRec.addEventListener("click", () => {
+  if (btnRec.classList.contains("active")) {
+    saveOrderInfo();
+    window.location.href = "recommend.html"; 
+  }
 });
 </script>
 </body>
