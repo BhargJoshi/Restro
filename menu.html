@@ -3,239 +3,284 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>EMERALD</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<title>Emerald Menu - Premium Mobile</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --primary-yellow: #ffcc00;
-    --primary-dark: #cc9900;   
-    --card-bg: #f7f7f7;
-  }
-  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  body {
-    font-family: 'Inter', sans-serif;
-    background: url("https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=1920") center/cover no-repeat fixed;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-  }
-  body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.65); 
-    backdrop-filter: blur(4px);
-    z-index: 0;
-  }
-  .app-shell {
-    position: relative;
-    z-index: 2; 
-    width: 100%;
-    max-width: 480px;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    padding: 20px; 
-  }
-  .header {
-    text-align: center;
-    padding: 40px 0;
-  }
-  .brand-name {
-    font-family: 'Playfair Display', serif;
-    font-size: 64px; 
-    color: #fff;
-    letter-spacing: 3px;
-    text-shadow: 0 4px 10px rgba(0,0,0,0.3);
-  }
-  .card {
-    background: var(--card-bg);
-    border-radius: 28px;        
-    padding: 35px 25px;
-    box-shadow: 0 25px 60px rgba(0,0,0,0.45); 
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 100px;
-  }
-  .card h2 {
-    text-align: center;
-    margin-bottom: 30px;
-    font-weight: 500;
-    color: #111;
-  }
-  .option {
-    display: flex;
-    align-items: center;
-    gap: 18px; 
-    padding: 18px;
-    margin-bottom: 20px;
-    border-radius: 16px;
-    cursor: pointer;
-    background: #ffffff;
-    border: 1px solid #e0e0e0; 
-    position: relative;
-    top: 0;
-    box-shadow: 0 6px 0px #d6d6d6, 0 8px 15px rgba(0,0,0,0.1);
-    transition: all 0.1s ease;
-  }
-  .option:active {
-    top: 4px;
-    box-shadow: 0 2px 0px #d6d6d6, 0 4px 8px rgba(0,0,0,0.1);
-  }
-  .option.selected {
-    background: var(--primary-yellow);
-    border-color: #e6b800;
-    box-shadow: 0 6px 0px var(--primary-dark), 0 8px 20px rgba(255, 204, 0, 0.3);
-    top: -2px;
-  }
-  .arrow-toggle {
-    margin-left: auto;
-    padding: 5px;
-    transition: transform 0.3s ease;
-    display: none;
-  }
-  .option.selected .arrow-toggle {
-    display: block;
-  }
-  .arrow-toggle.rotated {
-    transform: rotate(180deg);
-  }
-  #dinein-form {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), margin-bottom 0.4s ease, padding 0.4s ease;
-    background: #fff;
-    border-radius: 16px;
-    margin-bottom: 0;
-    border: 0 solid #e0e0e0;
-  }
-  #dinein-form.active {
-    max-height: 160px;
-    margin-bottom: 20px;
-    border: 1px solid #e0e0e0;
-    padding: 15px;
-  }
-  .input-group {
-    margin-bottom: 10px;
-  }
-  .input-group input {
-    width: 100%;
-    padding: 12px;
-    border-radius: 10px;
-    border: 1px solid #ddd;
-    font-family: 'Inter', sans-serif;
-    font-size: 14px;
-    outline: none;
-  }
-  .input-group input:focus {
-    border-color: var(--primary-dark);
-  }
-  .icon-box {
-    width: 48px;
-    height: 48px;
-    background: #f0f0f0; 
-    border-radius: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-  }
-  .option.selected .icon-box { background: rgba(255, 255, 255, 0.6); }
-  .icon-box svg {
-    width: 24px;
-    height: 24px;
-    stroke: #111;
-    stroke-width: 2;
-    fill: none;
-  }
-  .option-text h3 { font-size: 16px; color: #111; }
-  .option-text p { font-size: 13px; color: #555; } 
-  .footer-action {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    max-width: 480px;
-    padding: 20px;
-    background: linear-gradient(transparent, rgba(0,0,0,0.4));
-    z-index: 10;
-  }
-  
-  .action-grid {
-    display: flex;
-    gap: 12px;
-    width: 100%;
-    transition: all 0.3s ease;
-  }
-  
-  .btn {
-    flex: 1;
-    padding: 18px 10px;
-    border-radius: 20px;
-    border: none;
-    font-size: 15px;
-    font-weight: 700;
-    color: #999;        
-    background: #e0e0e0;
-    cursor: not-allowed;
-    box-shadow: 0 4px 0px #bcbcbc; 
-    position: relative;
-    top: 0;
-    transition: all 0.3s ease;
-    text-align: center;
-    line-height: 1.2;
-  }
-  
-  .btn-purple.active {
-    background: #9b59b6; 
-    color: #fff;
-    cursor: pointer;
-    box-shadow: 0 6px 0px #703688, 0 10px 20px rgba(155, 89, 182, 0.4);
-  }
-  .btn-purple.active:active {
-    top: 4px;
-    box-shadow: 0 2px 0px #703688;
-  }
+:root {
+  --primary: #ffcc00;
+  --primary-dark: #cc9900;
+  --bg-light: #D9D2C6;
+  --text-dark: #111;
+  --surface: #ffffff;
+  --intro-beige: #d2b48c;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+body { font-family: 'Inter', sans-serif; background-color: #111; color: var(--text-dark); height: 100vh; display: flex; overflow: hidden; }
 
-  .btn-yellow.active {
-    background: var(--primary-yellow); 
-    color: #111;
-    cursor: pointer;
-    box-shadow: 0 6px 0px var(--primary-dark), 0 10px 20px rgba(255, 204, 0, 0.4);
-  }
-  .btn-yellow.active:active {
-    top: 4px;
-    box-shadow: 0 2px 0px var(--primary-dark);
-  }
+/* INTRO */
+#intro-wrapper { position: fixed; inset: 0; z-index: 9999; background: var(--intro-beige); display: flex; flex-direction: column; justify-content: center; align-items: center; transition: transform 0.8s cubic-bezier(0.7,0,0.3,1); }
+#intro-wrapper.exit { transform: translateX(-100%); }
+.brand-header { position: absolute; top: 60px; font-family: 'Arial Black', serif; font-size: 32px; letter-spacing: 4px; color: #3d2b1f; text-transform: uppercase; }
+.animation-container { position: relative; width: 350px; height: 250px; display: flex; justify-content: center; align-items: flex-end; padding-bottom: 60px; }
+.plate-side { width: 180px; height: 8px; background: #fff; border-radius: 0 0 15px 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); position: relative; z-index: 10; animation: slidePlate 0.7s ease-out forwards; }
+@keyframes slidePlate { 0%{transform:translateX(100vw)}100%{transform:translateX(0)} }
+.falling-item { position: absolute; font-size: 40px; opacity: 0; z-index: 5; }
+.item-burger { animation: dropIn 0.5s 0.8s forwards; left: 85px; }
+.item-fries  { animation: dropIn 0.5s 1.1s forwards; left: 125px; }
+.item-salad  { animation: dropIn 0.5s 1.4s forwards; left: 160px; }
+.item-wine   { animation: dropIn 0.5s 1.7s forwards; left: 200px; }
+@keyframes dropIn { 0%{transform:translateY(-300px);opacity:0}100%{transform:translateY(-8px);opacity:1} }
+.intro-text-container { margin-top: 20px; height: 50px; text-align: center; font-family: 'Times New Roman', serif; font-size: 24px; position: relative; width: 100%; }
+.text-msg { position: absolute; width: 100%; left: 0; opacity: 0; }
+.msg-1 { animation: textFlow 2s 2.7s forwards; }
+.msg-2 { animation: textFlow 2s 4.7s forwards; }
+@keyframes textFlow { 0%{opacity:0;transform:translateX(30px)} 20%,80%{opacity:1;transform:translateX(0)} 100%{opacity:0;transform:translateX(-30px)} }
 
-  .hours {
-    text-align: center;
-    color: #000000;
-    font-size: 13px;
-    opacity: 0.8;
-    margin-top: 20px;
-  }
-  
-  #resume-banner {
-    display: none;
-    background: #28a745;
-    color: white;
-    padding: 12px;
-    border-radius: 12px;
-    text-align: center;
-    font-size: 14px;
-    font-weight: 600;
-    margin-bottom: 20px;
-    cursor: pointer;
-    box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3);
-  }
+/* COLLAPSIBLE SIDEBAR */
+.sidebar { width: 0; min-width: 0; background: #1a1a1a; display: flex; flex-direction: column; align-items: center; padding-top: 0; padding-bottom: 100px; position: relative; overflow: hidden; height: 100vh; border-right: 1px solid rgba(255,255,255,0.1); scrollbar-width: none; -webkit-overflow-scrolling: touch; flex-shrink: 0; transition: width 0.4s cubic-bezier(0.4,0,0.2,1), min-width 0.4s cubic-bezier(0.4,0,0.2,1), padding-top 0.4s ease; }
+.sidebar.open { width: 90px; min-width: 90px; overflow-y: auto; padding-top: 15px; }
+.sidebar::-webkit-scrollbar { display: none; }
+.nav-indicator { position: absolute; left: 10px; width: 70px; height: 70px; background: var(--primary); border-radius: 12px; transition: all 0.4s cubic-bezier(0.4,0,0.2,1); z-index: 1; }
+.nav-group { width: 100%; display: flex; flex-direction: column; align-items: center; margin-bottom: 5px; }
+.nav-item { width: 70px; height: 70px; margin-bottom: 5px; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; position: relative; z-index: 2; transition: color 0.3s ease; color: rgba(255,255,255,0.6); flex-shrink: 0; }
+.nav-item.active { color: #000; }
+.nav-item span { font-size: 22px; margin-bottom: 4px; }
+.nav-item label { font-size: 9px; font-weight: 700; text-transform: uppercase; text-align: center; pointer-events: none; }
+.submenu { width: 100%; max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; display: flex; flex-direction: column; align-items: center; background: rgba(255,204,0,0.07); border-left: 2px solid rgba(255,204,0,0.18); border-right: 2px solid rgba(255,204,0,0.18); border-radius: 0 0 10px 10px; }
+.nav-group.expanded .submenu { max-height: 700px; padding-bottom: 10px; }
+.sub-item { width: 60px; height: 55px; margin-top: 8px; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; z-index: 2; color: rgba(255,255,255,0.55); transition: all 0.3s ease; background: rgba(255,255,255,0.04); }
+.sub-item.active { color: #000; }
+.sub-item span { font-size: 16px; }
+.sub-item label { font-size: 7px; font-weight: 600; text-transform: uppercase; margin-top: 2px; pointer-events: none; }
 
-  @media (max-width: 480px) {
-    .brand-name { font-size: 48px; } 
-    .app-shell { padding: 15px; }
-    .btn { font-size: 14px; padding: 15px 8px; }
-  }
+/* MAIN CONTENT */
+.main-content { flex: 1; display: flex; flex-direction: column; background: var(--bg-light); border-top-left-radius: 25px; overflow: hidden; min-width: 0; }
+.hero-header { padding: 13px 20px; background: rgba(255,255,255,0.55); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,0.45); text-align: center; position: relative; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+#section-name { font-family: 'Playfair Display', serif; font-size: 16px; background: var(--primary); color: #000; display: inline-block; padding: 5px 12px; border-radius: 8px; box-shadow: 0 4px 10px rgba(255,204,0,0.2); }
+
+/* SIDEBAR TOGGLE BUTTON */
+.sidebar-toggle-btn { position: absolute; left: 12px; background: rgba(255,255,255,0.68); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.55); border-radius: 10px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 17px; color: #2a2a2a; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: background 0.25s, transform 0.15s, color 0.2s; z-index: 10; }
+.sidebar-toggle-btn:active { transform: scale(0.92); }
+.sidebar-toggle-btn.active { background: var(--primary); color: #000; border-color: var(--primary); }
+.search-container { display: flex; align-items: center; }
+#search-input { width: 0; opacity: 0; padding: 8px 0; border: none; border-bottom: 2px solid var(--primary); outline: none; transition: all 0.3s ease; font-size: 14px; background: transparent; }
+#search-input.active { width: 120px; opacity: 1; padding: 8px 10px; margin-right: 5px; }
+.search-icon-btn { background: none; border: none; font-size: 20px; cursor: pointer; }
+
+/* MENU CONTAINER */
+.menu-container { flex: 1; overflow-y: auto; padding-bottom: 100px; }
+
+/* CATEGORY BANNER */
+.category-banner { width: 100%; height: 155px; position: relative; overflow: hidden; margin-bottom: 10px; }
+.category-banner img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.6s ease; }
+.category-banner:hover img { transform: scale(1.04); }
+.category-banner-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.15) 55%, transparent 100%); display: flex; flex-direction: column; justify-content: flex-end; padding: 12px 15px; }
+.category-banner-title { font-family: 'Playfair Display', serif; font-size: 21px; color: #fff; font-weight: 700; letter-spacing: 0.3px; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+.category-banner-sub { font-size: 11px; color: rgba(255,255,255,0.82); margin-top: 3px; font-style: italic; }
+
+/* 3-COLUMN GRID */
+.items-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; padding: 0 10px 14px; }
+
+/* GLASSMORPHISM FOOD CARDS */
+.food-card { background: rgba(255,255,255,0.5); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.72); border-radius: 13px; padding: 6px; display: flex; flex-direction: column; position: relative; box-shadow: 0 4px 18px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,0.85); transition: transform 0.15s ease, box-shadow 0.15s ease; }
+.food-card:active { transform: scale(0.97); }
+
+/* CLICKABLE IMAGE WRAPPER */
+.food-card-img-wrap { width: 100%; position: relative; cursor: pointer; overflow: hidden; border-radius: 9px; margin-bottom: 5px; }
+.food-card-img-wrap img { width: 100%; aspect-ratio: 1/1; object-fit: cover; display: block; transition: transform 0.25s ease; }
+.food-card-img-wrap:active img { transform: scale(0.97); }
+.img-detail-hint { position: absolute; bottom: 5px; right: 5px; background: rgba(0,0,0,0.48); backdrop-filter: blur(4px); color: #fff; font-size: 7.5px; padding: 2px 5px; border-radius: 5px; pointer-events: none; font-weight: 600; }
+.food-card h4 { font-size: 9px; line-height: 1.25; margin-bottom: 3px; height: 22px; overflow: hidden; color: #1a1a1a; font-weight: 700; }
+.price { font-weight: 700; color: #3a3a3a; font-size: 11px; margin-bottom: 5px; }
+.cart-badge { position: absolute; top: -5px; right: -5px; background: #ff4444; color: white; font-size: 10px; font-weight: bold; padding: 2px 6px; border-radius: 10px; border: 2px solid rgba(255,255,255,0.75); display: none; z-index: 15; }
+.add-initial { width: 100%; padding: 5px; background: #111; color: #fff; border: none; border-radius: 7px; font-weight: 700; font-size: 10px; cursor: pointer; letter-spacing: 0.5px; transition: background 0.2s; }
+.add-initial:active { background: #333; }
+.qty-controls { display: none; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.08); border-radius: 7px; padding: 1px; }
+.btn-qty { width: 22px; height: 22px; border: none; background: rgba(255,255,255,0.85); border-radius: 5px; font-weight: 700; cursor: pointer; font-size: 13px; line-height: 1; }
+
+/* CART BAR */
+.cart-bar { position: fixed; bottom: 15px; left: 15px; right: 15px; background: #28a745; height: 50px; border-radius: 12px; display: none; align-items: center; justify-content: space-between; padding: 0 15px; color: #fff; font-weight: 700; z-index: 1000; cursor: pointer; transition: left 0.4s cubic-bezier(0.4,0,0.2,1); }
+.cart-bar.sidebar-adjusted { left: 105px; }
+.cart-popup { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: flex-end; z-index: 2000; }
+.cart-content { width: 100%; max-width: 500px; background: #fff; border-top-left-radius: 25px; border-top-right-radius: 25px; padding: 25px; max-height: 80vh; overflow-y: auto; }
+.cart-item-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #eee; }
+.cart-item-info { flex: 1; }
+.cart-item-info h5 { font-size: 14px; margin-bottom: 2px; }
+.cart-item-info p { font-size: 12px; color: #777; }
+.cart-item-actions { display: flex; align-items: center; gap: 10px; }
+.pay-btn { width: 100%; padding: 16px; background: #28a745; color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 700; margin-top: 20px; cursor: pointer; }
+
+/* ORDER CONFIRMATION OVERLAY */
+#order-confirm-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.75); display: none; justify-content: center; align-items: center; z-index: 9000; }
+#order-confirm-overlay.visible { display: flex; }
+.order-confirm-box { background: #fff; border-radius: 24px; padding: 40px 30px; text-align: center; width: 85%; max-width: 340px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); animation: popIn 0.4s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+@keyframes popIn { 0%{transform:scale(0.7);opacity:0}100%{transform:scale(1);opacity:1} }
+.order-confirm-icon { font-size: 52px; margin-bottom: 12px; }
+.order-confirm-title { font-family: 'Playfair Display', serif; font-size: 22px; color: #111; margin-bottom: 20px; }
+.order-timer-ring { position: relative; width: 130px; height: 130px; margin: 0 auto 20px; }
+.order-timer-ring svg { transform: rotate(-90deg); }
+.timer-track { fill: none; stroke: #f0f0f0; stroke-width: 8; }
+.timer-progress { fill: none; stroke: #28a745; stroke-width: 8; stroke-linecap: round; stroke-dasharray: 339.29; stroke-dashoffset: 0; transition: stroke-dashoffset 1s linear; }
+.timer-label { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 800; color: #111; }
+.order-ready-text { font-size: 15px; color: #555; font-weight: 600; margin-bottom: 24px; }
+.order-confirm-close { background: #111; color: #fff; border: none; border-radius: 12px; padding: 12px 32px; font-size: 14px; font-weight: 700; cursor: pointer; }
+#order-ready-banner { display: none; margin-bottom: 18px; animation: readyPop 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+#order-ready-banner.visible { display: block; }
+.order-ready-badge { background: #28a745; color: #fff; font-size: 20px; font-weight: 800; padding: 10px 24px; border-radius: 50px; display: inline-block; letter-spacing: 0.5px; }
+@keyframes readyPop { 0%{transform:scale(0.5);opacity:0}100%{transform:scale(1);opacity:1} }
+.token-box { background: #fff8e1; border: 2px dashed #ffcc00; border-radius: 12px; padding: 10px 18px; margin: 0 auto 20px; display: inline-block; text-align: center; }
+.token-label { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #888; letter-spacing: 1.5px; margin-bottom: 4px; }
+.token-number { font-size: 28px; font-weight: 800; color: #111; letter-spacing: 3px; font-family: 'Courier New', monospace; }
+#popup-table-badge { display: none; align-items: center; justify-content: center; gap: 8px; background: #111; color: #ffcc00; border-radius: 50px; padding: 10px 22px; margin: 0 auto 18px; font-size: 15px; font-weight: 800; letter-spacing: 1px; animation: tableIn 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+#popup-table-badge.visible { display: flex; }
+@keyframes tableIn { from{transform:scale(0.7);opacity:0}to{transform:scale(1);opacity:1} }
+
+/* TRACK ORDER BUTTON */
+#track-order-btn { display: none; position: fixed; bottom: 20px; right: 20px; background: #e00000; color: #fff; border: none; border-radius: 14px; padding: 13px 20px; font-size: 13px; font-weight: 700; cursor: pointer; z-index: 8000; box-shadow: 0 4px 18px rgba(220,0,0,0.45); letter-spacing: 0.5px; }
+#track-order-btn.visible { display: block; }
+@keyframes trackShake { 0%,100%{transform:translateX(0) rotate(0deg)}15%{transform:translateX(-5px) rotate(-3deg)}30%{transform:translateX(5px) rotate(3deg)}45%{transform:translateX(-4px) rotate(-2deg)}60%{transform:translateX(4px) rotate(2deg)}75%{transform:translateX(-2px) rotate(-1deg)}90%{transform:translateX(2px) rotate(1deg)} }
+#track-order-btn.shake { animation: trackShake 0.6s ease; }
+
+/* HEADER HAMBURGER */
+.header-actions { position: absolute; right: 15px; display: flex; align-items: center; gap: 6px; }
+.hamb-menu-wrap { position: relative; }
+.hamb-icon-btn { background: rgba(255,255,255,0.68); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.55); border-radius: 10px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; transition: background 0.2s; position: relative; }
+.hamb-icon-btn:active { background: #e0e0e0; }
+.hamb-notif-dot { position: absolute; top: -3px; right: -3px; width: 10px; height: 10px; background: #ff4444; border-radius: 50%; border: 2px solid #fff; display: none; }
+.hamb-notif-dot.visible { display: block; }
+.hamb-dropdown { position: absolute; right: 0; top: calc(100% + 8px); width: 180px; background: #fff; border-radius: 14px; box-shadow: 0 8px 30px rgba(0,0,0,0.15); border: 1px solid #eee; overflow: hidden; display: none; z-index: 3000; }
+.hamb-dropdown.open { display: block; }
+.hamb-drop-item { display: flex; align-items: center; gap: 10px; padding: 13px 16px; font-size: 13px; font-weight: 600; color: #111; cursor: pointer; border-bottom: 1px solid #f5f5f5; transition: background 0.15s; }
+.hamb-drop-item:last-child { border-bottom: none; }
+.hamb-drop-item:active { background: #f9f9f9; }
+.hamb-drop-item span { font-size: 16px; }
+
+/* PREVIOUS ORDERS PANEL */
+#prev-orders-panel { position: fixed; inset: 0; z-index: 5000; display: none; }
+#prev-orders-panel.open { display: block; }
+.pop-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.4); }
+.pop-sheet { position: absolute; top: 0; right: 0; width: min(340px,92vw); height: 100%; background: #fff; display: flex; flex-direction: column; box-shadow: -8px 0 40px rgba(0,0,0,0.18); transform: translateX(100%); transition: transform 0.35s cubic-bezier(0.4,0,0.2,1); }
+#prev-orders-panel.open .pop-sheet { transform: translateX(0); }
+.pop-head { display: flex; align-items: center; justify-content: space-between; padding: 20px 20px 14px; border-bottom: 1px solid #eee; background: #fff; }
+.pop-title { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: #111; }
+.pop-close { background: #f0f0f0; border: none; border-radius: 50%; width: 32px; height: 32px; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.pop-body { flex: 1; overflow-y: auto; padding: 16px; }
+.pop-empty { text-align: center; color: #bbb; font-size: 13px; margin-top: 60px; }
+.prev-order-card { background: #fafafa; border: 1px solid #eee; border-radius: 14px; padding: 14px; margin-bottom: 12px; }
+.poc-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.poc-round { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #888; background: #f0f0f0; padding: 3px 8px; border-radius: 6px; }
+.poc-time { font-size: 11px; color: #aaa; }
+.poc-item-row { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #444; padding: 4px 0; border-bottom: 1px solid #f0f0f0; }
+.poc-item-row:last-of-type { border-bottom: none; }
+.poc-item-name { flex: 1; }
+.poc-item-qty { color: #888; margin: 0 8px; font-weight: 600; }
+.poc-item-price { font-weight: 700; color: #333; }
+.poc-total { display: flex; justify-content: space-between; font-size: 13px; font-weight: 800; margin-top: 10px; padding-top: 8px; border-top: 2px solid var(--primary); color: #111; }
+
+/* ITEM DETAIL POPUP */
+#item-detail-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.52); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); display: none; justify-content: center; align-items: center; z-index: 8500; padding: 20px; }
+#item-detail-modal.open { display: flex; }
+.item-detail-box { background: rgba(255,255,255,0.78); backdrop-filter: blur(28px); -webkit-backdrop-filter: blur(28px); border: 1px solid rgba(255,255,255,0.88); border-radius: 26px; width: 100%; max-width: 340px; overflow: hidden; box-shadow: 0 24px 64px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.95); animation: detailPopIn 0.38s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+@keyframes detailPopIn { 0%{transform:scale(0.82) translateY(18px);opacity:0}100%{transform:scale(1) translateY(0);opacity:1} }
+.item-detail-img-wrap { width: 100%; height: 210px; position: relative; overflow: hidden; }
+.item-detail-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.item-detail-img-overlay { position: absolute; bottom: 0; left: 0; right: 0; height: 70px; background: linear-gradient(to top,rgba(255,255,255,0.88),transparent); }
+.item-detail-close { position: absolute; top: 11px; right: 11px; background: rgba(0,0,0,0.42); backdrop-filter: blur(6px); color: #fff; border: none; border-radius: 50%; width: 32px; height: 32px; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10; transition: background 0.2s; }
+.item-detail-close:active { background: rgba(0,0,0,0.65); }
+.item-detail-body { padding: 15px 18px 20px; }
+.item-detail-name { font-family: 'Playfair Display', serif; font-size: 19px; color: #111; margin-bottom: 4px; line-height: 1.3; font-weight: 700; }
+.item-detail-price-tag { font-size: 17px; font-weight: 800; color: #2a2a2a; margin-bottom: 10px; }
+.item-detail-badges { display: flex; gap: 7px; margin-bottom: 12px; flex-wrap: wrap; }
+.item-detail-badge { background: rgba(255,204,0,0.18); border: 1px solid rgba(255,204,0,0.4); color: #6b5200; font-size: 10px; font-weight: 700; padding: 4px 9px; border-radius: 20px; }
+.item-detail-badge.time-badge { background: rgba(40,167,69,0.12); border-color: rgba(40,167,69,0.3); color: #145a26; }
+.item-detail-desc { font-size: 12px; color: #4a4a4a; line-height: 1.65; margin-bottom: 16px; }
+.item-detail-add-btn { width: 100%; padding: 13px; background: #111; color: #fff; border: none; border-radius: 12px; font-size: 14px; font-weight: 700; cursor: pointer; letter-spacing: 0.4px; transition: background 0.25s, transform 0.12s; }
+.item-detail-add-btn:active { transform: scale(0.97); }
+.item-detail-add-btn.in-cart { background: #28a745; }
+.item-detail-add-btn.added-flash { background: var(--primary); color: #000; }
+
+/* ADDITIONAL THEME UPDATES & VISUAL DESIGN CHANGES */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap');
+:root {
+  --primary: #D9D2C6 !important;
+  --primary-dark: #B29079 !important;
+  --accent-yellow: #D9D2C6 !important;
+}
+
+body, .main-content, .app-container, #main-feed, .content-wrapper {
+  background-color: #B29079 !important;
+  background-image: none !important; 
+}
+
+.food-card img, .card-img-wrapper img, .food-card .image-container img, .item-card img, .modal-image-wrap img, .item-image img {
+  border-radius: 50% !important;
+  aspect-ratio: 1 / 1 !important;
+  object-fit: cover !important;
+  border: 3px solid #D9D2C6 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18) !important;
+}
+
+.food-card .image-container, .card-img-wrapper, .food-image-wrap {
+  border-radius: 50% !important;
+  overflow: hidden !important;
+  background: transparent !important;
+}
+
+.hero-header, .header, .top-navbar, .menu-header-section, header {
+  background-color: #4A342A !important;
+  background-image: none !important;
+  backdrop-filter: none !important;
+  color: #F5F5F3 !important;
+}
+
+.hero-header h1, .hero-header .title, .menu-header-section h1, .category-banner-title, header h1, header h2 {
+  font-family: 'Studio Noir', 'Cinzel', 'Playfair Display', serif !important;
+  color: #F5F5F3 !important; 
+  background: transparent !important; 
+  background-color: transparent !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
+.hero-header svg, .hero-header i, .hero-header .icon-btn, header svg, header i {
+  color: #F5F5F3 !important;
+  fill: #F5F5F3 !important;
+}
+
+.sidebar, .category-sidebar, #sidebar-wrapper {
+  background-color: #4A342A !important;
+  background: #4A342A !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+.sidebar .category-item, .sidebar a {
+  color: #F5F5F3 !important;
+}
+
+.sidebar .category-item.active, .sidebar .category-item:hover, .category-btn.active {
+  background-color: #D9D2C6 !important;
+  color: #4A342A !important; 
+}
+
+.sidebar .category-item.active svg, .sidebar .category-item:hover svg {
+  fill: #4A342A !important;
+  color: #4A342A !important;
+}
+
+.rating-stars, .star-icon, .badge-yellow, .accent-yellow-text {
+  color: #D9D2C6 !important;
+  fill: #D9D2C6 !important;
+}
+
+.add-to-cart-btn, .btn-primary {
+  background-color: #D9D2C6 !important;
+  color: #4A342A !important;
+  font-weight: bold !important;
+  border: none !important;
+}
 </style>
+
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-analytics-compat.js"></script>
@@ -253,161 +298,893 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 const analytics = firebase.analytics();
-
-// Session Persistence Check
-window.addEventListener('DOMContentLoaded', () => {
-  const currentOrderId = localStorage.getItem("currentOrderId");
-  if(currentOrderId) {
-    db.ref("orders/" + currentOrderId).once("value", snap => {
-      const order = snap.val();
-      if(order && (order.status === 'Completed' || order.status === 'Cancelled')) {
-        localStorage.removeItem("currentOrderId");
-        localStorage.removeItem("currentOrderInfo");
-        localStorage.removeItem("emerald_cart");
-        localStorage.removeItem("emerald_prevRounds");
-      } else if (order) {
-        document.getElementById('resume-banner').style.display = 'block';
-      }
-    });
-  }
-});
 </script>
 </head>
 <body>
-<div class="app-shell">
-  <header class="header">
-    <div class="brand-name">EMERALD</div>
-  </header>
-  <main class="card">
-    <div id="resume-banner" onclick="window.location.href='track.html'">
-      You have an active order. Click to Track!
+
+<div id="intro-wrapper">
+  <div class="brand-header">EMERALD</div>
+  <div class="animation-container">
+    <div class="plate-side"></div>
+    <div class="falling-item item-burger">&#x1F354;</div>
+    <div class="falling-item item-fries">&#x1F35F;</div>
+    <div class="falling-item item-salad">&#x1F957;</div>
+    <div class="falling-item item-wine">&#x1F377;</div>
+  </div>
+  <div class="intro-text-container">
+    <div class="text-msg msg-1">Prioritizing Taste</div>
+    <div class="text-msg msg-2">Serving With Speed</div>
+  </div>
+</div>
+
+<div class="sidebar" id="sidebar">
+  <div class="nav-indicator" id="nav-indicator"></div>
+  <div class="nav-group expanded" id="group-starters">
+    <div class="nav-item active" onclick="toggleGroup('starters',this)"><span>&#x1F362;</span><label>Starters</label></div>
+    <div class="submenu">
+      <div class="sub-item" onclick="showSection('starters',this)"><span>&#x1F37D;&#xFE0F;</span><label>Indian</label></div>
+      <div class="sub-item" onclick="showSection('snacks',this)"><span>&#x1F355;</span><label>Snacks</label></div>
+      <div class="sub-item" onclick="showSection('salads',this)"><span>&#x1F957;</span><label>Salads</label></div>
     </div>
-    
-    <h2>Select Order Mode</h2>
-    <div class="option" data-type="dinein" id="dinein-option">
-      <div class="icon-box">
-        <svg viewBox="0 0 24 24"><path d="M18 8c0 3.31-2.69 6-6 6M18 8V3M14 8V3M22 8V3M18 21v-7"/><path d="M2 15c0 3.87 3.13 7 7 7s7-3.13 7-7-3.13-7-7-7-7 3.13-7 7zM9 8V2"/></svg>
+  </div>
+  <div class="nav-group" id="group-main">
+    <div class="nav-item" onclick="toggleGroup('main',this)"><span>&#x1FAD5;</span><label>Main</label></div>
+    <div class="submenu">
+      <div class="sub-item" onclick="showSection('paneer',this)"><span>&#x1F9C0;</span><label>Paneer</label></div>
+      <div class="sub-item" onclick="showSection('indian_curry',this)"><span>&#x1F35B;</span><label>Curries</label></div>
+      <div class="sub-item" onclick="showSection('dal',this)"><span>&#x1F372;</span><label>Dal</label></div>
+      <div class="sub-item" onclick="showSection('rice_merged',this)"><span>&#x1F35A;</span><label>Rice</label></div>
+    </div>
+  </div>
+  <div class="nav-group" id="group-breads">
+    <div class="nav-item" onclick="toggleGroup('breads',this)"><span>&#x1F35E;</span><label>Breads</label></div>
+    <div class="submenu">
+      <div class="sub-item" onclick="showSection('tandoor',this)"><span>&#x1F525;</span><label>Tandoor</label></div>
+      <div class="sub-item" onclick="showSection('kofta',this)"><span>&#x1FAD3;</span><label>Kofta</label></div>
+    </div>
+  </div>
+  <div class="nav-group">
+    <div class="nav-item" onclick="showSection('chinese_merged',this)"><span>&#x1F35C;</span><label>Chinese</label></div>
+  </div>
+  <div class="nav-group" id="group-soups">
+    <div class="nav-item" onclick="toggleGroup('soups',this)"><span>&#x1F963;</span><label>Soups</label></div>
+    <div class="submenu">
+      <div class="sub-item" onclick="showSection('soups',this)"><span>&#x1F372;</span><label>Soups</label></div>
+    </div>
+  </div>
+  <div class="nav-group">
+    <div class="nav-item" onclick="showSection('sizzlers',this)"><span>&#x1F35D;</span><label>Sizzlers</label></div>
+  </div>
+  <div class="nav-group">
+    <div class="nav-item" onclick="showSection('continental',this)"><span>&#x1F35D;</span><label>Continental</label></div>
+  </div>
+  <div class="nav-group" id="group-beverages">
+    <div class="nav-item" onclick="toggleGroup('beverages',this)"><span>&#x1F964;</span><label>Drinks</label></div>
+    <div class="submenu">
+      <div class="sub-item" onclick="showSection('drinks',this)"><span>&#x1F377;</span><label>Beverages</label></div>
+      <div class="sub-item" onclick="showSection('shakes',this)"><span>&#x1F95B;</span><label>Shakes</label></div>
+      <div class="sub-item" onclick="showSection('ice_cream',this)"><span>&#x1F366;</span><label>Desserts</label></div>
+    </div>
+  </div>
+</div>
+
+<div class="main-content">
+  <div class="hero-header">
+    <button class="sidebar-toggle-btn" id="sidebar-toggle-btn" onclick="toggleSidebar()" aria-label="Toggle categories">&#9776;</button>
+    <h1 id="section-name">Starters</h1>
+    <div class="header-actions">
+      <div class="search-container" style="position:static;">
+        <input type="text" id="search-input" placeholder="Search item..." oninput="handleSearch()">
+        <button class="search-icon-btn" onclick="toggleSearch()">&#x1F50D;</button>
       </div>
-      <div class="option-text">
-        <h3>Dine In</h3>
-        <p>Enjoy at our restaurant</p>
-      </div>
-      <div class="arrow-toggle" id="arrowToggle">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+      <div class="hamb-menu-wrap">
+        <button class="hamb-icon-btn" onclick="toggleHeaderMenu(event)" id="hamb-icon-btn" aria-label="Menu options">
+          &#9776;
+          <span class="hamb-notif-dot" id="hamb-notif-dot"></span>
+        </button>
+        <div class="hamb-dropdown" id="hamb-dropdown">
+          <div class="hamb-drop-item" onclick="openPrevOrdersPanel();closeHeaderMenu()"><span>&#x1F4CB;</span> Previous Orders</div>
+          <div class="hamb-drop-item" onclick="goToTrackOrder();closeHeaderMenu()"><span>&#x1F6F5;</span> Track Order</div>
+        </div>
       </div>
     </div>
-    <div id="dinein-form">
-      <div class="input-group">
-        <input type="text" id="userName" placeholder="Your Name">
-      </div>
-      <div class="input-group">
-        <input type="number" id="userCount" placeholder="Number of People">
+  </div>
+  <div class="menu-container">
+    <div id="category-banner-wrap"></div>
+    <div class="items-grid" id="menu-grid"></div>
+  </div>
+</div>
+
+<div class="cart-bar" id="cart-bar" onclick="toggleCart()">
+  <span id="cart-item-count">0 Items</span>
+  <span id="cart-total-price">&#8377;0.00</span>
+  <span>View Cart &#8594;</span>
+</div>
+
+<div class="cart-popup" id="cart-popup">
+  <div class="cart-content">
+    <div style="display:flex;justify-content:space-between;margin-bottom:15px">
+      <h3>Your Basket</h3>
+      <button onclick="toggleCart()" style="background:none;border:none;color:#999;font-size:20px">&#x2715;</button>
+    </div>
+    <div id="cart-items-list"></div>
+    <div style="background:#f9f9f9;padding:15px;border-radius:12px;margin-top:15px;">
+      <div style="display:flex;justify-content:space-between;font-weight:800;font-size:20px;">
+        <span>Total</span><span id="cart-total-price-popup">&#8377;0.00</span>
       </div>
     </div>
-    <div class="option" data-type="takeaway">
-      <div class="icon-box">
-        <svg viewBox="0 0 24 24"><path d="M6 7h12l-1 14H7L6 7z"/><path d="M9 7V5a3 3 0 016 0v2"/></svg>
-      </div>
-      <div class="option-text">
-        <h3>Takeaway</h3>
-        <p>Pick up your order</p>
+    <button class="pay-btn" onclick="processPayment()">Place Order</button>
+  </div>
+</div>
+
+<div id="prev-orders-panel">
+  <div class="pop-backdrop" onclick="closePrevOrdersPanel()"></div>
+  <div class="pop-sheet">
+    <div class="pop-head">
+      <span class="pop-title">Previous Orders</span>
+      <button class="pop-close" onclick="closePrevOrdersPanel()">&#x2715;</button>
+    </div>
+    <div class="pop-body" id="prev-orders-body">
+      <div class="pop-empty">No orders placed yet this session.</div>
+    </div>
+  </div>
+</div>
+
+<div id="order-confirm-overlay">
+  <div class="order-confirm-box">
+    <div class="order-confirm-icon">&#x1F37D;&#xFE0F;</div>
+    <div class="order-confirm-title">Order Placed!</div>
+    <div style="text-align:center;margin-bottom:18px;">
+      <div class="token-box">
+        <div class="token-label">&#x1F3AB; Your Token Number</div>
+        <div class="token-number" id="order-token-number">#---</div>
       </div>
     </div>
-    <div class="hours">Open daily: 12:00 PM - 11:00 PM</div>
-  </main>
-  <footer class="footer-action">
-    <div class="action-grid">
-      <button class="btn btn-purple" id="recommendBtn">Let us recommend you</button>
-      <button class="btn btn-yellow" id="viewMenuBtn">View Menu</button>
+    <div id="popup-table-badge">&#x1FA91; Your Table: <span id="popup-table-number">&#8212;</span></div>
+    <div class="order-timer-ring">
+      <svg width="130" height="130" viewBox="0 0 130 130">
+        <circle class="timer-track" cx="65" cy="65" r="54"/>
+        <circle class="timer-progress" id="timer-progress-circle" cx="65" cy="65" r="54"/>
+      </svg>
+      <div class="timer-label" id="timer-display">15:00</div>
     </div>
-  </footer>
+    <div class="order-ready-text" id="order-ready-subtext">Your order will be ready in 15 minutes</div>
+    <div id="order-ready-banner"><span class="order-ready-badge">&#x1F374; Order Ready !</span></div>
+    <button class="order-confirm-close" onclick="closeOrderConfirm()">Got it!</button>
+  </div>
+</div>
+
+<button id="track-order-btn" onclick="goToTrackOrder()">&#x1F6F5; Track Order</button>
+
+<div id="item-detail-modal" onclick="closeItemDetail(event)">
+  <div class="item-detail-box" onclick="event.stopPropagation()">
+    <div class="item-detail-img-wrap">
+      <img id="item-detail-img" src="" alt="">
+      <div class="item-detail-img-overlay"></div>
+      <button class="item-detail-close" onclick="_closeDetailModal()">&#x2715;</button>
+    </div>
+    <div class="item-detail-body">
+      <div class="item-detail-name" id="item-detail-name"></div>
+      <div class="item-detail-price-tag" id="item-detail-price"></div>
+      <div class="item-detail-badges">
+        <span class="item-detail-badge" id="item-detail-cat-badge">Category</span>
+        <span class="item-detail-badge time-badge" id="item-detail-time">&#x23F1; ~15 min</span>
+      </div>
+      <p class="item-detail-desc" id="item-detail-desc"></p>
+      <button class="item-detail-add-btn" id="item-detail-add-btn" onclick="addFromDetail()">ADD TO CART</button>
+    </div>
+  </div>
 </div>
 <script>
-const options = document.querySelectorAll(".option");
-const btnMenu = document.getElementById("viewMenuBtn");
-const btnRec = document.getElementById("recommendBtn");
-const dineinForm = document.getElementById("dinein-form");
-const nameInput = document.getElementById("userName");
-const countInput = document.getElementById("userCount");
-const arrowToggle = document.getElementById("arrowToggle");
-let selected = null;
+const menuData = {
+  starters: [
+    { id: 'st1',  name: 'Corn Tikki',                price: 200.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnMSoDPqbSHVRvP9UUOfUXeQmo2cHT-_TPtUZ3YJRXKf8o38sRbov1ICUmpA&s' },
+    { id: 'st2',  name: 'Paneer Tikka Dry',          price: 235.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQLGilZUsB-UT5Fg1yIFJYN2dzc-ctilFBpzVYPiRlRvGNKCxo4Hus6uDl2Zrg&s' },
+    { id: 'st3',  name: 'Paneer Phudina Tikka',      price: 235.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHPW-1_J3YuQ8umbCW6ZvQ1chf-w9c2RAXcwqVwVvSakhp3Ua-W7zqcIvszY4&s' },
+    { id: 'st4',  name: 'Paneer Lahsuni Tikka',      price: 235.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSaK7iaUGqo5RGmx1gPMSJSwCWdYn-gd8zmsuEQ9r_FQRwCIYGxIQ_rwmgy660&s' },
+    { id: 'st5',  name: 'Hara Bhara Kabab',          price: 200.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQvEdtCyriAu9hZPb3iXzI7hQb9UZU9iXi6iUBA8UcuHjR1ULg_tdI00-QyYw&s' },
+    { id: 'st6',  name: 'Raja Kabab',                price: 210.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTd3XlcCjYFtIKVur7D10WD97WpOGOLlic7pAeumvMNPADhHDAQh5lck-ck4Q&s' },
+    { id: 'st7',  name: 'Veg. Sheekh Kabab',         price: 230.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUZ9k9eehKgTjP9SjmhEDkuW8YNzEdDgMbrBH8rEhDntEJgKhKyJnXYx7rU7A&s' },
+    { id: 'st8',  name: 'Paneer Sheekh Kabab',       price: 260.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPVJK_eKYv-A8Cf29C0PeFm0IhtuI5sphRqy3UVxr8mxTKykkhYx4O7um5Lxs&s' },
+    { id: 'st9',  name: 'Veg. Brice Kabab',          price: 200.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX1eCH5sW_OqxyeVuci48XeoKgSz2vzX8CZbK9dBSopgMjEf-6ezXNCXPFSQ&s' },
+    { id: 'st10', name: 'Veg. Dilruba Sheekh Kabab', price: 260.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRjm5xJKeHPP5KVP_MnaM1Ge-ar-Zkx4cuLASlykXS_j3l63fM3o6ioGm0G8CI&s' },
+    { id: 'st11', name: 'Dahi Kabab',                price: 190.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTs8qU1I9cJMvKSJPmdzVwyBcOyvN_RRF6LPgiin1ChAYPZ7P6aenjM9rsMsPRA&s' },
+    { id: 'st12', name: 'Jahangiri Tikka',           price: 230.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRyZoBs7nOJyMXCegt8puFzSWIDb_kep2QtT6_UNsglPLHC59ZaSahcOTFTww&s' },
+    { id: 'st13', name: 'Tandoori Plater',           price: 285.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTh_9O4lCssUkRfWcTPlNTXtsboJRNaIYaIhtHz-w5Y-F1GOTwv9bfS-Iye0tg&s' }
+  ],
+  snacks: [
+    { id: 'sn1',  name: 'Veg. Pizza',          price: 135.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcZbS_g1y4mcyqDyffzQ1em9LxESjjv_XboKDdb3dFi1KjY6JUi8RDtGowvA&s' },
+    { id: 'sn2',  name: 'Italian Pizza',       price: 135.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJiAJiyeCBwrKH9QGXwjmHcAK8N_N6pGV47gitT1a8II32wuTPl2OB98ju6x4&s' },
+    { id: 'sn3',  name: 'Cheese Pizza',        price: 150.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXfxisbWZ3dactVTVbzhllrSZFDxim-Vrtv9l16MI2TNQqVBAhTVgamAnS8A&s' },
+    { id: 'sn4',  name: 'Jain Pizza',          price: 120.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9gHkBz7Rqsdr8ONpnwPTzSwrxmJsmAaFNHrjhky3D-U6fE-YAhKyGYWKYYxU&s' },
+    { id: 'sn5',  name: 'Veg. Club Sandwich',  price: 90.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQheZ7bqoOvbwsoztSEKj26v_jRiuDpbUGQ1xmklkNve00dCBrsVYkfaV19iKU&s' },
+    { id: 'sn6',  name: 'Veg. Sandwich',       price: 80.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcToM5d8P8Uv2HNeCCTZFMVE-EPyS_BsFmoLro8SNetCuWvu1xwF7BBKEtMs6A&s' },
+    { id: 'sn7',  name: 'Cheese Sandwich',     price: 80.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjb5DmJICAgE99DpNRr4PEdfE9fpp6xa49COhcEqao3kZlZhI2X30HBuqxXug&s' },
+    { id: 'sn8',  name: 'Cheese Jam Sandwich', price: 90.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOgXouOb8XZS_uo3K9TbvxO9wcnf-fHbkRjG6n7ATThkKrbnz-HGbD9K8Wmw&s' },
+    { id: 'sn9',  name: 'Bread Butter',        price: 55.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTCjaFXXRZfGg0loRiNy0IgPtttFEDaWd-H_LVAoUakfTeVt01CjO8jNe6D75I&s' },
+    { id: 'sn10', name: 'French Fries',        price: 100.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQMhzEnJCL7mXaVf_4Dsm01mZXmpTuIFURvjQxQaX3sZpeIpWpLLUVX85QrqQ&s' }
+  ],
+  paneer: [
+    { id: 'pn1',  name: 'Emerald Sp. Paneer',     price: 240.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQZ1NZRI0qF1uVzh3cHKrlV5ws8AzWEXNmr1wi_09jdFV9H_3-uauxLkbn2_Q&s' },
+    { id: 'pn2',  name: 'Paneer Sizzling',         price: 245.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTENXelHAQVN1o1El1uyXXlLt2sBzAXzikGoHMVWAug8tBM52wifobxgIQeLA&s' },
+    { id: 'pn3',  name: 'Paneer Kathiyawadi',      price: 230.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwoTP1i4WHoSkkRDHcBUMjdAWvmDTmwcZrfljrsrKwZLCJEvZz1cihiZuWkQ&s' },
+    { id: 'pn4',  name: 'Paneer Darwar',           price: 230.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTqGTAsBD1JR_ZXKpQzWDolO5dziF1DyaCkgDtyeKAgoCoM7fenbwStizfNFA&s' },
+    { id: 'pn5',  name: 'Paneer Tiranga',          price: 235.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhXqrGjVSrLeU93WHYDSR-EfRXRPIxZxn4oV_zQ70_5I7sU4EjGCFvhcA_Cw&s' },
+    { id: 'pn6',  name: 'Cheese Butter Masala',    price: 235.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKlyiDm0odqlRKurnQH-qfCF_4lXoI_WnG6nKqWtQfz0o4it89F9PRTiajXuo&s' },
+    { id: 'pn7',  name: 'Cheese Angoori',          price: 235.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxhIdaj-9HLlHepdg26np0FMO1eMPPYTnv8zUUo1MIZKn5dK1YwBM3UFDjMA&s' },
+    { id: 'pn8',  name: 'Paneer Mushroom Masala',  price: 230.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRYUwRncHgwsQfHX0l01zaldNbkKYoPX4QOIQWSupDnGNt-m4qI_F3MpQDcww&s' },
+    { id: 'pn9',  name: 'Paneer Butter Masala',    price: 210.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT-DKI6IZznGQYyEdIs8Pz9yuHJMF_ZdyUVVNisCbAZkBZ5uEILxnZBtZm_GxA&s' },
+    { id: 'pn10', name: 'Paneer Tikka Masala',     price: 220.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTA8kS6uIoiT-0d3uMOiEpGBWJx5poogJhhj9kB2F4hCvxM2G4cJNK0QjWtGm0&s' },
+    { id: 'pn11', name: 'Paneer Kankani',          price: 220.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSzoz_nUT7f9BddMaE1fYuj4bKZSEcQ5mNW3RoCUUwhe3brMwJvY28EhXAi-w&s' },
+    { id: 'pn12', name: 'Paneer Diwani Handi',     price: 220.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSV7HAYYhfdndeaKgsVe2KBHuwDz8GCZGkzVHQbRc-eMNJoEHz3SJH6Ezepe64&s' },
+    { id: 'pn13', name: 'Paneer Lajawab',          price: 220.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMJzClOsFlc9fL2LDvD2PkKnSveiweQcaaqyTVlnUG1rEJPwEhTdMAw1W4fA&s' },
+    { id: 'pn14', name: 'Paneer Kalimirch',        price: 220.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZT7hbYQPZWQS8EiPPQFUVHJRub8CrwyReuXc1-wmATrzMQyEokUfb_nlIkg&s' },
+    { id: 'pn15', name: 'Paneer Kadai',            price: 220.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRebYK9td9pnUuP4KBg2BjQA3WkFMqxsQG5WEjCx_azeFF8CR_V6ejMkN_5V1M&s' },
+    { id: 'pn16', name: 'Paneer Handi',            price: 220.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpvTNMgzQEACbdSiR7M8Aw6khIVZDvXPb2b6-9YTGbGUK-hVWfQNHpG7YTqQ&s' },
+    { id: 'pn17', name: 'Balti Paneer',            price: 220.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRSBx2YwfjmqRmziJNb-TJxxI8YOZtSVP_FzpOKHyM5cjxWnaxVrmSYLby8gQ&s' },
+    { id: 'pn18', name: 'Tawa Paneer',             price: 220.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTylUM036lj8Xm_gfyqp9nhp0aBlEF-z8w_K2-hhMXZRHOH6QpBHwESNb2RLw&s' },
+    { id: 'pn19', name: 'Paneer Toofani',          price: 220.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsqrRnuUw1M4Ez-IbDTtXR5zVPSBAYSxXqTvS1GkyexbE7uSEQ--mApcDxYA&s' },
+    { id: 'pn20', name: 'Paneer Hara Masala',      price: 220.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT2uJ8s9UanvXFg1A7BCBxo49HcJZ6omi4wnORDSRs7km3wayEGTqTmZnUPdA&s' },
+    { id: 'pn21', name: 'Paneer Shahi Korma',      price: 220.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTD5awf2CJlTf8hfHOpvprTV00_8EdpEd0nfgQmPJ8sxT3Gw05i7_ZLuQXS-g&s' },
+    { id: 'pn22', name: 'Paneer Bhurjee',          price: 230.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnohiVvfV6tw7Jgrme55F5ql8gZ5zhDy7jpNwiLDKL76XwO9I9SvNPrHIpwoM&s' },
+    { id: 'pn23', name: 'Paneer Pasanda',          price: 225.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKPHEmr3Dz4JAG21aIpV_ryUombNLNCk2quT1yNLC8VucQaCNRASkrB9iiHA&s' },
+    { id: 'pn24', name: 'Mutter Paneer',           price: 200.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXdxMrCZ-IhHiDvVN--E6AUxBIe8zqUXFCaEHMf6-MDxhTTkDiHpLKn6vdUDs&s' },
+    { id: 'pn25', name: 'Palak Paneer',            price: 200.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKSB61FcG0jywiAX4_aRFWKmrwoiBYrmsrq76QMcnDA0DEbN8_R63T9QOSPA&s' },
+    { id: 'pn26', name: 'Methi Paneer Masala',     price: 220.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRvN7tPVw9DpOADOpZ3Qg9AF6mTrNPII3KYfPuYiACbVCxnGpa2YsKdWpX3xWg&s' },
+    { id: 'pn27', name: 'Kaju Paneer Masala',      price: 245.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRo8Uy8AutD9fjV-YtsnqdQT2rkYACD8rvwiLc-mYCmvqTuxynHyJxpGe9oDu4&s' },
+    { id: 'pn28', name: 'Khoya Kaju (sweet)',       price: 240.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSvj8SGZmE8PWPGw2qf0ZJLU1xbotrSgM2rIk4X4xByA3zAx-citw1e_VhSbuA&s' },
+    { id: 'pn29', name: 'Kaju Balti Masala',       price: 245.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSDYpgFi8rUHoXXS0_Dcj8WeHkzCGrTO8T_BpfmhCMhI2XkxlDW5rhaBDc49lQ&s' }
+  ],
+  indian_curry: [
+    { id: 'in1',  name: 'Emerald Sp. Veg.',       price: 210.00, img: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=400' },
+    { id: 'in2',  name: 'Veg. Mastani',           price: 215.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJken_OHzMdXzslUAgVF-OSzDKfxJfqYHUODZfD4snErypwhDpBmjiFjm8PdU&s' },
+    { id: 'in3',  name: 'Veg. Jawalamukhi',       price: 215.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4iDXY1HwoY9OrCw9yLJ0KC9WWkW_d17O9eIXz4OTV7BSzC6KzvPRKZQA&s' },
+    { id: 'in4',  name: 'Veg. Sizzling',          price: 220.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT9B-Rj54fQEMbx191I65tb9Nt-ZvopEFVugHwya7UdZdySG6_4W9HHSc0t_w&s' },
+    { id: 'in5',  name: 'Veg. Tawa Masala',       price: 200.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAK8ADLVGpL8bYcbB6qAbq7wjy-DAb61nEdZX1fGu9PF8FqOn36Cm_UewIfA&s' },
+    { id: 'in6',  name: 'Veg. Kadai',             price: 200.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSij1FeNHj-2YA4Y72JVA5IgvGid-VO-BKan0AgUYp6c_DuTiJtMg3w0-6VMQ&s' },
+    { id: 'in7',  name: 'Veg. Kolhapuri',         price: 200.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcToXzED7p4Qq6O-KagGUB_JjJDvrIGbFapk7GC_9mpOQNhu0QIPBZI9FA2g1g&s' },
+    { id: 'in8',  name: 'Veg. Makhanwala',        price: 200.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1LUq1bH4isfxxbroZA4ULybVvEJxr8iYnhPrgI00MyfbZpVNBC-s64S6NTb8&s' },
+    { id: 'in9',  name: 'Veg. Jaipuri',           price: 200.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTP6xHIvQ0gQZHxVI9oSgvduCzj_WWS05K94IMZWiT1ZRnZ58RXrDT6wHu2Lsw&s' },
+    { id: 'in10', name: 'Veg. Singapuri',         price: 200.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQ57ovk-MqhRi-pTlYLG6RwgBa2R5_nKyXURh_sYDG8mW8m-LkMS9QhR0WNA&s' },
+    { id: 'in11', name: 'Veg. Handi',             price: 200.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQoZcZF_rYeSkYKgZEQTAsghzq43cpCx6LC0SgXIUzbOcrUqlXOLqpdiGDpDqg&s' },
+    { id: 'in12', name: 'Veg. Jalfrezi',          price: 200.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTpmPm6oAUd4jRmFpq9tLBU8L4n7HfpnClrABa47BTfsUaXcGrUR27J5yl1wQ&s' },
+    { id: 'in13', name: 'Veg. Shahi Korma',       price: 200.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDmtuafszLhm4mgMTxDD13bVRqxvf0hEQJ9pD2cyomzS_Da-QFJ_AIkw5VWfA&s' },
+    { id: 'in14', name: 'Veg. Toofani',           price: 200.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSmXe4d4xyXOZgVgOYIVMcrwoF7-e-lDTfQeDplAXQTHivQ33dONphajA_shnY&s' },
+    { id: 'in15', name: 'Veg. Hyderabadi',        price: 200.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFE9HIpvhPpDDn0mg_j5KnQsx1Xwaqki-0nPtw4SlkCSMWpPgES7HEoHMV--M&s' },
+    { id: 'in16', name: 'Palak Corn Capsicum',    price: 200.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcREqJYS60btuPrCqTo0oJPHtwXQm-HqOCgUqu2Va2mmro6CA2SpK2CBRjNeLA&s' },
+    { id: 'in17', name: 'Mutter Methi Malai',     price: 215.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR5I2RJPVH6u-9wYKGsxNCky_5DsYQLld6gJQEyAUC3Yi90kgocTyavlBQjVw&s' },
+    { id: 'in18', name: 'Baby Corn Makhanwala',   price: 215.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTX410m7LpHjDoM3r_vqP6uIt4j0t_4noEaMQI9LXUDrsNQ9PJ1El3ZkM7cA5U&s' },
+    { id: 'in19', name: 'Navaratan Korma',        price: 215.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLi9_6ksSOOZzX36L0OES0fZV0di7XjmPbevDZketQfx0zsVOHB_Ts2FnSU6Y&s' },
+    { id: 'in20', name: 'Corn Tomato Bhartha',    price: 200.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcREf03T4qEJWZj5KUyqhdv114Exh-K1AXDtwFTqAUcr0PkbJ-Ysmw-jAm9uTEc&s' },
+    { id: 'in21', name: 'Mutter Mushroom',        price: 215.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR5MtO-yHpfNO_A5BlQPzGtiq5L_88Vd2smHCQZVsZiPYUtv1eZ9TJcz0LaQPY&s' },
+    { id: 'in22', name: 'Mushroom Masala',        price: 215.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQRjqX-1J2tDkic0eM9HgKNeP-Tdn4FHZeify82jXsjfm5oQ7_TjlV40i2qJLA&s' },
+    { id: 'in23', name: 'Mix Vegetable',          price: 190.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR87kdrOanfilj1Tvij9hNEK6b9kVk0OZu5rK3NndJqmcaJdEZxnn_AhC9bjKo&s' },
+    { id: 'in24', name: 'Chana Masala',           price: 190.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRViB5mkcMJiQQLdNsMLUpadxknye9fGQiqUMPtZHFX8kOuPnx511_2eBngHs0&s' },
+    { id: 'in25', name: 'Aloo Masala',            price: 190.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQrBQjeDOSKgkNjzSXS6WKBCrH-EE3rrIHnFbXQOTeBngN_hBJ00vpw5l6HZw&s' },
+    { id: 'in26', name: 'Dum Aloo',               price: 190.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQS26r1lTLNKX6bdCAUgovAJSim9uoqiAFJG_nlWgdyBhINWwvx56PeHRPs1g&s' },
+    { id: 'in27', name: 'Aloo Methi',             price: 155.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3l5FgCh1jM3M5NQvwwI7Aw1b6O1DILhONvCEr-uZb0Ch1k342dAhzPq3PJw&s' },
+    { id: 'in28', name: 'Jeera Aloo',             price: 155.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQh5q0nN3Jlq9yVxs6WpTiC9SJ7L34LXvXkJwXS7j1pMJ020miRpzEMdyxSUg&s' }
+  ],
+  dal: [
+    { id: 'da1', name: 'Dal Fry',        price: 115.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQz3YmEz-ixbsaPM1A-y-ikrxJ4jlaxbn1NhSphHfrc8srCw9WLLurGbesfSw&s' },
+    { id: 'da2', name: 'Dal Fry Butter', price: 120.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1-WK5fyJ9AnMFXsrzlAJ8ZgOkV1AQn4_UyNOFenA576oB5x58C6VcjvVeQPI&s' },
+    { id: 'da3', name: 'Dal Fry Tadka',  price: 140.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnuR-kW3Rc9D2no5JYcNqrxD1rNimPXDhhhkBcbQS6u1Qq8qGy92frN1BYng&s' },
+    { id: 'da4', name: 'Dal Palak',      price: 145.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJWRvY4cMb5Ffu_P8k6OyIvdVbEoTMmb1CqrEtq_x6XZMtb_x0G9cFkIsIS3w&s' }
+  ],
+  rice_merged: [
+    { id: 'ba1',  name: 'Emerald Sp. Biryani',   price: 199.00, img: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=400' },
+    { id: 'ba2',  name: 'Veg. Biryani',          price: 150.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRMrPvVVI_p51wmimkIOKW1vivFUbC_pD49cBrT8Qetko8WRW61m6OnP3JJhmo&s' },
+    { id: 'ba3',  name: 'Hyderabadi Biryani',    price: 165.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT4Wj8lV9gZkLGeSWxqyihCaG1WBSdJalfLcNw0c0f4ctpGasUTPrPDQG27yQ&s' },
+    { id: 'ba4',  name: 'Handi Biryani',         price: 165.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRWLsJJguNISxQLUHALM_VLsWojdnlh9cBOeQdMaNg9xyWX3UPWXNp5SGy2Kek&s' },
+    { id: 'ba5',  name: 'Veg. Pulav',            price: 130.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYxzbc70NiAtkueNnlBVc55fyI9yLE_4rM3_bF3VrFsA-l-_P44BMPpqErRd4&s' },
+    { id: 'ba6',  name: 'Peas Pulav',            price: 130.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUrMpCoaeFZT2FDPxgTafhSSKLVn1azF3L2N97DDdGQ1U3QPAUruL-l_JjcA&s' },
+    { id: 'ba7',  name: 'Kashmiri Pulav',        price: 170.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTe1_D4BSZa-P722NmGagGAytQbFqx_En-IubCm0xZDyxasPhpDkrlZ-k3pi3M&s' },
+    { id: 'ba8',  name: 'Jeera Rice',            price: 125.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcABEZQtmF-chKF2G637YT_qV42M6taWnfjTFoM7K4FMWHT455sVn36d9tzkw&s' },
+    { id: 'ba9',  name: 'Steamed Rice',          price: 95.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTA5vHz9AWNwXCVIAUEiHyIq_uW4LJ_6dPBYGeA10eoo339IjsT0JsuTkSXkQ&s' },
+    { id: 'ba10', name: 'Mint Rice',             price: 190.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR5cDoj1sm6c96yB5v56mL3ADZGLaQpsVLiVKlkOzidSKcMpFz6N-8VExMTtmw&s' },
+    { id: 'ba11', name: 'Corn Rice',             price: 190.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0N6oVtKCd1mU7pFGkL1w95YC3yg5g9nFfTmifbwwsx35044oU6jLzfhEO4Q&s' },
+    { id: 'ri1',  name: 'Mushroom Fry Rice',     price: 195.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4jymona75F3B9EIYmK9sCNAQYPDhvr3sK1P9-XpAJy4jodmvGKp34GV96Kg&s' },
+    { id: 'ri2',  name: 'Chinese Bhel',          price: 190.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcROOeB4BsRgKyqoam4VV0zTvgsG313zvd9cftgBZBiwj4EN2RLTsSM8dSRUAA&s' },
+    { id: 'ri3',  name: 'American Chopsuey',     price: 190.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQCeXU7fixnVy0_Uz4BLui2r3BF5IreNNesB8XttYdJ7v-YxAtstMhSJgdQMXo&s' },
+    { id: 'ri4',  name: 'Veg. Triple Fried Rice',price: 210.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTi8F6l2aowfD4UAz2VXoe3s-cPzzC451OvQNBR_FTgAfQjOxaVdTidICTXL3M&s' },
+    { id: 'ri5',  name: 'Veg. Fried Rice',       price: 185.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRIItrz76aFxyRWjQ9fJ7Hamlt05YoQOWZpkW9KmC6Vlhuy32XZO5YUTinPUQ&s' },
+    { id: 'ri6',  name: 'Schezwan Fried Rice',   price: 185.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUE8D7f3AI6VhuH_QGfoekuBlxz4VrM5fmNW5Yu1nZSLhCaAWbHuzQB7AFyQ&s' }
+  ],
+  kofta: [
+    { id: 'ko1', name: 'Cheese Kofta',   price: 225.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTz6SjYMJmZJYKylGEGFEVjK_Lhuek0lp2Omnh2U6QYCFeZy9Uiw1l7Z-oqHX0&s' },
+    { id: 'ko2', name: 'Malai Kofta',    price: 220.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStZp15hcWu3_F5UtuYx46XkcDiz3q2KbyP6L8a4dzarG6xUPNrz3Pky5049w&s' },
+    { id: 'ko3', name: 'Veg. Kofta',    price: 200.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3W03iE8rsEd0yms9BZBdsjwX8h70qxlexq5ENmopDmFYXlaHEqX8ElxumBw&s' },
+    { id: 'ko4', name: 'Paneer Kofta',  price: 215.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRSKT-v8uo9kv5vfvAeFHC168NrANkAzpFQ6fGWkB3BkggYSgW6Bkz1GC2yUA&s' },
+    { id: 'ko5', name: 'Kashmiri Kofta',price: 215.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT2eSXIeHsV-6-_0uWktGf4Kzyhvs2QQ7ZHZYPiGgNS4dVOUY2EHrZQAAj67dk&s' },
+    { id: 'ko6', name: 'Nargisi Kofta', price: 205.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQU3jd1HNJyF0mSpQ-4pYnSD1hB3uH4313RJGp1COptabkF6iUMLN60oh-FyQ&s' },
+    { id: 'ko7', name: 'Kadai Kofta',   price: 210.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAlQUx51gdmKbAqYGsAOxqBCJGZ9Iko2ecCJkK7QvH85fyhHHpdsWVu-0FVZs&s' },
+    { id: 'ko8', name: 'Kaju Kofta',    price: 225.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIrpk1gWUI0HHns2P-wEnORCPaNtRd4CrFFjMMdwBgujE9ONto7Rf8Rt-nKFE&s' }
+  ],
+  tandoor: [
+    { id: 'ta1',  name: 'Roti - Plain',          price: 25.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRASLfl7eQ6yo_5x2RAm7K50NkiqJa4pRoRaaCuCh-nO7-oaFPecwjyRYljIQ&s' },
+    { id: 'ta2',  name: 'Roti - Butter',         price: 28.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8zgs_vMZS-m8AaHi6oqMcc89HEuhOlpu2JhhW8-B9oXq9Gx7qOPLUcD5ZvQ&s' },
+    { id: 'ta3',  name: 'Paratha',               price: 40.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTGOYJh0ycbnLcO-LuKPROrR8p7HqHIoOW_cD2I2W5eK8gJocILeL4Qe0abtw&s' },
+    { id: 'ta4',  name: 'Paratha Butter',        price: 55.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWM1KJVZ-SSn83NfgA5OwC51dc61K5hq3v8NpOvQEej3okOj0QVBW2n5HGGw&s' },
+    { id: 'ta5',  name: 'Lachha Paratha',        price: 60.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTheDXfXj0AF59FI5LbffwpUGzIyJ5QmVSqzenr0uLT9ODtV_lLe4hYYFPsyw&s' },
+    { id: 'ta6',  name: 'Paratha Stuffed',       price: 65.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmUfJ5qUQ_slFjWGoV5zGPbvlN3-iasiV6mJ3cCUlfFEGNqDJV21XlTwVyxw&s' },
+    { id: 'ta7',  name: 'Paratha Phudina',       price: 65.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5xmo3h3zGXy9rAfRgB8YLy_jt0pLEDmu7DeGn7lVHL2t8or0jvivBGT7NOkk&s' },
+    { id: 'ta8',  name: 'Paneer Paratha',        price: 99.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4zZadWsG_YlMZQc5W0g2qlqA1aRvn2sOPLmiViA-2OoWEZgofxMmxpdJLkOI&s' },
+    { id: 'ta9',  name: 'Paneer Cheese Paratha', price: 110.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbpZk7HrC7QZQUeYyuKnvT8gzawzztm1-wmVo94HY0yNrzjOpAiUl9_FeF2g&s' },
+    { id: 'ta10', name: 'Naan',                  price: 50.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQd1N1Y4d9C6r_uIqLAVbfv1bdATFS7vgbm9LN4PlAzeM0euXZlv380FySvvQ&s' },
+    { id: 'ta11', name: 'Naan Butter',           price: 55.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTnUEF57S2trussmAMuQv6KTtd5KYgXoznpDgLO4x9CZbSFVz9ndhB8irLjWU&s' },
+    { id: 'ta12', name: 'Naan Stuffed',          price: 80.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyTTBVSnPtTmfhnsJzoDQQfkqMmW-AR-5zovcE50nFieEWm6xUfKdXKN_XeA&s' },
+    { id: 'ta13', name: 'Naan Kashmiri',         price: 90.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQrybUsfulbzurOesDhrk11uHlgtPSq6zJ5-1egnJ9BK0_z0bcpPHqL_tZAyQ&s' },
+    { id: 'ta14', name: 'Naan Garlic',           price: 90.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS557btQaA6U395Mmer33zLFkxpC3YIazuiheg3nCgGz6GKn6cLO97RZ4nQ0A&s' },
+    { id: 'ta15', name: 'Naan Cheese',           price: 99.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQJkM5q0jbkuKuHzVx-nXh5_L23JvVa4NLsOXm5mNRml7N9U8yln2MtR5MXA&s' },
+    { id: 'ta16', name: 'Hariyali Naan',         price: 99.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbt-VlE8VilJ1QOu3cCTL0uBrXOkC6FONNTIJqMHP1mIS9WdTG2dI1m-c8CA&s' },
+    { id: 'ta17', name: 'Naan Cheese Garlic',    price: 105.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6nHIrI9Pa9v4j0eegeotv6C2gcHZFs7iIZxuQP3EwV3U7AorOny81ncOY9a0&s' },
+    { id: 'ta18', name: 'Family Naan',           price: 125.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTVcOTdM9eiM1sgfC0H6HtRyzKpwDjSWMDjF1MXM6ZDFz23A5jXTslo0KPWIQ&s' },
+    { id: 'ta19', name: 'Kulcha',                price: 45.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRK1RV9agN-0pttHpx6sqKaFMQwT5UsjLpP6VRrVfMZqEb45U_if88hVRd1ug&s' },
+    { id: 'ta20', name: 'Kulcha Butter',         price: 55.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQD9vEShKzHYzpfhDmV8-cqPucHtS4CZlJxK_l0FfHcteJfG7oWJ641rn1HmA&s' },
+    { id: 'ta21', name: 'Kulcha Stuffed',        price: 70.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTekETb_whlhAsYUEUGQAfVbFyPzABjm5vK5UV-u58x2R-RjV7fgoLT9KbgkA&s' },
+    { id: 'ta22', name: 'Onion Kulcha',          price: 70.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0ylgoz7y_k3AtSxvaDCjPb1Fj9dDo7-0EmnuSzxOgjFuu1iPaOKDtbTuRfA&s' },
+    { id: 'ta23', name: 'Missi Roti',            price: 32.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQeIHg52BZmtq5AxFfXkxqtPXadmfOXnS68MH0k1-pcgdk4s_smfGBx08bY5Q&s' }
+  ],
+  chinese_merged: [
+    { id: 'cs1',  name: 'Oriental Crispy Vegetables',      price: 200.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSVGJB38RiIVf7iU4MN_YoeucVxPjkqBG9IVwWuyzm9eoR3Mmp83P10P2m8CNE&s' },
+    { id: 'cs2',  name: 'Baby Corn Chilli Fried',          price: 200.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQbOVJqtFib_CiEJkse9XY0cyegvVP-BdWFBA5HBx3UmaZX6kQiC_UKoqJ2an8&s' },
+    { id: 'cs3',  name: 'Schezwan Paneer',                 price: 225.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQAtONj6_wcUBzCF3gOewavdOpDvr1kLE11FFgcLV9awYzzaVlXZq4ymaY0fYg&s' },
+    { id: 'cs4',  name: 'Paneer Chilly (Dry / Gravy)',     price: 225.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSb-iM-omRNmhunWRotYHptxnQhB2Bxskea6oBXAfGp0yOGMUpSZY6mJTIxOg&s' },
+    { id: 'cs5',  name: 'Paneer Manchurian (Dry / Gravy)', price: 220.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcXdavS0xeX-oa5qTTn2Y_RyF227Q2raV4GvS4bZ8g6mmB7eSKZAQu-f1KI-I&s' },
+    { id: 'cs6',  name: 'Paneer 65',                       price: 225.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQgF9UQ7XEpa_hzoB4vqImJNxhtoXo1bSkxXXYNGSrJI7XQx7luoS0Ny9cp3iw&s' },
+    { id: 'cs7',  name: 'Veg. Manchurian (Dry / Gravy)',   price: 200.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-T08wN9wEcv7K69YunK_KpkJI2JqwxoHp7KD6Tam4CZrzr79paeiQ_KXgYYw&s' },
+    { id: 'cs8',  name: 'Veg. Spring Roll',                price: 210.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9e71ZRaUf1eyTgPi-2DNdSRhvmCo_FQZs5az96-Kbh15ySvvhHtDcaLdn9Ho&s' },
+    { id: 'cs9',  name: 'Veg. Lollipop',                   price: 220.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnHONXWkJZesco0moCnyRYWi9TSZbWvlDTMwYNjK1xv7DJRjTO2PyeAt5FDA&s' },
+    { id: 'cs10', name: 'Mushroom Chilly Fry',             price: 225.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTqTP7ncN-WIfRGMzbykjoIJyAU2iFO2LV01XUhGslMqCs-mALo4yZyiuZ_Ia0&s' },
+    { id: 'no1',  name: 'Veg. Chow Mein',                  price: 180.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0i6lo6r8E6jBEwnRff4kEwRIfiGoPsEEP0UUPR-bnovLZ-HlcCudxPbz6cU4&s' },
+    { id: 'no2',  name: 'Veg. Hakka Noodles',              price: 190.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEMZ4JpLRuSa_REGClx1HXFOn7xk5WzUpmsAY0hK3GnzOUFjPIDpFh9Hc07Mo&s' },
+    { id: 'no3',  name: 'Schezwan Noodles',                price: 190.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwUPw_NlnJTWTLK5FEmnl9u01xEQOAq7vb6rPBn2ayEAGaiv_GHU3mykC9Z-8&s' },
+    { id: 'no4',  name: 'Chilly Garlic Noodles',           price: 190.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT112W7k7LfbXy-JuWSi1ZO0kbDt8iuB7weVztEfMlTEQQhadfhVHQqsWU7Wg&s' },
+    { id: 'no5',  name: 'Veg. Manchurian With Noodles',    price: 190.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTCStge8hAfSjPp-wHhPCSyWx-RyBLehGLKgTd5J41dUxjnnDHUDtVibo-HeY&s' }
+  ],
+  soups: [
+    { id: 'sp1',  name: 'Cream of Tomato',            price: 100.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhVcyucgQyRU-6gf5VLl2wSkhJCo1QswUcjGp4pGOd5oJNWwV-RPw_0GD-hc8&s' },
+    { id: 'sp2',  name: 'Minestrone Soup',            price: 115.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjXwyRiOKV7X8Ka5SOV6zrhHvrXj8my110S6Ar0I9MRxU4PfJAhdNCfAc_-w&s' },
+    { id: 'sp3',  name: 'Sweet Corn Veg. Soup',       price: 100.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTBezZIreKezhrRagk-otaTRjdJydAaNY-k3WbIQQqmEQYNCnzjWAGXcYw8vQk&s' },
+    { id: 'sp4',  name: 'Veg. Hot & Sour Soup',       price: 115.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR252ppRRUXE-oXOa6n_Ma_SUEKBq44yyXfzj1-NiX3dj73kHQBoUFQHYlcUrM&s' },
+    { id: 'sp5',  name: 'Veg. Manchow Soup',          price: 115.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXHUZbTvLv856SjtYAuIoDOfEqODqLHqe9J0CxMhlTj0i_ePxldvBntPqFEss&s' },
+    { id: 'sp6',  name: 'Lemon Coriander Soup',       price: 115.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR2bmb6BphHnxlflDhKxxQp34v5IKfBveenyJLGYmndbv7bU0L5VDEaLyk0-w&s' },
+    { id: 'sp7',  name: 'Palak Phudina Soup',         price: 115.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRH6zlUbe8n5OB24hH6fC0x1CfruI4X8OK4YIVHTkRxEX7LXi_ohz5erutb1PU&s' },
+    { id: 'sp8',  name: 'Veg. Mushroom Soup',         price: 120.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSDqiFfKY-dRTzl9MeMoP5sIoxkBMQ2gcjdKwkZtBcDnQfgjq5rBs6glw62yA&s' },
+    { id: 'sp9',  name: 'Clear Soup (Veg / Noodles)', price: 100.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsrQW6uBdAqf0tU5YvunqAlvngV9rChETaV9HPFOHw0kjRvbSUFH72ZgrpsFU&s' },
+    { id: 'sp10', name: 'Cheese Corn Tomato Soup',    price: 120.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSLA0NVQKGKhVKZpvSyCu6wA5MDu84hpHVHN7r4VqmBf7Yu-ZYQNKCRbPyDHQ&s' }
+  ],
+  salads: [
+    { id: 'sl1',  name: 'Cream of Fruit Salad',   price: 125.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdYPV0I5AhQgs7GHBAu7j6DDIa3ZYSu8NIJsPNSL77WH4C-kWBvcmCRSSghw&s' },
+    { id: 'sl2',  name: 'Fresh Green Salad',       price: 80.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjRrWGoNl45Unb2FjG9GIQh-395tZqaaXNehe7KJQn87hWz8NJbxMnSl5bMDQ&s' },
+    { id: 'sl3',  name: 'Russian Salad',           price: 125.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDcpbHfcda5cP0HuKqWeA6Y6nqEan367FBZ3-mXS6-xeuOSgcvbbQ7znMmCw&s' },
+    { id: 'sl4',  name: 'Kachumber Salad',         price: 70.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDFdMp-l7wAy_GTXG25mtega4Abw1hBqXs8xXZ7Dft_HZbI2jumxDWiX5hLw&s' },
+    { id: 'sl5',  name: 'Pineapple Raita',         price: 95.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQljzEF3tlLQHGDS0X_1U2Jxb6mcoq3B9yGbcFpYLnSzQv4EhNuqKr-y-oqxtQ&s' },
+    { id: 'sl6',  name: 'Veg. Raita',              price: 85.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4bXlFE4dJwtcOE11BOplH9MMy9XB96w5NBKP8OeNeBOyW5v9dpwYRyAE3Cw&s' },
+    { id: 'sl7',  name: 'Cucumber Raita',          price: 85.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXxOyenOXcVD5pe7PSafk_8r1mbcD-VEbpAyq25SLIJ4sG4df5jM3WNB7aos8&s' },
+    { id: 'sl8',  name: 'Boondi Raita',            price: 85.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2W-0dtojnRC-yQN3EYNQyCt7yUG0bDy2g_6nRfpAmej33_vpYUF7fWH2inFQ&s' },
+    { id: 'sl9',  name: 'Curd',                    price: 65.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQs8asBPpIjmluNqnmtMFg8VpjIwbrgWVCBL6cZLN2xpZPnR1A7GxP0kF1mhg&s' },
+    { id: 'sl10', name: 'Papad Roasted',           price: 25.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSMOpdTJr-WbAL1W_HYktzAE3OqCNnCVK3qEPiE5LuEUFsCzGnJkJUvGhL8c-k&s' },
+    { id: 'sl11', name: 'Papad Fried',             price: 27.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR56gsgRwitwucyFaDTiooUwQIvnZ9fzblauSjoObkbUky8mSdU-5CvKjvsLQ&s' },
+    { id: 'sl12', name: 'Papad Masala',            price: 45.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRMF4qjJcmXxI8UYlYYMD-aQnUf642CU77KknfePxKeJYam-xql2SJay6mOXA&s' },
+    { id: 'sl13', name: 'Papad Cheese Masala',     price: 60.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRtTftYDmZvyB31TdH6u9IpacwT37Kk2VC1wVSiRBgbmUMjuV8Xp9LevVaP2g&s' }
+  ],
+  sizzlers: [
+    { id: 'sz1', name: 'Mix Grilled Sizzler', price: 330.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNhXpjk4v0z5qnJiv5NZQiTvHJzw74HW3WIVZGjhPrmB6aKincBlLmZZPwd_Y&s' },
+    { id: 'sz2', name: 'Chinese Sizzler',     price: 340.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxV54mJHwjNySJqYrpGMTA0y7m0Sb7v_KESr16JgQ_NfABg-QFzerN30gnhg&s' },
+    { id: 'sz3', name: 'Paneer Shaslik',      price: 340.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQuLOv1AGTjm7niu7pJVoNLJiv5DAmsAKUb9UoaWgAmi_ju9GjnNRQWkO5EFEE&s' },
+    { id: 'sz4', name: 'Paneer Stick',        price: 340.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFaRXtioc6Bn525TLUYTvQ1rttLzoD3OVsYTTa3VB9YN4ldj3YlOU1bXjhUQ&s' }
+  ],
+  continental: [
+    { id: 'con1', name: 'Baked Macaroni with Pineapple',  price: 205.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTVVJX4CejaVCf1__nhScf76SUT2rehI1hxnFmFoFKENFhuwQgurQmwFThpH2s&s' },
+    { id: 'con2', name: 'Baked Spaghetti with Pineapple', price: 205.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSPIEUNdiU_3D_05lLNx7_LJOZAfINTL6iKkRddmTCCAyq-MnNSSQWzedUHXvs&s' },
+    { id: 'con3', name: 'Baked Vegetable with Pineapple', price: 205.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSq2IpgUk_IKO3kRU_WDdKj_vygon6dS-c6t6xRGkplMQBwKfDgWBCnd6cbEpM&s' }
+  ],
+  drinks: [
+    { id: 'dr1',  name: 'Jal Jeera Water',                   price: 40.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSf0cAsq5HqaujK5x77DRVlG3b9BvqnyfxCXmTrTV9JlslsE5Woth3Q5mI_MA&s' },
+    { id: 'dr2',  name: 'Fresh Lime Soda',                   price: 40.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRjA3RR-0gcYfV-BdT_8pHkqzrfoGBcVR_K2etJ6rBNn3AsrZus7oCypAUSsw&s' },
+    { id: 'dr3',  name: 'Fresh Lime Water (Sweet / Salted)', price: 40.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjOVDQ-Otf9GbsrU-LN4sm6mAIc_diVTI7NMZDw9AQLQ8GKgPLy7gl35TUFoI&s' },
+    { id: 'dr4',  name: 'Soft Drinks (MRP)',                 price: 20.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMiph65hMwBbzoSwSDfcoIuBpild2iFYczJIcL2bTfwAiYJU7rfBb9RtmtJOU&s' },
+    { id: 'dr5',  name: 'Lassi (Sweet / Salted)',            price: 80.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYkV_QCDRXajyMpyOTcHwXhYc8s8L02lrHfLrTgoEYf9UkXWjL9SC0UDz-EA&s' },
+    { id: 'dr6',  name: 'Special Lassi',                    price: 100.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTpOgUouoKjVWADPVRthgzfFAjRQmfYqq-vxfEcR3kgT1qyKCODWfnuglFMvCE&s' },
+    { id: 'dr7',  name: 'Mineral Water (MRP)',               price: 20.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUroTdaIvq6L8nK91XZawA7DQ_sReJ2Q7oWKQVBtdhiRb8c7bLlX40jX7A2Q&s' },
+    { id: 'dr8',  name: 'Fruit Punch',                      price: 70.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR29_XVWmX4oIJXhj_CSfWHLszTjoPZw6_beNMxafKWMH2aoVPLmha_lkhUYw&s' },
+    { id: 'dr9',  name: 'Butter Milk',                      price: 30.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRYpSPn1saRpuyGeS3UyVQWiN3qyzffJmg9AwwZyDAjT92T1vJtl5on4l4kBc0&s' },
+    { id: 'dr10', name: 'Masala Butter Milk',               price: 35.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRr5T8Xa2RWHMWT32eb_DymnN4ltCsFEGg2ZzvxKEyMdwbnhNn3P2Uqds4SEQ&s' }
+  ],
+  shakes: [
+    { id: 'sh1',   name: 'Vanilla Milk Shake',                     price: 99.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQW9zETUU7svE5NKX_Tpp6GSCbkov4QO7Irxqfb5EmcSRLsD7MzVrYd2GFRkIk&s' },
+    { id: 'sh1ic', name: 'Vanilla Milk Shake (with Ice Cream)',     price: 110.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR07uPg02xlm0S2qZ2KE9SawbyKN2j1_Dtf8IM-_Aon5lmVK36GwAhmKgXNYHA&s' },
+    { id: 'sh2',   name: 'Strawberry Milk Shake',                  price: 99.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsOt3GSgSnpyqmRKK_kwINygnlAOcTAmBh3t_N7nOJVZv08UhnDuntxvwd3Uk&s' },
+    { id: 'sh2ic', name: 'Strawberry Milk Shake (with Ice Cream)', price: 110.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRex-x2KcskrW9DppN_cDMaJw-yNOccyaF58tNhYfER_52nBnA3IjHjRKcOqKM&s' },
+    { id: 'sh3',   name: 'Chocolate Milk Shake',                   price: 99.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRWGF8p_V1X6UaGYI_vQ7guVfluMoDTQb856snp2n2q_Vv4IwK6q3CjooII1Q&s' },
+    { id: 'sh3ic', name: 'Chocolate Milk Shake (with Ice Cream)',  price: 115.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdWXPNQlIm5qYNZlDgd5h6zk8PDACwgjsz86ngV5UluLRNouebNqOVGNKr-60&s' },
+    { id: 'sh4',   name: 'Kesar Pista Milk Shake',                 price: 110.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQZu3zt4SGqgkFpZRe9gPXkGyeLpxrtQY1SGftOpME8xxLQYVgw9yaKvrImGQ&s' },
+    { id: 'sh4ic', name: 'Kesar Pista Milk Shake (with Ice Cream)',price: 120.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzgvQjBCJCdA6jGdVG3Z5tFXNgzS0ehQ9U7F0NQx8hIRKq4cmJ0MQ2FyzmDLU&s' },
+    { id: 'sh5',   name: 'Kaju Draksh Milk Shake',                 price: 110.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQMBhqouZQQrDyiWp9Qt6en4zqm7HwFVLjDHoAsVZnLE3te1h19kowiycZymY&s' },
+    { id: 'sh5ic', name: 'Kaju Draksh Milk Shake (with Ice Cream)',price: 120.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVqp-qtz0wCWOh6rRIQ1oAUMtn-y5K7q-WSGyWwj7QWrBv2e3cxdcxrOnYlBA&s' },
+    { id: 'sh6',   name: 'Mango Milk Shake',                       price: 110.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbkhiKyv9z2nmYPyN_kTS1IILprknUv6J-0AHAxEr5DPiLLHb7U4NVpev_dg&s' },
+    { id: 'sh6ic', name: 'Mango Milk Shake (with Ice Cream)',      price: 120.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQu3_GpeR3B-p-dLLpF55JUtE3IvS2pGx3NbYFQLal8XWKwvnZp7m2fDOSEKA&s' },
+    { id: 'sh7',   name: 'Cold Coffee',                            price: 99.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTmUwVs_XeD4MZZ4tVCoshIE0Kn2D7y_jpSp9csBBZc-ltPbtNc1qYA5c1G6Ho&s' },
+    { id: 'sh7ic', name: 'Cold Coffee (with Ice Cream)',           price: 115.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRmiZWgxBPAKm0abDszJm1CN2oBwKsqt3VJs5v3yLjcgDQFFVjGi4Dae9Ml8A&s' }
+  ],
+  ice_cream: [
+    { id: 'ic1',  name: 'Gulab Jamun',              price: 50.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsJA1SQdg5_BIZ9RrLGkTu6kJL5oOStSP89vBKB64KRpconDmKy2cqUfdYrg&s' },
+    { id: 'ic2',  name: 'Rajbhog',                  price: 99.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT2xZCICdx4jD8LaY17IUhVsYea_QhCND6GuZaShhQAbjUu4qRxjCXt6RzWrQ&s' },
+    { id: 'ic3',  name: 'Vanilla Ice Cream',         price: 80.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJCqFbb7Kys8VQXS-w3ccgUrsu0ENVkT2ltx0ctymJTd55cIpUus7o16nnv1A&s' },
+    { id: 'ic4',  name: 'Strawberry Ice Cream',      price: 80.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_IiLaxDUz-XqJTCPB5mEaOZM9SG79epWEw-UI3rAvJn1Ab43gTGexw0eeFhY&s' },
+    { id: 'ic5',  name: 'Cheery Berry Ice Cream',    price: 80.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcTwbZKqR7zLwpAy7n5AzAZQJ0o8OxHZLYP_qHhUDFbBQAz1GeowDyBQ3ZGnc&s' },
+    { id: 'ic6',  name: 'Mango Ice Cream',           price: 80.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3pxk78iTaHADhDtQkGm0PP0sMzs_bo3uGdF2hDHXIZfU7zwS7XAnFaKaMgw&s' },
+    { id: 'ic7',  name: 'Kesar Pista Ice Cream',     price: 90.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTasoYFvxW6_4a7zWT146t5hQwxzK8vB8L6-n2z8Vxmg_xqV3BsLREGLQsa11U&s' },
+    { id: 'ic8',  name: 'Kaju Draksh Ice Cream',     price: 90.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIgY1vPl82wSeksM93GfkZ5WSWQps7w7qIg6ywEmIKnRYMX-lAMsqZPqpx26c&s' },
+    { id: 'ic9',  name: 'Butter Scotch Ice Cream',   price: 90.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDe-rPhT2qd8R9iVqfrMdtlRVbyZn7T3YLylzxyxAhIs0zJZLf4ZC640iXSw&s' },
+    { id: 'ic10', name: 'Chocolate Ice Cream',       price: 90.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtRQfL6mM1ULa42AMgt8skn0Pyr4w3h5Qq_MMnHaaVo3l2LFZUL80mm1clYbw&s' },
+    { id: 'ic11', name: 'Fruit Salad with Ice Cream',price: 140.00, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQbTrudasoK2XNCkuOqxAyOChwT_yarZLJA72QAhhtV3SO74XgLVVf5WWaBzw&s' },
+    { id: 'ic12', name: 'American Nut',              price: 99.00,  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhXpPuia6sOViPa3XvY4PhIcgs0d3FxjG2K1LeBtL_ExZMXZ5A5KRE1C_ieA&s' }
+  ]
+};
 
-function validateForm() {
-  if (selected === "takeaway") {
-    btnMenu.classList.add("active");
-    btnRec.classList.add("active");
-  } else if (selected === "dinein") {
-    if (nameInput.value.trim() !== "" && countInput.value.trim() !== "") {
-      btnMenu.classList.add("active");
-      btnRec.classList.add("active");
-    } else {
-      btnMenu.classList.remove("active");
-      btnRec.classList.remove("active");
-    }
+const categoryInfo = {
+  starters:      { bannerImg:'https://images.unsplash.com/photo-1544025162-d76538a23b06?w=800&q=80', bannerLabel:'Starters & Appetisers', bannerSub:'Small bites — big flavours', desc:'A signature Emerald appetiser crafted with market-fresh ingredients and slow-roasted house spices. Lightly seared or char-grilled to a perfect golden finish — the ideal way to ignite your appetite.', cookTime:'12–18 min', tag:'🍢 Starters' },
+  snacks:        { bannerImg:'https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=800&q=80', bannerLabel:'Snacks & Light Bites', bannerSub:'Crispy, crunchy & irresistible', desc:'Made fresh to order with premium quality ingredients. Satisfyingly crispy on the outside, fluffy and delightful within — perfect for any time of day.', cookTime:'8–12 min', tag:'🍕 Snacks' },
+  paneer:        { bannerImg:'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=800&q=80', bannerLabel:'Paneer Delights', bannerSub:'Rich, creamy & indulgent', desc:'Our cottage cheese is locally sourced and hand-cut fresh daily, then slow-cooked in our signature gravy of aromatic spices, garden herbs, and fresh cream. An experience fit for royalty.', cookTime:'18–22 min', tag:'🧀 Paneer' },
+  indian_curry:  { bannerImg:'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=800&q=80', bannerLabel:'Indian Curries', bannerSub:'Slow-cooked, soul-warming', desc:'Vibrant curries simmered in a house-blend masala perfected over years. Every spoonful carries warmth, depth, and the unmistakable taste of authentic Indian cooking.', cookTime:'18–25 min', tag:'🍛 Curries' },
+  dal:           { bannerImg:'https://images.unsplash.com/photo-1546833998-877b37c2e543?w=800&q=80', bannerLabel:'Dal Collection', bannerSub:'Comforting & nourishing', desc:'Lentils slow-simmered to a velvety perfection, finished with a sizzling tadka of ghee, cumin, mustard seeds, and aromatic spices. Simple, heartfelt, and utterly satisfying.', cookTime:'12–18 min', tag:'🍲 Dal' },
+  rice_merged:   { bannerImg:'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=800&q=80', bannerLabel:'Rice & Biryani', bannerSub:'Fragrant grains, layered flavours', desc:'From fragrant long-grain biryani layered with whole spices to comforting everyday rice — every grain is cooked with care and finished with herbs that carry the aroma of tradition.', cookTime:'15–20 min', tag:'🍚 Rice' },
+  kofta:         { bannerImg:'https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=800&q=80', bannerLabel:'Kofta Specialities', bannerSub:'Soft, melt-in-mouth magic', desc:'Hand-rolled kofta balls made with seasoned cottage cheese, vegetables, and nuts — gently poached and served in a silky, aromatic gravy. A true celebration of Indian culinary craft.', cookTime:'20–25 min', tag:'🫓 Kofta' },
+  tandoor:       { bannerImg:'https://images.unsplash.com/photo-1628294895950-9805252f784d?w=800&q=80', bannerLabel:'Tandoor Breads', bannerSub:'Fresh from the clay oven', desc:'Freshly baked in our traditional clay tandoor at high heat — charred at the edges, pillowy soft inside. Whether plain or stuffed, every bread is made to order and served piping hot.', cookTime:'8–12 min', tag:'🔥 Tandoor' },
+  chinese_merged:{ bannerImg:'https://images.unsplash.com/photo-1563245372-f21724e3856d?w=800&q=80', bannerLabel:'Indo-Chinese', bannerSub:'Wok-tossed, bold & fiery', desc:'A beloved fusion of Indian spice and Chinese technique — high-heat wok cooking that delivers smoky, bold flavours with every bite. From crispy starters to saucy mains, it is all here.', cookTime:'15–20 min', tag:'🍜 Chinese' },
+  soups:         { bannerImg:'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=800&q=80', bannerLabel:'Soups', bannerSub:'Warm your soul, sip by sip', desc:'Crafted with fresh vegetables and slow-simmered broths, our soups are seasoned gently to let natural flavours shine. A warm, nourishing start to your meal or a light companion.', cookTime:'8–12 min', tag:'🥣 Soups' },
+  salads:        { bannerImg:'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800&q=80', bannerLabel:'Salads & Accompaniments', bannerSub:'Fresh, crisp & vibrant', desc:'Garden-fresh ingredients tossed with herbs, yoghurt, or house dressings — our salads and raitas are the perfect accompaniment to cool the palate and complement every main course.', cookTime:'5–8 min', tag:'🥗 Salads' },
+  sizzlers:      { bannerImg:'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800&q=80', bannerLabel:'Sizzlers', bannerSub:'A dramatic, smoking experience', desc:'Served on a cast-iron plate, smoking and sizzling right to your table — a true spectacle of dining theatre. Grilled vegetables, paneer, and sauces come together in one showstopping platter.', cookTime:'22–28 min', tag:'🍝 Sizzlers' },
+  continental:   { bannerImg:'https://images.unsplash.com/photo-1499028344343-cd173ffc68a9?w=800&q=80', bannerLabel:'Continental', bannerSub:'European classics, Emerald style', desc:'Oven-baked pasta and vegetables in a rich, creamy sauce with a hint of tropical sweetness — a comforting continental dish with our own signature touch. Served bubbling hot from the oven.', cookTime:'20–25 min', tag:'🍝 Continental' },
+  drinks:        { bannerImg:'https://images.unsplash.com/photo-1544145945-f90425340c7e?w=800&q=80', bannerLabel:'Beverages', bannerSub:'Refresh, revive, rejoice', desc:'From tangy chaas and fresh lime soda to cool lassi and nimbu pani — our beverages are crafted to refresh and complement your meal. Made fresh, served chilled.', cookTime:'2–5 min', tag:'🥤 Drinks' },
+  shakes:        { bannerImg:'https://images.unsplash.com/photo-1571805529673-0f56b922b359?w=800&q=80', bannerLabel:'Milk Shakes', bannerSub:'Thick, creamy & indulgent', desc:'Blended with premium flavours and chilled to perfection, our milkshakes are rich, creamy, and utterly satisfying. Available with or without a scoop of our signature ice cream.', cookTime:'5–8 min', tag:'🥛 Shakes' },
+  ice_cream:     { bannerImg:'https://images.unsplash.com/photo-1488900128323-21503983a07e?w=800&q=80', bannerLabel:'Desserts & Ice Cream', bannerSub:'Sweet endings, happy memories', desc:'From classic gulab jamun to cool, velvety ice cream scoops — our desserts are the perfect finale to your Emerald dining experience. Indulge. You deserve it.', cookTime:'2–4 min', tag:'🍦 Desserts' }
+};
+
+let cart = {};
+let currentSection = 'starters';
+let _detailItemId  = null;
+let _detailSection = null;
+let _sidebarOpen   = false;
+let _togglePendingTimer = null;
+let orderTimerInterval = null;
+const TOTAL_SECONDS    = 15 * 60;
+const CIRCUMFERENCE    = 2 * Math.PI * 54;
+let _orderingInProgress = false;
+let _previousOrderItems = [];
+let _prevOrderRounds = [];
+let _tableListener = null;
+
+// Session Recovery Logic 
+window.onload = () => {
+  try {
+    const savedCart = localStorage.getItem('emerald_cart');
+    if (savedCart) cart = JSON.parse(savedCart);
+    const savedPrev = localStorage.getItem('emerald_prevRounds');
+    if (savedPrev) _prevOrderRounds = JSON.parse(savedPrev).map(r => ({...r, time: new Date(r.time)}));
+  } catch (e) { console.error('Session parsing error:', e); }
+
+  const currentOrderId = localStorage.getItem("currentOrderId");
+  if(currentOrderId) {
+      document.getElementById('track-order-btn').classList.add('visible');
+  }
+
+  setTimeout(() => {
+    document.getElementById('intro-wrapper').classList.add('exit');
+    const firstSubItem = document.querySelector('.sub-item');
+    showSection('starters', firstSubItem);
+  }, 5500);
+};
+
+function toggleSidebar() {
+  const sidebar   = document.getElementById('sidebar');
+  const toggleBtn = document.getElementById('sidebar-toggle-btn');
+  const cartBar   = document.getElementById('cart-bar');
+  _sidebarOpen = !_sidebarOpen;
+  if (_sidebarOpen) {
+    sidebar.classList.add('open');
+    toggleBtn.classList.add('active');
+    cartBar.classList.add('sidebar-adjusted');
+    setTimeout(() => {
+      const activeEl = document.querySelector('.nav-item.active, .sub-item.active');
+      if (activeEl) moveIndicator(activeEl);
+    }, 420);
   } else {
-    btnMenu.classList.remove("active");
-    btnRec.classList.remove("active");
+    sidebar.classList.remove('open');
+    toggleBtn.classList.remove('active');
+    cartBar.classList.remove('sidebar-adjusted');
   }
 }
 
-options.forEach(option => {
-  option.addEventListener("click", (e) => {
-    if (option.id === "dinein-option" && selected === "dinein" && e.target.closest('#arrowToggle')) {
-        dineinForm.classList.toggle("active");
-        arrowToggle.classList.toggle("rotated");
-        return;
-    }
-    if (window.navigator && window.navigator.vibrate) {
-      window.navigator.vibrate(15);
-    }
-    options.forEach(o => o.classList.remove("selected"));
-    option.classList.add("selected");
-    selected = option.dataset.type;
+function moveIndicator(el) {
+  const indicator   = document.getElementById('nav-indicator');
+  const sidebar     = document.getElementById('sidebar');
+  const rect        = el.getBoundingClientRect();
+  const sidebarRect = sidebar.getBoundingClientRect();
+  const relativeTop = rect.top - sidebarRect.top + sidebar.scrollTop;
+  indicator.style.top    = `${relativeTop}px`;
+  indicator.style.height = `${rect.height}px`;
+  indicator.style.width  = `${rect.width}px`;
+  indicator.style.left   = `${el.offsetLeft}px`;
+}
 
-    if (selected === "dinein") {
-      dineinForm.classList.add("active");
-      arrowToggle.classList.remove("rotated");
-    } else {
-      dineinForm.classList.remove("active");
-    }
-    validateForm();
+function toggleGroup(groupId, el) {
+  triggerHaptic();
+  if (_togglePendingTimer !== null) { clearTimeout(_togglePendingTimer); _togglePendingTimer = null; }
+  const allGroups    = document.querySelectorAll('.nav-group');
+  const clickedGroup = el.closest('.nav-group');
+  const isExpanded   = clickedGroup.classList.contains('expanded');
+  allGroups.forEach(g => g.classList.remove('expanded'));
+  if (!isExpanded) {
+    clickedGroup.classList.add('expanded');
+    _togglePendingTimer = setTimeout(() => {
+      _togglePendingTimer = null;
+      if (clickedGroup.classList.contains('expanded')) {
+        const firstSub = clickedGroup.querySelector('.sub-item');
+        if (firstSub) {
+          const sectionName = firstSub.getAttribute('onclick').match(/'([^']+)'/)[1];
+          showSection(sectionName, firstSub);
+        } else { moveIndicator(el); }
+      } else { moveIndicator(el); }
+    }, 400);
+  } else { moveIndicator(el); }
+}
+
+function showSection(section, el) {
+  triggerHaptic();
+  currentSection = section;
+  const grid          = document.getElementById('menu-grid');
+  const bannerWrap    = document.getElementById('category-banner-wrap');
+  const nameDisplay   = document.getElementById('section-name');
+  const menuContainer = document.querySelector('.menu-container');
+  document.querySelectorAll('.nav-item, .sub-item').forEach(i => i.classList.remove('active'));
+  el.classList.add('active');
+  moveIndicator(el);
+  const label = section.replace(/_/g,' ').replace('merged','').trim().toUpperCase();
+  nameDisplay.innerText = label;
+  const catInfo = categoryInfo[section] || { bannerImg:'https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?w=800&q=80', bannerLabel:label, bannerSub:'Explore our selection' };
+  bannerWrap.innerHTML = `<div class="category-banner"><img src="${catInfo.bannerImg}" alt="${catInfo.bannerLabel}" loading="lazy"><div class="category-banner-overlay"><div class="category-banner-title">${catInfo.bannerLabel}</div><div class="category-banner-sub">${catInfo.bannerSub}</div></div></div>`;
+  const items = menuData[section] || [];
+  grid.innerHTML = items.map(item => `
+    <div class="food-card">
+      <div class="cart-badge" id="badge-${item.id}">0</div>
+      <div class="food-card-img-wrap" onclick="openItemDetail('${section}','${item.id}')">
+        <img src="${item.img}" alt="${item.name}" loading="lazy">
+        <span class="img-detail-hint">ℹ Info</span>
+      </div>
+      <h4>${item.name}</h4>
+      <div class="price">&#8377;${item.price.toFixed(2)}</div>
+      <button class="add-initial" id="add-btn-${item.id}" onclick="addToCart('${section}','${item.id}')">ADD</button>
+      <div class="qty-controls" id="qty-ctrl-${item.id}">
+        <button class="btn-qty" onclick="updateQty('${item.id}',-1)">-</button>
+        <span id="qty-val-${item.id}">0</span>
+        <button class="btn-qty" onclick="updateQty('${item.id}',1)">+</button>
+      </div>
+    </div>`).join('');
+  menuContainer.scrollTop = 0;
+  syncCartUI();
+}
+
+function findItemSection(itemId) {
+  for (const [sec, items] of Object.entries(menuData)) {
+    if (items.find(i => i.id === itemId)) return sec;
+  }
+  return currentSection;
+}
+
+function openItemDetail(section, itemId) {
+  const item = (menuData[section] || []).find(i => i.id === itemId);
+  if (!item) return;
+  _detailItemId  = itemId;
+  _detailSection = section;
+  const catInfo = categoryInfo[section] || {};
+  document.getElementById('item-detail-img').src             = item.img;
+  document.getElementById('item-detail-img').alt             = item.name;
+  document.getElementById('item-detail-name').textContent    = item.name;
+  document.getElementById('item-detail-price').textContent   = '₹' + item.price.toFixed(2);
+  document.getElementById('item-detail-cat-badge').textContent = catInfo.tag || section;
+  document.getElementById('item-detail-time').textContent    = '⏱ ' + (catInfo.cookTime || '15–20 min');
+  document.getElementById('item-detail-desc').textContent    = catInfo.desc || 'A delicious dish crafted with fresh, quality ingredients and prepared to order in our kitchen.';
+  const btn = document.getElementById('item-detail-add-btn');
+  if (cart[itemId]) { btn.textContent = '✓ Already in Cart'; btn.classList.add('in-cart'); btn.classList.remove('added-flash'); }
+  else { btn.textContent = 'ADD TO CART'; btn.classList.remove('in-cart','added-flash'); }
+  document.getElementById('item-detail-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeItemDetail(e) {
+  if (e && e.target !== document.getElementById('item-detail-modal')) return;
+  _closeDetailModal();
+}
+
+function _closeDetailModal() {
+  document.getElementById('item-detail-modal').classList.remove('open');
+  document.body.style.overflow = '';
+  _detailItemId = null; _detailSection = null;
+}
+
+function addFromDetail() {
+  if (!_detailItemId || !_detailSection) return;
+  const btn = document.getElementById('item-detail-add-btn');
+  if (!cart[_detailItemId]) { addToCart(_detailSection, _detailItemId); }
+  else { updateQty(_detailItemId, 1); }
+  btn.textContent = '✓ Added!';
+  btn.classList.add('added-flash');
+  btn.classList.remove('in-cart');
+  setTimeout(() => _closeDetailModal(), 550);
+}
+
+function addToCart(sec, id) {
+  triggerHaptic();
+  let item;
+  if (sec === 'search') { Object.values(menuData).forEach(cat => { const f = cat.find(i => i.id === id); if (f) item = f; }); }
+  else { item = (menuData[sec] || []).find(i => i.id === id); }
+  if (item && !cart[id]) cart[id] = { ...item, qty: 1 };
+  syncCartUI();
+}
+
+function updateQty(id, delta) {
+  triggerHaptic();
+  if (cart[id]) { cart[id].qty += delta; if (cart[id].qty <= 0) delete cart[id]; }
+  syncCartUI();
+}
+
+function syncCartUI() {
+  let totalItems = 0, subtotal = 0;
+  document.querySelectorAll('.add-initial').forEach(b => b.style.display = 'block');
+  document.querySelectorAll('.qty-controls').forEach(c => c.style.display = 'none');
+  document.querySelectorAll('.cart-badge').forEach(b => b.style.display = 'none');
+  const cartList = document.getElementById('cart-items-list');
+  cartList.innerHTML = '';
+  Object.keys(cart).forEach(id => {
+    const item = cart[id];
+    totalItems += item.qty; subtotal += item.price * item.qty;
+    const addBtn  = document.getElementById(`add-btn-${id}`);
+    const qtyCtrl = document.getElementById(`qty-ctrl-${id}`);
+    const qtyVal  = document.getElementById(`qty-val-${id}`);
+    const badge   = document.getElementById(`badge-${id}`);
+    if (addBtn) { addBtn.style.display = 'none'; qtyCtrl.style.display = 'flex'; qtyVal.innerText = item.qty; badge.style.display = 'block'; badge.innerText = item.qty; }
+    cartList.innerHTML += `<div class="cart-item-row"><div class="cart-item-info"><h5>${item.name}</h5><p>&#8377;${(item.price*item.qty).toFixed(2)}</p></div><div class="cart-item-actions"><button class="btn-qty" onclick="updateQty('${item.id}',-1)">-</button><span style="font-weight:700">${item.qty}</span><button class="btn-qty" onclick="updateQty('${item.id}',1)">+</button></div></div>`;
   });
-});
-
-nameInput.addEventListener("input", validateForm);
-countInput.addEventListener("input", validateForm);
-
-function saveOrderInfo() {
-  const orderInfo = {
-    orderType: selected,
-    name: selected === "dinein" ? nameInput.value.trim() : "Takeaway Customer",
-    people: selected === "dinein" ? parseInt(countInput.value) : 1,
-    timestamp: Date.now()
-  };
-  localStorage.setItem("currentOrderInfo", JSON.stringify(orderInfo));
-  // Don't remove currentOrderId here if we want session persistence, but we need to ensure 
-  // it's a new session if they explicitly fill this out and don't click resume.
-  // We cleared it on load if it was completed. If they start fresh, we clear it.
-  if(document.getElementById('resume-banner').style.display === 'none') {
-      localStorage.removeItem("currentOrderId");
-      localStorage.removeItem("emerald_cart");
-      localStorage.removeItem("emerald_prevRounds");
+  const bar = document.getElementById('cart-bar');
+  if (totalItems > 0) {
+    bar.style.display = 'flex';
+    document.getElementById('cart-item-count').innerText         = `${totalItems} Items`;
+    document.getElementById('cart-total-price').innerText        = `₹${subtotal.toFixed(2)}`;
+    document.getElementById('cart-total-price-popup').innerText  = `₹${subtotal.toFixed(2)}`;
+  } else {
+    bar.style.display = 'none';
+    cartList.innerHTML = '<p style="text-align:center;color:#999;padding:20px;">Your basket is empty</p>';
   }
+  localStorage.setItem('emerald_cart', JSON.stringify(cart));
 }
 
-btnMenu.addEventListener("click", () => {
-  if (btnMenu.classList.contains("active")) {
-    saveOrderInfo();
-    window.location.href = "menu.html"; 
+function toggleCart() { const p = document.getElementById('cart-popup'); p.style.display = (p.style.display==='flex') ? 'none' : 'flex'; }
+function toggleSearch() { document.getElementById('search-input').classList.toggle('active'); }
+function triggerHaptic() { if (window.navigator.vibrate) window.navigator.vibrate(10); }
+
+function handleSearch() {
+  const query = document.getElementById('search-input').value.toLowerCase();
+  const grid  = document.getElementById('menu-grid');
+  const bannerWrap = document.getElementById('category-banner-wrap');
+  if (query === '') {
+    const activeItem = document.querySelector('.nav-item.active, .sub-item.active');
+    if (activeItem) { const m = activeItem.getAttribute('onclick').match(/'([^']+)'/); if (m) showSection(m[1], activeItem); }
+    return;
   }
+  let allItems = [];
+  Object.values(menuData).forEach(cat => allItems = [...allItems, ...cat]);
+  const filtered = allItems.filter(i => i.name.toLowerCase().includes(query));
+  bannerWrap.innerHTML = '';
+  grid.innerHTML = filtered.map(item => {
+    const sec = findItemSection(item.id);
+    return `<div class="food-card">
+      <div class="cart-badge" id="badge-${item.id}">${cart[item.id]?cart[item.id].qty:0}</div>
+      <div class="food-card-img-wrap" onclick="openItemDetail('${sec}','${item.id}')">
+        <img src="${item.img}" alt="${item.name}" loading="lazy">
+        <span class="img-detail-hint">ℹ Info</span>
+      </div>
+      <h4>${item.name}</h4>
+      <div class="price">&#8377;${item.price.toFixed(2)}</div>
+      <button class="add-initial" id="add-btn-${item.id}" onclick="addToCart('search','${item.id}')" style="display:${cart[item.id]?'none':'block'}">ADD</button>
+      <div class="qty-controls" id="qty-ctrl-${item.id}" style="display:${cart[item.id]?'flex':'none'}">
+        <button class="btn-qty" onclick="updateQty('${item.id}',-1)">-</button>
+        <span id="qty-val-${item.id}">${cart[item.id]?cart[item.id].qty:0}</span>
+        <button class="btn-qty" onclick="updateQty('${item.id}',1)">+</button>
+      </div></div>`;
+  }).join('');
+}
+
+function processPayment() {
+  triggerHaptic();
+  if (_orderingInProgress) return;
+  const cartSnapshot = Object.values(cart).map(item => ({ ...item }));
+  const cartTotal    = cartSnapshot.reduce((sum, item) => sum + (item.price * item.qty), 0);
+  if (cartSnapshot.length === 0) return;
+
+  _orderingInProgress = true;
+  const currentOrderInfo = JSON.parse(localStorage.getItem('currentOrderInfo') || '{}');
+  const orderType    = currentOrderInfo.orderType || 'takeaway';
+  const customerName = currentOrderInfo.name || 'Customer';
+  const peopleCount  = parseInt(currentOrderInfo.people) || 1;
+  const tablePref    = currentOrderInfo.tablePref || '';
+  const prevOrderId  = localStorage.getItem('currentOrderId');
+
+  const createNewOrder = (assignedTableNum, bypassAssign) => {
+    const sessionStartTime = Date.now();
+    const orderId = 'ORD' + sessionStartTime;
+    const order = { id: orderId, tableNumber: assignedTableNum || null, customerName, people: peopleCount, items: cartSnapshot, total: cartTotal, status: 'Preparing', diet: 'Regular', orderType, createdAt: new Date(sessionStartTime).toISOString() };
+    db.ref('orders/' + orderId).set(order).then(() => {
+      localStorage.setItem('currentOrderId', orderId);
+      _previousOrderItems = cartSnapshot;
+      cart = {};
+      syncCartUI();
+      addPrevOrderRound(_previousOrderItems);
+      if (orderType === 'dinein' && !assignedTableNum && !bypassAssign) { 
+        assignTable(customerName, peopleCount, orderId, tablePref, sessionStartTime); 
+      }
+      showOrderConfirm();
+      _orderingInProgress = false;
+    }).catch(error => { console.error('Error placing order:', error); alert('Error placing order. Please try again.'); _orderingInProgress = false; });
+  };
+
+  if (orderType === 'dinein' && prevOrderId) {
+    db.ref('orders/' + prevOrderId).once('value', snap => {
+      const prevOrder = snap.val();
+      const isStillActive = prevOrder && prevOrder.status !== 'Completed' && prevOrder.status !== 'Cancelled' && prevOrder.tableNumber && (prevOrder.customerName || '').trim().toLowerCase() === customerName.trim().toLowerCase();
+      if (!isStillActive) { createNewOrder(null, false); return; }
+      db.ref('tables').once('value', tSnap => {
+        const tables = tSnap.val();
+        let tableStillOccupied = false;
+        if (tables) { Object.values(tables).forEach(t => { if (t && t.number == prevOrder.tableNumber && t.occupied) tableStillOccupied = true; }); }
+        if (tableStillOccupied) { createNewOrder(prevOrder.tableNumber, true); } else { createNewOrder(null, false); }
+      });
+    });
+  } else { createNewOrder(null, false); }
+}
+
+function assignTable(name, people, orderId, tablePref, sessionStartTime) {
+  const since = sessionStartTime || Date.now();
+  db.ref('tables').once('value', (snapshot) => {
+    const raw = snapshot.val();
+    if (!raw) {
+      const initTables = [];
+      for (let i = 1; i <= 10; i++) { initTables.push({ number: i, capacity: i<=4?2:i<=8?4:6, occupied: false, current: null, nextOrder: null }); }
+      db.ref('tables').set(initTables).then(() => { setTimeout(() => assignTable(name, people, orderId, tablePref, sessionStartTime), 500); });
+      return;
+    }
+    const entries = Object.entries(raw).map(([k,v]) => ({key:k, table:v})).filter(e => e.table && e.table.number != null);
+    
+    let selectedEntry = null;
+    if (tablePref && tablePref.trim() !== '' && !isNaN(tablePref)) {
+      selectedEntry = entries.find(e => e.table.number === parseInt(tablePref)) || null;
+      if (selectedEntry && selectedEntry.table.occupied && selectedEntry.table.nextOrder) selectedEntry = null;
+    }
+    if (!selectedEntry) {
+      const freeEntries = entries.filter(e => !e.table.occupied);
+      if (freeEntries.length > 0) { 
+        selectedEntry = freeEntries[Math.floor(Math.random()*freeEntries.length)];
+      } else { 
+        // FIFO Queue Logic integration
+        db.ref('queue').push().set({ name, people, orderId, time: Date.now() }); 
+        return; 
+      }
+    }
+    if (selectedEntry) {
+      const { key: tableKey, table: selectedTable } = selectedEntry;
+      db.ref('tables/'+tableKey).update({ occupied: true, current: { name, people, since, orderId } });
+      db.ref('orders/'+orderId).update({ tableNumber: selectedTable.number }); 
+    }
+  });
+}
+
+function addPrevOrderRound(items) {
+  if (!items || !items.length) return;
+  _prevOrderRounds.push({ items: items.map(i => ({...i})), time: new Date() });
+  localStorage.setItem('emerald_prevRounds', JSON.stringify(_prevOrderRounds));
+  const dot = document.getElementById('hamb-notif-dot');
+  if (dot) dot.classList.add('visible');
+}
+
+function openPrevOrdersPanel() {
+  const panel = document.getElementById('prev-orders-panel');
+  const body  = document.getElementById('prev-orders-body');
+  if (!panel || !body) return;
+  const dot = document.getElementById('hamb-notif-dot');
+  if (dot) dot.classList.remove('visible');
+  if (!_prevOrderRounds.length) {
+    body.innerHTML = '<div class="pop-empty">No orders placed yet this session.</div>';
+  } else {
+    body.innerHTML = _prevOrderRounds.map((round, idx) => {
+      const total   = round.items.reduce((s, i) => s + i.price * i.qty, 0);
+      const timeStr = round.time.toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit' });
+      const itemRows = round.items.map(i => `<div class="poc-item-row"><span class="poc-item-name">${i.name}</span><span class="poc-item-qty">×${i.qty}</span><span class="poc-item-price">₹${(i.price*i.qty).toFixed(2)}</span></div>`).join('');
+      return `<div class="prev-order-card"><div class="poc-header"><span class="poc-round">Round ${idx+1}</span><span class="poc-time">${timeStr}</span></div>${itemRows}<div class="poc-total"><span>Round Total</span><span>₹${total.toFixed(2)}</span></div></div>`;
+    }).join('');
+  }
+  panel.classList.add('open');
+}
+
+function closePrevOrdersPanel() { const p = document.getElementById('prev-orders-panel'); if (p) p.classList.remove('open'); }
+function toggleHeaderMenu(e) { e.stopPropagation(); document.getElementById('hamb-dropdown').classList.toggle('open'); }
+function closeHeaderMenu()   { document.getElementById('hamb-dropdown').classList.remove('open'); }
+
+document.addEventListener('click', function(e) {
+  const drop = document.getElementById('hamb-dropdown');
+  const btn  = document.getElementById('hamb-icon-btn');
+  if (drop && !drop.contains(e.target) && e.target !== btn) drop.classList.remove('open');
 });
 
-btnRec.addEventListener("click", () => {
-  if (btnRec.classList.contains("active")) {
-    saveOrderInfo();
-    window.location.href = "recommend.html"; 
+function showOrderConfirm() {
+  const overlay = document.getElementById('order-confirm-overlay');
+  document.getElementById('order-ready-subtext').style.display = 'block';
+  document.getElementById('order-ready-banner').classList.remove('visible');
+  const token = Math.floor(100 + Math.random() * 900);
+  document.getElementById('order-token-number').textContent = '#' + token;
+  const tableBadge = document.getElementById('popup-table-badge');
+  const tableNumEl = document.getElementById('popup-table-number');
+  tableBadge.classList.remove('visible');
+  tableNumEl.textContent = '—';
+  const currentOrderInfo = JSON.parse(localStorage.getItem('currentOrderInfo') || '{}');
+  if (currentOrderInfo.orderType === 'dinein') {
+    const orderId = localStorage.getItem('currentOrderId');
+    if (orderId) {
+      if (_tableListener) { db.ref('orders/'+_tableListener).off('value'); _tableListener = null; }
+      _tableListener = orderId;
+      db.ref('orders/'+orderId).on('value', snap => {
+        const order = snap.val();
+        if (order && order.tableNumber) { tableNumEl.textContent = order.tableNumber; tableBadge.classList.add('visible'); db.ref('orders/'+orderId).off('value'); _tableListener = null; }
+      });
+    }
   }
-});
+  overlay.classList.add('visible');
+  startOrderTimer();
+}
+
+function closeOrderConfirm() {
+  document.getElementById('order-confirm-overlay').classList.remove('visible');
+  if (orderTimerInterval) { clearInterval(orderTimerInterval); orderTimerInterval = null; }
+  const trackBtn = document.getElementById('track-order-btn');
+  trackBtn.classList.add('visible');
+  triggerTrackShake();
+  if (window._trackShakeInterval) clearInterval(window._trackShakeInterval);
+  window._trackShakeInterval = setInterval(triggerTrackShake, 5000);
+}
+
+function triggerTrackShake() {
+  const trackBtn = document.getElementById('track-order-btn');
+  trackBtn.classList.remove('shake');
+  void trackBtn.offsetWidth;
+  trackBtn.classList.add('shake');
+}
+
+function startOrderTimer() {
+  if (orderTimerInterval) clearInterval(orderTimerInterval);
+  let secondsLeft = TOTAL_SECONDS;
+  const display = document.getElementById('timer-display');
+  const circle  = document.getElementById('timer-progress-circle');
+  circle.style.strokeDasharray  = CIRCUMFERENCE;
+  circle.style.strokeDashoffset = 0;
+  function updateTimer() {
+    const mins = Math.floor(secondsLeft / 60);
+    const secs = secondsLeft % 60;
+    display.textContent = `${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+    circle.style.strokeDashoffset = CIRCUMFERENCE * ((TOTAL_SECONDS - secondsLeft) / TOTAL_SECONDS);
+    if (secondsLeft <= 0) {
+      clearInterval(orderTimerInterval); orderTimerInterval = null;
+      display.textContent = '00:00';
+      circle.style.strokeDashoffset = CIRCUMFERENCE;
+      document.getElementById('order-ready-subtext').style.display = 'none';
+      document.getElementById('order-ready-banner').classList.add('visible');
+    } else { secondsLeft--; }
+  }
+  updateTimer();
+  orderTimerInterval = setInterval(updateTimer, 1000);
+}
+
+function goToTrackOrder() { window.location.href = 'track.html'; }
 </script>
 </body>
 </html>
