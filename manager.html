@@ -6,9 +6,6 @@
 <title>EMERALD — Manager</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-/* ════════════════════════════════════════════════════════════
-   DESIGN TOKENS — aligned with menu.txt + track.html palette
-════════════════════════════════════════════════════════════ */
 :root {
   --gold:          #ffcc00;
   --gold-d:        rgba(255,204,0,0.10);
@@ -40,175 +37,88 @@
   --glass-shadow:  0 4px 24px rgba(0,0,0,0.32), inset 0 1px 0 rgba(255,255,255,0.06);
   --r8:8px; --r12:12px; --r16:16px; --r20:20px; --r28:28px;
 }
-
 *,*::before,*::after { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 html { scroll-behavior:smooth; }
-
-body {
-  font-family: 'Inter', sans-serif;
-  background: var(--dark);
-  color: var(--w80);
-  min-height: 100vh;
-  overflow-x: hidden;
-}
-
+body { font-family: 'Inter', sans-serif; background: var(--dark); color: var(--w80); min-height: 100vh; overflow-x: hidden; }
 .bg { position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
-.bg-orb {
-  position:absolute; border-radius:50%;
-  filter:blur(170px); opacity:0.22;
-  animation:drift 22s ease-in-out infinite alternate;
-}
+.bg-orb { position:absolute; border-radius:50%; filter:blur(170px); opacity:0.22; animation:drift 22s ease-in-out infinite alternate; }
 .bg-orb:nth-child(1){width:800px;height:800px;background:#1c0d06;top:-200px;left:-180px;animation-duration:28s;}
 .bg-orb:nth-child(2){width:600px;height:600px;background:#0d1c08;top:40%;right:-150px;animation-duration:20s;animation-delay:-11s;}
 .bg-orb:nth-child(3){width:520px;height:520px;background:#190b08;bottom:-110px;left:40%;animation-duration:25s;animation-delay:-7s;}
 @keyframes drift{0%{transform:translate(0,0) scale(1);}100%{transform:translate(55px,75px) scale(1.12);}}
-
-.bg-grid{
-  position:fixed;inset:0;z-index:0;pointer-events:none;
-  background-image:
-    linear-gradient(rgba(255,255,255,0.013) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(255,255,255,0.013) 1px,transparent 1px);
-  background-size:64px 64px;
-}
-
+.bg-grid{ position:fixed;inset:0;z-index:0;pointer-events:none; background-image:linear-gradient(rgba(255,255,255,0.013) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.013) 1px,transparent 1px); background-size:64px 64px; }
 #app { position:relative; z-index:1; min-height:100vh; display:flex; flex-direction:column; }
-
-.nav {
-  display:flex; align-items:center; justify-content:space-between;
-  height:62px; padding:0 28px;
-  background:rgba(14,9,7,0.88);
-  border-bottom:1px solid rgba(255,204,0,0.10);
-  backdrop-filter:blur(40px) saturate(180%);
-  -webkit-backdrop-filter:blur(40px) saturate(180%);
-  position:sticky; top:0; z-index:200; flex-shrink:0;
-}
-
+.nav { display:flex; align-items:center; justify-content:space-between; height:62px; padding:0 28px; background:rgba(14,9,7,0.88); border-bottom:1px solid rgba(255,204,0,0.10); backdrop-filter:blur(40px) saturate(180%); -webkit-backdrop-filter:blur(40px) saturate(180%); position:sticky; top:0; z-index:200; flex-shrink:0; }
 .nav-brand { display:flex; align-items:baseline; gap:14px; }
 .nav-logo { font-family:'Playfair Display',serif; font-size:19px; font-weight:700; color:var(--gold); letter-spacing:5px; }
 .nav-role { font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--w30); letter-spacing:2.5px; text-transform:uppercase; border-left:1px solid rgba(255,204,0,0.18); padding-left:12px; }
-
-.nav-tabs {
-  display:flex; gap:2px;
-  background:rgba(255,255,255,0.04);
-  border:1px solid rgba(255,255,255,0.08);
-  border-radius:var(--r8); padding:3px;
-}
-.nav-tab {
-  padding:7px 20px; border:none; border-radius:6px; background:transparent;
-  font-family:'Inter',sans-serif; font-size:12px; font-weight:600;
-  color:var(--w30); cursor:pointer; transition:all .2s; letter-spacing:.3px;
-}
+.nav-tabs { display:flex; gap:2px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:var(--r8); padding:3px; }
+.nav-tab { padding:7px 20px; border:none; border-radius:6px; background:transparent; font-family:'Inter',sans-serif; font-size:12px; font-weight:600; color:var(--w30); cursor:pointer; transition:all .2s; letter-spacing:.3px; }
 .nav-tab.active { background:rgba(255,204,0,0.12); color:var(--gold); box-shadow:0 1px 6px rgba(0,0,0,.5); }
 .nav-tab:not(.active):hover { color:var(--w55); background:rgba(255,255,255,0.05); }
-
 .nav-right { display:flex; align-items:center; gap:18px; }
 .nav-clock { font-family:'JetBrains Mono',monospace; font-size:12px; color:rgba(255,204,0,0.45); letter-spacing:1.5px; }
-
 .hamburger-menu { position:relative; }
-.hamb-btn {
-  background:rgba(255,204,0,0.08); border:1px solid rgba(255,204,0,0.18);
-  color:var(--gold); font-size:14px; padding:7px 12px; border-radius:8px;
-  cursor:pointer; transition:all 0.2s; font-family:'Inter',sans-serif; font-weight:600;
-}
+.hamb-btn { background:rgba(255,204,0,0.08); border:1px solid rgba(255,204,0,0.18); color:var(--gold); font-size:14px; padding:7px 12px; border-radius:8px; cursor:pointer; transition:all 0.2s; font-family:'Inter',sans-serif; font-weight:600; }
 .hamb-btn:hover { background:rgba(255,204,0,0.16); }
-
-.hamb-dropdown {
-  position:absolute; right:0; top:120%; width:220px;
-  background:rgba(20,12,7,0.97);
-  border:1px solid rgba(255,204,0,0.12);
-  border-radius:var(--r12); box-shadow:0 12px 36px rgba(0,0,0,.85);
-  display:none; flex-direction:column; overflow:hidden;
-  backdrop-filter:blur(24px);
-}
+.hamb-dropdown { position:absolute; right:0; top:120%; width:220px; background:rgba(20,12,7,0.97); border:1px solid rgba(255,204,0,0.12); border-radius:var(--r12); box-shadow:0 12px 36px rgba(0,0,0,.85); display:none; flex-direction:column; overflow:hidden; backdrop-filter:blur(24px); }
 .hamb-dropdown.active { display:flex; }
-.hamb-dropdown a {
-  padding:13px 18px; font-size:13px; font-weight:500;
-  color:var(--w80); cursor:pointer;
-  border-bottom:1px solid rgba(255,255,255,0.05); transition:background 0.2s;
-  font-family:'Inter',sans-serif;
-}
+.hamb-dropdown a { padding:13px 18px; font-size:13px; font-weight:500; color:var(--w80); cursor:pointer; border-bottom:1px solid rgba(255,255,255,0.05); transition:background 0.2s; font-family:'Inter',sans-serif; }
 .hamb-dropdown a:hover { background:rgba(255,204,0,0.08); color:var(--gold); }
 .hamb-dropdown a:last-child { border-bottom:none; }
-
 .main { flex:1; padding:28px; max-width:1440px; margin:0 auto; width:100%; }
 .tab-panel { display:none; }
 .tab-panel.active { display:block; animation:panelIn .3s ease; }
 @keyframes panelIn { from{opacity:0;transform:translateY(6px);} to{opacity:1;transform:translateY(0);} }
-
 .slabel { display:flex; align-items:center; gap:12px; margin-bottom:20px; }
 .slabel-txt { font-family:'Playfair Display',serif; font-size:17px; font-weight:700; color:var(--off-white); letter-spacing:0.3px; white-space:nowrap; }
 .slabel-line { flex:1; height:1px; background:rgba(255,255,255,0.07); }
 .slabel-pill { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--gold); background:rgba(255,204,0,0.08); border:1px solid rgba(255,204,0,0.22); padding:3px 11px; border-radius:20px; letter-spacing:.5px; }
-
-.g {
-  background:var(--glass);
-  border:1px solid var(--glass-border);
-  border-radius:var(--r16);
-  backdrop-filter:blur(48px) saturate(160%);
-  -webkit-backdrop-filter:blur(48px) saturate(160%);
-  box-shadow:var(--glass-shadow);
-  transition:border-color .25s,box-shadow .25s,transform .2s;
-}
-.g:hover {
-  border-color:rgba(255,255,255,0.15);
-  box-shadow:0 16px 44px rgba(0,0,0,.48),inset 0 1px 0 rgba(255,255,255,0.09);
-  transform:translateY(-1px);
-}
-
+.g { background:var(--glass); border:1px solid var(--glass-border); border-radius:var(--r16); backdrop-filter:blur(48px) saturate(160%); -webkit-backdrop-filter:blur(48px) saturate(160%); box-shadow:var(--glass-shadow); transition:border-color .25s,box-shadow .25s,transform .2s; }
+.g:hover { border-color:rgba(255,255,255,0.15); box-shadow:0 16px 44px rgba(0,0,0,.48),inset 0 1px 0 rgba(255,255,255,0.09); transform:translateY(-1px); }
 .tgrid { display:grid; grid-template-columns:repeat(auto-fill,minmax(278px,1fr)); gap:16px; margin-bottom:40px; }
 .tcard { position:relative; cursor:pointer; border-left:3px solid rgba(255,255,255,0.06) !important; transition:border-left-color .3s,box-shadow .3s,transform .2s; }
-
 .tcard:has(.tcard-status.occ-prep) { border-left-color:var(--amber) !important; box-shadow:0 4px 24px rgba(251,191,36,0.07),inset 0 1px 0 rgba(255,255,255,0.06) !important; }
 .tcard:has(.tcard-status.occ-dining) { border-left-color:var(--green) !important; box-shadow:0 4px 24px rgba(52,211,153,0.07),inset 0 1px 0 rgba(255,255,255,0.06) !important; }
 .tcard.drag-over { border-color:var(--gold) !important; box-shadow:0 0 24px rgba(255,204,0,0.30),inset 0 1px 0 rgba(255,255,255,0.10) !important; transform:scale(1.02); }
 .tcard.occupied { border-left-color:var(--amber) !important; }
 .tcard.tcard-order-cancelled { border-color:var(--red) !important; background:rgba(248,113,113,0.05) !important; animation:mgrCancelPulse 0.8s ease-in-out 5; }
 @keyframes mgrCancelPulse { 0%,100%{box-shadow:0 4px 24px rgba(248,113,113,0.10);} 50%{box-shadow:0 4px 44px rgba(248,113,113,0.60),0 0 0 5px rgba(248,113,113,0.15);} }
-
 .cancel-alert-overlay { position:absolute;inset:0;border-radius:inherit; background:rgba(200,22,22,0.94); z-index:25; display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px; animation:cancelOverlayIn 0.4s cubic-bezier(0.34,1.56,0.64,1) forwards; }
 @keyframes cancelOverlayIn{from{opacity:0;transform:scale(0.85);}to{opacity:1;transform:scale(1);}}
 .cancel-alert-overlay .cao-emoji { font-size:30px; line-height:1; }
 .cancel-alert-overlay .cao-title { font-family:'Playfair Display',serif; font-size:16px; font-weight:700; color:#fff; letter-spacing:1.5px; text-align:center; line-height:1.2; }
 .cancel-alert-overlay .cao-sub { font-family:'Inter',sans-serif; font-size:10px; color:rgba(255,255,255,0.65); letter-spacing:.8px; }
 .cancel-alert-overlay .cao-timer { font-family:'Playfair Display',serif; font-size:28px; font-weight:700; color:#fff; background:rgba(0,0,0,0.25); border-radius:50%; width:48px; height:48px; display:flex; align-items:center; justify-content:center; margin-top:2px; }
-
 .addon-notif { position:absolute;top:-10px;left:-10px;width:28px;height:28px;border-radius:50%; background:var(--green);color:#000; display:flex;align-items:center;justify-content:center; font-size:13px;font-weight:800;z-index:10; box-shadow:0 4px 10px rgba(52,211,153,0.5); animation:addonPulse 2s ease-in-out infinite; cursor:pointer; }
 @keyframes addonPulse{0%,100%{box-shadow:0 4px 10px rgba(52,211,153,0.5);}50%{box-shadow:0 4px 20px rgba(52,211,153,0.9),0 0 0 6px rgba(52,211,153,0.15);}}
 .addon-notif-count{font-family:'Inter',sans-serif;font-size:11px;font-weight:800;line-height:1;}
-
 .next-notif { position:absolute;top:-10px;right:-10px;width:28px;height:28px;border-radius:50%; background:var(--red);color:#fff; display:flex;align-items:center;justify-content:center; font-size:14px;cursor:grab;z-index:10; box-shadow:0 4px 10px rgba(248,113,113,0.60); animation:nextPulse 2s ease-in-out infinite; transition:transform 0.2s; }
 .next-notif:hover{transform:scale(1.15);}
 @keyframes nextPulse{0%,100%{box-shadow:0 4px 10px rgba(248,113,113,0.60);}50%{box-shadow:0 4px 20px rgba(248,113,113,1.0),0 0 0 6px rgba(248,113,113,0.15);}}
-
 .tcard-inner { overflow:hidden; border-radius:inherit; height:100%; display:flex; flex-direction:column; }
 .tcard-top { padding:18px 20px 14px; display:flex; align-items:flex-start; justify-content:space-between; border-bottom:1px solid rgba(255,255,255,0.06); background:rgba(255,255,255,0.022); }
 .tcard-num { font-family:'Playfair Display',serif; font-size:38px; font-weight:700; color:var(--gold); line-height:1; letter-spacing:-1.5px; }
 .tcard-numlabel { font-family:'Inter',sans-serif; font-size:9px; font-weight:600; color:var(--w30); letter-spacing:2.5px; text-transform:uppercase; margin-top:4px; }
-
 .tcard-status { display:inline-flex; align-items:center; gap:5px; padding:5px 11px; border-radius:20px; font-family:'Inter',sans-serif; font-size:9px; font-weight:700; letter-spacing:1px; text-transform:uppercase; border:1px solid; }
 .tcard-status.free   { color:var(--green); background:rgba(52,211,153,0.08);  border-color:rgba(52,211,153,0.20); }
 .tcard-status.occ    { color:var(--red);   background:rgba(248,113,113,0.08); border-color:rgba(248,113,113,0.22); }
 .tcard-status.occ-prep  { color:var(--amber); background:rgba(251,191,36,0.08); border-color:rgba(251,191,36,0.24); }
 .tcard-status.occ-dining{ color:var(--green); background:rgba(52,211,153,0.08); border-color:rgba(52,211,153,0.20); }
-
 .sdot { width:5px; height:5px; border-radius:50%; background:currentColor; animation:sdotBlink 2.5s ease-in-out infinite; }
 @keyframes sdotBlink{0%,100%{opacity:1;}50%{opacity:.18;}}
-
 .tcard-meta { padding:10px 20px; border-bottom:1px solid rgba(255,255,255,0.06); display:flex; gap:6px; align-items:center; }
 .tcard-meta-lbl { font-family:'Inter',sans-serif; font-size:9px; font-weight:600; color:var(--w30); letter-spacing:2px; text-transform:uppercase; }
 .tcard-meta-val { font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--gold); margin-left:4px; opacity:.75; }
-
 .tcard-cust { padding:14px 20px; border-bottom:1px solid rgba(255,255,255,0.06); background:rgba(52,211,153,0.018); flex:1; }
 .tcard-cust-name { font-family:'Inter',sans-serif; font-size:16px; font-weight:700; color:var(--off-white); line-height:1.2; margin-bottom:8px; }
 .tcard-cust-chips { display:flex; gap:14px; }
 .chip { font-family:'Inter',sans-serif; font-size:11px; font-weight:500; color:var(--w30); display:flex; align-items:center; gap:4px; }
 .chip svg { width:10px; height:10px; opacity:.45; flex-shrink:0; }
 .tcard-actions { padding:12px 20px; display:flex; gap:8px; }
-
 .addon-item-row{background:rgba(52,211,153,0.06)!important;border-left:3px solid var(--green)!important;}
 .addon-item-row td:first-child{padding-left:10px!important;}
 .addon-badge-label{ display:inline-block;background:var(--green);color:#000; font-family:'Inter',sans-serif;font-size:8px;font-weight:700; letter-spacing:1px;padding:2px 6px;border-radius:10px;margin-left:6px;vertical-align:middle; }
-
 .tkgrid { display:grid; grid-template-columns:repeat(auto-fill,minmax(278px,1fr)); gap:16px; margin-bottom:40px; }
 .tkcard { overflow:hidden; border-radius:var(--r16); border-left:3px solid rgba(147,197,253,0.30) !important; }
 .tkcard-top { padding:14px 18px 12px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid rgba(255,255,255,0.06); background:rgba(147,197,253,0.022); }
@@ -226,8 +136,10 @@ body {
 .tkcard-total { font-family:'Playfair Display',serif; font-size:24px; font-weight:700; color:var(--red); margin-bottom:12px; }
 .tkcard-cancel { background:none; border:none; color:var(--red); cursor:pointer; font-size:16px; margin-left:auto; }
 
+/* CHANGE 1: FIFO Queue styling — added FIFO indicator */
 .qlist { display:flex; flex-direction:column; gap:8px; margin-bottom:40px; }
-.qcard { display:flex; align-items:center; justify-content:space-between; padding:14px 20px; border-radius:var(--r12); border-left:3px solid rgba(255,204,0,0.28) !important; cursor:default; }
+.qcard { display:flex; align-items:center; justify-content:space-between; padding:14px 20px; border-radius:var(--r12); border-left:3px solid rgba(255,204,0,0.28) !important; cursor:grab; }
+.qcard:active { cursor:grabbing; }
 .qcard-left { display:flex; align-items:center; gap:14px; }
 .qidx { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--w30); width:18px; }
 .qname { font-family:'Inter',sans-serif; font-size:16px; font-weight:700; color:var(--gold); }
@@ -235,33 +147,31 @@ body {
 .qwait  { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--blue); }
 .qpeople{ font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--w30); }
 .qcancel{ background:none; border:none; color:var(--red); cursor:pointer; font-size:14px; padding-left:10px; }
+.qfifo-badge { font-family:'JetBrains Mono',monospace; font-size:8px; letter-spacing:1px; color:var(--gold); background:rgba(255,204,0,0.08); border:1px solid rgba(255,204,0,0.18); padding:2px 7px; border-radius:10px; }
 
 .btn { display:inline-flex; align-items:center; justify-content:center; gap:6px; padding:9px 16px; border-radius:var(--r8); border:1px solid transparent; font-family:'Inter',sans-serif; font-size:12px; font-weight:600; letter-spacing:.3px; cursor:pointer; transition:all .18s; white-space:nowrap; }
-.btn-gold  { background:rgba(255,204,0,0.10);    color:var(--gold);  border-color:rgba(255,204,0,0.24);    }
+.btn-gold  { background:rgba(255,204,0,0.10);    color:var(--gold);  border-color:rgba(255,204,0,0.24); }
 .btn-gold:hover  { background:rgba(255,204,0,0.18);  border-color:var(--gold); }
-.btn-red   { background:rgba(248,113,113,0.10);  color:var(--red);   border-color:rgba(248,113,113,0.24);  }
-.btn-red:hover   { background:rgba(248,113,113,0.18); border-color:var(--red);  }
+.btn-red   { background:rgba(248,113,113,0.10);  color:var(--red);   border-color:rgba(248,113,113,0.24); }
+.btn-red:hover   { background:rgba(248,113,113,0.18); border-color:var(--red); }
 .btn-blue  { background:rgba(147,197,253,0.10);  color:var(--blue);  border-color:rgba(147,197,253,0.24); }
 .btn-blue:hover  { background:rgba(147,197,253,0.18); border-color:var(--blue); }
-.btn-ghost { background:rgba(255,255,255,0.05);  color:var(--w55);   border-color:rgba(255,255,255,0.10);  }
+.btn-ghost { background:rgba(255,255,255,0.05);  color:var(--w55);   border-color:rgba(255,255,255,0.10); }
 .btn-ghost:hover { background:rgba(255,255,255,0.10); color:var(--w80); }
 .btn-white { background:rgba(255,255,255,0.08); color:#ffffff; border-color:rgba(255,255,255,0.18); backdrop-filter:blur(10px); }
 .btn-white:hover { background:rgba(255,255,255,0.14); border-color:rgba(255,255,255,0.30); transform:translateY(-1px); }
 .btn-sm   { padding:7px 13px; font-size:11px; }
 .btn-lg   { padding:13px 22px; font-size:14px; font-weight:700; }
 .btn-full { width:100%; }
-
 .empty { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:60px 20px; gap:10px; grid-column:1/-1; }
 .empty-ico { font-size:36px; opacity:.18; filter:grayscale(1); }
 .empty-txt { font-family:'Inter',sans-serif; font-size:11px; font-weight:600; letter-spacing:2.5px; color:var(--w30); text-transform:uppercase; }
-
 .hist-toolbar { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:24px; padding:16px 20px; background:var(--glass); border:1px solid var(--glass-border); border-radius:var(--r12); backdrop-filter:blur(40px); }
 .htlabel { font-family:'Inter',sans-serif; font-size:10px; font-weight:600; color:var(--w30); letter-spacing:1.8px; text-transform:uppercase; white-space:nowrap; }
 .date-in { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.12); color:var(--w80); padding:8px 12px; border-radius:var(--r8); font-family:'JetBrains Mono',monospace; font-size:11px; outline:none; cursor:pointer; transition:border-color .2s; }
 .date-in:focus { border-color:var(--gold); box-shadow:0 0 0 3px rgba(255,204,0,0.08); }
 .date-in::-webkit-calendar-picker-indicator { filter:invert(.5) sepia(1) saturate(3) hue-rotate(15deg); cursor:pointer; }
 .vdiv { width:1px; height:22px; background:rgba(255,255,255,0.08); }
-
 .stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(165px,1fr)); gap:12px; margin-bottom:22px; }
 .stile { padding:22px 20px; display:flex; flex-direction:column; gap:5px; }
 .stile-lbl { font-family:'Inter',sans-serif; font-size:9px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:var(--w30); }
@@ -270,20 +180,18 @@ body {
 .stile-val.green { color:var(--green); }
 .stile-val.gold  { color:var(--gold); }
 .stile-sub { font-family:'Inter',sans-serif; font-size:10px; color:var(--w30); }
-
 .export-bar { display:flex; gap:8px; align-items:center; margin-bottom:18px; flex-wrap:wrap; }
 .ebtn { display:inline-flex; align-items:center; gap:6px; padding:9px 16px; border-radius:var(--r8); border:1px solid; font-family:'Inter',sans-serif; font-size:11px; font-weight:600; cursor:pointer; transition:all .18s; }
 .ebtn svg { width:13px; height:13px; fill:currentColor; flex-shrink:0; }
-.ebtn-pdf { background:rgba(248,113,113,0.10); color:var(--red);   border-color:rgba(248,113,113,0.20); }
+.ebtn-pdf { background:rgba(248,113,113,0.10); color:var(--red); border-color:rgba(248,113,113,0.20); }
 .ebtn-pdf:hover { background:rgba(248,113,113,0.18); }
-.ebtn-xl  { background:rgba(52,211,153,0.10);  color:var(--green); border-color:rgba(52,211,153,0.20);  }
+.ebtn-xl  { background:rgba(52,211,153,0.10); color:var(--green); border-color:rgba(52,211,153,0.20); }
 .ebtn-xl:hover  { background:rgba(52,211,153,0.18); }
 .esp { display:none; width:11px; height:11px; border:2px solid rgba(255,255,255,.25); border-top-color:currentColor; border-radius:50%; animation:spin .6s linear infinite; }
 @keyframes spin { to{transform:rotate(360deg);} }
 .ebtn.loading .esp  { display:block; }
-.ebtn.loading .eico { display:none;  }
+.ebtn.loading .eico { display:none; }
 #expNote { display:none; font-family:'Inter',sans-serif; font-size:11px; color:var(--w30); }
-
 .hist-wrap { border:1px solid rgba(255,255,255,0.08); border-radius:var(--r12); overflow:hidden; margin-bottom:22px; backdrop-filter:blur(40px); }
 .htable { width:100%; border-collapse:collapse; }
 .htable thead { background:rgba(255,204,0,0.035); border-bottom:1px solid rgba(255,204,0,0.12); }
@@ -296,31 +204,27 @@ body {
 .hcust { font-family:'Inter',sans-serif; font-size:13px; font-weight:600; color:var(--off-white); }
 .hdate    { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--blue); font-weight:500; }
 .hdatesub { font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--w30); }
-.hamt     { font-family:'Playfair Display',serif;   font-size:16px; font-weight:700; color:var(--gold); }
-
+.hamt     { font-family:'Playfair Display',serif; font-size:16px; font-weight:700; color:var(--gold); }
 .badge { display:inline-flex; align-items:center; padding:3px 9px; border-radius:20px; font-family:'Inter',sans-serif; font-size:9px; font-weight:700; letter-spacing:1px; text-transform:uppercase; border:1px solid; }
-.bg-green { color:var(--green); background:rgba(52,211,153,0.08);  border-color:rgba(52,211,153,0.18); }
+.bg-green { color:var(--green); background:rgba(52,211,153,0.08); border-color:rgba(52,211,153,0.18); }
 .bg-red   { color:var(--red);   background:rgba(248,113,113,0.08); border-color:rgba(248,113,113,0.18); }
 .bg-blue  { color:var(--blue);  background:rgba(147,197,253,0.08); border-color:rgba(147,197,253,0.18); }
 .bg-gold  { color:var(--gold);  background:rgba(255,204,0,0.08);   border-color:rgba(255,204,0,0.18); }
-
 .drow td { padding:0 16px 14px; background:rgba(0,0,0,.18)!important; }
 .drow-inner { background:rgba(255,255,255,0.025); border:1px solid rgba(255,255,255,0.07); border-radius:var(--r8); padding:14px 16px; margin-top:4px; }
 .ditem { display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px solid rgba(255,255,255,0.04); font-size:12px; }
 .ditem:last-child { border-bottom:none; }
 .ditem-name { color:var(--w55); }
-.ditem-qty  { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--blue);  }
+.ditem-qty  { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--blue); }
 .ditem-amt  { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--green); }
 .dtotals { margin-top:10px; padding-top:10px; border-top:1px solid rgba(255,255,255,0.07); display:flex; flex-direction:column; gap:5px; }
 .dtr { display:flex; justify-content:space-between; font-size:11px; }
 .dtr-grand { font-family:'Playfair Display',serif; font-size:18px; font-weight:700; color:var(--gold); }
-
 .pagi { display:flex; justify-content:center; gap:5px; margin-bottom:40px; }
 .pgbtn { font-family:'JetBrains Mono',monospace; font-size:11px; padding:7px 12px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.10); color:var(--w55); border-radius:var(--r8); cursor:pointer; transition:all .18s; }
 .pgbtn:hover  { border-color:var(--gold); color:var(--gold); }
 .pgbtn.active { background:rgba(255,204,0,0.14); border-color:var(--gold); color:var(--gold); }
 .pgbtn:disabled { opacity:.2; cursor:not-allowed; }
-
 .overlay { position:fixed; inset:0; background:rgba(0,0,0,.82); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); z-index:999; display:none; align-items:flex-start; justify-content:center; padding:36px 16px; overflow-y:auto; }
 .overlay.open { display:flex; }
 .bmodal { background:rgba(18,12,7,0.78); border:1px solid rgba(255,255,255,0.11); border-radius:var(--r28); width:100%; max-width:660px; margin:auto; overflow:hidden; box-shadow:0 40px 100px rgba(0,0,0,.80), inset 0 1px 0 rgba(255,255,255,0.07); backdrop-filter:blur(60px) saturate(180%); -webkit-backdrop-filter:blur(60px) saturate(180%); }
@@ -332,7 +236,6 @@ body {
 .bmodal-body   { padding:22px 26px; }
 .bmodal-footer { padding:14px 26px 26px; display:flex; gap:8px; }
 .modal-slbl { font-family:'Inter',sans-serif; font-size:9px; font-weight:700; color:var(--w30); letter-spacing:2.5px; text-transform:uppercase; margin-bottom:8px; }
-
 .msearch { width:100%; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.12); color:var(--w80); padding:10px 14px; border-radius:var(--r8); font-family:'Inter',sans-serif; font-size:13px; outline:none; transition:border-color .2s; }
 .msearch::placeholder { color:var(--w30); }
 .msearch:focus { border-color:var(--gold); box-shadow:0 0 0 3px rgba(255,204,0,0.07); }
@@ -342,7 +245,6 @@ body {
 .mresult:hover { background:rgba(255,204,0,0.06); }
 .mr-name  { color:var(--w80); }
 .mr-price { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--green); }
-
 .btable { width:100%; border-collapse:collapse; margin-bottom:4px; }
 .btable th { text-align:left; font-family:'Inter',sans-serif; font-size:9px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--w30); padding:6px 8px; border-bottom:1px solid rgba(255,255,255,0.07); }
 .btable td { padding:8px 8px; border-bottom:1px solid rgba(255,255,255,0.04); vertical-align:middle; font-size:12px; }
@@ -356,7 +258,6 @@ body {
 .rmbtn { background:none; border:none; color:var(--red); cursor:pointer; font-size:12px; padding:2px 4px; opacity:.6; transition:opacity .15s; }
 .rmbtn:hover { opacity:1; }
 .iamt { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--green); }
-
 .tbox { background:rgba(255,255,255,0.028); border:1px solid rgba(255,255,255,0.08); border-radius:var(--r8); padding:14px 16px; }
 .tline { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; font-size:12px; }
 .tline-lbl { color:var(--w30); }
@@ -373,7 +274,6 @@ body {
 .grand-lbl { font-size:14px; font-weight:600; color:var(--w80); }
 .grand-val { font-family:'Playfair Display',serif; font-size:24px; font-weight:700; color:var(--gold); }
 .ebill-msg { text-align:center; color:var(--w30); font-family:'Inter',sans-serif; font-size:11px; padding:18px; }
-
 .next-order-popup { position:fixed; inset:0; background:rgba(0,0,0,0.82); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); z-index:1000; display:none; align-items:center; justify-content:center; padding:20px; }
 .next-order-popup.open { display:flex; }
 .next-order-popup-inner { background:rgba(20,12,7,0.95); border:1px solid rgba(248,113,113,0.28); border-radius:var(--r20); padding:28px 26px; width:100%; max-width:380px; box-shadow:0 40px 80px rgba(0,0,0,.80), inset 0 1px 0 rgba(255,255,255,0.06); backdrop-filter:blur(60px); }
@@ -389,37 +289,13 @@ body {
 .nop-val.mono { font-family:'JetBrains Mono',monospace; font-style:normal; font-size:14px; color:var(--blue); }
 .nop-actions { display:flex; gap:8px; margin-top:20px; }
 .nop-hint { font-family:'Inter',sans-serif; font-size:10px; color:var(--w30); text-align:center; margin-top:12px; letter-spacing:.5px; }
-
 #parea{display:none;}
-@media print{
-  body>*:not(#parea){display:none!important;}
-  #parea{display:block!important;font-family:'Courier New',monospace;max-width:80mm;margin:0 auto;color:#000;padding:4mm;}
-  .pr-brand{text-align:center;font-size:22px;font-weight:900;letter-spacing:4px;border-bottom:2px dashed #000;padding-bottom:6px;margin-bottom:6px;}
-  .pr-tag{text-align:center;font-size:10px;margin-bottom:8px;letter-spacing:1px;}
-  .pr-row{display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px;}
-  .pr-ih{display:flex;justify-content:space-between;font-size:9px;font-weight:900;text-transform:uppercase;margin:5px 0 3px;}
-  .pr-ir{display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;}
-  .pr-ir-n{flex:1;}.pr-ir-q{width:28px;text-align:center;}.pr-ir-p{width:56px;text-align:right;}
-  .pr-tr{display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px;}
-  .pr-gr{display:flex;justify-content:space-between;font-size:15px;font-weight:900;margin-top:4px;}
-  .pr-ft{text-align:center;font-size:10px;margin-top:10px;color:#555;}
-  .pr-ty{font-size:14px;font-weight:900;text-align:center;margin:8px 0 4px;}
-}
-
+@media print{ body>*:not(#parea){display:none!important;} #parea{display:block!important;font-family:'Courier New',monospace;max-width:80mm;margin:0 auto;color:#000;padding:4mm;} .pr-brand{text-align:center;font-size:22px;font-weight:900;letter-spacing:4px;border-bottom:2px dashed #000;padding-bottom:6px;margin-bottom:6px;} .pr-tag{text-align:center;font-size:10px;margin-bottom:8px;letter-spacing:1px;} .pr-row{display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px;} .pr-ih{display:flex;justify-content:space-between;font-size:9px;font-weight:900;text-transform:uppercase;margin:5px 0 3px;} .pr-ir{display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;} .pr-ir-n{flex:1;}.pr-ir-q{width:28px;text-align:center;}.pr-ir-p{width:56px;text-align:right;} .pr-tr{display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px;} .pr-gr{display:flex;justify-content:space-between;font-size:15px;font-weight:900;margin-top:4px;} .pr-ft{text-align:center;font-size:10px;margin-top:10px;color:#555;} .pr-ty{font-size:14px;font-weight:900;text-align:center;margin:8px 0 4px;} }
 .mob-tabs{display:none;gap:3px;margin-bottom:22px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:var(--r8);padding:3px;}
 .mob-tab{flex:1;padding:9px;text-align:center;border:none;border-radius:6px;font-family:'Inter',sans-serif;font-size:12px;font-weight:500;color:var(--w30);background:transparent;cursor:pointer;transition:all .2s;}
 .mob-tab.active{background:rgba(255,204,0,0.10);color:var(--gold);}
-
-@media(max-width:768px){
-  .nav{padding:0 16px;}.nav-tabs{display:none;}
-  .main{padding:16px;}
-  .tgrid,.tkgrid{grid-template-columns:1fr;}
-  .bmodal-body{padding:14px;}.bmodal-footer{flex-direction:column;padding:12px 14px 22px;}
-  .stats{grid-template-columns:repeat(2,1fr);}
-  .mob-tabs{display:flex;}
-}
+@media(max-width:768px){ .nav{padding:0 16px;}.nav-tabs{display:none;} .main{padding:16px;} .tgrid,.tkgrid{grid-template-columns:1fr;} .bmodal-body{padding:14px;}.bmodal-footer{flex-direction:column;padding:12px 14px 22px;} .stats{grid-template-columns:repeat(2,1fr);} .mob-tabs{display:flex;} }
 </style>
-
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-analytics-compat.js"></script>
@@ -427,11 +303,6 @@ body {
 const firebaseConfig={apiKey:"AIzaSyC_LUKzINx6H4XE7uWoCpeLSldpIp-DR80",authDomain:"restro-4db49.firebaseapp.com",databaseURL:"https://restro-4db49-default-rtdb.firebaseio.com",projectId:"restro-4db49",storageBucket:"restro-4db49.firebasestorage.app",messagingSenderId:"860567729744",appId:"1:860567729744:web:773f5a315af7340d950355",measurementId:"G-D9CJCYZJF4"};
 firebase.initializeApp(firebaseConfig);
 const db=firebase.database();firebase.analytics();
-
-let allTables=[],allQueue=[],allTkw=[];
-let billItems=[],curOids=[],curOid=null,curTnum=null,curTkey=null,dMode='pct';
-let _renderDashTimer=null;
-function renderDashDebounced(){clearTimeout(_renderDashTimer);_renderDashTimer=setTimeout(renderDash,40);}
 
 let _tablesInitDone=false;
 db.ref("tables").on("value",s=>{
@@ -453,12 +324,6 @@ db.ref("tables").on("value",s=>{
   renderDashDebounced();
 });
 
-db.ref("queue").on("value", s => {
-  const qVal = s.val();
-  allQueue = qVal ? Object.entries(qVal).map(([k,v])=>({key:k, ...v})).sort((a,b)=>a.time - b.time) : [];
-  renderDashDebounced();
-});
-
 db.ref("orders").on("value",s=>{
   const d=s.val();
   const ordersArr=d?Object.values(d):[];
@@ -473,49 +338,53 @@ db.ref("orders").on("value",s=>{
   });
   renderDashDebounced();
 });
+
+// CHANGE 1: Listen to global FIFO queue in Firebase
+let allGlobalQueue = [];
+db.ref("queue").orderByChild("timestamp").on("value", s => {
+  const qData = s.val();
+  allGlobalQueue = qData ?
+    Object.entries(qData)
+      .map(([k, v]) => ({...v, _key: k}))
+      .sort((a, b) => (a.timestamp||0) - (b.timestamp||0)) : [];
+  document.getElementById('qcount').textContent = allGlobalQueue.length + allTables.filter(t=>t.occupied&&t.nextOrder).length;
+  renderDashDebounced();
+});
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
-
 <div class="bg"><div class="bg-orb"></div><div class="bg-orb"></div><div class="bg-orb"></div></div>
 <div class="bg-grid"></div>
-
 <div id="app">
-
   <nav class="nav">
     <div class="nav-brand">
       <span class="nav-logo">EMERALD</span>
       <span class="nav-role">Manager Console</span>
     </div>
-
     <div class="nav-tabs">
       <button class="nav-tab active" id="tab-live"    onclick="switchTab('live')">Live Dashboard</button>
       <button class="nav-tab"        id="tab-history" onclick="switchTab('history')">Bill History</button>
       <button class="nav-tab"        id="tab-tracker" onclick="switchTab('tracker')">Order Tracking</button>
     </div>
-
     <div class="nav-right">
       <div class="nav-clock" id="clock">--:--:--</div>
       <div class="hamburger-menu">
         <button class="hamb-btn" onclick="toggleMenu()">☰ Menu</button>
         <div class="hamb-dropdown" id="hambDrop">
-          <a onclick="switchTab('live'); toggleMenu()">Live Dashboard</a>
+          <a onclick="switchTab('live');    toggleMenu()">Live Dashboard</a>
           <a onclick="switchTab('history'); toggleMenu()">Bill History</a>
           <a onclick="switchTab('tracker'); toggleMenu()">Order Tracking</a>
         </div>
       </div>
     </div>
   </nav>
-
   <main class="main">
-
     <div class="mob-tabs">
       <button class="mob-tab active" id="mtab-live"    onclick="switchTab('live')">Live</button>
       <button class="mob-tab"        id="mtab-history" onclick="switchTab('history')">History</button>
       <button class="mob-tab"        id="mtab-tracker" onclick="switchTab('tracker')">Tracker</button>
     </div>
-
     <div class="tab-panel active" id="panel-live">
       <div class="slabel">
         <span class="slabel-txt">Tables</span>
@@ -523,22 +392,19 @@ db.ref("orders").on("value",s=>{
         <span class="slabel-pill" id="tcount">0</span>
       </div>
       <div class="tgrid" id="tgrid"></div>
-
       <div class="slabel" style="margin-top:4px;">
         <span class="slabel-txt">Takeaway Orders</span>
         <span class="slabel-line"></span>
         <span class="slabel-pill" id="tkcount">0</span>
       </div>
       <div class="tkgrid" id="tkgrid"></div>
-
       <div class="slabel" style="margin-top:4px;">
-        <span class="slabel-txt">Waiting Queue (FIFO)</span>
+        <span class="slabel-txt">Waiting Queue</span>
         <span class="slabel-line"></span>
         <span class="slabel-pill" id="qcount">0</span>
       </div>
       <div class="qlist" id="qlist"></div>
     </div>
-
     <div class="tab-panel" id="panel-history">
       <div class="hist-toolbar">
         <span class="htlabel">From</span>
@@ -551,7 +417,6 @@ db.ref("orders").on("value",s=>{
         <button class="btn btn-ghost btn-sm" onclick="setToday()">Today</button>
         <button class="btn btn-ghost btn-sm" onclick="clearF()">All Time</button>
       </div>
-
       <div class="stats">
         <div class="g stile"><span class="stile-lbl">Total Orders</span><span class="stile-val"         id="st1">—</span><span class="stile-sub">Completed</span></div>
         <div class="g stile"><span class="stile-lbl">Revenue</span>      <span class="stile-val"         id="st2">—</span><span class="stile-sub">Grand total</span></div>
@@ -560,20 +425,12 @@ db.ref("orders").on("value",s=>{
         <div class="g stile"><span class="stile-lbl">Dine-In</span>      <span class="stile-val blue"    id="st5">—</span><span class="stile-sub">Table orders</span></div>
         <div class="g stile"><span class="stile-lbl">Takeaway</span>     <span class="stile-val green"   id="st6">—</span><span class="stile-sub">Pickup</span></div>
       </div>
-
       <div class="export-bar">
         <span class="htlabel">Export</span>
-        <button class="ebtn ebtn-pdf" id="expPdf" onclick="exportPDF()">
-          <span class="eico"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 1.5L18.5 9H13V3.5zM8.5 17H8v1H7v-4h1.5a1.5 1.5 0 0 1 0 3zm4-.5a2 2 0 0 1-2 2H10v-4h.5a2 2 0 0 1 2 2zm4-1.5h-1.5v1H17v1h-1.5V19H14v-4h3v1zm-7.5 0H8v1h.5a.5.5 0 0 0 0-1zm3 0h-.5v2h.5a1 1 0 0 0 0-2z"/></svg></span>
-          <span class="esp"></span>PDF
-        </button>
-        <button class="ebtn ebtn-xl" id="expXl" onclick="exportExcel()">
-          <span class="eico"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 1.5L18.5 9H13V3.5zM7 19l2-3-2-3h1.5l1.25 2 1.25-2H12.5l-2 3 2 3H11l-1.25-2L8.5 19H7zm6.5 0v-6H15v5h2v1h-3.5z"/></svg></span>
-          <span class="esp"></span>Excel
-        </button>
+        <button class="ebtn ebtn-pdf" id="expPdf" onclick="exportPDF()"><span class="eico"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 1.5L18.5 9H13V3.5zM8.5 17H8v1H7v-4h1.5a1.5 1.5 0 0 1 0 3zm4-.5a2 2 0 0 1-2 2H10v-4h.5a2 2 0 0 1 2 2zm4-1.5h-1.5v1H17v1h-1.5V19H14v-4h3v1zm-7.5 0H8v1h.5a.5.5 0 0 0 0-1zm3 0h-.5v2h.5a1 1 0 0 0 0-2z"/></svg></span><span class="esp"></span>PDF</button>
+        <button class="ebtn ebtn-xl" id="expXl" onclick="exportExcel()"><span class="eico"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 1.5L18.5 9H13V3.5zM7 19l2-3-2-3h1.5l1.25 2 1.25-2H12.5l-2 3 2 3H11l-1.25-2L8.5 19H7zm6.5 0v-6H15v5h2v1h-3.5z"/></svg></span><span class="esp"></span>Excel</button>
         <span id="expNote"><span id="expCount">0</span> records</span>
       </div>
-
       <div class="hist-wrap">
         <table class="htable">
           <thead><tr><th>#</th><th>Date / Time</th><th>Customer</th><th>Type</th><th>Table</th><th>Items</th><th>Status</th><th>Total</th></tr></thead>
@@ -582,7 +439,6 @@ db.ref("orders").on("value",s=>{
       </div>
       <div class="pagi" id="hpagi"></div>
     </div>
-
     <div class="tab-panel" id="panel-tracker">
       <div class="slabel"><span class="slabel-txt">Order Tracking Overview</span><span class="slabel-line"></span></div>
       <div class="stats" id="trackerStats">
@@ -592,10 +448,10 @@ db.ref("orders").on("value",s=>{
         <div class="g stile"><span class="stile-lbl">Served / Ready</span>    <span class="stile-val green" id="trk-served">0</span><span class="stile-sub">Completed</span></div>
       </div>
     </div>
-
   </main>
 </div>
 
+<!-- VIEW ORDER MODAL -->
 <div class="overlay" id="viewOrderModal" onclick="if(event.target==this)closeViewOrder()">
   <div class="bmodal" style="max-width:500px;">
     <div class="bmodal-head">
@@ -617,6 +473,7 @@ db.ref("orders").on("value",s=>{
   </div>
 </div>
 
+<!-- BILL MODAL -->
 <div class="overlay" id="billModal">
   <div class="bmodal">
     <div class="bmodal-head">
@@ -655,25 +512,28 @@ db.ref("orders").on("value",s=>{
       </div>
     </div>
     <div class="bmodal-footer">
-      <button class="btn btn-ghost" onclick="saveOnly()">Save Only</button>
+      <button class="btn btn-ghost"               onclick="saveOnly()">Save Only</button>
       <button class="btn btn-white btn-lg" style="flex:1;" onclick="printBill()" id="pbtn">Print Bill & Close</button>
     </div>
   </div>
 </div>
 
+<!-- NEXT ORDER POPUP -->
 <div class="next-order-popup" id="nextOrderPopup" onclick="if(event.target==this)closeNextOrderPopup()">
   <div class="next-order-popup-inner">
     <div class="nop-head">
-      <div class="nop-title">🔔 Manual Allocation Override</div>
+      <div class="nop-title">🔔 New Order Waiting</div>
       <button class="nop-close" onclick="closeNextOrderPopup()">✕</button>
     </div>
     <div class="nop-sub" id="nopSub">Table — · Waiting for seat</div>
-    <div class="nop-field"><span class="nop-lbl">Customer</span><span class="nop-val" id="nopName">—</span></div>
+    <div class="nop-field"><span class="nop-lbl">Customer</span><span class="nop-val"      id="nopName">—</span></div>
     <div class="nop-field"><span class="nop-lbl">Party Size</span><span class="nop-val mono" id="nopPeople">—</span></div>
     <div class="nop-field"><span class="nop-lbl">Waiting Since</span><span class="nop-val mono" id="nopSince">—</span></div>
     <div class="nop-actions">
       <button class="btn btn-ghost" style="flex:1;" onclick="closeNextOrderPopup()">Close</button>
+      <button class="btn btn-red"   style="flex:1;" id="nopCancelBtn" onclick="cancelNextOrder()">Remove Order</button>
     </div>
+    <div class="nop-hint">Drag the 🔔 badge to move this order to another table</div>
   </div>
 </div>
 
@@ -681,152 +541,31 @@ db.ref("orders").on("value",s=>{
 
 <script>
 setInterval(()=>{const n=new Date(),pad=x=>String(x).padStart(2,'0');document.getElementById('clock').textContent=`${pad(n.getHours())}:${pad(n.getMinutes())}:${pad(n.getSeconds())}`;},1000);
+
 const menuData={
-  starters:[
-    {id:'st1',name:'Corn Tikki',price:200},{id:'st2',name:'Paneer Tikka Dry',price:235},
-    {id:'st3',name:'Paneer Phudina Tikka',price:235},{id:'st4',name:'Paneer Lahsuni Tikka',price:235},
-    {id:'st5',name:'Hara Bhara Kabab',price:200},{id:'st6',name:'Raja Kabab',price:210},
-    {id:'st7',name:'Veg. Sheekh Kabab',price:230},{id:'st8',name:'Paneer Sheekh Kabab',price:260},
-    {id:'st9',name:'Veg. Brice Kabab',price:200},{id:'st10',name:'Veg. Dilruba Sheekh Kabab',price:260},
-    {id:'st11',name:'Dahi Kabab',price:190},{id:'st12',name:'Jahangiri Tikka',price:230},
-    {id:'st13',name:'Tandoori Plater',price:285}
-  ],
-  snacks:[
-    {id:'sn1',name:'Veg. Pizza',price:135},{id:'sn2',name:'Italian Pizza',price:135},
-    {id:'sn3',name:'Cheese Pizza',price:150},{id:'sn4',name:'Jain Pizza',price:120},
-    {id:'sn5',name:'Veg. Club Sandwich',price:90},{id:'sn6',name:'Veg. Sandwich',price:80},
-    {id:'sn7',name:'Cheese Sandwich',price:80},{id:'sn8',name:'Cheese Jam Sandwich',price:90},
-    {id:'sn9',name:'Bread Butter',price:55},{id:'sn10',name:'French Fries',price:100}
-  ],
-  salads:[
-    {id:'sl1',name:'Cream of Fruit Salad',price:125},{id:'sl2',name:'Fresh Green Salad',price:80},
-    {id:'sl3',name:'Russian Salad',price:125},{id:'sl4',name:'Kachumber Salad',price:70},
-    {id:'sl5',name:'Pineapple Raita',price:95},{id:'sl6',name:'Veg. Raita',price:85},
-    {id:'sl7',name:'Cucumber Raita',price:85},{id:'sl8',name:'Boondi Raita',price:85},
-    {id:'sl9',name:'Curd',price:65},{id:'sl10',name:'Papad Roasted',price:25},
-    {id:'sl11',name:'Papad Fried',price:27},{id:'sl12',name:'Papad Masala',price:45},
-    {id:'sl13',name:'Papad Cheese Masala',price:60}
-  ],
-  paneer:[
-    {id:'pn1',name:'Emerald Sp. Paneer',price:240},{id:'pn2',name:'Paneer Sizzling',price:245},
-    {id:'pn3',name:'Paneer Kathiyawadi',price:230},{id:'pn4',name:'Paneer Darwar',price:230},
-    {id:'pn5',name:'Paneer Tiranga',price:235},{id:'pn6',name:'Cheese Butter Masala',price:235},
-    {id:'pn7',name:'Cheese Angoori',price:235},{id:'pn8',name:'Paneer Mushroom Masala',price:230},
-    {id:'pn9',name:'Paneer Butter Masala',price:210},{id:'pn10',name:'Paneer Tikka Masala',price:220},
-    {id:'pn11',name:'Paneer Kankani',price:220},{id:'pn12',name:'Paneer Diwani Handi',price:220},
-    {id:'pn13',name:'Paneer Lajawab',price:220},{id:'pn14',name:'Paneer Kalimirch',price:220},
-    {id:'pn15',name:'Paneer Kadai',price:220},{id:'pn16',name:'Paneer Handi',price:220},
-    {id:'pn17',name:'Balti Paneer',price:220},{id:'pn18',name:'Tawa Paneer',price:220},
-    {id:'pn19',name:'Paneer Toofani',price:220},{id:'pn20',name:'Paneer Hara Masala',price:220},
-    {id:'pn21',name:'Paneer Shahi Korma',price:220},{id:'pn22',name:'Paneer Bhurjee',price:230},
-    {id:'pn23',name:'Paneer Pasanda',price:225},{id:'pn24',name:'Mutter Paneer',price:200},
-    {id:'pn25',name:'Palak Paneer',price:200},{id:'pn26',name:'Methi Paneer Masala',price:220},
-    {id:'pn27',name:'Kaju Paneer Masala',price:245},{id:'pn28',name:'Khoya Kaju (sweet)',price:240},
-    {id:'pn29',name:'Kaju Balti Masala',price:245}
-  ],
-  indian_curry:[
-    {id:'in1',name:'Emerald Sp. Veg.',price:210},{id:'in2',name:'Veg. Mastani',price:215},
-    {id:'in3',name:'Veg. Jawalamukhi',price:215},{id:'in4',name:'Veg. Sizzling',price:220},
-    {id:'in5',name:'Veg. Tawa Masala',price:200},{id:'in6',name:'Veg. Kadai',price:200},
-    {id:'in7',name:'Veg. Kolhapuri',price:200},{id:'in8',name:'Veg. Makhanwala',price:200},
-    {id:'in9',name:'Veg. Jaipuri',price:200},{id:'in10',name:'Veg. Singapuri',price:200},
-    {id:'in11',name:'Veg. Handi',price:200},{id:'in12',name:'Veg. Jalfrezi',price:200},
-    {id:'in13',name:'Veg. Shahi Korma',price:200},{id:'in14',name:'Veg. Toofani',price:200},
-    {id:'in15',name:'Veg. Hyderabadi',price:200},{id:'in16',name:'Palak Corn Capsicum',price:200},
-    {id:'in17',name:'Mutter Methi Malai',price:215},{id:'in18',name:'Baby Corn Makhanwala',price:215},
-    {id:'in19',name:'Navaratan Korma',price:215},{id:'in20',name:'Corn Tomato Bhartha',price:200},
-    {id:'in21',name:'Mutter Mushroom',price:215},{id:'in22',name:'Mushroom Masala',price:215},
-    {id:'in23',name:'Mix Vegetable',price:190},{id:'in24',name:'Chana Masala',price:190},
-    {id:'in25',name:'Aloo Masala',price:190},{id:'in26',name:'Dum Aloo',price:190},
-    {id:'in27',name:'Aloo Methi',price:155},{id:'in28',name:'Jeera Aloo',price:155}
-  ],
-  dal:[
-    {id:'da1',name:'Dal Fry',price:115},{id:'da2',name:'Dal Fry Butter',price:120},
-    {id:'da3',name:'Dal Fry Tadka',price:140},{id:'da4',name:'Dal Palak',price:145}
-  ],
-  rice_merged:[
-    {id:'ba1',name:'Emerald Sp. Biryani',price:199},{id:'ba2',name:'Veg. Biryani',price:150},
-    {id:'ba3',name:'Hyderabadi Biryani',price:165},{id:'ba4',name:'Handi Biryani',price:165},
-    {id:'ba5',name:'Veg. Pulav',price:130},{id:'ba6',name:'Peas Pulav',price:130},
-    {id:'ba7',name:'Kashmiri Pulav',price:170},{id:'ba8',name:'Jeera Rice',price:125},
-    {id:'ba9',name:'Steamed Rice',price:95},{id:'ba10',name:'Mint Rice',price:190},
-    {id:'ba11',name:'Corn Rice',price:190},{id:'ri1',name:'Mushroom Fry Rice',price:195},
-    {id:'ri2',name:'Chinese Bhel',price:190},{id:'ri3',name:'American Chopsuey',price:190},
-    {id:'ri4',name:'Veg. Triple Fried Rice',price:210},{id:'ri5',name:'Veg. Fried Rice',price:185},
-    {id:'ri6',name:'Schezwan Fried Rice',price:185}
-  ],
-  kofta:[
-    {id:'ko1',name:'Cheese Kofta',price:225},{id:'ko2',name:'Malai Kofta',price:220},
-    {id:'ko3',name:'Veg. Kofta',price:200},{id:'ko4',name:'Paneer Kofta',price:215},
-    {id:'ko5',name:'Kashmiri Kofta',price:215},{id:'ko6',name:'Nargisi Kofta',price:205},
-    {id:'ko7',name:'Kadai Kofta',price:210},{id:'ko8',name:'Kaju Kofta',price:225}
-  ],
-  tandoor:[
-    {id:'ta1',name:'Roti - Plain',price:25},{id:'ta2',name:'Roti - Butter',price:28},
-    {id:'ta3',name:'Paratha',price:40},{id:'ta4',name:'Paratha Butter',price:55},
-    {id:'ta5',name:'Lachha Paratha',price:60},{id:'ta6',name:'Paratha Stuffed',price:65},
-    {id:'ta7',name:'Paratha Phudina',price:65},{id:'ta8',name:'Paneer Paratha',price:99},
-    {id:'ta9',name:'Paneer Cheese Paratha',price:110},{id:'ta10',name:'Naan',price:50},
-    {id:'ta11',name:'Naan Butter',price:55},{id:'ta12',name:'Naan Stuffed',price:80},
-    {id:'ta13',name:'Naan Kashmiri',price:90},{id:'ta14',name:'Naan Garlic',price:90},
-    {id:'ta15',name:'Naan Cheese',price:99},{id:'ta16',name:'Hariyali Naan',price:99},
-    {id:'ta17',name:'Naan Cheese Garlic',price:105},{id:'ta18',name:'Family Naan',price:125},
-    {id:'ta19',name:'Kulcha',price:45},{id:'ta20',name:'Kulcha Butter',price:55},
-    {id:'ta21',name:'Kulcha Stuffed',price:70},{id:'ta22',name:'Onion Kulcha',price:70},
-    {id:'ta23',name:'Missi Roti',price:32}
-  ],
-  chinese_merged:[
-    {id:'cs1',name:'Oriental Crispy Vegetables',price:200},{id:'cs2',name:'Baby Corn Chilli Fried',price:200},
-    {id:'cs3',name:'Schezwan Paneer',price:225},{id:'cs4',name:'Paneer Chilly (Dry / Gravy)',price:225},
-    {id:'cs5',name:'Paneer Manchurian (Dry / Gravy)',price:220},{id:'cs6',name:'Paneer 65',price:225},
-    {id:'cs7',name:'Veg. Manchurian (Dry / Gravy)',price:200},{id:'cs8',name:'Veg. Spring Roll',price:210},
-    {id:'cs9',name:'Veg. Lollipop',price:220},{id:'cs10',name:'Mushroom Chilly Fry',price:225},
-    {id:'no1',name:'Veg. Chow Mein',price:180},{id:'no2',name:'Veg. Hakka Noodles',price:190},
-    {id:'no3',name:'Schezwan Noodles',price:190},{id:'no4',name:'Chilly Garlic Noodles',price:190},
-    {id:'no5',name:'Veg. Manchurian With Noodles',price:190}
-  ],
-  soups:[
-    {id:'sp1',name:'Cream of Tomato',price:100},{id:'sp2',name:'Minestrone Soup',price:115},
-    {id:'sp3',name:'Sweet Corn Veg. Soup',price:100},{id:'sp4',name:'Veg. Hot & Sour Soup',price:115},
-    {id:'sp5',name:'Veg. Manchow Soup',price:115},{id:'sp6',name:'Lemon Coriander Soup',price:115},
-    {id:'sp7',name:'Palak Phudina Soup',price:115},{id:'sp8',name:'Veg. Mushroom Soup',price:120},
-    {id:'sp9',name:'Clear Soup (Veg / Noodles)',price:100},{id:'sp10',name:'Cheese Corn Tomato Soup',price:120}
-  ],
-  sizzlers:[
-    {id:'sz1',name:'Mix Grilled Sizzler',price:330},{id:'sz2',name:'Chinese Sizzler',price:340},
-    {id:'sz3',name:'Paneer Shaslik',price:340},{id:'sz4',name:'Paneer Stick',price:340}
-  ],
-  continental:[
-    {id:'con1',name:'Baked Macaroni with Pineapple',price:205},
-    {id:'con2',name:'Baked Spaghetti with Pineapple',price:205},
-    {id:'con3',name:'Baked Vegetable with Pineapple',price:205}
-  ],
-  drinks:[
-    {id:'dr1',name:'Jal Jeera Water',price:40},{id:'dr2',name:'Fresh Lime Soda',price:40},
-    {id:'dr3',name:'Fresh Lime Water (Sweet / Salted)',price:40},{id:'dr4',name:'Soft Drinks (MRP)',price:20},
-    {id:'dr5',name:'Lassi (Sweet / Salted)',price:80},{id:'dr6',name:'Special Lassi',price:100},
-    {id:'dr7',name:'Mineral Water (MRP)',price:20},{id:'dr8',name:'Fruit Punch',price:70},
-    {id:'dr9',name:'Butter Milk',price:30},{id:'dr10',name:'Masala Butter Milk',price:35}
-  ],
-  shakes:[
-    {id:'sh1',name:'Vanilla Milk Shake',price:99},{id:'sh1ic',name:'Vanilla Milk Shake (with Ice Cream)',price:110},
-    {id:'sh2',name:'Strawberry Milk Shake',price:99},{id:'sh2ic',name:'Strawberry Milk Shake (with Ice Cream)',price:110},
-    {id:'sh3',name:'Chocolate Milk Shake',price:99},{id:'sh3ic',name:'Chocolate Milk Shake (with Ice Cream)',price:115},
-    {id:'sh4',name:'Kesar Pista Milk Shake',price:110},{id:'sh4ic',name:'Kesar Pista Milk Shake (with Ice Cream)',price:120},
-    {id:'sh5',name:'Kaju Draksh Milk Shake',price:110},{id:'sh5ic',name:'Kaju Draksh Milk Shake (with Ice Cream)',price:120},
-    {id:'sh6',name:'Mango Milk Shake',price:110},{id:'sh6ic',name:'Mango Milk Shake (with Ice Cream)',price:120},
-    {id:'sh7',name:'Cold Coffee',price:99},{id:'sh7ic',name:'Cold Coffee (with Ice Cream)',price:115}
-  ],
-  ice_cream:[
-    {id:'ic1',name:'Gulab Jamun',price:50},{id:'ic2',name:'Rajbhog',price:99},
-    {id:'ic3',name:'Vanilla Ice Cream',price:80},{id:'ic4',name:'Strawberry Ice Cream',price:80},
-    {id:'ic5',name:'Cheery Berry Ice Cream',price:80},{id:'ic6',name:'Mango Ice Cream',price:80},
-    {id:'ic7',name:'Kesar Pista Ice Cream',price:90},{id:'ic8',name:'Kaju Draksh Ice Cream',price:90},
-    {id:'ic9',name:'Butter Scotch Ice Cream',price:90},{id:'ic10',name:'Chocolate Ice Cream',price:90},
-    {id:'ic11',name:'Fruit Salad with Ice Cream',price:140},{id:'ic12',name:'American Nut',price:99}
-  ]
+  starters:[{id:'st1',name:'Corn Tikki',price:200},{id:'st2',name:'Paneer Tikka Dry',price:235},{id:'st3',name:'Paneer Phudina Tikka',price:235},{id:'st4',name:'Paneer Lahsuni Tikka',price:235},{id:'st5',name:'Hara Bhara Kabab',price:200},{id:'st6',name:'Raja Kabab',price:210},{id:'st7',name:'Veg. Sheekh Kabab',price:230},{id:'st8',name:'Paneer Sheekh Kabab',price:260},{id:'st9',name:'Veg. Brice Kabab',price:200},{id:'st10',name:'Veg. Dilruba Sheekh Kabab',price:260},{id:'st11',name:'Dahi Kabab',price:190},{id:'st12',name:'Jahangiri Tikka',price:230},{id:'st13',name:'Tandoori Plater',price:285}],
+  snacks:[{id:'sn1',name:'Veg. Pizza',price:135},{id:'sn2',name:'Italian Pizza',price:135},{id:'sn3',name:'Cheese Pizza',price:150},{id:'sn4',name:'Jain Pizza',price:120},{id:'sn5',name:'Veg. Club Sandwich',price:90},{id:'sn6',name:'Veg. Sandwich',price:80},{id:'sn7',name:'Cheese Sandwich',price:80},{id:'sn8',name:'Cheese Jam Sandwich',price:90},{id:'sn9',name:'Bread Butter',price:55},{id:'sn10',name:'French Fries',price:100}],
+  salads:[{id:'sl1',name:'Cream of Fruit Salad',price:125},{id:'sl2',name:'Fresh Green Salad',price:80},{id:'sl3',name:'Russian Salad',price:125},{id:'sl4',name:'Kachumber Salad',price:70},{id:'sl5',name:'Pineapple Raita',price:95},{id:'sl6',name:'Veg. Raita',price:85},{id:'sl7',name:'Cucumber Raita',price:85},{id:'sl8',name:'Boondi Raita',price:85},{id:'sl9',name:'Curd',price:65},{id:'sl10',name:'Papad Roasted',price:25},{id:'sl11',name:'Papad Fried',price:27},{id:'sl12',name:'Papad Masala',price:45},{id:'sl13',name:'Papad Cheese Masala',price:60}],
+  paneer:[{id:'pn1',name:'Emerald Sp. Paneer',price:240},{id:'pn2',name:'Paneer Sizzling',price:245},{id:'pn3',name:'Paneer Kathiyawadi',price:230},{id:'pn4',name:'Paneer Darwar',price:230},{id:'pn5',name:'Paneer Tiranga',price:235},{id:'pn6',name:'Cheese Butter Masala',price:235},{id:'pn7',name:'Cheese Angoori',price:235},{id:'pn8',name:'Paneer Mushroom Masala',price:230},{id:'pn9',name:'Paneer Butter Masala',price:210},{id:'pn10',name:'Paneer Tikka Masala',price:220},{id:'pn11',name:'Paneer Kankani',price:220},{id:'pn12',name:'Paneer Diwani Handi',price:220},{id:'pn13',name:'Paneer Lajawab',price:220},{id:'pn14',name:'Paneer Kalimirch',price:220},{id:'pn15',name:'Paneer Kadai',price:220},{id:'pn16',name:'Paneer Handi',price:220},{id:'pn17',name:'Balti Paneer',price:220},{id:'pn18',name:'Tawa Paneer',price:220},{id:'pn19',name:'Paneer Toofani',price:220},{id:'pn20',name:'Paneer Hara Masala',price:220},{id:'pn21',name:'Paneer Shahi Korma',price:220},{id:'pn22',name:'Paneer Bhurjee',price:230},{id:'pn23',name:'Paneer Pasanda',price:225},{id:'pn24',name:'Mutter Paneer',price:200},{id:'pn25',name:'Palak Paneer',price:200},{id:'pn26',name:'Methi Paneer Masala',price:220},{id:'pn27',name:'Kaju Paneer Masala',price:245},{id:'pn28',name:'Khoya Kaju (sweet)',price:240},{id:'pn29',name:'Kaju Balti Masala',price:245}],
+  indian_curry:[{id:'in1',name:'Emerald Sp. Veg.',price:210},{id:'in2',name:'Veg. Mastani',price:215},{id:'in3',name:'Veg. Jawalamukhi',price:215},{id:'in4',name:'Veg. Sizzling',price:220},{id:'in5',name:'Veg. Tawa Masala',price:200},{id:'in6',name:'Veg. Kadai',price:200},{id:'in7',name:'Veg. Kolhapuri',price:200},{id:'in8',name:'Veg. Makhanwala',price:200},{id:'in9',name:'Veg. Jaipuri',price:200},{id:'in10',name:'Veg. Singapuri',price:200},{id:'in11',name:'Veg. Handi',price:200},{id:'in12',name:'Veg. Jalfrezi',price:200},{id:'in13',name:'Veg. Shahi Korma',price:200},{id:'in14',name:'Veg. Toofani',price:200},{id:'in15',name:'Veg. Hyderabadi',price:200},{id:'in16',name:'Palak Corn Capsicum',price:200},{id:'in17',name:'Mutter Methi Malai',price:215},{id:'in18',name:'Baby Corn Makhanwala',price:215},{id:'in19',name:'Navaratan Korma',price:215},{id:'in20',name:'Corn Tomato Bhartha',price:200},{id:'in21',name:'Mutter Mushroom',price:215},{id:'in22',name:'Mushroom Masala',price:215},{id:'in23',name:'Mix Vegetable',price:190},{id:'in24',name:'Chana Masala',price:190},{id:'in25',name:'Aloo Masala',price:190},{id:'in26',name:'Dum Aloo',price:190},{id:'in27',name:'Aloo Methi',price:155},{id:'in28',name:'Jeera Aloo',price:155}],
+  dal:[{id:'da1',name:'Dal Fry',price:115},{id:'da2',name:'Dal Fry Butter',price:120},{id:'da3',name:'Dal Fry Tadka',price:140},{id:'da4',name:'Dal Palak',price:145}],
+  rice_merged:[{id:'ba1',name:'Emerald Sp. Biryani',price:199},{id:'ba2',name:'Veg. Biryani',price:150},{id:'ba3',name:'Hyderabadi Biryani',price:165},{id:'ba4',name:'Handi Biryani',price:165},{id:'ba5',name:'Veg. Pulav',price:130},{id:'ba6',name:'Peas Pulav',price:130},{id:'ba7',name:'Kashmiri Pulav',price:170},{id:'ba8',name:'Jeera Rice',price:125},{id:'ba9',name:'Steamed Rice',price:95},{id:'ba10',name:'Mint Rice',price:190},{id:'ba11',name:'Corn Rice',price:190},{id:'ri1',name:'Mushroom Fry Rice',price:195},{id:'ri2',name:'Chinese Bhel',price:190},{id:'ri3',name:'American Chopsuey',price:190},{id:'ri4',name:'Veg. Triple Fried Rice',price:210},{id:'ri5',name:'Veg. Fried Rice',price:185},{id:'ri6',name:'Schezwan Fried Rice',price:185}],
+  kofta:[{id:'ko1',name:'Cheese Kofta',price:225},{id:'ko2',name:'Malai Kofta',price:220},{id:'ko3',name:'Veg. Kofta',price:200},{id:'ko4',name:'Paneer Kofta',price:215},{id:'ko5',name:'Kashmiri Kofta',price:215},{id:'ko6',name:'Nargisi Kofta',price:205},{id:'ko7',name:'Kadai Kofta',price:210},{id:'ko8',name:'Kaju Kofta',price:225}],
+  tandoor:[{id:'ta1',name:'Roti - Plain',price:25},{id:'ta2',name:'Roti - Butter',price:28},{id:'ta3',name:'Paratha',price:40},{id:'ta4',name:'Paratha Butter',price:55},{id:'ta5',name:'Lachha Paratha',price:60},{id:'ta6',name:'Paratha Stuffed',price:65},{id:'ta7',name:'Paratha Phudina',price:65},{id:'ta8',name:'Paneer Paratha',price:99},{id:'ta9',name:'Paneer Cheese Paratha',price:110},{id:'ta10',name:'Naan',price:50},{id:'ta11',name:'Naan Butter',price:55},{id:'ta12',name:'Naan Stuffed',price:80},{id:'ta13',name:'Naan Kashmiri',price:90},{id:'ta14',name:'Naan Garlic',price:90},{id:'ta15',name:'Naan Cheese',price:99},{id:'ta16',name:'Hariyali Naan',price:99},{id:'ta17',name:'Naan Cheese Garlic',price:105},{id:'ta18',name:'Family Naan',price:125},{id:'ta19',name:'Kulcha',price:45},{id:'ta20',name:'Kulcha Butter',price:55},{id:'ta21',name:'Kulcha Stuffed',price:70},{id:'ta22',name:'Onion Kulcha',price:70},{id:'ta23',name:'Missi Roti',price:32}],
+  chinese_merged:[{id:'cs1',name:'Oriental Crispy Vegetables',price:200},{id:'cs2',name:'Baby Corn Chilli Fried',price:200},{id:'cs3',name:'Schezwan Paneer',price:225},{id:'cs4',name:'Paneer Chilly (Dry / Gravy)',price:225},{id:'cs5',name:'Paneer Manchurian (Dry / Gravy)',price:220},{id:'cs6',name:'Paneer 65',price:225},{id:'cs7',name:'Veg. Manchurian (Dry / Gravy)',price:200},{id:'cs8',name:'Veg. Spring Roll',price:210},{id:'cs9',name:'Veg. Lollipop',price:220},{id:'cs10',name:'Mushroom Chilly Fry',price:225},{id:'no1',name:'Veg. Chow Mein',price:180},{id:'no2',name:'Veg. Hakka Noodles',price:190},{id:'no3',name:'Schezwan Noodles',price:190},{id:'no4',name:'Chilly Garlic Noodles',price:190},{id:'no5',name:'Veg. Manchurian With Noodles',price:190}],
+  soups:[{id:'sp1',name:'Cream of Tomato',price:100},{id:'sp2',name:'Minestrone Soup',price:115},{id:'sp3',name:'Sweet Corn Veg. Soup',price:100},{id:'sp4',name:'Veg. Hot & Sour Soup',price:115},{id:'sp5',name:'Veg. Manchow Soup',price:115},{id:'sp6',name:'Lemon Coriander Soup',price:115},{id:'sp7',name:'Palak Phudina Soup',price:115},{id:'sp8',name:'Veg. Mushroom Soup',price:120},{id:'sp9',name:'Clear Soup (Veg / Noodles)',price:100},{id:'sp10',name:'Cheese Corn Tomato Soup',price:120}],
+  sizzlers:[{id:'sz1',name:'Mix Grilled Sizzler',price:330},{id:'sz2',name:'Chinese Sizzler',price:340},{id:'sz3',name:'Paneer Shaslik',price:340},{id:'sz4',name:'Paneer Stick',price:340}],
+  continental:[{id:'con1',name:'Baked Macaroni with Pineapple',price:205},{id:'con2',name:'Baked Spaghetti with Pineapple',price:205},{id:'con3',name:'Baked Vegetable with Pineapple',price:205}],
+  drinks:[{id:'dr1',name:'Jal Jeera Water',price:40},{id:'dr2',name:'Fresh Lime Soda',price:40},{id:'dr3',name:'Fresh Lime Water (Sweet / Salted)',price:40},{id:'dr4',name:'Soft Drinks (MRP)',price:20},{id:'dr5',name:'Lassi (Sweet / Salted)',price:80},{id:'dr6',name:'Special Lassi',price:100},{id:'dr7',name:'Mineral Water (MRP)',price:20},{id:'dr8',name:'Fruit Punch',price:70},{id:'dr9',name:'Butter Milk',price:30},{id:'dr10',name:'Masala Butter Milk',price:35}],
+  shakes:[{id:'sh1',name:'Vanilla Milk Shake',price:99},{id:'sh1ic',name:'Vanilla Milk Shake (with Ice Cream)',price:110},{id:'sh2',name:'Strawberry Milk Shake',price:99},{id:'sh2ic',name:'Strawberry Milk Shake (with Ice Cream)',price:110},{id:'sh3',name:'Chocolate Milk Shake',price:99},{id:'sh3ic',name:'Chocolate Milk Shake (with Ice Cream)',price:115},{id:'sh4',name:'Kesar Pista Milk Shake',price:110},{id:'sh4ic',name:'Kesar Pista Milk Shake (with Ice Cream)',price:120},{id:'sh5',name:'Kaju Draksh Milk Shake',price:110},{id:'sh5ic',name:'Kaju Draksh Milk Shake (with Ice Cream)',price:120},{id:'sh6',name:'Mango Milk Shake',price:110},{id:'sh6ic',name:'Mango Milk Shake (with Ice Cream)',price:120},{id:'sh7',name:'Cold Coffee',price:99},{id:'sh7ic',name:'Cold Coffee (with Ice Cream)',price:115}],
+  ice_cream:[{id:'ic1',name:'Gulab Jamun',price:50},{id:'ic2',name:'Rajbhog',price:99},{id:'ic3',name:'Vanilla Ice Cream',price:80},{id:'ic4',name:'Strawberry Ice Cream',price:80},{id:'ic5',name:'Cheery Berry Ice Cream',price:80},{id:'ic6',name:'Mango Ice Cream',price:80},{id:'ic7',name:'Kesar Pista Ice Cream',price:90},{id:'ic8',name:'Kaju Draksh Ice Cream',price:90},{id:'ic9',name:'Butter Scotch Ice Cream',price:90},{id:'ic10',name:'Chocolate Ice Cream',price:90},{id:'ic11',name:'Fruit Salad with Ice Cream',price:140},{id:'ic12',name:'American Nut',price:99}]
 };
 const allMenu=Object.values(menuData).flat();
+
+let allTables=[],allQueue=[],allTkw=[];
+let billItems=[],curOids=[],curOid=null,curTnum=null,curTkey=null,dMode='pct';
+let _renderDashTimer=null;
+function renderDashDebounced(){clearTimeout(_renderDashTimer);_renderDashTimer=setTimeout(renderDash,40);}
 
 const _cancelAlertActive={};
 function triggerTableCancelAlert(tableNum){
@@ -842,16 +581,9 @@ function triggerTableCancelAlert(tableNum){
     let countdown=10;
     const overlay=document.createElement('div');
     overlay.className='cancel-alert-overlay';
-    overlay.innerHTML='<div class="cao-emoji">🚫</div>'+'<div class="cao-title">Order Cancelled</div>'+'<div class="cao-sub">Table '+tableNum+' &middot; Customer cancelled</div>'+'<div class="cao-timer" id="cao-cd-'+tableNum+'">'+countdown+'</div>'+'<div class="cao-sub" id="cao-sub2-'+tableNum+'">Freeing table in '+countdown+'s</div>';
+    overlay.innerHTML='<div class="cao-emoji">🚫</div><div class="cao-title">Order Cancelled</div><div class="cao-sub">Table '+tableNum+' · Customer cancelled</div><div class="cao-timer" id="cao-cd-'+tableNum+'">'+countdown+'</div><div class="cao-sub" id="cao-sub2-'+tableNum+'">Freeing table in '+countdown+'s</div>';
     targetCard.appendChild(overlay);
-    const interval=setInterval(()=>{
-      countdown--;
-      const cdEl=document.getElementById('cao-cd-'+tableNum);
-      const s2El=document.getElementById('cao-sub2-'+tableNum);
-      if(cdEl)cdEl.textContent=countdown;
-      if(s2El)s2El.textContent='Freeing table in '+countdown+'s';
-      if(countdown<=0){clearInterval(interval);delete _cancelAlertActive[tableNum];freeTable(tableNum);}
-    },1000);
+    const interval=setInterval(()=>{countdown--;const cdEl=document.getElementById('cao-cd-'+tableNum);const s2El=document.getElementById('cao-sub2-'+tableNum);if(cdEl)cdEl.textContent=countdown;if(s2El)s2El.textContent='Freeing table in '+countdown+'s';if(countdown<=0){clearInterval(interval);delete _cancelAlertActive[tableNum];freeTable(tableNum);}},1000);
   };
   setTimeout(findAndOverlay,500);
 }
@@ -897,14 +629,25 @@ window.openNextOrderPopup=function(tNum){
   document.getElementById('nextOrderPopup').classList.add('open');
 };
 window.closeNextOrderPopup=function(){document.getElementById('nextOrderPopup').classList.remove('open');currentNextOrderTnum=null;};
+window.cancelNextOrder=function(){
+  if(currentNextOrderTnum===null)return;
+  if(confirm('Remove this waiting order from the queue?')){cancelQueue(currentNextOrderTnum);closeNextOrderPopup();}
+};
 
+// CHANGE 1: Updated renderDash to use global queue for display
 function renderDash(){
   const g=document.getElementById('tgrid'),q=document.getElementById('qlist');
   if(!g)return;
   g.innerHTML='';q.innerHTML='';
   const occ=allTables.filter(t=>t.occupied).length;
   document.getElementById('tcount').textContent=`${occ}/${allTables.length}`;
-  document.getElementById('qcount').textContent=allQueue.length;
+
+  // Combine global FIFO queue + legacy per-table nextOrder entries
+  const legacyQueue=[];
+  allTables.forEach(t=>{if(t.occupied&&t.nextOrder)legacyQueue.push({...t.nextOrder,sourceTable:t.number,_legacy:true});});
+  const combinedQueue=[...allGlobalQueue,...legacyQueue];
+  document.getElementById('qcount').textContent=combinedQueue.length;
+
   if(!allTables.length){g.innerHTML=`<div class="empty"><div class="empty-ico">🪑</div><div class="empty-txt">No tables configured</div></div>`;return;}
 
   db.ref("orders").once("value",s=>{
@@ -924,51 +667,37 @@ function renderDash(){
       el.setAttribute('ondragleave',"this.classList.remove('drag-over')");
       el.setAttribute('ondrop',`dropOnTable(event,${t.number}); this.classList.remove('drag-over')`);
       el.setAttribute('onclick',`viewOrderDetails(${t.number})`);
-
       let cust='';
       if(t.current){
         const m=Math.floor((Date.now()-t.current.since)/60000);
-        cust=`<div class="tcard-cust">
-          <div class="tcard-cust-name">${t.current.name||'Guest'}</div>
-          <div class="tcard-cust-chips">
-            <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>${t.current.people} ${t.current.people===1?'person':'people'}</span>
-            <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>${m} min</span>
-          </div>
-        </div>
-        <div class="tcard-actions">
-          <button class="btn btn-gold btn-sm" style="flex:1;" onclick="event.stopPropagation(); openBill(${t.number})">Generate Bill</button>
-          <button class="btn btn-red btn-sm" onclick="event.stopPropagation(); freeTable(${t.number})">Free</button>
-        </div>`;
+        cust=`<div class="tcard-cust"><div class="tcard-cust-name">${t.current.name||'Guest'}</div><div class="tcard-cust-chips"><span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>${t.current.people} ${t.current.people===1?'person':'people'}</span><span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>${m} min</span></div></div><div class="tcard-actions"><button class="btn btn-gold btn-sm" style="flex:1;" onclick="event.stopPropagation(); openBill(${t.number})">Generate Bill</button><button class="btn btn-red btn-sm" onclick="event.stopPropagation(); freeTable(${t.number})">Free</button></div>`;
       }
-
       let addonNotif='';
-      if(t.occupied&&t.current){
-        const addonCnt=getAddonCount(t.number,allOrdersObj);
-        if(addonCnt>0){addonNotif=`<div class="addon-notif" onclick="event.stopPropagation(); viewOrderDetails(${t.number})" title="New items added"><span class="addon-notif-count">＋</span></div>`;}
-      }
-
-      el.innerHTML=`
-        <div class="tcard-inner">
-          <div class="tcard-top">
-            <div><div class="tcard-num">${t.number}</div><div class="tcard-numlabel">Table</div></div>
-            <div class="tcard-status ${t.occupied?(kitchenDoneMap[t.number]?'occ-dining':'occ-prep'):'free'}"><div class="sdot"></div>${t.occupied?(kitchenDoneMap[t.number]?'Occupied · Dining':'Occupied · Preparing'):'Free'}</div>
-          </div>
-          <div class="tcard-meta"><span class="tcard-meta-lbl">Capacity</span><span class="tcard-meta-val">${t.capacity} seats</span></div>
-          ${cust}
-        </div>
-        ${addonNotif}`;
+      if(t.occupied&&t.current){const addonCnt=getAddonCount(t.number,allOrdersObj);if(addonCnt>0){addonNotif=`<div class="addon-notif" onclick="event.stopPropagation(); viewOrderDetails(${t.number})" title="New items added"><span class="addon-notif-count">＋</span></div>`;}}
+      let nextNotif='';
+      if(t.nextOrder){nextNotif=`<div class="next-notif" id="notif-${t.number}" draggable="true" ondragstart="event.stopPropagation(); event.dataTransfer.setData('text/plain', JSON.stringify({type:'table', tNum:${t.number}}))" onclick="event.stopPropagation(); openNextOrderPopup(${t.number})" title="New order waiting · Click for details">🔔</div>`;}
+      el.innerHTML=`<div class="tcard-inner"><div class="tcard-top"><div><div class="tcard-num">${t.number}</div><div class="tcard-numlabel">Table</div></div><div class="tcard-status ${t.occupied?(kitchenDoneMap[t.number]?'occ-dining':'occ-prep'):'free'}"><div class="sdot"></div>${t.occupied?(kitchenDoneMap[t.number]?'Occupied · Dining':'Occupied · Preparing'):'Free'}</div></div><div class="tcard-meta"><span class="tcard-meta-lbl">Capacity</span><span class="tcard-meta-val">${t.capacity} seats</span></div>${cust}</div>${addonNotif}${nextNotif}`;
       g.appendChild(el);
     });
-    
-    if(!allQueue.length){
+
+    // CHANGE 1: Render combined FIFO queue
+    if(!combinedQueue.length){
       q.innerHTML=`<div class="empty" style="grid-column:unset;"><div class="empty-ico">📋</div><div class="empty-txt">Queue is empty</div></div>`;
     } else {
-      allQueue.forEach((qu,i)=>{
-        const m=Math.floor((Date.now()-(qu.time||Date.now()))/60000);
+      combinedQueue.forEach((qu,i)=>{
+        const waitStart = qu.since || qu.timestamp || Date.now();
+        const m=Math.floor((Date.now()-waitStart)/60000);
         const el=document.createElement('div');
         el.className='g qcard';
-        el.innerHTML=`<div class="qcard-left"><span class="qidx">${i+1}</span><span class="qname">${qu.name||'Guest'}</span></div>
-          <div class="qcard-right"><span class="qpeople">${qu.people} pax</span><span class="qwait">${m} min wait</span><button class="qcancel" onclick="event.stopPropagation(); cancelQueue('${qu.key}')" title="Remove from Queue">✕</button></div>`;
+        if(qu._legacy){
+          // Legacy per-table nextOrder — keep drag support
+          el.setAttribute('draggable','true');
+          el.setAttribute('ondragstart',`event.dataTransfer.setData('text/plain', JSON.stringify({type:'table', tNum:${qu.sourceTable}}))`);
+          el.innerHTML=`<div class="qcard-left"><span class="qidx">${i+1}</span><span class="qname">${qu.name||'Guest'}</span></div><div class="qcard-right"><span class="qpeople">${qu.people} pax</span><span class="qwait">${m} min wait</span><button class="qcancel" onclick="event.stopPropagation(); cancelQueue(${qu.sourceTable})" title="Remove from Queue">✕</button></div>`;
+        } else {
+          // Global FIFO queue entry
+          el.innerHTML=`<div class="qcard-left"><span class="qidx">#${i+1}</span><span class="qname">${qu.name||'Guest'}</span></div><div class="qcard-right"><span class="qpeople">${qu.people} pax</span><span class="qwait">${m} min wait</span><span class="qfifo-badge">FIFO</span><button class="qcancel" onclick="event.stopPropagation(); cancelGlobalQueueEntry('${qu._key}')" title="Remove from Queue">✕</button></div>`;
+        }
         q.appendChild(el);
       });
     }
@@ -980,7 +709,34 @@ document.addEventListener('click',e=>{if(!e.target.closest('.hamburger-menu'))do
 
 window.dropOnTable=function(e,targetTnum){
   e.preventDefault();
-  // Drag and drop assignment logic kept intact if manually sorting queue, but primarily we use FIFO
+  try{
+    const data=JSON.parse(e.dataTransfer.getData('text/plain'));
+    db.ref("tables").once("value",s=>{
+      const tablesRaw=s.val();
+      let targetKey=null,sourceKey=null;
+      Object.entries(tablesRaw).forEach(([k,v])=>{if(v&&v.number===targetTnum)targetKey=k;if(data.type==='table'&&v&&v.number===data.tNum)sourceKey=k;});
+      const targetTable=tablesRaw[targetKey];
+      const handleMove=(item)=>{
+        if(!targetTable.occupied){
+          db.ref("tables/"+targetKey).update({occupied:true,current:{name:item.name,people:item.people,since:item.since||Date.now(),orderId:item.orderId||null}});
+          if(item.orderId)db.ref("orders/"+item.orderId).update({tableNumber:targetTable.number});
+        } else if(targetTable.nextOrder){
+          if(!confirm(`Table ${targetTnum} already has a next order (${targetTable.nextOrder.name}). Replace it?`))return;
+          db.ref("tables/"+targetKey).update({nextOrder:item});
+          if(item.orderId)db.ref("orders/"+item.orderId).update({tableNumber:targetTable.number});
+        } else {
+          db.ref("tables/"+targetKey).update({nextOrder:item});
+          if(item.orderId)db.ref("orders/"+item.orderId).update({tableNumber:targetTable.number});
+        }
+      };
+      if(data.type==='table'){
+        if(sourceKey&&targetKey&&sourceKey!==targetKey){
+          const itemToMove=tablesRaw[sourceKey].nextOrder;
+          if(itemToMove){db.ref("tables/"+sourceKey).update({nextOrder:null});handleMove(itemToMove);}
+        }
+      }
+    });
+  }catch(err){console.error("Drag drop error",err);}
 };
 
 window.viewOrderDetails=function(n){
@@ -1014,13 +770,7 @@ window.viewOrderDetails=function(n){
         });
         let merged=[];
         rows.forEach(item=>{let existing=merged.find(i=>i.name===item.name);if(existing){existing.qty+=item.qty;if(item.isNew)existing.hasNew=true;}else{merged.push({...item,hasNew:item.isNew});}});
-        document.getElementById('voItems').innerHTML=merged.map(i=>`
-          <tr class="${i.hasNew?'addon-item-row':''}">
-            <td>${i.name}${i.hasNew?'<span class="addon-badge-label">NEW</span>':''}</td>
-            <td>${i.qty}</td>
-            <td>₹${i.price.toFixed(2)}</td>
-            <td style="text-align:right;">₹${(i.price*i.qty).toFixed(2)}</td>
-          </tr>`).join('');
+        document.getElementById('voItems').innerHTML=merged.map(i=>`<tr class="${i.hasNew?'addon-item-row':''}"><td>${i.name}${i.hasNew?'<span class="addon-badge-label">NEW</span>':''}</td><td>${i.qty}</td><td>₹${i.price.toFixed(2)}</td><td style="text-align:right;">₹${(i.price*i.qty).toFixed(2)}</td></tr>`).join('');
         document.getElementById('voTotal').textContent=`₹${grandTotal.toFixed(2)}`;
       }
       document.getElementById('viewOrderModal').classList.add('open');
@@ -1039,32 +789,30 @@ function renderTkw(){
     const preview=items.slice(0,4).map(i=>`<div class="tkcard-item-row"><span class="tkcard-iname">${i.name}</span><span class="tkcard-iqty">×${i.qty}</span></div>`).join('')+(items.length>4?`<div class="tkcard-item-row" style="opacity:.4"><span class="tkcard-iname">+${items.length-4} more</span></div>`:'');
     const m=o.createdAt?Math.floor((Date.now()-new Date(o.createdAt).getTime())/60000):'?';
     const sid=(o.id||'').replace('ORD','');
-    return `<div class="g tkcard">
-      <div class="tkcard-top">
-        <span class="tkcard-id">#${sid}</span>
-        <span class="tkcard-badge">Takeaway</span>
-        <button class="tkcard-cancel" onclick="cancelTakeaway('${o.id}')" title="Cancel Takeaway">✕</button>
-      </div>
-      <div class="tkcard-body">
-        <div class="tkcard-name">${o.customerName||'Customer'}</div>
-        <div class="tkcard-time">${m} min ago</div>
-        <div class="tkcard-items">${preview||'<span style="color:var(--w30)">No items</span>'}</div>
-        <span class="tkcard-total-lbl">Total</span>
-        <div class="tkcard-total">₹${(o.total||0).toFixed(2)}</div>
-        <button class="btn btn-blue btn-full" onclick="openTkwBill('${o.id}')">Print Bill & Complete</button>
-      </div>
-    </div>`;
+    return `<div class="g tkcard"><div class="tkcard-top"><span class="tkcard-id">#${sid}</span><span class="tkcard-badge">Takeaway</span><button class="tkcard-cancel" onclick="cancelTakeaway('${o.id}')" title="Cancel Takeaway">✕</button></div><div class="tkcard-body"><div class="tkcard-name">${o.customerName||'Customer'}</div><div class="tkcard-time">${m} min ago</div><div class="tkcard-items">${preview||'<span style="color:var(--w30)">No items</span>'}</div><span class="tkcard-total-lbl">Total</span><div class="tkcard-total">₹${(o.total||0).toFixed(2)}</div><button class="btn btn-blue btn-full" onclick="openTkwBill('${o.id}')">Print Bill & Complete</button></div></div>`;
   }).join('');
 }
 
 window.cancelTakeaway=function(oid){if(confirm("Are you sure you want to cancel this takeaway order?"))db.ref("orders/"+oid).update({status:'Cancelled'});};
 
-window.cancelQueue=function(key){
+window.cancelQueue=function(tNum){
   if(confirm("Remove this customer from the queue?")){
-    db.ref("queue/" + key).remove();
+    db.ref("tables").once("value",s=>{
+      let raw=s.val(),key=null;
+      Object.entries(raw).forEach(([k,v])=>{if(v&&v.number===tNum)key=k;});
+      if(key!==null)db.ref("tables/"+key).update({nextOrder:null});
+    });
   }
 };
 
+// CHANGE 1: Cancel a global FIFO queue entry
+window.cancelGlobalQueueEntry=function(key){
+  if(confirm("Remove this customer from the waiting queue?")){
+    db.ref("queue/"+key).remove();
+  }
+};
+
+// CHANGE 1: Updated freeTable to check global FIFO queue first, then per-table nextOrder
 function freeTable(n){
   db.ref("tables").once("value",s=>{
     const raw=s.val();if(!raw)return;
@@ -1073,39 +821,42 @@ function freeTable(n){
     if(k===null)return;
     const t=raw[k];
     const seen=getSeenOrders();delete seen[n];setSeenOrders(seen);
-    
-    // Complete current orders
     db.ref("orders").once("value",os=>{
       const allOrders=os.val();
       if(allOrders){
         Object.entries(allOrders).forEach(([oid,o])=>{
           if(o.tableNumber==n&&o.status!=='Completed'&&o.status!=='Cancelled'){
+            // CHANGE 4: Also clear session when table is freed
+            if(o.sessionId){
+              db.ref("sessions/"+o.sessionId).update({active:false});
+            }
             db.ref("orders/"+oid).update({status:'Completed',billedAt:new Date().toISOString(),autoClosedOnTableFree:true});
           }
         });
       }
-      
-      // Check Queue for FIFO Assignment
-      db.ref("queue").orderByChild("time").limitToFirst(1).once("value", qSnap => {
-        const qVal = qSnap.val();
-        if (qVal) {
-            const qKey = Object.keys(qVal)[0];
-            const nextCust = qVal[qKey];
-            
-            // Assign table to the queue person
-            db.ref("tables/"+k).update({
-                occupied: true,
-                current: { name: nextCust.name, people: nextCust.people, since: Date.now(), orderId: nextCust.orderId },
-                nextOrder: null,
-                diningStatus: null
-            });
-            if (nextCust.orderId) {
-                db.ref("orders/"+nextCust.orderId).update({ tableNumber: n, status: 'Preparing' });
-            }
-            db.ref("queue/"+qKey).remove();
+      // CHANGE 1: Check global FIFO queue first (auto-assign first-in-line customer)
+      db.ref("queue").orderByChild("timestamp").limitToFirst(1).once("value",qSnap=>{
+        const qData=qSnap.val();
+        if(qData){
+          // Assign first FIFO queue entry to the freed table
+          const qKey=Object.keys(qData)[0];
+          const qEntry=qData[qKey];
+          db.ref("queue/"+qKey).remove();
+          db.ref("tables/"+k).update({
+            occupied:true,
+            current:{name:qEntry.name,people:qEntry.people,since:Date.now(),orderId:qEntry.orderId||null},
+            nextOrder:null,
+            diningStatus:null
+          });
+          if(qEntry.orderId){
+            db.ref("orders/"+qEntry.orderId).update({tableNumber:t.number,status:'Preparing'});
+          }
+        } else if(t.nextOrder){
+          // Fallback: per-table nextOrder (backward compatibility)
+          db.ref("tables/"+k).update({occupied:true,current:{name:t.nextOrder.name,people:t.nextOrder.people,since:Date.now(),orderId:t.nextOrder.orderId||null},nextOrder:null,diningStatus:null});
+          if(t.nextOrder.orderId)db.ref("orders/"+t.nextOrder.orderId).update({tableNumber:t.number,status:'Preparing'});
         } else {
-            // No queue, make it fully free
-            db.ref("tables/"+k).update({occupied:false,current:null,nextOrder:null,diningStatus:null});
+          db.ref("tables/"+k).update({occupied:false,current:null,nextOrder:null,diningStatus:null});
         }
       });
     });
@@ -1161,13 +912,7 @@ function closeBill(){document.getElementById('billModal').classList.remove('open
 function renderBItems(){
   const b=document.getElementById('bitems');
   if(!billItems.length){b.innerHTML=`<tr><td colspan="5" class="ebill-msg">No items. Search above to add.</td></tr>`;return;}
-  b.innerHTML=billItems.map((it,i)=>`<tr>
-    <td><input class="item-name-in" value="${it.name}" onchange="billItems[${i}].name=this.value"></td>
-    <td><div class="qrow"><button class="qbtn" onclick="adjQ(${i},-1)">−</button><span class="qval">${it.qty}</span><button class="qbtn" onclick="adjQ(${i},1)">+</button></div></td>
-    <td><input class="rate-in" type="number" value="${it.price.toFixed(2)}" onchange="billItems[${i}].price=parseFloat(this.value)||0;renderBItems();recalc()"></td>
-    <td class="iamt">₹${(it.price*it.qty).toFixed(2)}</td>
-    <td><button class="rmbtn" onclick="billItems.splice(${i},1);renderBItems();recalc()">✕</button></td>
-  </tr>`).join('');
+  b.innerHTML=billItems.map((it,i)=>`<tr><td><input class="item-name-in" value="${it.name}" onchange="billItems[${i}].name=this.value"></td><td><div class="qrow"><button class="qbtn" onclick="adjQ(${i},-1)">−</button><span class="qval">${it.qty}</span><button class="qbtn" onclick="adjQ(${i},1)">+</button></div></td><td><input class="rate-in" type="number" value="${it.price.toFixed(2)}" onchange="billItems[${i}].price=parseFloat(this.value)||0;renderBItems();recalc()"></td><td class="iamt">₹${(it.price*it.qty).toFixed(2)}</td><td><button class="rmbtn" onclick="billItems.splice(${i},1);renderBItems();recalc()">✕</button></td></tr>`).join('');
 }
 function adjQ(i,d){billItems[i].qty=Math.max(1,billItems[i].qty+d);renderBItems();recalc();}
 
@@ -1223,10 +968,12 @@ function printBill(){
   if(!isTkw&&tk!==null)setTimeout(()=>freeTable(tn),500);
 }
 
+// CHANGE 1: Updated tracker stats to include global queue count
 function updateTrackerStats(ordersArr){
   if(!ordersArr)return;
   const total=ordersArr.filter(o=>o.status!=='Cancelled').length;
-  const wait=allQueue.length;
+  const legacyWait=allTables.filter(t=>t.occupied&&t.nextOrder).length;
+  const wait=allGlobalQueue.length+legacyWait;
   const cook=ordersArr.filter(o=>o.status==='Preparing').length;
   const served=ordersArr.filter(o=>o.status==='Completed'||o.status==='Ready').length;
   const elTotal=document.getElementById('trk-total');
@@ -1295,19 +1042,8 @@ function renderHist(){
     const ts=d?d.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'}):'';
     const ic=Array.isArray(o.items)?o.items.length:(o.items&&typeof o.items==='object'?Object.keys(o.items).length:'—');
     const tot=(o.grandTotal||o.total||0);const id=o.id||'';
-    return `<tr onclick="togDet('${id}')" style="cursor:pointer;">
-      <td><span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--w30);">${st+i+1}</span></td>
-      <td><div class="hdate">${ds}</div><div class="hdatesub">${ts}</div></td>
-      <td><span class="hcust">${o.customerName||o.name||'Guest'}</span></td>
-      <td>${o.orderType==='dinein'?'<span class="badge bg-gold">Dine-In</span>':'<span class="badge bg-blue">Takeaway</span>'}</td>
-      <td style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--blue);">${o.orderType==='dinein'?(o.tableNumber||'—'):'—'}</td>
-      <td style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--w30);">${ic} item${ic!==1?'s':''}</td>
-      <td>${o.status==='Completed'?'<span class="badge bg-green">Completed</span>':'<span class="badge bg-red">Cancelled</span>'}</td>
-      <td><span class="hamt">₹${tot.toFixed(2)}</span></td>
-    </tr>
-    <tr id="det-${id}" class="drow" style="display:none;"><td colspan="8">${buildDet(o)}</td></tr>`;
+    return `<tr onclick="togDet('${id}')" style="cursor:pointer;"><td><span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--w30);">${st+i+1}</span></td><td><div class="hdate">${ds}</div><div class="hdatesub">${ts}</div></td><td><span class="hcust">${o.customerName||o.name||'Guest'}</span></td><td>${o.orderType==='dinein'?'<span class="badge bg-gold">Dine-In</span>':'<span class="badge bg-blue">Takeaway</span>'}</td><td style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--blue);">${o.orderType==='dinein'?(o.tableNumber||'—'):'—'}</td><td style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--w30);">${ic} item${ic!==1?'s':''}</td><td>${o.status==='Completed'?'<span class="badge bg-green">Completed</span>':'<span class="badge bg-red">Cancelled</span>'}</td><td><span class="hamt">₹${tot.toFixed(2)}</span></td></tr><tr id="det-${id}" class="drow" style="display:none;"><td colspan="8">${buildDet(o)}</td></tr>`;
   }).join('');
-
   if(pages<=1){p.innerHTML='';return;}
   let pg=`<button class="pgbtn" onclick="goP(${hPage-1})" ${hPage===1?'disabled':''}>‹</button>`;
   for(let i=1;i<=pages;i++){if(i===1||i===pages||Math.abs(i-hPage)<=1)pg+=`<button class="pgbtn ${i===hPage?'active':''}" onclick="goP(${i})">${i}</button>`;else if(Math.abs(i-hPage)===2)pg+=`<span style="color:var(--w30);padding:0 3px;">…</span>`;}
@@ -1321,11 +1057,7 @@ function buildDet(order){
   const items=Array.isArray(order.items)?order.items:(order.items&&typeof order.items==='object'?Object.values(order.items):[]);
   const sub=items.reduce((s,i)=>s+i.price*i.qty,0),disc=order.discount||0,grand=order.grandTotal||order.total||sub;
   const rows=items.length?items.map(i=>`<div class="ditem"><span class="ditem-name">${i.name}</span><span class="ditem-qty">× ${i.qty}</span><span class="ditem-amt">₹${(i.price*i.qty).toFixed(2)}</span></div>`).join(''):'<div class="ditem"><span style="color:var(--w30)">No item details</span></div>';
-  return `<div class="drow-inner">${rows}<div class="dtotals">
-    <div class="dtr"><span style="color:var(--w30)">Subtotal</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--blue);">₹${sub.toFixed(2)}</span></div>
-    ${disc>0?`<div class="dtr"><span style="color:var(--w30)">Discount</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--red);">−₹${disc.toFixed(2)}</span></div>`:''}
-    <div class="dtr"><span style="color:var(--w80);font-weight:600;">Grand Total</span><span class="dtr-grand">₹${grand.toFixed(2)}</span></div>
-  </div></div>`;
+  return `<div class="drow-inner">${rows}<div class="dtotals"><div class="dtr"><span style="color:var(--w30)">Subtotal</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--blue);">₹${sub.toFixed(2)}</span></div>${disc>0?`<div class="dtr"><span style="color:var(--w30)">Discount</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--red);">−₹${disc.toFixed(2)}</span></div>`:''}<div class="dtr"><span style="color:var(--w80);font-weight:600;">Grand Total</span><span class="dtr-grand">₹${grand.toFixed(2)}</span></div></div></div>`;
 }
 
 function togDet(id){const r=document.getElementById('det-'+id);if(!r)return;const open=r.style.display!=='none';document.querySelectorAll('.drow').forEach(x=>x.style.display='none');if(!open)r.style.display='table-row';}
