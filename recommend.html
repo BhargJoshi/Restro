@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>Emerald Menu - Premium Mobile</title>
+<title>Emerald — Recommended For You</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -217,13 +217,13 @@ body { font-family: 'Inter', sans-serif; background-color: #111; color: var(--te
   --sidebar-bg: #0B1830;
 }
 
-/* CHANGE 2: Changing the main page background color to Brandy Rose (#B29079) */
+/* CHANGE 2: Main page background now follows the active occasion's theme (--primary-dark) */
 body, 
 .main-content, 
 .app-container, 
 #main-feed, 
 .content-wrapper {
-  background-color: #B29079 !important;
+  background-color: var(--primary-dark) !important;
   background-image: none !important; /* Clears out any prior background gradients */
 }
 
@@ -250,13 +250,13 @@ body,
   background: transparent !important;
 }
 
-/* CHANGE 3: Title/Header section background to Espresso (#4A342A) and font to "Studio Noir" */
+/* CHANGE 3: Header section background now follows the active occasion's theme (--header-bg) */
 .hero-header, 
 .header, 
 .top-navbar, 
 .menu-header-section, 
 header {
-  background-color: #4A342A !important;
+  background-color: var(--header-bg) !important;
   background-image: none !important; /* Clears glassmorphism overlays */
   backdrop-filter: none !important;
   color: #F5F5F3 !important; /* Slightly off-white color */
@@ -288,12 +288,12 @@ header i {
   fill: #F5F5F3 !important;
 }
 
-/* CHANGE 5: Setting the background of the category sidebar to Espresso (#4A342A) */
+/* CHANGE 5: Sidebar background now follows the active occasion's theme (--sidebar-bg) */
 .sidebar, 
 .category-sidebar, 
 #sidebar-wrapper {
-  background-color: #4A342A !important;
-  background: #4A342A !important;
+  background-color: var(--sidebar-bg) !important;
+  background: var(--sidebar-bg) !important;
   border-right: 1px solid rgba(255, 255, 255, 0.05) !important;
 }
 
@@ -367,8 +367,8 @@ const analytics = firebase.analytics();
     <div class="falling-item item-wine">&#x1F377;</div>
   </div>
   <div class="intro-text-container">
-    <div class="text-msg msg-1">Prioritizing Taste</div>
-    <div class="text-msg msg-2">Serving With Speed</div>
+    <div class="text-msg msg-1">Curated For The Moment</div>
+    <div class="text-msg msg-2">Picked Just For You</div>
   </div>
 </div>
 
@@ -411,6 +411,7 @@ const analytics = firebase.analytics();
         <div class="hamb-dropdown" id="hamb-dropdown">
           <div class="hamb-drop-item" onclick="openPrevOrdersPanel();closeHeaderMenu()"><span>&#x1F4CB;</span> Previous Orders</div>
           <div class="hamb-drop-item" onclick="goToTrackOrder();closeHeaderMenu()"><span>&#x1F6F5;</span> Track Order</div>
+          <div class="hamb-drop-item" onclick="window.location.href='menu.html'"><span>&#x1F37D;&#xFE0F;</span> Full Menu</div>
         </div>
       </div>
     </div>
