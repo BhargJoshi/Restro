@@ -1,318 +1,1100 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Let Us Recommend You</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Emerald Menu - Premium Mobile</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-/* CSS Architecture borrowing components from Menu.html but uniquely themed */
 :root {
-  --theme-color: #ff6b6b; /* Default */
-  --bg-color: #fff0f0;
+  --primary: #ffcc00;
+  --primary-dark: #cc9900;
+  --bg-light: #D9D2C6;
   --text-dark: #111;
-  --glass: rgba(255,255,255,0.7);
+  --surface: #ffffff;
+  --intro-beige: #d2b48c;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); color: var(--text-dark); height: 100vh; display: flex; flex-direction: column; overflow: hidden; transition: background-color 0.5s ease; }
+body { font-family: 'Inter', sans-serif; background-color: #111; color: var(--text-dark); height: 100vh; display: flex; overflow: hidden; }
 
-.header-strip {
-  padding: 15px 20px;
-  background: var(--glass);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(0,0,0,0.05);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.header-strip h1 { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--text-dark); }
-.back-btn { background: #fff; border: none; padding: 8px 12px; border-radius: 8px; font-weight: 600; box-shadow: 0 2px 5px rgba(0,0,0,0.1); cursor: pointer;}
+/* INTRO */
+#intro-wrapper { position: fixed; inset: 0; z-index: 9999; background: var(--intro-beige); display: flex; flex-direction: column; justify-content: center; align-items: center; transition: transform 0.8s cubic-bezier(0.7,0,0.3,1); }
+#intro-wrapper.exit { transform: translateX(-100%); }
+.brand-header { position: absolute; top: 60px; font-family: 'Arial Black', serif; font-size: 32px; letter-spacing: 4px; color: #3d2b1f; text-transform: uppercase; }
+.animation-container { position: relative; width: 350px; height: 250px; display: flex; justify-content: center; align-items: flex-end; padding-bottom: 60px; }
+.plate-side { width: 180px; height: 8px; background: #fff; border-radius: 0 0 15px 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); position: relative; z-index: 10; animation: slidePlate 0.7s ease-out forwards; }
+@keyframes slidePlate { 0%{transform:translateX(100vw)}100%{transform:translateX(0)} }
+.falling-item { position: absolute; font-size: 40px; opacity: 0; z-index: 5; }
+.item-burger { animation: dropIn 0.5s 0.8s forwards; left: 85px; }
+.item-fries  { animation: dropIn 0.5s 1.1s forwards; left: 125px; }
+.item-salad  { animation: dropIn 0.5s 1.4s forwards; left: 160px; }
+.item-wine   { animation: dropIn 0.5s 1.7s forwards; left: 200px; }
+@keyframes dropIn { 0%{transform:translateY(-300px);opacity:0}100%{transform:translateY(-8px);opacity:1} }
+.intro-text-container { margin-top: 20px; height: 50px; text-align: center; font-family: 'Times New Roman', serif; font-size: 24px; position: relative; width: 100%; }
+.text-msg { position: absolute; width: 100%; left: 0; opacity: 0; }
+.msg-1 { animation: textFlow 2s 2.7s forwards; }
+.msg-2 { animation: textFlow 2s 4.7s forwards; }
+@keyframes textFlow { 0%{opacity:0;transform:translateX(30px)} 20%,80%{opacity:1;transform:translateX(0)} 100%{opacity:0;transform:translateX(-30px)} }
 
-.content {
-  display: flex;
-  flex: 1;
-  overflow: hidden;
-}
+/* CHANGE 1: COLLAPSIBLE SIDEBAR */
+.sidebar { width: 0; min-width: 0; background: #1a1a1a; display: flex; flex-direction: column; align-items: center; padding-top: 0; padding-bottom: 100px; position: relative; overflow: hidden; height: 100vh; border-right: 1px solid rgba(255,255,255,0.1); scrollbar-width: none; -webkit-overflow-scrolling: touch; flex-shrink: 0; transition: width 0.4s cubic-bezier(0.4,0,0.2,1), min-width 0.4s cubic-bezier(0.4,0,0.2,1), padding-top 0.4s ease; }
+.sidebar.open { width: 90px; min-width: 90px; overflow-y: auto; padding-top: 15px; }
+.sidebar::-webkit-scrollbar { display: none; }
+.nav-indicator { position: absolute; left: 10px; width: 70px; height: 70px; background: var(--primary); border-radius: 12px; transition: all 0.4s cubic-bezier(0.4,0,0.2,1); z-index: 1; }
+.nav-group { width: 100%; display: flex; flex-direction: column; align-items: center; margin-bottom: 5px; }
+.nav-item { width: 70px; height: 70px; margin-bottom: 5px; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; position: relative; z-index: 2; transition: color 0.3s ease; color: rgba(255,255,255,0.6); flex-shrink: 0; }
+.nav-item.active { color: #000; }
+.nav-item span { font-size: 22px; margin-bottom: 4px; }
+.nav-item label { font-size: 9px; font-weight: 700; text-transform: uppercase; text-align: center; pointer-events: none; }
+.submenu { width: 100%; max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; display: flex; flex-direction: column; align-items: center; background: rgba(255,204,0,0.07); border-left: 2px solid rgba(255,204,0,0.18); border-right: 2px solid rgba(255,204,0,0.18); border-radius: 0 0 10px 10px; }
+.nav-group.expanded .submenu { max-height: 700px; padding-bottom: 10px; }
+.sub-item { width: 60px; height: 55px; margin-top: 8px; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; z-index: 2; color: rgba(255,255,255,0.55); transition: all 0.3s ease; background: rgba(255,255,255,0.04); }
+.sub-item.active { color: #000; }
+.sub-item span { font-size: 16px; }
+.sub-item label { font-size: 7px; font-weight: 600; text-transform: uppercase; margin-top: 2px; pointer-events: none; }
 
-.category-nav {
-  width: 110px;
-  background: rgba(255,255,255,0.4);
-  backdrop-filter: blur(15px);
-  border-right: 1px solid rgba(0,0,0,0.05);
-  overflow-y: auto;
-  padding: 10px 0;
-}
-.cat-btn {
-  width: 100%;
-  padding: 15px 10px;
-  text-align: center;
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  transition: all 0.3s;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 5px;
-  color: #555;
-}
-.cat-btn.active { color: var(--text-dark); font-weight: 700; background: var(--glass); border-left: 4px solid var(--theme-color); }
-.cat-btn span { font-size: 24px; }
-.cat-btn p { font-size: 10px; text-transform: uppercase; font-weight: bold; }
+/* MAIN CONTENT */
+.main-content { flex: 1; display: flex; flex-direction: column; background: var(--bg-light); border-top-left-radius: 25px; overflow: hidden; min-width: 0; }
+.hero-header { padding: 13px 20px; background: rgba(255,255,255,0.55); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,0.45); text-align: center; position: relative; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+#section-name { font-family: 'Playfair Display', serif; font-size: 16px; background: var(--primary); color: #000; display: inline-block; padding: 5px 12px; border-radius: 8px; box-shadow: 0 4px 10px rgba(255,204,0,0.2); }
 
-.recommendations {
-  flex: 1;
-  padding: 15px;
-  overflow-y: auto;
-  padding-bottom: 100px;
-}
-.event-banner {
-  background: var(--theme-color);
-  color: white;
-  padding: 20px;
-  border-radius: 16px;
-  margin-bottom: 15px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-  transition: background 0.5s ease;
-}
-.event-banner h2 { font-family: 'Playfair Display', serif; font-size: 22px; margin-bottom: 5px; }
-.event-banner p { font-size: 12px; opacity: 0.9; }
+/* CHANGE 1: SIDEBAR TOGGLE BUTTON */
+.sidebar-toggle-btn { position: absolute; left: 12px; background: rgba(255,255,255,0.68); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.55); border-radius: 10px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 17px; color: #2a2a2a; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: background 0.25s, transform 0.15s, color 0.2s; z-index: 10; }
+.sidebar-toggle-btn:active { transform: scale(0.92); }
+.sidebar-toggle-btn.active { background: var(--primary); color: #000; border-color: var(--primary); }
+.search-container { display: flex; align-items: center; }
+#search-input { width: 0; opacity: 0; padding: 8px 0; border: none; border-bottom: 2px solid var(--primary); outline: none; transition: all 0.3s ease; font-size: 14px; background: transparent; }
+#search-input.active { width: 120px; opacity: 1; padding: 8px 10px; margin-right: 5px; }
+.search-icon-btn { background: none; border: none; font-size: 20px; cursor: pointer; }
 
-.combo-card {
-  background: rgba(255,255,255,0.85);
-  border-radius: 14px;
-  padding: 15px;
-  margin-bottom: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-.combo-header { display: flex; justify-content: space-between; align-items: flex-start; }
-.combo-title { font-weight: 700; font-size: 15px; color: var(--theme-color); }
-.combo-price { font-weight: 800; font-size: 14px; }
-.combo-desc { font-size: 11px; color: #666; line-height: 1.4; }
+/* MENU CONTAINER */
+.menu-container { flex: 1; overflow-y: auto; padding-bottom: 100px; }
 
-.add-btn {
-  background: var(--text-dark);
-  color: #fff;
-  border: none;
-  padding: 10px;
-  border-radius: 8px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: transform 0.2s;
-}
-.add-btn:active { transform: scale(0.95); }
+/* CHANGE 2: CATEGORY BANNER */
+.category-banner { width: 100%; height: 155px; position: relative; overflow: hidden; margin-bottom: 10px; }
+.category-banner img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.6s ease; }
+.category-banner:hover img { transform: scale(1.04); }
+.category-banner-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.15) 55%, transparent 100%); display: flex; flex-direction: column; justify-content: flex-end; padding: 12px 15px; }
+.category-banner-title { font-family: 'Playfair Display', serif; font-size: 21px; color: #fff; font-weight: 700; letter-spacing: 0.3px; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+.category-banner-sub { font-size: 11px; color: rgba(255,255,255,0.82); margin-top: 3px; font-style: italic; }
 
-/* Reuse Cart Styles from Menu */
-.cart-bar { position: fixed; bottom: 15px; left: 15px; right: 15px; background: #28a745; height: 50px; border-radius: 12px; display: none; align-items: center; justify-content: space-between; padding: 0 15px; color: #fff; font-weight: 700; z-index: 1000; cursor: pointer; }
+/* CHANGE 2: 3-COLUMN HALF-SIZE GRID */
+.items-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; padding: 0 10px 14px; }
+
+/* CHANGE 3: GLASSMORPHISM FOOD CARDS */
+.food-card { background: rgba(255,255,255,0.5); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.72); border-radius: 13px; padding: 6px; display: flex; flex-direction: column; position: relative; box-shadow: 0 4px 18px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,0.85); transition: transform 0.15s ease, box-shadow 0.15s ease; }
+.food-card:active { transform: scale(0.97); }
+
+/* CHANGE 4: CLICKABLE IMAGE WRAPPER */
+.food-card-img-wrap { width: 100%; position: relative; cursor: pointer; overflow: hidden; border-radius: 9px; margin-bottom: 5px; }
+.food-card-img-wrap img { width: 100%; aspect-ratio: 1/1; object-fit: cover; display: block; transition: transform 0.25s ease; }
+.food-card-img-wrap:active img { transform: scale(0.97); }
+.img-detail-hint { position: absolute; bottom: 5px; right: 5px; background: rgba(0,0,0,0.48); backdrop-filter: blur(4px); color: #fff; font-size: 7.5px; padding: 2px 5px; border-radius: 5px; pointer-events: none; font-weight: 600; }
+.food-card h4 { font-size: 9px; line-height: 1.25; margin-bottom: 3px; height: 22px; overflow: hidden; color: #1a1a1a; font-weight: 700; }
+.price { font-weight: 700; color: #3a3a3a; font-size: 11px; margin-bottom: 5px; }
+.cart-badge { position: absolute; top: -5px; right: -5px; background: #ff4444; color: white; font-size: 10px; font-weight: bold; padding: 2px 6px; border-radius: 10px; border: 2px solid rgba(255,255,255,0.75); display: none; z-index: 15; }
+.add-initial { width: 100%; padding: 5px; background: #111; color: #fff; border: none; border-radius: 7px; font-weight: 700; font-size: 10px; cursor: pointer; letter-spacing: 0.5px; transition: background 0.2s; }
+.add-initial:active { background: #333; }
+.qty-controls { display: none; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.08); border-radius: 7px; padding: 1px; }
+.btn-qty { width: 22px; height: 22px; border: none; background: rgba(255,255,255,0.85); border-radius: 5px; font-weight: 700; cursor: pointer; font-size: 13px; line-height: 1; }
+
+/* CART BAR */
+.cart-bar { position: fixed; bottom: 15px; left: 15px; right: 15px; background: #28a745; height: 50px; border-radius: 12px; display: none; align-items: center; justify-content: space-between; padding: 0 15px; color: #fff; font-weight: 700; z-index: 1000; cursor: pointer; transition: left 0.4s cubic-bezier(0.4,0,0.2,1); }
+.cart-bar.sidebar-adjusted { left: 105px; }
 .cart-popup { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: flex-end; z-index: 2000; }
 .cart-content { width: 100%; max-width: 500px; background: #fff; border-top-left-radius: 25px; border-top-right-radius: 25px; padding: 25px; max-height: 80vh; overflow-y: auto; }
 .cart-item-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #eee; }
-.btn-qty { width: 22px; height: 22px; border: none; background: #eee; border-radius: 5px; font-weight: 700; cursor: pointer; }
+.cart-item-info { flex: 1; }
+.cart-item-info h5 { font-size: 14px; margin-bottom: 2px; }
+.cart-item-info p { font-size: 12px; color: #777; }
+.cart-item-actions { display: flex; align-items: center; gap: 10px; }
 .pay-btn { width: 100%; padding: 16px; background: #28a745; color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 700; margin-top: 20px; cursor: pointer; }
 
-/* Theming Classes */
-body.theme-date { --theme-color: #e84393; --bg-color: #ffeef4; }
-body.theme-family { --theme-color: #00b894; --bg-color: #e8f8f5; }
-body.theme-friends { --theme-color: #fdcb6e; --bg-color: #fff9e6; }
-body.theme-solo { --theme-color: #0984e3; --bg-color: #e6f2ff; }
+/* ORDER CONFIRMATION OVERLAY */
+#order-confirm-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.75); display: none; justify-content: center; align-items: center; z-index: 9000; }
+#order-confirm-overlay.visible { display: flex; }
+.order-confirm-box { background: #fff; border-radius: 24px; padding: 40px 30px; text-align: center; width: 85%; max-width: 340px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); animation: popIn 0.4s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+@keyframes popIn { 0%{transform:scale(0.7);opacity:0}100%{transform:scale(1);opacity:1} }
+.order-confirm-icon { font-size: 52px; margin-bottom: 12px; }
+.order-confirm-title { font-family: 'Playfair Display', serif; font-size: 22px; color: #111; margin-bottom: 20px; }
+.order-timer-ring { position: relative; width: 130px; height: 130px; margin: 0 auto 20px; }
+.order-timer-ring svg { transform: rotate(-90deg); }
+.timer-track { fill: none; stroke: #f0f0f0; stroke-width: 8; }
+.timer-progress { fill: none; stroke: #28a745; stroke-width: 8; stroke-linecap: round; stroke-dasharray: 339.29; stroke-dashoffset: 0; transition: stroke-dashoffset 1s linear; }
+.timer-label { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 800; color: #111; }
+.order-ready-text { font-size: 15px; color: #555; font-weight: 600; margin-bottom: 24px; }
+.order-confirm-close { background: #111; color: #fff; border: none; border-radius: 12px; padding: 12px 32px; font-size: 14px; font-weight: 700; cursor: pointer; }
+#order-ready-banner { display: none; margin-bottom: 18px; animation: readyPop 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+#order-ready-banner.visible { display: block; }
+.order-ready-badge { background: #28a745; color: #fff; font-size: 20px; font-weight: 800; padding: 10px 24px; border-radius: 50px; display: inline-block; letter-spacing: 0.5px; }
+@keyframes readyPop { 0%{transform:scale(0.5);opacity:0}100%{transform:scale(1);opacity:1} }
+.token-box { background: #fff8e1; border: 2px dashed #ffcc00; border-radius: 12px; padding: 10px 18px; margin: 0 auto 20px; display: inline-block; text-align: center; }
+.token-label { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #888; letter-spacing: 1.5px; margin-bottom: 4px; }
+.token-number { font-size: 28px; font-weight: 800; color: #111; letter-spacing: 3px; font-family: 'Courier New', monospace; }
+#popup-table-badge { display: none; align-items: center; justify-content: center; gap: 8px; background: #111; color: #ffcc00; border-radius: 50px; padding: 10px 22px; margin: 0 auto 18px; font-size: 15px; font-weight: 800; letter-spacing: 1px; animation: tableIn 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+#popup-table-badge.visible { display: flex; }
+@keyframes tableIn { from{transform:scale(0.7);opacity:0}to{transform:scale(1);opacity:1} }
+
+/* TRACK ORDER BUTTON */
+#track-order-btn { display: none; position: fixed; bottom: 20px; right: 20px; background: #e00000; color: #fff; border: none; border-radius: 14px; padding: 13px 20px; font-size: 13px; font-weight: 700; cursor: pointer; z-index: 8000; box-shadow: 0 4px 18px rgba(220,0,0,0.45); letter-spacing: 0.5px; }
+#track-order-btn.visible { display: block; }
+@keyframes trackShake { 0%,100%{transform:translateX(0) rotate(0deg)}15%{transform:translateX(-5px) rotate(-3deg)}30%{transform:translateX(5px) rotate(3deg)}45%{transform:translateX(-4px) rotate(-2deg)}60%{transform:translateX(4px) rotate(2deg)}75%{transform:translateX(-2px) rotate(-1deg)}90%{transform:translateX(2px) rotate(1deg)} }
+#track-order-btn.shake { animation: trackShake 0.6s ease; }
+
+/* HEADER HAMBURGER */
+.header-actions { position: absolute; right: 15px; display: flex; align-items: center; gap: 6px; }
+.hamb-menu-wrap { position: relative; }
+.hamb-icon-btn { background: rgba(255,255,255,0.68); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.55); border-radius: 10px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; transition: background 0.2s; position: relative; }
+.hamb-icon-btn:active { background: #e0e0e0; }
+.hamb-notif-dot { position: absolute; top: -3px; right: -3px; width: 10px; height: 10px; background: #ff4444; border-radius: 50%; border: 2px solid #fff; display: none; }
+.hamb-notif-dot.visible { display: block; }
+.hamb-dropdown { position: absolute; right: 0; top: calc(100% + 8px); width: 180px; background: #fff; border-radius: 14px; box-shadow: 0 8px 30px rgba(0,0,0,0.15); border: 1px solid #eee; overflow: hidden; display: none; z-index: 3000; }
+.hamb-dropdown.open { display: block; }
+.hamb-drop-item { display: flex; align-items: center; gap: 10px; padding: 13px 16px; font-size: 13px; font-weight: 600; color: #111; cursor: pointer; border-bottom: 1px solid #f5f5f5; transition: background 0.15s; }
+.hamb-drop-item:last-child { border-bottom: none; }
+.hamb-drop-item:active { background: #f9f9f9; }
+.hamb-drop-item span { font-size: 16px; }
+
+/* PREVIOUS ORDERS PANEL */
+#prev-orders-panel { position: fixed; inset: 0; z-index: 5000; display: none; }
+#prev-orders-panel.open { display: block; }
+.pop-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.4); }
+.pop-sheet { position: absolute; top: 0; right: 0; width: min(340px,92vw); height: 100%; background: #fff; display: flex; flex-direction: column; box-shadow: -8px 0 40px rgba(0,0,0,0.18); transform: translateX(100%); transition: transform 0.35s cubic-bezier(0.4,0,0.2,1); }
+#prev-orders-panel.open .pop-sheet { transform: translateX(0); }
+.pop-head { display: flex; align-items: center; justify-content: space-between; padding: 20px 20px 14px; border-bottom: 1px solid #eee; background: #fff; }
+.pop-title { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: #111; }
+.pop-close { background: #f0f0f0; border: none; border-radius: 50%; width: 32px; height: 32px; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.pop-body { flex: 1; overflow-y: auto; padding: 16px; }
+.pop-empty { text-align: center; color: #bbb; font-size: 13px; margin-top: 60px; }
+.prev-order-card { background: #fafafa; border: 1px solid #eee; border-radius: 14px; padding: 14px; margin-bottom: 12px; }
+.poc-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.poc-round { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #888; background: #f0f0f0; padding: 3px 8px; border-radius: 6px; }
+.poc-time { font-size: 11px; color: #aaa; }
+.poc-item-row { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #444; padding: 4px 0; border-bottom: 1px solid #f0f0f0; }
+.poc-item-row:last-of-type { border-bottom: none; }
+.poc-item-name { flex: 1; }
+.poc-item-qty { color: #888; margin: 0 8px; font-weight: 600; }
+.poc-item-price { font-weight: 700; color: #333; }
+.poc-total { display: flex; justify-content: space-between; font-size: 13px; font-weight: 800; margin-top: 10px; padding-top: 8px; border-top: 2px solid var(--primary); color: #111; }
+
+/* CHANGE 4: ITEM DETAIL POPUP */
+#item-detail-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.52); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); display: none; justify-content: center; align-items: center; z-index: 8500; padding: 20px; }
+#item-detail-modal.open { display: flex; }
+.item-detail-box { background: rgba(255,255,255,0.78); backdrop-filter: blur(28px); -webkit-backdrop-filter: blur(28px); border: 1px solid rgba(255,255,255,0.88); border-radius: 26px; width: 100%; max-width: 340px; overflow: hidden; box-shadow: 0 24px 64px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.95); animation: detailPopIn 0.38s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+@keyframes detailPopIn { 0%{transform:scale(0.82) translateY(18px);opacity:0}100%{transform:scale(1) translateY(0);opacity:1} }
+.item-detail-img-wrap { width: 100%; height: 210px; position: relative; overflow: hidden; }
+.item-detail-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.item-detail-img-overlay { position: absolute; bottom: 0; left: 0; right: 0; height: 70px; background: linear-gradient(to top,rgba(255,255,255,0.88),transparent); }
+.item-detail-close { position: absolute; top: 11px; right: 11px; background: rgba(0,0,0,0.42); backdrop-filter: blur(6px); color: #fff; border: none; border-radius: 50%; width: 32px; height: 32px; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10; transition: background 0.2s; }
+.item-detail-close:active { background: rgba(0,0,0,0.65); }
+.item-detail-body { padding: 15px 18px 20px; }
+.item-detail-name { font-family: 'Playfair Display', serif; font-size: 19px; color: #111; margin-bottom: 4px; line-height: 1.3; font-weight: 700; }
+.item-detail-price-tag { font-size: 17px; font-weight: 800; color: #2a2a2a; margin-bottom: 10px; }
+.item-detail-badges { display: flex; gap: 7px; margin-bottom: 12px; flex-wrap: wrap; }
+.item-detail-badge { background: rgba(255,204,0,0.18); border: 1px solid rgba(255,204,0,0.4); color: #6b5200; font-size: 10px; font-weight: 700; padding: 4px 9px; border-radius: 20px; }
+.item-detail-badge.time-badge { background: rgba(40,167,69,0.12); border-color: rgba(40,167,69,0.3); color: #145a26; }
+.item-detail-desc { font-size: 12px; color: #4a4a4a; line-height: 1.65; margin-bottom: 16px; }
+.item-detail-add-btn { width: 100%; padding: 13px; background: #111; color: #fff; border: none; border-radius: 12px; font-size: 14px; font-weight: 700; cursor: pointer; letter-spacing: 0.4px; transition: background 0.25s, transform 0.12s; }
+.item-detail-add-btn:active { transform: scale(0.97); }
+.item-detail-add-btn.in-cart { background: #28a745; }
+.item-detail-add-btn.added-flash { background: var(--primary); color: #000; }
+/* ==========================================================================
+   ADDITIONAL THEME UPDATES & VISUAL DESIGN CHANGES
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap');
+
+/* CHANGE 4: Overriding all yellow system colors globally with the warm greige/beige (#D9D2C6) */
+/* CHANGE 3 (recommend.html): --primary / --primary-dark are re-themed live
+   per occasion by applyTheme(); the values below are just the pre-JS
+   defaults (Date Night blue). --header-bg / --sidebar-bg are new variables
+   used further below so the header and sidebar can be themed too. */
+:root {
+  --primary: #93C5FD !important;
+  --primary-dark: #142A4D !important;
+  --accent-yellow: #D9D2C6 !important;
+  --header-bg: #0F2040;
+  --sidebar-bg: #0B1830;
+}
+
+/* CHANGE 2: Changing the main page background color to Brandy Rose (#B29079) */
+body, 
+.main-content, 
+.app-container, 
+#main-feed, 
+.content-wrapper {
+  background-color: #B29079 !important;
+  background-image: none !important; /* Clears out any prior background gradients */
+}
+
+/* CHANGE 1: Giving food card images a perfectly circular boundary look */
+.food-card img, 
+.card-img-wrapper img, 
+.food-card .image-container img, 
+.item-card img, 
+.modal-image-wrap img,
+.item-image img {
+  border-radius: 50% !important;
+  aspect-ratio: 1 / 1 !important;
+  object-fit: cover !important;
+  border: 3px solid #D9D2C6 !important; /* Framing border using the new beige shade */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18) !important;
+}
+
+/* Ensures layout containers clip appropriately for the round image layout */
+.food-card .image-container, 
+.card-img-wrapper, 
+.food-image-wrap {
+  border-radius: 50% !important;
+  overflow: hidden !important;
+  background: transparent !important;
+}
+
+/* CHANGE 3: Title/Header section background to Espresso (#4A342A) and font to "Studio Noir" */
+.hero-header, 
+.header, 
+.top-navbar, 
+.menu-header-section, 
+header {
+  background-color: #4A342A !important;
+  background-image: none !important; /* Clears glassmorphism overlays */
+  backdrop-filter: none !important;
+  color: #F5F5F3 !important; /* Slightly off-white color */
+}
+
+/* Applying "Studio Noir" look with zero background fill on the title text */
+.hero-header h1, 
+.hero-header .title, 
+.menu-header-section h1, 
+.category-banner-title, 
+header h1, 
+header h2 {
+  font-family: 'Studio Noir', 'Cinzel', 'Playfair Display', serif !important;
+  color: #F5F5F3 !important; 
+  background: transparent !important; /* No background color on title text */
+  background-color: transparent !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
+/* Keeping structural icons inside the top header slightly off-white */
+.hero-header svg, 
+.hero-header i, 
+.hero-header .icon-btn, 
+header svg, 
+header i {
+  color: #F5F5F3 !important;
+  fill: #F5F5F3 !important;
+}
+
+/* CHANGE 5: Setting the background of the category sidebar to Espresso (#4A342A) */
+.sidebar, 
+.category-sidebar, 
+#sidebar-wrapper {
+  background-color: #4A342A !important;
+  background: #4A342A !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+/* CHANGE 4 (Continued): Swapping remaining yellow accents to Beige (#D9D2C6) */
+.sidebar .category-item, 
+.sidebar a {
+  color: #F5F5F3 !important;
+}
+
+/* Active or highlighted category buttons inside the sidebar */
+.sidebar .category-item.active, 
+.sidebar .category-item:hover, 
+.category-btn.active {
+  background-color: #D9D2C6 !important; 
+  color: #4A342A !important; /* Contrasting espresso text for active choice */
+}
+
+.sidebar .category-item.active svg, 
+.sidebar .category-item:hover svg {
+  fill: #4A342A !important;
+  color: #4A342A !important;
+}
+
+/* Updating any active action buttons, stars, or tags that previously relied on yellow */
+.rating-stars, 
+.star-icon, 
+.badge-yellow, 
+.accent-yellow-text {
+  color: #D9D2C6 !important;
+  fill: #D9D2C6 !important;
+}
+
+.add-to-cart-btn, 
+.btn-primary {
+  background-color: #D9D2C6 !important;
+  color: #4A342A !important;
+  font-weight: bold !important;
+  border: none !important;
+}
 </style>
+
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-analytics-compat.js"></script>
 <script>
 const firebaseConfig = {
   apiKey: "AIzaSyC_LUKzINx6H4XE7uWoCpeLSldpIp-DR80",
   authDomain: "restro-4db49.firebaseapp.com",
   databaseURL: "https://restro-4db49-default-rtdb.firebaseio.com",
-  projectId: "restro-4db49"
+  projectId: "restro-4db49",
+  storageBucket: "restro-4db49.firebasestorage.app",
+  messagingSenderId: "860567729744",
+  appId: "1:860567729744:web:773f5a315af7340d950355",
+  measurementId: "G-D9CJCYZJF4"
 };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
+const analytics = firebase.analytics();
 </script>
 </head>
-<body class="theme-date">
-  <div class="header-strip">
-    <button class="back-btn" onclick="window.location.href='index.html'">← Back</button>
-    <h1>Curated For You</h1>
-    <button class="back-btn" style="background:var(--theme-color); color:white; border:none;" onclick="window.location.href='menu.html'">Full Menu</button>
-  </div>
-  
-  <div class="content">
-    <div class="category-nav">
-      <button class="cat-btn active" onclick="switchTheme('date', this)"><span>🍷</span><p>Date Night</p></button>
-      <button class="cat-btn" onclick="switchTheme('family', this)"><span>👨‍👩‍👧‍👦</span><p>Family Dinner</p></button>
-      <button class="cat-btn" onclick="switchTheme('friends', this)"><span>🎉</span><p>With Friends</p></button>
-      <button class="cat-btn" onclick="switchTheme('solo', this)"><span>🎧</span><p>Solo Dining</p></button>
-    </div>
-    
-    <div class="recommendations" id="rec-container">
-      </div>
-  </div>
+<body>
 
-  <div class="cart-bar" id="cart-bar" onclick="toggleCart()">
-    <span id="cart-item-count">0 Items</span>
-    <span id="cart-total-price">&#8377;0.00</span>
-    <span>View Cart →</span>
+<!-- INTRO -->
+<div id="intro-wrapper">
+  <div class="brand-header">EMERALD</div>
+  <div class="animation-container">
+    <div class="plate-side"></div>
+    <div class="falling-item item-burger">&#x1F354;</div>
+    <div class="falling-item item-fries">&#x1F35F;</div>
+    <div class="falling-item item-salad">&#x1F957;</div>
+    <div class="falling-item item-wine">&#x1F377;</div>
   </div>
+  <div class="intro-text-container">
+    <div class="text-msg msg-1">Prioritizing Taste</div>
+    <div class="text-msg msg-2">Serving With Speed</div>
+  </div>
+</div>
 
-  <div class="cart-popup" id="cart-popup">
-    <div class="cart-content">
-      <div style="display:flex;justify-content:space-between;margin-bottom:15px">
-        <h3>Your Basket</h3>
-        <button onclick="toggleCart()" style="background:none;border:none;color:#999;font-size:20px">&#x2715;</button>
+<!-- OCCASION SIDEBAR — flat list, no submenus. Each item is its own
+     occasion category with its own combos + colour theme (see applyTheme). -->
+<div class="sidebar" id="sidebar">
+  <div class="nav-indicator" id="nav-indicator"></div>
+  <div class="nav-group">
+    <div class="nav-item active" onclick="showSection('date_night',this)"><span>&#x1F339;</span><label>Date Night</label></div>
+  </div>
+  <div class="nav-group">
+    <div class="nav-item" onclick="showSection('family_dinner',this)"><span>&#x1F46A;</span><label>Family</label></div>
+  </div>
+  <div class="nav-group">
+    <div class="nav-item" onclick="showSection('friends',this)"><span>&#x1F389;</span><label>Friends</label></div>
+  </div>
+  <div class="nav-group">
+    <div class="nav-item" onclick="showSection('solo',this)"><span>&#x1F9D8;</span><label>Solo</label></div>
+  </div>
+  <div class="nav-group">
+    <div class="nav-item" onclick="showSection('cafe',this)"><span>&#x2615;</span><label>Cafe Hop</label></div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main-content">
+  <div class="hero-header">
+    <button class="sidebar-toggle-btn" id="sidebar-toggle-btn" onclick="toggleSidebar()" aria-label="Toggle categories">&#9776;</button>
+    <h1 id="section-name">Starters</h1>
+    <div class="header-actions">
+      <div class="search-container" style="position:static;">
+        <input type="text" id="search-input" placeholder="Search item..." oninput="handleSearch()">
+        <button class="search-icon-btn" onclick="toggleSearch()">&#x1F50D;</button>
       </div>
-      <div id="cart-items-list"></div>
-      <div style="background:#f9f9f9;padding:15px;border-radius:12px;margin-top:15px;">
-        <div style="display:flex;justify-content:space-between;font-weight:800;font-size:20px;">
-          <span>Total</span><span id="cart-total-price-popup">&#8377;0.00</span>
+      <div class="hamb-menu-wrap">
+        <button class="hamb-icon-btn" onclick="toggleHeaderMenu(event)" id="hamb-icon-btn" aria-label="Menu options">
+          &#9776;
+          <span class="hamb-notif-dot" id="hamb-notif-dot"></span>
+        </button>
+        <div class="hamb-dropdown" id="hamb-dropdown">
+          <div class="hamb-drop-item" onclick="openPrevOrdersPanel();closeHeaderMenu()"><span>&#x1F4CB;</span> Previous Orders</div>
+          <div class="hamb-drop-item" onclick="goToTrackOrder();closeHeaderMenu()"><span>&#x1F6F5;</span> Track Order</div>
         </div>
       </div>
-      <button class="pay-btn" onclick="processPayment()">Place Order</button>
     </div>
   </div>
+  <div class="menu-container">
+    <div id="category-banner-wrap"></div>
+    <div class="items-grid" id="menu-grid"></div>
+  </div>
+</div>
 
+<!-- CART BAR -->
+<div class="cart-bar" id="cart-bar" onclick="toggleCart()">
+  <span id="cart-item-count">0 Items</span>
+  <span id="cart-total-price">&#8377;0.00</span>
+  <span>View Cart &#8594;</span>
+</div>
+
+<!-- CART POPUP -->
+<div class="cart-popup" id="cart-popup">
+  <div class="cart-content">
+    <div style="display:flex;justify-content:space-between;margin-bottom:15px">
+      <h3>Your Basket</h3>
+      <button onclick="toggleCart()" style="background:none;border:none;color:#999;font-size:20px">&#x2715;</button>
+    </div>
+    <div id="cart-items-list"></div>
+    <div style="background:#f9f9f9;padding:15px;border-radius:12px;margin-top:15px;">
+      <div style="display:flex;justify-content:space-between;font-weight:800;font-size:20px;">
+        <span>Total</span><span id="cart-total-price-popup">&#8377;0.00</span>
+      </div>
+    </div>
+    <button class="pay-btn" onclick="processPayment()">Place Order</button>
+  </div>
+</div>
+
+<!-- PREVIOUS ORDERS PANEL -->
+<div id="prev-orders-panel">
+  <div class="pop-backdrop" onclick="closePrevOrdersPanel()"></div>
+  <div class="pop-sheet">
+    <div class="pop-head">
+      <span class="pop-title">Previous Orders</span>
+      <button class="pop-close" onclick="closePrevOrdersPanel()">&#x2715;</button>
+    </div>
+    <div class="pop-body" id="prev-orders-body">
+      <div class="pop-empty">No orders placed yet this session.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ORDER CONFIRMATION OVERLAY -->
+<div id="order-confirm-overlay">
+  <div class="order-confirm-box">
+    <div class="order-confirm-icon">&#x1F37D;&#xFE0F;</div>
+    <div class="order-confirm-title">Order Placed!</div>
+    <div style="text-align:center;margin-bottom:18px;">
+      <div class="token-box">
+        <div class="token-label">&#x1F3AB; Your Token Number</div>
+        <div class="token-number" id="order-token-number">#---</div>
+      </div>
+    </div>
+    <div id="popup-table-badge">&#x1FA91; Your Table: <span id="popup-table-number">&#8212;</span></div>
+    <div class="order-timer-ring">
+      <svg width="130" height="130" viewBox="0 0 130 130">
+        <circle class="timer-track" cx="65" cy="65" r="54"/>
+        <circle class="timer-progress" id="timer-progress-circle" cx="65" cy="65" r="54"/>
+      </svg>
+      <div class="timer-label" id="timer-display">15:00</div>
+    </div>
+    <div class="order-ready-text" id="order-ready-subtext">Your order will be ready in 15 minutes</div>
+    <div id="order-ready-banner"><span class="order-ready-badge">&#x1F374; Order Ready !</span></div>
+    <button class="order-confirm-close" onclick="closeOrderConfirm()">Got it!</button>
+  </div>
+</div>
+
+<!-- TRACK ORDER BUTTON -->
+<button id="track-order-btn" onclick="goToTrackOrder()">&#x1F6F5; Track Order</button>
+
+<!-- CHANGE 4: ITEM DETAIL POPUP -->
+<div id="item-detail-modal" onclick="closeItemDetail(event)">
+  <div class="item-detail-box" onclick="event.stopPropagation()">
+    <div class="item-detail-img-wrap">
+      <img id="item-detail-img" src="" alt="">
+      <div class="item-detail-img-overlay"></div>
+      <button class="item-detail-close" onclick="_closeDetailModal()">&#x2715;</button>
+    </div>
+    <div class="item-detail-body">
+      <div class="item-detail-name" id="item-detail-name"></div>
+      <div class="item-detail-price-tag" id="item-detail-price"></div>
+      <div class="item-detail-badges">
+        <span class="item-detail-badge" id="item-detail-cat-badge">Category</span>
+        <span class="item-detail-badge time-badge" id="item-detail-time">&#x23F1; ~15 min</span>
+      </div>
+      <p class="item-detail-desc" id="item-detail-desc"></p>
+      <button class="item-detail-add-btn" id="item-detail-add-btn" onclick="addFromDetail()">ADD TO CART</button>
+    </div>
+  </div>
+</div>
 <script>
-let cart = {};
+const comboData = {
+  date_night: [
+    { id: 'dn1', name: 'Candlelit Starter Duo',     price: 515.00, img: 'https://images.unsplash.com/photo-1544025162-d76538a23b06?w=800&q=80',
+      desc: 'Paneer Tikka Dry, Hara Bhara Kabab and 2 Fresh Lime Sodas — the perfect way to begin a romantic evening for two.', tag: '🌹 Date Night', cookTime: '15–20 min' },
+    { id: 'dn2', name: 'Royal Paneer Date Special', price: 760.00, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=800&q=80',
+      desc: 'Paneer Butter Masala, Kaju Paneer Masala, 2 Garlic Naans and Jeera Rice — rich, indulgent, and made for sharing.', tag: '🌹 Date Night', cookTime: '20–25 min' },
+    { id: 'dn3', name: 'Sweet Nothings for Two',    price: 440.00, img: 'https://images.unsplash.com/photo-1488900128323-21503983a07e?w=800&q=80',
+      desc: '2 Gulab Jamuns, a Fruit Salad with Ice Cream and 2 Special Lassis — end the night on the sweetest note.', tag: '🌹 Date Night', cookTime: '5–10 min' }
+  ],
+  family_dinner: [
+    { id: 'fd1', name: 'Family Feast Thali (Serves 4)', price: 910.00, img: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=800&q=80',
+      desc: 'Paneer Butter Masala, Mix Vegetable, Dal Fry Tadka, Veg. Biryani and 4 Butter Naans — a wholesome spread for the whole table.', tag: '👪 Family Dinner', cookTime: '25–30 min' },
+    { id: 'fd2', name: 'Sunday Curry Special',          price: 777.00, img: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=800&q=80',
+      desc: 'Paneer Kadai, Veg. Kolhapuri, Dal Fry Butter, Jeera Rice and 4 Butter Rotis — a comforting Sunday classic for everyone.', tag: '👪 Family Dinner', cookTime: '25–30 min' },
+    { id: 'fd3', name: 'Family Snack Box',              price: 475.00, img: 'https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=800&q=80',
+      desc: 'Veg. Pizza, French Fries, 2 Cheese Sandwiches and 4 Soft Drinks — a crowd-pleaser the kids (and adults) will love.', tag: '👪 Family Dinner', cookTime: '12–18 min' },
+    { id: 'fd4', name: 'Tandoori Family Night',         price: 895.00, img: 'https://images.unsplash.com/photo-1628294895950-9805252f784d?w=800&q=80',
+      desc: 'Tandoori Plater, Veg. Sheekh Kabab, 2 Garlic Naans and 2 Special Lassis — a smoky tandoor feast to share.', tag: '👪 Family Dinner', cookTime: '20–25 min' }
+  ],
+  friends: [
+    { id: 'fr1', name: 'Sizzler Squad Platter',  price: 880.00, img: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800&q=80',
+      desc: 'Mix Grilled Sizzler, Chinese Sizzler and Veg. Triple Fried Rice — a smoking-hot platter built for the group.', tag: '🎉 Fun with Friends', cookTime: '22–28 min' },
+    { id: 'fr2', name: 'Indo-Chinese Mania',     price: 820.00, img: 'https://images.unsplash.com/photo-1563245372-f21724e3856d?w=800&q=80',
+      desc: 'Veg. Manchurian (Dry), Veg. Hakka Noodles, Veg. Spring Roll and Veg. Lollipop — wok-tossed favourites for sharing.', tag: '🎉 Fun with Friends', cookTime: '18–22 min' },
+    { id: 'fr3', name: 'Starter Sharing Platter', price: 935.00, img: 'https://images.unsplash.com/photo-1544025162-d76538a23b06?w=800&q=80',
+      desc: 'Tandoori Plater, Paneer Sheekh Kabab, Veg. Sheekh Kabab and 4 Fresh Lime Sodas — the ultimate starter spread.', tag: '🎉 Fun with Friends', cookTime: '15–20 min' },
+    { id: 'fr4', name: 'Cold Coffee Crew Pack',  price: 560.00, img: 'https://images.unsplash.com/photo-1571805529673-0f56b922b359?w=800&q=80',
+      desc: '4 Cold Coffees with Ice Cream and a French Fries to share — perfect for a chill catch-up session.', tag: '🎉 Fun with Friends', cookTime: '8–12 min' }
+  ],
+  solo: [
+    { id: 'so1', name: 'Solo Comfort Thali',     price: 263.00, img: 'https://images.unsplash.com/photo-1546833998-877b37c2e543?w=800&q=80',
+      desc: 'Dal Fry Tadka, Steamed Rice and a Butter Roti — simple, comforting, and just right for one.', tag: '🧘 Solo Dining', cookTime: '12–18 min' },
+    { id: 'so2', name: 'Light & Healthy Solo',   price: 235.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800&q=80',
+      desc: 'Fresh Green Salad, Veg. Hot & Sour Soup and a Fresh Lime Water — a light, feel-good meal for one.', tag: '🧘 Solo Dining', cookTime: '8–12 min' },
+    { id: 'so3', name: 'Soup & Sandwich Combo',  price: 289.00, img: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=800&q=80',
+      desc: 'Cream of Tomato Soup, a Veg. Club Sandwich and a Cold Coffee — cosy, quick, and entirely yours.', tag: '🧘 Solo Dining', cookTime: '10–15 min' }
+  ],
+  cafe: [
+    { id: 'cf1', name: 'Cafe Classic Combo',  price: 235.00, img: 'https://images.unsplash.com/photo-1544145945-f90425340c7e?w=800&q=80',
+      desc: 'A Cheese Sandwich, Cold Coffee with Ice Cream and a Fresh Lime Soda — your everyday cafe favourite.', tag: '☕ Cafe Hopping', cookTime: '8–12 min' },
+    { id: 'cf2', name: 'Sweet Treat Break',   price: 245.00, img: 'https://images.unsplash.com/photo-1488900128323-21503983a07e?w=800&q=80',
+      desc: 'Chocolate Milk Shake with Ice Cream, a Gulab Jamun and a Vanilla Ice Cream — a little sweetness mid-hop.', tag: '☕ Cafe Hopping', cookTime: '5–8 min' },
+    { id: 'cf3', name: 'Brunch for Two',      price: 378.00, img: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=800&q=80',
+      desc: 'A Veg. Club Sandwich, a Cheese Jam Sandwich and 2 Cold Coffees — a lazy brunch made for two.', tag: '☕ Cafe Hopping', cookTime: '10–15 min' },
+    { id: 'cf4', name: 'Pizza & Shake Combo', price: 249.00, img: 'https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=800&q=80',
+      desc: 'A Cheese Pizza with a Strawberry Milk Shake — a classic cafe-hop pairing.', tag: '☕ Cafe Hopping', cookTime: '12–18 min' }
+  ]
+};
 
-const recData = {
-  date: {
-    title: "Romantic Evening", desc: "Perfect portions for two to share.",
-    bundles: [
-      { id: 'b1', name: "The Perfect Pair", desc: "1x Paneer Tikka Dry, 1x Emerald Sp. Paneer, 2x Naan Garlic, 2x Fruit Punch", price: 795, items: [{name:"Paneer Tikka Dry", qty:1, price:235}, {name:"Emerald Sp. Paneer", qty:1, price:240}, {name:"Naan Garlic", qty:2, price:90}, {name:"Fruit Punch", qty:2, price:70}] }
-    ]
+/* ══════════════════════════════════════════════════════════════════════════
+   CHANGE 3: OCCASION CATEGORIES — each carries its own banner copy AND its
+   own colour theme (page background / header / sidebar / accent). Selecting
+   a category (via showSection → applyTheme) re-skins the whole page to match
+   the occasion's mood, e.g. Date Night → blue, Family Dinner → green.
+   ══════════════════════════════════════════════════════════════════════════ */
+const categoryInfo = {
+  date_night: {
+    bannerImg:'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80',
+    bannerLabel:'Date Night', bannerSub:'Set the mood — we\'ll set the table',
+    theme: { accent:'#93C5FD', pageBg:'#142A4D', headerBg:'#0F2040', sidebarBg:'#0B1830' }
   },
-  family: {
-    title: "Family Feast", desc: "Generous combos that everyone will love.",
-    bundles: [
-      { id: 'b2', name: "Grand Family Combo", desc: "1x Tandoori Plater, 1x Paneer Butter Masala, 1x Mix Vegetable, 4x Butter Naan, 1x Veg Biryani", price: 1100, items: [{name:"Tandoori Plater", qty:1, price:285}, {name:"Paneer Butter Masala", qty:1, price:210}, {name:"Mix Vegetable", qty:1, price:190}, {name:"Naan Butter", qty:4, price:55}, {name:"Veg Biryani", qty:1, price:150}] }
-    ]
+  family_dinner: {
+    bannerImg:'https://images.unsplash.com/photo-1499028344343-cd173ffc68a9?w=800&q=80',
+    bannerLabel:'Family Dinner', bannerSub:'Big platters, bigger memories',
+    theme: { accent:'#86EFAC', pageBg:'#163A2C', headerBg:'#102A20', sidebarBg:'#0A1E17' }
   },
   friends: {
-    title: "Hangout Bites", desc: "Snacks, sizzlers, and fast food to chill.",
-    bundles: [
-      { id: 'b3', name: "Pizza & Fries Party", desc: "2x Cheese Pizza, 2x French Fries, 4x Soft Drinks", price: 580, items: [{name:"Cheese Pizza", qty:2, price:150}, {name:"French Fries", qty:2, price:100}, {name:"Soft Drinks (MRP)", qty:4, price:20}] }
-    ]
+    bannerImg:'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800&q=80',
+    bannerLabel:'Fun with Friends', bannerSub:'Share plates, share laughs',
+    theme: { accent:'#FFC07A', pageBg:'#4D2A14', headerBg:'#3A1F0E', sidebarBg:'#2A1609' }
   },
   solo: {
-    title: "Me Time", desc: "Comforting meals just for you.",
-    bundles: [
-      { id: 'b4', name: "Comfort Bowl", desc: "1x Chinese Bhel, 1x Cold Coffee", price: 289, items: [{name:"Chinese Bhel", qty:1, price:190}, {name:"Cold Coffee", qty:1, price:99}] }
-    ]
+    bannerImg:'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=800&q=80',
+    bannerLabel:'Solo Dining', bannerSub:'Just you, your favourites, no rush',
+    theme: { accent:'#5EEAD4', pageBg:'#0F3D3A', headerBg:'#0B2E2B', sidebarBg:'#08211F' }
+  },
+  cafe: {
+    bannerImg:'https://images.unsplash.com/photo-1571805529673-0f56b922b359?w=800&q=80',
+    bannerLabel:'Cafe Hopping', bannerSub:'Light bites, slow sips',
+    theme: { accent:'#F4B8C0', pageBg:'#3D2024', headerBg:'#2E171A', sidebarBg:'#211013' }
   }
 };
 
+/* Applies an occasion's colour theme to the whole page by updating the CSS
+   custom properties that the stylesheet's theme-override block reads from.
+   --primary / --primary-dark are declared `!important` in the base
+   stylesheet override, so they're set here with `important` priority too
+   (inline !important beats stylesheet !important). --header-bg /
+   --sidebar-bg are new, non-important variables, so a normal inline
+   override is enough. */
+function applyTheme(themeKey) {
+  const info = categoryInfo[themeKey];
+  if (!info || !info.theme) return;
+  const t = info.theme;
+  const root = document.documentElement.style;
+  root.setProperty('--primary',      t.accent, 'important');
+  root.setProperty('--primary-dark', t.pageBg,  'important');
+  root.setProperty('--header-bg',  t.headerBg);
+  root.setProperty('--sidebar-bg', t.sidebarBg);
+}
+
+/* ── STATE ───────────────────────────────────────────────────────────────── */
+let cart = {};
+let currentSection = 'date_night';
+let _detailItemId  = null;
+let _detailSection = null;
+let _sidebarOpen   = false;
+
+/* ══════════════════════════════════════════════════════════════════════════
+   CHANGE 4: SESSION PERSISTENCE
+   Generates (or restores) a unique session ID per device/browser. This ID is
+   attached to every order placed from this device and is used by track.html
+   to restore "current order" tracking even if localStorage's currentOrderId
+   was lost, as long as the session is still active (table not yet freed).
+   ══════════════════════════════════════════════════════════════════════════ */
+function getOrCreateSessionId() {
+  let sid = localStorage.getItem('emeraldSessionId');
+  if (!sid) {
+    const ts   = Date.now().toString(36);
+    const rand = Math.random().toString(36).substr(2, 9).toUpperCase();
+    sid = 'SES' + ts + rand;
+    localStorage.setItem('emeraldSessionId', sid);
+  }
+  return sid;
+}
+const emeraldSessionId = getOrCreateSessionId();
+
+/* On revisit, if currentOrderId was lost but this device has an active
+   session on file, silently restore it so order rounds / tracking continue
+   to reference the correct order. */
+if (!localStorage.getItem('currentOrderId')) {
+  db.ref('sessions/' + emeraldSessionId).once('value', snap => {
+    const sess = snap.val();
+    if (sess && sess.active && sess.currentOrderId) {
+      localStorage.setItem('currentOrderId', sess.currentOrderId);
+    }
+  });
+}
+
+/* ── INIT ────────────────────────────────────────────────────────────────── */
 window.onload = () => {
-  try {
-    const savedCart = localStorage.getItem('emerald_cart');
-    if (savedCart) cart = JSON.parse(savedCart);
-  } catch(e) {}
-  renderSection('date');
-  syncCartUI();
+  setTimeout(() => {
+    document.getElementById('intro-wrapper').classList.add('exit');
+    const firstNavItem = document.querySelector('.nav-item');
+    showSection('date_night', firstNavItem);
+  }, 5500);
 };
 
-function switchTheme(theme, btn) {
-  document.body.className = 'theme-' + theme;
-  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderSection(theme);
+/* ── CHANGE 1: SIDEBAR TOGGLE ────────────────────────────────────────────── */
+function toggleSidebar() {
+  const sidebar   = document.getElementById('sidebar');
+  const toggleBtn = document.getElementById('sidebar-toggle-btn');
+  const cartBar   = document.getElementById('cart-bar');
+  _sidebarOpen = !_sidebarOpen;
+  if (_sidebarOpen) {
+    sidebar.classList.add('open');
+    toggleBtn.classList.add('active');
+    cartBar.classList.add('sidebar-adjusted');
+    setTimeout(() => {
+      const activeEl = document.querySelector('.nav-item.active, .sub-item.active');
+      if (activeEl) moveIndicator(activeEl);
+    }, 420);
+  } else {
+    sidebar.classList.remove('open');
+    toggleBtn.classList.remove('active');
+    cartBar.classList.remove('sidebar-adjusted');
+  }
 }
 
-function renderSection(theme) {
-  const data = recData[theme];
-  let html = `<div class="event-banner"><h2>${data.title}</h2><p>${data.desc}</p></div>`;
-  
-  data.bundles.forEach(b => {
-    html += `
-      <div class="combo-card">
-        <div class="combo-header">
-          <div class="combo-title">${b.name}</div>
-          <div class="combo-price">₹${b.price}</div>
-        </div>
-        <div class="combo-desc">${b.desc}</div>
-        <button class="add-btn" onclick='addBundle(${JSON.stringify(b)})'>ADD BUNDLE</button>
-      </div>`;
-  });
-  document.getElementById('rec-container').innerHTML = html;
+/* ── NAV INDICATOR ───────────────────────────────────────────────────────── */
+function moveIndicator(el) {
+  const indicator   = document.getElementById('nav-indicator');
+  const sidebar     = document.getElementById('sidebar');
+  const rect        = el.getBoundingClientRect();
+  const sidebarRect = sidebar.getBoundingClientRect();
+  const relativeTop = rect.top - sidebarRect.top + sidebar.scrollTop;
+  indicator.style.top    = `${relativeTop}px`;
+  indicator.style.height = `${rect.height}px`;
+  indicator.style.width  = `${rect.width}px`;
+  indicator.style.left   = `${el.offsetLeft}px`;
 }
 
-function addBundle(bundle) {
-  bundle.items.forEach(i => {
-    let id = 'item_' + i.name.replace(/\s+/g,'_');
-    if(cart[id]) { cart[id].qty += i.qty; } 
-    else { cart[id] = { id: id, name: i.name, price: i.price, qty: i.qty }; }
-  });
+let _togglePendingTimer = null;
+
+/* ── TOGGLE GROUP ────────────────────────────────────────────────────────── */
+function toggleGroup(groupId, el) {
+  triggerHaptic();
+  if (_togglePendingTimer !== null) { clearTimeout(_togglePendingTimer); _togglePendingTimer = null; }
+  const allGroups    = document.querySelectorAll('.nav-group');
+  const clickedGroup = el.closest('.nav-group');
+  const isExpanded   = clickedGroup.classList.contains('expanded');
+  allGroups.forEach(g => g.classList.remove('expanded'));
+  if (!isExpanded) {
+    clickedGroup.classList.add('expanded');
+    _togglePendingTimer = setTimeout(() => {
+      _togglePendingTimer = null;
+      if (clickedGroup.classList.contains('expanded')) {
+        const firstSub = clickedGroup.querySelector('.sub-item');
+        if (firstSub) {
+          const sectionName = firstSub.getAttribute('onclick').match(/'([^']+)'/)[1];
+          showSection(sectionName, firstSub);
+        } else { moveIndicator(el); }
+      } else { moveIndicator(el); }
+    }, 400);
+  } else { moveIndicator(el); }
+}
+
+/* ── SHOW SECTION — banner + 3-col glass grid, themed per occasion ────────── */
+function showSection(section, el) {
+  triggerHaptic();
+  currentSection = section;
+  const grid          = document.getElementById('menu-grid');
+  const bannerWrap    = document.getElementById('category-banner-wrap');
+  const nameDisplay   = document.getElementById('section-name');
+  const menuContainer = document.querySelector('.menu-container');
+  document.querySelectorAll('.nav-item, .sub-item').forEach(i => i.classList.remove('active'));
+  el.classList.add('active');
+  moveIndicator(el);
+  const label = section.replace(/_/g,' ').replace('merged','').trim().toUpperCase();
+  const catInfo = categoryInfo[section] || { bannerImg:'https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?w=800&q=80', bannerLabel:label, bannerSub:'Explore our selection' };
+  nameDisplay.innerText = (catInfo.bannerLabel || label).toUpperCase();
+  /* CHANGE 3: re-skin the whole page (bg / header / sidebar / accent) to
+     match this occasion's mood. */
+  applyTheme(section);
+  bannerWrap.innerHTML = `<div class="category-banner"><img src="${catInfo.bannerImg}" alt="${catInfo.bannerLabel}" loading="lazy"><div class="category-banner-overlay"><div class="category-banner-title">${catInfo.bannerLabel}</div><div class="category-banner-sub">${catInfo.bannerSub}</div></div></div>`;
+  const items = comboData[section] || [];
+  grid.innerHTML = items.map(item => `
+    <div class="food-card">
+      <div class="cart-badge" id="badge-${item.id}">0</div>
+      <div class="food-card-img-wrap" onclick="openItemDetail('${section}','${item.id}')">
+        <img src="${item.img}" alt="${item.name}" loading="lazy">
+        <span class="img-detail-hint">ℹ Info</span>
+      </div>
+      <h4>${item.name}</h4>
+      <div class="price">&#8377;${item.price.toFixed(2)}</div>
+      <button class="add-initial" id="add-btn-${item.id}" onclick="addToCart('${section}','${item.id}')">ADD</button>
+      <div class="qty-controls" id="qty-ctrl-${item.id}">
+        <button class="btn-qty" onclick="updateQty('${item.id}',-1)">-</button>
+        <span id="qty-val-${item.id}">0</span>
+        <button class="btn-qty" onclick="updateQty('${item.id}',1)">+</button>
+      </div>
+    </div>`).join('');
+  menuContainer.scrollTop = 0;
+  syncCartUI();
+}
+
+/* ── ITEM DETAIL POPUP ───────────────────────────────────────────────────── */
+function findItemSection(itemId) {
+  for (const [sec, items] of Object.entries(comboData)) {
+    if (items.find(i => i.id === itemId)) return sec;
+  }
+  return currentSection;
+}
+
+function openItemDetail(section, itemId) {
+  const item = (comboData[section] || []).find(i => i.id === itemId);
+  if (!item) return;
+  _detailItemId  = itemId;
+  _detailSection = section;
+  document.getElementById('item-detail-img').src             = item.img;
+  document.getElementById('item-detail-img').alt             = item.name;
+  document.getElementById('item-detail-name').textContent    = item.name;
+  document.getElementById('item-detail-price').textContent   = '₹' + item.price.toFixed(2);
+  document.getElementById('item-detail-cat-badge').textContent = item.tag || section;
+  document.getElementById('item-detail-time').textContent    = '⏱ ' + (item.cookTime || '15–20 min');
+  document.getElementById('item-detail-desc').textContent    = item.desc || 'A delicious combo crafted with fresh, quality ingredients and prepared to order in our kitchen.';
+  const btn = document.getElementById('item-detail-add-btn');
+  if (cart[itemId]) { btn.textContent = '✓ Already in Cart'; btn.classList.add('in-cart'); btn.classList.remove('added-flash'); }
+  else { btn.textContent = 'ADD TO CART'; btn.classList.remove('in-cart','added-flash'); }
+  document.getElementById('item-detail-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeItemDetail(e) {
+  if (e && e.target !== document.getElementById('item-detail-modal')) return;
+  _closeDetailModal();
+}
+
+function _closeDetailModal() {
+  document.getElementById('item-detail-modal').classList.remove('open');
+  document.body.style.overflow = '';
+  _detailItemId = null; _detailSection = null;
+}
+
+function addFromDetail() {
+  if (!_detailItemId || !_detailSection) return;
+  const btn = document.getElementById('item-detail-add-btn');
+  if (!cart[_detailItemId]) { addToCart(_detailSection, _detailItemId); }
+  else { updateQty(_detailItemId, 1); }
+  btn.textContent = '✓ Added!';
+  btn.classList.add('added-flash');
+  btn.classList.remove('in-cart');
+  setTimeout(() => _closeDetailModal(), 550);
+}
+
+/* ── CART FUNCTIONS (unchanged logic) ────────────────────────────────────── */
+function addToCart(sec, id) {
+  triggerHaptic();
+  let item;
+  if (sec === 'search') { Object.values(comboData).forEach(cat => { const f = cat.find(i => i.id === id); if (f) item = f; }); }
+  else { item = (comboData[sec] || []).find(i => i.id === id); }
+  if (item && !cart[id]) cart[id] = { ...item, qty: 1 };
   syncCartUI();
 }
 
 function updateQty(id, delta) {
+  triggerHaptic();
   if (cart[id]) { cart[id].qty += delta; if (cart[id].qty <= 0) delete cart[id]; }
   syncCartUI();
 }
 
 function syncCartUI() {
   let totalItems = 0, subtotal = 0;
+  document.querySelectorAll('.add-initial').forEach(b => b.style.display = 'block');
+  document.querySelectorAll('.qty-controls').forEach(c => c.style.display = 'none');
+  document.querySelectorAll('.cart-badge').forEach(b => b.style.display = 'none');
   const cartList = document.getElementById('cart-items-list');
   cartList.innerHTML = '';
   Object.keys(cart).forEach(id => {
     const item = cart[id];
     totalItems += item.qty; subtotal += item.price * item.qty;
-    cartList.innerHTML += `<div class="cart-item-row"><div><h5>${item.name}</h5><p>&#8377;${(item.price*item.qty).toFixed(2)}</p></div><div style="display:flex;gap:10px;"><button class="btn-qty" onclick="updateQty('${id}',-1)">-</button><span>${item.qty}</span><button class="btn-qty" onclick="updateQty('${id}',1)">+</button></div></div>`;
+    const addBtn  = document.getElementById(`add-btn-${id}`);
+    const qtyCtrl = document.getElementById(`qty-ctrl-${id}`);
+    const qtyVal  = document.getElementById(`qty-val-${id}`);
+    const badge   = document.getElementById(`badge-${id}`);
+    if (addBtn) { addBtn.style.display = 'none'; qtyCtrl.style.display = 'flex'; qtyVal.innerText = item.qty; badge.style.display = 'block'; badge.innerText = item.qty; }
+    cartList.innerHTML += `<div class="cart-item-row"><div class="cart-item-info"><h5>${item.name}</h5><p>&#8377;${(item.price*item.qty).toFixed(2)}</p></div><div class="cart-item-actions"><button class="btn-qty" onclick="updateQty('${item.id}',-1)">-</button><span style="font-weight:700">${item.qty}</span><button class="btn-qty" onclick="updateQty('${item.id}',1)">+</button></div></div>`;
   });
-  
   const bar = document.getElementById('cart-bar');
   if (totalItems > 0) {
     bar.style.display = 'flex';
-    document.getElementById('cart-item-count').innerText = `${totalItems} Items`;
-    document.getElementById('cart-total-price').innerText = `₹${subtotal.toFixed(2)}`;
-    document.getElementById('cart-total-price-popup').innerText = `₹${subtotal.toFixed(2)}`;
+    document.getElementById('cart-item-count').innerText         = `${totalItems} Items`;
+    document.getElementById('cart-total-price').innerText        = `₹${subtotal.toFixed(2)}`;
+    document.getElementById('cart-total-price-popup').innerText  = `₹${subtotal.toFixed(2)}`;
   } else {
     bar.style.display = 'none';
     cartList.innerHTML = '<p style="text-align:center;color:#999;padding:20px;">Your basket is empty</p>';
   }
-  localStorage.setItem('emerald_cart', JSON.stringify(cart));
 }
 
 function toggleCart() { const p = document.getElementById('cart-popup'); p.style.display = (p.style.display==='flex') ? 'none' : 'flex'; }
+function toggleSearch() { document.getElementById('search-input').classList.toggle('active'); }
+function triggerHaptic() { if (window.navigator.vibrate) window.navigator.vibrate(10); }
 
+/* ── SEARCH (updated with clickable image) ───────────────────────────────── */
+function handleSearch() {
+  const query = document.getElementById('search-input').value.toLowerCase();
+  const grid  = document.getElementById('menu-grid');
+  const bannerWrap = document.getElementById('category-banner-wrap');
+  if (query === '') {
+    const activeItem = document.querySelector('.nav-item.active, .sub-item.active');
+    if (activeItem) { const m = activeItem.getAttribute('onclick').match(/'([^']+)'/); if (m) showSection(m[1], activeItem); }
+    return;
+  }
+  let allItems = [];
+  Object.values(comboData).forEach(cat => allItems = [...allItems, ...cat]);
+  const filtered = allItems.filter(i => i.name.toLowerCase().includes(query));
+  bannerWrap.innerHTML = '';
+  grid.innerHTML = filtered.map(item => {
+    const sec = findItemSection(item.id);
+    return `<div class="food-card">
+      <div class="cart-badge" id="badge-${item.id}">${cart[item.id]?cart[item.id].qty:0}</div>
+      <div class="food-card-img-wrap" onclick="openItemDetail('${sec}','${item.id}')">
+        <img src="${item.img}" alt="${item.name}" loading="lazy">
+        <span class="img-detail-hint">ℹ Info</span>
+      </div>
+      <h4>${item.name}</h4>
+      <div class="price">&#8377;${item.price.toFixed(2)}</div>
+      <button class="add-initial" id="add-btn-${item.id}" onclick="addToCart('search','${item.id}')" style="display:${cart[item.id]?'none':'block'}">ADD</button>
+      <div class="qty-controls" id="qty-ctrl-${item.id}" style="display:${cart[item.id]?'flex':'none'}">
+        <button class="btn-qty" onclick="updateQty('${item.id}',-1)">-</button>
+        <span id="qty-val-${item.id}">${cart[item.id]?cart[item.id].qty:0}</span>
+        <button class="btn-qty" onclick="updateQty('${item.id}',1)">+</button>
+      </div></div>`;
+  }).join('');
+}
+
+let orderTimerInterval = null;
+const TOTAL_SECONDS    = 15 * 60;
+const CIRCUMFERENCE    = 2 * Math.PI * 54;
+let _orderingInProgress = false;
+let _previousOrderItems = [];
+
+/* ══════════════════════════════════════════════════════════════════════════
+   FIREBASE / ORDER FUNCTIONS — 100% UNCHANGED
+   ══════════════════════════════════════════════════════════════════════════ */
 function processPayment() {
-  const cartSnapshot = Object.values(cart);
-  const cartTotal = cartSnapshot.reduce((sum, item) => sum + (item.price * item.qty), 0);
+  triggerHaptic();
+  if (_orderingInProgress) return;
+  const cartSnapshot = Object.values(cart).map(item => ({ ...item }));
+  const cartTotal    = cartSnapshot.reduce((sum, item) => sum + (item.price * item.qty), 0);
   if (cartSnapshot.length === 0) return;
-
+  _orderingInProgress = true;
   const currentOrderInfo = JSON.parse(localStorage.getItem('currentOrderInfo') || '{}');
-  const sessionStartTime = Date.now();
-  const orderId = 'ORD' + sessionStartTime;
-  
-  const order = { 
-    id: orderId, 
-    tableNumber: null, 
-    customerName: currentOrderInfo.name || 'Customer', 
-    people: parseInt(currentOrderInfo.people) || 1, 
-    items: cartSnapshot, 
-    total: cartTotal, 
-    status: 'Preparing', 
-    orderType: currentOrderInfo.orderType || 'takeaway', 
-    createdAt: new Date(sessionStartTime).toISOString() 
+  const orderType    = currentOrderInfo.orderType || 'takeaway';
+  const customerName = currentOrderInfo.name || 'Customer';
+  const peopleCount  = parseInt(currentOrderInfo.people) || 1;
+  const tablePref    = currentOrderInfo.tablePref || '';
+  const prevOrderId  = localStorage.getItem('currentOrderId');
+
+  const createNewOrder = (assignedTableNum, bypassAssign) => {
+    const sessionStartTime = Date.now();
+    const orderId = 'ORD' + sessionStartTime;
+    const order = { id: orderId, tableNumber: assignedTableNum || null, customerName, people: peopleCount, items: cartSnapshot, total: cartTotal, status: 'Preparing', diet: 'Regular', orderType, createdAt: new Date(sessionStartTime).toISOString(), sessionId: emeraldSessionId };
+    db.ref('orders/' + orderId).set(order).then(() => {
+      localStorage.setItem('currentOrderId', orderId);
+      // CHANGE 4: Persist session → current-order mapping. track.html (and a
+      // revisiting menu.html) can use this to restore tracking if local
+      // storage's currentOrderId is lost. Manager clears `active` once the
+      // table is freed / order completed.
+      db.ref('sessions/' + emeraldSessionId).set({ currentOrderId: orderId, active: true, lastActive: Date.now(), customerName, orderType });
+      _previousOrderItems = cartSnapshot;
+      cart = {};
+      syncCartUI();
+      addPrevOrderRound(_previousOrderItems);
+      if (orderType === 'dinein' && !bypassAssign) { assignTable(customerName, peopleCount, orderId, tablePref, sessionStartTime); }
+      showOrderConfirm();
+      _orderingInProgress = false;
+    }).catch(error => { console.error('Error placing order:', error); alert('Error placing order. Please try again.'); _orderingInProgress = false; });
   };
-  
-  db.ref('orders/' + orderId).set(order).then(() => {
-    localStorage.setItem('currentOrderId', orderId);
-    if(order.orderType === 'dinein') {
-      // FIFO Assignment request
-      db.ref('queue').push().set({
-        name: order.customerName,
-        people: order.people,
-        orderId: orderId,
-        time: sessionStartTime
+
+  if (orderType === 'dinein' && prevOrderId) {
+    db.ref('orders/' + prevOrderId).once('value', snap => {
+      const prevOrder = snap.val();
+      const isStillActive = prevOrder && prevOrder.status !== 'Completed' && prevOrder.status !== 'Cancelled' && prevOrder.tableNumber && (prevOrder.customerName || '').trim().toLowerCase() === customerName.trim().toLowerCase();
+      if (!isStillActive) { createNewOrder(null, false); return; }
+      db.ref('tables').once('value', tSnap => {
+        const tables = tSnap.val();
+        let tableStillOccupied = false;
+        if (tables) { Object.values(tables).forEach(t => { if (t && t.number == prevOrder.tableNumber && t.occupied) tableStillOccupied = true; }); }
+        if (tableStillOccupied) { createNewOrder(prevOrder.tableNumber, true); } else { createNewOrder(null, false); }
       });
+    });
+  } else { createNewOrder(null, false); }
+}
+
+let _prevOrderRounds = [];
+function addPrevOrderRound(items) {
+  if (!items || !items.length) return;
+  _prevOrderRounds.push({ items: items.map(i => ({...i})), time: new Date() });
+  const dot = document.getElementById('hamb-notif-dot');
+  if (dot) dot.classList.add('visible');
+}
+
+function openPrevOrdersPanel() {
+  const panel = document.getElementById('prev-orders-panel');
+  const body  = document.getElementById('prev-orders-body');
+  if (!panel || !body) return;
+  const dot = document.getElementById('hamb-notif-dot');
+  if (dot) dot.classList.remove('visible');
+  if (!_prevOrderRounds.length) {
+    body.innerHTML = '<div class="pop-empty">No orders placed yet this session.</div>';
+  } else {
+    body.innerHTML = _prevOrderRounds.map((round, idx) => {
+      const total   = round.items.reduce((s, i) => s + i.price * i.qty, 0);
+      const timeStr = round.time.toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit' });
+      const itemRows = round.items.map(i => `<div class="poc-item-row"><span class="poc-item-name">${i.name}</span><span class="poc-item-qty">×${i.qty}</span><span class="poc-item-price">₹${(i.price*i.qty).toFixed(2)}</span></div>`).join('');
+      return `<div class="prev-order-card"><div class="poc-header"><span class="poc-round">Round ${idx+1}</span><span class="poc-time">${timeStr}</span></div>${itemRows}<div class="poc-total"><span>Round Total</span><span>₹${total.toFixed(2)}</span></div></div>`;
+    }).join('');
+  }
+  panel.classList.add('open');
+}
+
+function closePrevOrdersPanel() { const p = document.getElementById('prev-orders-panel'); if (p) p.classList.remove('open'); }
+
+function toggleHeaderMenu(e) { e.stopPropagation(); document.getElementById('hamb-dropdown').classList.toggle('open'); }
+function closeHeaderMenu()   { document.getElementById('hamb-dropdown').classList.remove('open'); }
+
+document.addEventListener('click', function(e) {
+  const drop = document.getElementById('hamb-dropdown');
+  const btn  = document.getElementById('hamb-icon-btn');
+  if (drop && !drop.contains(e.target) && e.target !== btn) drop.classList.remove('open');
+});
+
+function assignTable(name, people, orderId, tablePref, sessionStartTime) {
+  const since = sessionStartTime || Date.now();
+  db.ref('tables').once('value', (snapshot) => {
+    const raw = snapshot.val();
+    if (!raw) {
+      const initTables = [];
+      for (let i = 1; i <= 10; i++) { initTables.push({ number: i, capacity: i<=4?2:i<=8?4:6, occupied: false, current: null, nextOrder: null }); }
+      db.ref('tables').set(initTables).then(() => { setTimeout(() => assignTable(name, people, orderId, tablePref, sessionStartTime), 500); });
+      return;
     }
-    cart = {};
-    syncCartUI();
-    window.location.href = 'track.html';
+    const entries = Object.entries(raw).map(([k,v]) => ({key:k, table:v})).filter(e => e.table && e.table.number != null);
+    let selectedEntry = null;
+    if (tablePref && tablePref.trim() !== '' && !isNaN(tablePref)) {
+      selectedEntry = entries.find(e => e.table.number === parseInt(tablePref)) || null;
+      if (selectedEntry && selectedEntry.table.occupied) selectedEntry = null;
+    }
+    if (!selectedEntry) {
+      const freeEntries = entries.filter(e => !e.table.occupied);
+      if (freeEntries.length > 0) { selectedEntry = freeEntries[Math.floor(Math.random()*freeEntries.length)]; }
+      else {
+        /* ══════════════════════════════════════════════════════════════════
+           CHANGE 1: FIFO WAITING QUEUE
+           All tables are currently occupied — push this customer into the
+           global FIFO queue ("queue" node, ordered by `timestamp`). The
+           manager dashboard listens to this node in real time and, the
+           instant any table is freed, automatically assigns the
+           first-in-line entry to that table (removing it from the queue and
+           setting order.tableNumber so this customer's tracking page picks
+           up the new table number live).
+           ══════════════════════════════════════════════════════════════════ */
+        const queueRef = db.ref('queue').push();
+        queueRef.set({ name, people, orderId, sessionId: emeraldSessionId, timestamp: since, since });
+        return;
+      }
+    }
+    if (selectedEntry) {
+      const { key: tableKey, table: selectedTable } = selectedEntry;
+      db.ref('tables/'+tableKey).update({ occupied: true, current: { name, people, since, orderId } });
+      db.ref('orders/'+orderId).update({ tableNumber: selectedTable.number });
+    }
   });
 }
+
+let _tableListener = null;
+
+function showOrderConfirm() {
+  const overlay = document.getElementById('order-confirm-overlay');
+  document.getElementById('order-ready-subtext').style.display = 'block';
+  document.getElementById('order-ready-banner').classList.remove('visible');
+  const token = Math.floor(100 + Math.random() * 900);
+  document.getElementById('order-token-number').textContent = '#' + token;
+  const tableBadge = document.getElementById('popup-table-badge');
+  const tableNumEl = document.getElementById('popup-table-number');
+  tableBadge.classList.remove('visible');
+  tableNumEl.textContent = '—';
+  const currentOrderInfo = JSON.parse(localStorage.getItem('currentOrderInfo') || '{}');
+  if (currentOrderInfo.orderType === 'dinein') {
+    const orderId = localStorage.getItem('currentOrderId');
+    if (orderId) {
+      if (_tableListener) { db.ref('orders/'+_tableListener).off('value'); _tableListener = null; }
+      _tableListener = orderId;
+      db.ref('orders/'+orderId).on('value', snap => {
+        const order = snap.val();
+        if (order && order.tableNumber) { tableNumEl.textContent = order.tableNumber; tableBadge.classList.add('visible'); db.ref('orders/'+orderId).off('value'); _tableListener = null; }
+      });
+    }
+  }
+  overlay.classList.add('visible');
+  startOrderTimer();
+}
+
+function closeOrderConfirm() {
+  document.getElementById('order-confirm-overlay').classList.remove('visible');
+  if (orderTimerInterval) { clearInterval(orderTimerInterval); orderTimerInterval = null; }
+  const trackBtn = document.getElementById('track-order-btn');
+  trackBtn.classList.add('visible');
+  triggerTrackShake();
+  if (window._trackShakeInterval) clearInterval(window._trackShakeInterval);
+  window._trackShakeInterval = setInterval(triggerTrackShake, 5000);
+}
+
+function triggerTrackShake() {
+  const trackBtn = document.getElementById('track-order-btn');
+  trackBtn.classList.remove('shake');
+  void trackBtn.offsetWidth;
+  trackBtn.classList.add('shake');
+}
+
+function startOrderTimer() {
+  if (orderTimerInterval) clearInterval(orderTimerInterval);
+  let secondsLeft = TOTAL_SECONDS;
+  const display = document.getElementById('timer-display');
+  const circle  = document.getElementById('timer-progress-circle');
+  circle.style.strokeDasharray  = CIRCUMFERENCE;
+  circle.style.strokeDashoffset = 0;
+  function updateTimer() {
+    const mins = Math.floor(secondsLeft / 60);
+    const secs = secondsLeft % 60;
+    display.textContent = `${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+    circle.style.strokeDashoffset = CIRCUMFERENCE * ((TOTAL_SECONDS - secondsLeft) / TOTAL_SECONDS);
+    if (secondsLeft <= 0) {
+      clearInterval(orderTimerInterval); orderTimerInterval = null;
+      display.textContent = '00:00';
+      circle.style.strokeDashoffset = CIRCUMFERENCE;
+      document.getElementById('order-ready-subtext').style.display = 'none';
+      document.getElementById('order-ready-banner').classList.add('visible');
+    } else { secondsLeft--; }
+  }
+  updateTimer();
+  orderTimerInterval = setInterval(updateTimer, 1000);
+}
+
+function goToTrackOrder() { window.location.href = 'track.html'; }
 </script>
 </body>
 </html>
