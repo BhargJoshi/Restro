@@ -75,6 +75,11 @@
       position: relative;
       overflow: hidden;
       animation: headerIn 0.5s ease 0.1s both;
+      /* UPDATE: keep the back button reachable above every overlay
+         (success / cancel-confirm / cancelled-screen all sit at z-index
+         200–400) so "Back to Menu" always works, even once the
+         "order ready" sheet has appeared. */
+      z-index: 500;
     }
 
     /* Decorative ghost circles — same as menu.txt food-card detail popup */
