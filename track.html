@@ -75,11 +75,6 @@
       position: relative;
       overflow: hidden;
       animation: headerIn 0.5s ease 0.1s both;
-      /* UPDATE: keep the back button reachable above every overlay
-         (success / cancel-confirm / cancelled-screen all sit at z-index
-         200–400) so "Back to Menu" always works, even once the
-         "order ready" sheet has appeared. */
-      z-index: 500;
     }
 
     /* Decorative ghost circles — same as menu.txt food-card detail popup */
@@ -111,7 +106,13 @@
     }
 
     /* Back button — mirrors .sidebar-toggle-btn in menu.txt */
+    /* UPDATE: kept in the DOM/layout (so .header-top's title/cancel-btn
+       spacing is unchanged) but made invisible — the new
+       .floating-back-btn below sits at the same spot, is always
+       reachable above every overlay, and is the one users actually see
+       and tap. */
     .back-btn {
+      visibility: hidden;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -128,6 +129,34 @@
       flex-shrink: 0;
     }
     .back-btn:active { transform: scale(0.92); background: rgba(255,255,255,0.22); }
+
+    /* ══════════════════════════════════════
+       UPDATE: ALWAYS-ON-TOP BACK BUTTON
+       Visually sits exactly over the header's back-btn (same offset/size/
+       style) but is fixed to the viewport with a z-index above every
+       overlay (success=200, cancel=300, cancelled=400), so it's reachable
+       no matter what's currently showing.
+    ══════════════════════════════════════ */
+    .floating-back-btn {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.12);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 10px;
+      width: 36px;
+      height: 36px;
+      cursor: pointer;
+      outline: none;
+      transition: background 0.2s, transform 0.15s;
+      z-index: 9999;
+    }
+    .floating-back-btn:active { transform: scale(0.92); background: rgba(255,255,255,0.22); }
 
     /* Title — Playfair Display matches .order-confirm-title */
     .header-title {
@@ -804,7 +833,7 @@
   <!-- ─── HEADER ─── -->
   <header>
     <div class="header-top">
-      <button class="back-btn" aria-label="Go back" onclick="window.location.href='menu.html'">
+      <button class="back-btn" aria-label="Go back" onclick="goBackToMenu()">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
              stroke="rgba(245,245,243,0.90)" stroke-width="2.5"
              stroke-linecap="round" stroke-linejoin="round">
@@ -895,6 +924,20 @@
   <div class="cancelled-sub">Redirecting…</div>
 </div>
 
+<!-- ══════════════════════════════════════
+     UPDATE: ALWAYS-ON-TOP BACK BUTTON
+     Sits at the same top-left spot as the header's back-btn, but as a
+     direct child of <body> with a very high z-index — so it stays above
+     the success / cancel / cancelled overlays (z-index 200–400) and the
+     "order ready" popup can never block navigation back to menu.html.
+══════════════════════════════════════ -->
+<button class="floating-back-btn" id="floating-back-btn" aria-label="Go back to menu" onclick="goBackToMenu()">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+       stroke="rgba(245,245,243,0.90)" stroke-width="2.5"
+       stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="15 18 9 12 15 6"/>
+  </svg>
+</button>
 
 <!-- ══════════════════════════════════════
      ALL JS LOGIC — UNCHANGED FROM ORIGINAL
@@ -903,6 +946,24 @@
       calls are bit-for-bit identical.)
 ══════════════════════════════════════ -->
 <script>
+  /* ══════════════════════════════════════════════════════════════════════
+     UPDATE: BACK NAVIGATION — always to menu.html, session intact
+     • goBackToMenu() is used by both the floating back button and the
+       (now-invisible) header back-btn.
+     • The phone/browser's own back gesture is hijacked via the History
+       API: on load we push a marker state, and popping it (back button /
+       gesture) redirects to menu.html instead of wherever history would
+       otherwise have gone (e.g. back to an order-confirm popup state).
+     menu.html itself reads currentOrderId / emeraldSessionId / cart from
+     localStorage (untouched here) to restore the active session, last
+     section, previous-orders panel and Track button.
+     ══════════════════════════════════════════════════════════════════════ */
+  function goBackToMenu() {
+    window.location.replace('menu.html');
+  }
+  history.pushState({ emeraldTrack: true }, '', location.href);
+  window.addEventListener('popstate', goBackToMenu);
+
   /* ─── CONFIG ─── */
   const TOTAL_SEC = 15 * 60;          // 15 minutes total
   const STEP_AT   = [0, 300, 600, 900]; // seconds each step becomes active
