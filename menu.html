@@ -826,26 +826,112 @@ function getOrCreateSessionId() {
 }
 const emeraldSessionId = getOrCreateSessionId();
 
-/* On revisit, if currentOrderId was lost but this device has an active
-   session on file, silently restore it so order rounds / tracking continue
-   to reference the correct order. */
-if (!localStorage.getItem('currentOrderId')) {
+/* ══════════════════════════════════════════════════════════════════════════
+   BACK-TO-MENU SESSION RESTORE
+   When track.html's back button (or the phone's back button) sends the user
+   to menu.html, this device's session ("sessions/<id>") is checked once. If
+   it's still active (table not yet freed by the manager), we:
+     • restore currentOrderId if it was lost,
+     • rebuild the "Previous Orders" panel from every order this session has
+       placed in Firebase (so the order just tracked reappears there),
+     • re-show the floating "Track Order" button, and
+     • restore the sidebar category the customer was last viewing —
+   all while skipping the long splash animation, so the customer lands right
+   back where they left off.
+   ══════════════════════════════════════════════════════════════════════════ */
+const _sessionCheckPromise = new Promise(resolve => {
   db.ref('sessions/' + emeraldSessionId).once('value', snap => {
     const sess = snap.val();
     if (sess && sess.active && sess.currentOrderId) {
       localStorage.setItem('currentOrderId', sess.currentOrderId);
+      resolve(sess.currentOrderId);
+    } else {
+      resolve(null);
     }
+  }, () => resolve(null));
+});
+
+/* Rebuilds _prevOrderRounds from every order this session has placed, so the
+   "Previous Orders" panel survives a full page reload (e.g. returning from
+   track.html). Mirrors the shape addPrevOrderRound() produces. */
+function restorePrevOrderRoundsFromFirebase() {
+  db.ref('orders').orderByChild('sessionId').equalTo(emeraldSessionId).once('value', snap => {
+    const data = snap.val();
+    if (!data) return;
+    const ordersArr = Object.values(data)
+      .filter(o => o && Array.isArray(o.items) && o.items.length)
+      .sort((a, b) => new Date(a.createdAt || 0) - new Date(b.createdAt || 0));
+    if (!ordersArr.length) return;
+    _prevOrderRounds = ordersArr.map(o => ({ items: o.items.map(i => ({...i})), time: new Date(o.createdAt || Date.now()) }));
+    const dot = document.getElementById('hamb-notif-dot');
+    if (dot) dot.classList.add('visible');
   });
+}
+
+/* Restores the sidebar category last viewed on menu.html, expanding its
+   parent group (mirroring toggleGroup's collapse-others/expand-this
+   behaviour) if it's a sub-item. */
+function restoreLastSection() {
+  const savedSection = localStorage.getItem('emeraldMenuSection');
+  let sectionToShow = 'starters';
+  let elToUse = document.querySelector('.sub-item');
+  let needsIndicatorFix = false;
+  if (savedSection) {
+    const match = document.querySelector(`[onclick*="showSection('${savedSection}'"]`);
+    if (match) {
+      sectionToShow = savedSection;
+      elToUse = match;
+      if (match.classList.contains('sub-item')) {
+        const grp = match.closest('.nav-group');
+        document.querySelectorAll('.nav-group').forEach(g => g.classList.remove('expanded'));
+        if (grp) grp.classList.add('expanded');
+        needsIndicatorFix = true;
+      }
+    }
+  }
+  if (elToUse) {
+    showSection(sectionToShow, elToUse);
+    // If a collapsed submenu was just expanded, its CSS max-height
+    // transition needs a moment before the indicator's final position is
+    // measurable — nudge it once the transition settles.
+    if (needsIndicatorFix) setTimeout(() => moveIndicator(elToUse), 420);
+  }
+}
+
+/* Re-shows the floating Track Order button + its periodic attention shake,
+   exactly as closeOrderConfirm() does right after placing a fresh order. */
+function restoreTrackButton() {
+  const trackBtn = document.getElementById('track-order-btn');
+  trackBtn.classList.add('visible');
+  triggerTrackShake();
+  if (window._trackShakeInterval) clearInterval(window._trackShakeInterval);
+  window._trackShakeInterval = setInterval(triggerTrackShake, 5000);
+}
+
+function restoreActiveSession() {
+  restoreLastSection();
+  restoreTrackButton();
+  restorePrevOrderRoundsFromFirebase();
 }
 
 /* ── INIT ────────────────────────────────────────────────────────────────── */
 window.onload = () => {
-  setTimeout(() => {
-    document.getElementById('intro-wrapper').classList.add('exit');
-    const firstSubItem = document.querySelector('.sub-item');
-    showSection('starters', firstSubItem);
-  }, 5500);
+  _sessionCheckPromise.then(activeOrderId => {
+    const introWrapper = document.getElementById('intro-wrapper');
+    if (activeOrderId) {
+      // Returning to an active session — skip the long splash and restore state.
+      introWrapper.classList.add('exit');
+      restoreActiveSession();
+    } else {
+      setTimeout(() => {
+        introWrapper.classList.add('exit');
+        const firstSubItem = document.querySelector('.sub-item');
+        showSection('starters', firstSubItem);
+      }, 5500);
+    }
+  });
 };
+
 
 /* ── CHANGE 1: SIDEBAR TOGGLE ────────────────────────────────────────────── */
 function toggleSidebar() {
@@ -910,6 +996,9 @@ function toggleGroup(groupId, el) {
 function showSection(section, el) {
   triggerHaptic();
   currentSection = section;
+  // BACK-TO-MENU SESSION RESTORE: remember the last section viewed so
+  // restoreLastSection() can bring the customer right back to it.
+  localStorage.setItem('emeraldMenuSection', section);
   const grid          = document.getElementById('menu-grid');
   const bannerWrap    = document.getElementById('category-banner-wrap');
   const nameDisplay   = document.getElementById('section-name');
