@@ -611,7 +611,15 @@ function applyTheme(themeKey) {
 }
 
 /* ── STATE ───────────────────────────────────────────────────────────────── */
+/* PERSISTENT CART: shared with menu.html via the same localStorage key, so
+   items added on either page survive a reload and a "Resume Session" from
+   index.html lands with the basket intact regardless of which page it was
+   built on. Saved on every change inside syncCartUI(). */
 let cart = {};
+try {
+  const _savedCart = JSON.parse(localStorage.getItem('emeraldCart') || '{}');
+  if (_savedCart && typeof _savedCart === 'object') cart = _savedCart;
+} catch (e) { cart = {}; }
 let currentSection = 'date_night';
 let _detailItemId  = null;
 let _detailSection = null;
@@ -821,6 +829,8 @@ function updateQty(id, delta) {
 }
 
 function syncCartUI() {
+  // PERSISTENT CART: mirror current cart state to localStorage on every change.
+  localStorage.setItem('emeraldCart', JSON.stringify(cart));
   let totalItems = 0, subtotal = 0;
   document.querySelectorAll('.add-initial').forEach(b => b.style.display = 'block');
   document.querySelectorAll('.qty-controls').forEach(c => c.style.display = 'none');
