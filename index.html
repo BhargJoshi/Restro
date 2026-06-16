@@ -493,8 +493,93 @@ function getOrCreateSessionId() {
   }
   return sid;
 }
-// Generate session ID on page load
-getOrCreateSessionId();
+const emeraldSessionId = getOrCreateSessionId();
+
+// ══════════════════════════════════════════════════════════════════════════
+// UPDATE: PREVIOUS SESSION BANNER
+// Conditions for showing "Previous Session Active":
+//   (A) Cart has items left over from last visit (emeraldCart in localStorage)
+//   (B) OR this device has a placed order that's still active in Firebase
+//       (sessions/{id}.active === true)
+//
+// Both scenarios happen per-device so checking localStorage first is
+// instant — Firebase is only consulted when localStorage has no cart but
+// MIGHT have an active placed order from a previous cold-start.
+// ══════════════════════════════════════════════════════════════════════════
+function getSavedCart() {
+  try {
+    const c = JSON.parse(localStorage.getItem('emeraldCart') || '{}');
+    return (c && typeof c === 'object') ? c : {};
+  } catch (e) { return {}; }
+}
+
+function buildBannerSubText(cartItemCount, hasActiveOrder) {
+  const parts = [];
+  if (cartItemCount > 0) parts.push(cartItemCount + ' item' + (cartItemCount !== 1 ? 's' : '') + ' in basket');
+  if (hasActiveOrder)    parts.push('order still being prepared');
+  return parts.length ? parts.join(' · ') + '.' : 'Pick up where you left off, or start fresh.';
+}
+
+function showSessionBanner(cartItemCount, hasActiveOrder) {
+  const banner = document.getElementById('session-banner');
+  const sub    = document.getElementById('session-banner-sub');
+  sub.textContent = buildBannerSubText(cartItemCount, hasActiveOrder);
+  banner.classList.add('visible');
+}
+
+function checkPreviousSession() {
+  const savedCart = getSavedCart();
+  const cartCount = Object.values(savedCart).reduce((s, i) => s + (i.qty || 0), 0);
+
+  if (cartCount > 0) {
+    // Case A: instant — no Firebase needed
+    showSessionBanner(cartCount, false);
+    // Still peek at Firebase in background to enrich the subtitle
+    db.ref('sessions/' + emeraldSessionId).once('value', snap => {
+      const sess = snap.val();
+      const hasOrder = !!(sess && sess.active && sess.currentOrderId);
+      if (hasOrder) {
+        document.getElementById('session-banner-sub').textContent =
+          buildBannerSubText(cartCount, true);
+      }
+    });
+    return;
+  }
+
+  // Case B: no cart items, check Firebase for a still-active placed order
+  db.ref('sessions/' + emeraldSessionId).once('value', snap => {
+    const sess = snap.val();
+    if (sess && sess.active && sess.currentOrderId) {
+      showSessionBanner(0, true);
+    }
+  });
+}
+checkPreviousSession();
+
+// ── Resume previous session → menu.html (session already in localStorage) ──
+function goToPreviousSession() {
+  // The session data (emeraldSessionId, currentOrderId, emeraldCart,
+  // currentOrderInfo, emeraldMenuSection) is already in localStorage.
+  // menu.html's window.onload reads all of it on boot and restores state.
+  window.location.href = 'menu.html';
+}
+
+// ── Start new session → clear everything, then let index flow normally ──────
+function startNewSession() {
+  // Clear session ID so a brand-new one is generated next visit
+  localStorage.removeItem('emeraldSessionId');
+  localStorage.removeItem('currentOrderId');
+  localStorage.removeItem('currentOrderInfo');
+  localStorage.removeItem('emeraldCart');
+  localStorage.removeItem('emeraldMenuSection');
+  // Mark old Firebase session inactive (best-effort, no await needed)
+  if (emeraldSessionId) {
+    db.ref('sessions/' + emeraldSessionId).update({ active: false });
+  }
+  // Hide banner, generate a fresh session ID, continue with normal flow
+  document.getElementById('session-banner').classList.remove('visible');
+  getOrCreateSessionId(); // generates and stores a new SES…
+}
 
 // ── ORIGINAL LOGIC (unchanged) ──────────────────────────────────────────────
 const options = document.querySelectorAll(".option");
