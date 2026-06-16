@@ -801,7 +801,15 @@ const categoryInfo = {
 };
 
 /* ── STATE ───────────────────────────────────────────────────────────────── */
+/* PERSISTENT CART: restore whatever was in the basket last time this device
+   was here (even if no order was ever placed). Saved on every change inside
+   syncCartUI(). Lets index.html detect "previous session active" purely from
+   cart contents, and lets that contents survive a full reload either way. */
 let cart = {};
+try {
+  const _savedCart = JSON.parse(localStorage.getItem('emeraldCart') || '{}');
+  if (_savedCart && typeof _savedCart === 'object') cart = _savedCart;
+} catch (e) { cart = {}; }
 let currentSection = 'starters';
 let _detailItemId  = null;
 let _detailSection = null;
@@ -1098,6 +1106,8 @@ function updateQty(id, delta) {
 }
 
 function syncCartUI() {
+  // PERSISTENT CART: mirror current cart state to localStorage on every change.
+  localStorage.setItem('emeraldCart', JSON.stringify(cart));
   let totalItems = 0, subtotal = 0;
   document.querySelectorAll('.add-initial').forEach(b => b.style.display = 'block');
   document.querySelectorAll('.qty-controls').forEach(c => c.style.display = 'none');
