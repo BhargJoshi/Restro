@@ -801,6 +801,114 @@
       0%   { transform: scale(0.7); opacity: 0; }
       100% { transform: scale(1);   opacity: 1; }
     }
+
+    /* ══════════════════════════════════════
+       CHANGE 2: ORDER DETAILS (items ordered)
+       Sits directly below the tracking timeline so the customer can see
+       exactly what they ordered. Card matches the .step-card glassmorphism
+       language; the total rule mirrors the yellow-accent .poc-total pattern
+       used for "Previous Orders" on menu.html / recommend.html.
+    ══════════════════════════════════════ */
+    .order-details-wrap {
+      width: 100%;
+      max-width: 480px;
+      padding: 6px 16px 0;
+      opacity: 0;
+      transform: translateY(10px);
+      animation: fadeUp 0.5s ease 0.4s forwards;
+    }
+
+    .order-details-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 16px 16px 14px;
+      box-shadow: var(--glass-shadow);
+    }
+
+    .order-details-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(74,52,42,0.10);
+    }
+
+    .order-details-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--espresso);
+    }
+
+    .order-details-count {
+      font-size: 9px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      background: rgba(74,52,42,0.08);
+      padding: 4px 9px;
+      border-radius: 20px;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+
+    .order-detail-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(74,52,42,0.07);
+      font-size: 12.5px;
+    }
+    .order-detail-row:last-child { border-bottom: none; }
+
+    .order-detail-name {
+      flex: 1;
+      min-width: 0;
+      color: var(--espresso);
+      font-weight: 600;
+    }
+
+    .order-detail-qty {
+      color: var(--text-muted);
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .order-detail-price {
+      font-weight: 700;
+      color: var(--espresso);
+      flex-shrink: 0;
+      min-width: 62px;
+      text-align: right;
+    }
+
+    .order-details-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 8px;
+      padding-top: 12px;
+      border-top: 2px solid var(--primary);
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--espresso);
+    }
+
+    .order-details-empty {
+      text-align: center;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
+      padding: 10px 0;
+    }
   </style>
 
   <!-- Firebase SDK -->
@@ -879,6 +987,27 @@
 
   <!-- ─── STEPS (built dynamically by JS) ─── -->
   <div class="steps-wrapper" id="steps-wrapper"></div>
+
+  <!-- ─── CHANGE 2: ORDER DETAILS (items ordered) ───────────────────────────
+       Sits below the tracking timeline so the customer can see exactly what
+       they ordered. Populated from the same Firebase order object (order.items
+       / order.total) that menu.html / recommend.html already write on
+       checkout — no new data, no new writes, purely a read-only display. ─── -->
+  <div class="order-details-wrap" id="order-details-wrap">
+    <div class="order-details-card">
+      <div class="order-details-head">
+        <span class="order-details-title">Your Order</span>
+        <span class="order-details-count" id="order-details-count">— items</span>
+      </div>
+      <div id="order-details-list">
+        <div class="order-details-empty">Loading order details…</div>
+      </div>
+      <div class="order-details-total">
+        <span>Total</span>
+        <span id="order-details-total-price">₹0.00</span>
+      </div>
+    </div>
+  </div>
 
 </div>
 
@@ -1060,6 +1189,35 @@
   }
 
   /* ══════════════════════════════════════════════════════════════════════
+     CHANGE 2: ORDER DETAILS (items ordered)
+     Renders the "Your Order" card below the tracking timeline straight from
+     the same order object the live listener already receives — order.items
+     (each {name, price, qty, ...}) and order.total are written once at
+     checkout by menu.html / recommend.html's processPayment() and never
+     change afterwards, so this is a pure read with zero new Firebase calls.
+     ══════════════════════════════════════════════════════════════════════ */
+  function renderOrderDetails(order) {
+    const listEl  = document.getElementById('order-details-list');
+    const countEl = document.getElementById('order-details-count');
+    const totalEl = document.getElementById('order-details-total-price');
+    if (!listEl || !countEl || !totalEl) return;
+    const items = (order && Array.isArray(order.items)) ? order.items : [];
+    if (!items.length) {
+      listEl.innerHTML = '<div class="order-details-empty">Order details unavailable.</div>';
+      countEl.textContent = '0 items';
+      totalEl.textContent = '₹0.00';
+      return;
+    }
+    const totalQty = items.reduce((s, i) => s + (i.qty || 0), 0);
+    countEl.textContent = totalQty + (totalQty === 1 ? ' item' : ' items');
+    listEl.innerHTML = items.map(i =>
+      `<div class="order-detail-row"><span class="order-detail-name">${i.name}</span><span class="order-detail-qty">×${i.qty}</span><span class="order-detail-price">₹${(i.price * i.qty).toFixed(2)}</span></div>`
+    ).join('');
+    const total = (typeof order.total === 'number') ? order.total : items.reduce((s, i) => s + i.price * i.qty, 0);
+    totalEl.textContent = '₹' + total.toFixed(2);
+  }
+
+  /* ══════════════════════════════════════════════════════════════════════
      CHANGE 2: GLOBAL FIFO QUEUE — live position + ETA
      Mirrors the "queue" node maintained by menu.html (assignTable) and
      manager.html (auto-assignment on table-free). Used by renderTableBadge()
@@ -1122,6 +1280,7 @@
         const displayId = buildDisplayId(order, orderId);
         document.getElementById('order-id').textContent        = displayId;
         document.getElementById('success-order-id').textContent = displayId;
+        renderOrderDetails(order);
       }
     });
 
@@ -1138,6 +1297,7 @@
       const displayId = buildDisplayId(order, orderId);
       document.getElementById('order-id').textContent        = displayId;
       document.getElementById('success-order-id').textContent = displayId;
+      renderOrderDetails(order);
 
       // CHANGE 2: keep table badge (seated table # OR waiting position/ETA) in sync
       _latestOrder = order;
@@ -1188,6 +1348,7 @@
         const fallback = '#' + String(Math.floor(100 + Math.random() * 900));
         document.getElementById('order-id').textContent        = fallback;
         document.getElementById('success-order-id').textContent = fallback;
+        renderOrderDetails(null);
       }
     });
   }
