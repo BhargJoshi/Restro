@@ -59,9 +59,15 @@ body { font-family: 'Inter', sans-serif; background-color: #111; color: var(--te
 #section-name { font-family: 'Playfair Display', serif; font-size: 16px; background: var(--primary); color: #000; display: inline-block; padding: 5px 12px; border-radius: 8px; box-shadow: 0 4px 10px rgba(255,204,0,0.2); }
 
 /* CHANGE 1: SIDEBAR TOGGLE BUTTON */
-.sidebar-toggle-btn { position: absolute; left: 12px; background: rgba(255,255,255,0.68); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.55); border-radius: 10px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 17px; color: #2a2a2a; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: background 0.25s, transform 0.15s, color 0.2s; z-index: 10; }
+.sidebar-toggle-btn { position: absolute; left: 12px; background: rgba(255,255,255,0.68); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.55); border-radius: 12px; width: auto; height: 36px; padding: 0 12px 0 10px; display: flex; align-items: center; justify-content: center; gap: 5px; cursor: pointer; font-size: 17px; color: #2a2a2a; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: background 0.25s, transform 0.15s, color 0.2s; z-index: 10; }
 .sidebar-toggle-btn:active { transform: scale(0.92); }
 .sidebar-toggle-btn.active { background: var(--primary); color: #000; border-color: var(--primary); }
+/* CHANGE 4: arrow + "Menu" label replacing the old hamburger glyph — the
+   arrow flips direction (rotate 180°) when the sidebar is open, echoing the
+   same expand/collapse language already used by .arrow-toggle in index.html */
+.sidebar-toggle-btn .toggle-arrow { width: 13px; height: 13px; flex-shrink: 0; fill: none !important; stroke: #2a2a2a !important; transition: transform 0.35s cubic-bezier(0.4,0,0.2,1); }
+.sidebar-toggle-btn.active .toggle-arrow { transform: rotate(180deg); stroke: #000 !important; }
+.sidebar-toggle-btn .toggle-label { font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.4px; text-transform: uppercase; line-height: 1; white-space: nowrap; }
 .search-container { display: flex; align-items: center; }
 #search-input { width: 0; opacity: 0; padding: 8px 0; border: none; border-bottom: 2px solid var(--primary); outline: none; transition: all 0.3s ease; font-size: 14px; background: transparent; }
 #search-input.active { width: 120px; opacity: 1; padding: 8px 10px; margin-right: 5px; }
@@ -421,9 +427,14 @@ const analytics = firebase.analytics();
 <!-- MAIN CONTENT -->
 <div class="main-content">
   <div class="hero-header">
-    <button class="sidebar-toggle-btn" id="sidebar-toggle-btn" onclick="toggleSidebar()" aria-label="Toggle categories">&#9776;</button>
+    <button class="sidebar-toggle-btn" id="sidebar-toggle-btn" onclick="toggleSidebar()" aria-label="Toggle categories">
+      <svg class="toggle-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+      <span class="toggle-label">Menu</span>
+    </button>
     <h1 id="section-name">Starters</h1>
     <div class="header-actions">
+      <!-- CHANGE 3: cross-page reference button → jumps straight to recommend.html -->
+      <button class="hamb-icon-btn" id="cross-page-btn" onclick="window.location.href='recommend.html'" aria-label="Go to Recommended For You" title="Recommended For You">&#x2728;</button>
       <div class="search-container" style="position:static;">
         <input type="text" id="search-input" placeholder="Search item..." oninput="handleSearch()">
         <button class="search-icon-btn" onclick="toggleSearch()">&#x1F50D;</button>
