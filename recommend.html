@@ -333,6 +333,122 @@ header i {
   font-weight: bold !important;
   border: none !important;
 }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   CHANGE 1: SARCASTIC SUGGESTION POPUP (recommend.html only)
+   Fires every 30s, and again shortly after any add-to-cart. Circular hero
+   image matches the site's existing "circular food image" language; the
+   accent border/price colour rides on --primary / --primary-dark, which
+   applyTheme() already re-skins per occasion — so the popup automatically
+   matches whichever mood (Date Night blue, Family green, etc.) is active.
+   ══════════════════════════════════════════════════════════════════════════ */
+#suggest-popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 8800;
+  padding: 24px;
+}
+#suggest-popup-overlay.open { display: flex; }
+
+.suggest-popup-box {
+  position: relative;
+  width: 100%;
+  max-width: 300px;
+  background: rgba(255,255,255,0.88);
+  backdrop-filter: blur(26px);
+  -webkit-backdrop-filter: blur(26px);
+  border: 1px solid rgba(255,255,255,0.9);
+  border-radius: 28px;
+  padding: 26px 22px 22px;
+  text-align: center;
+  box-shadow: 0 28px 70px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.95);
+  animation: suggestPopIn 0.45s cubic-bezier(0.34,1.56,0.64,1) forwards;
+}
+@keyframes suggestPopIn {
+  0%   { transform: scale(0.75) translateY(30px); opacity: 0; }
+  100% { transform: scale(1)    translateY(0);     opacity: 1; }
+}
+
+.suggest-popup-close {
+  position: absolute;
+  top: 12px; right: 12px;
+  background: rgba(0,0,0,0.08);
+  border: none;
+  border-radius: 50%;
+  width: 28px; height: 28px;
+  font-size: 13px;
+  color: #555;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+.suggest-popup-close:active { background: rgba(0,0,0,0.18); }
+
+.suggest-popup-tag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--primary-dark);
+  background: rgba(0,0,0,0.05);
+  border: 1px solid rgba(0,0,0,0.08);
+  padding: 5px 12px;
+  border-radius: 20px;
+  margin-bottom: 16px;
+}
+
+/* Circular hero image — mirrors the same "perfectly circular boundary"
+   treatment already applied to every food-card image on this page. */
+.suggest-popup-img-wrap {
+  width: 128px;
+  height: 128px;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4px solid var(--primary);
+  box-shadow: 0 10px 26px rgba(0,0,0,0.25);
+}
+.suggest-popup-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.suggest-popup-msg {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 17px;
+  font-weight: 700;
+  color: #111;
+  line-height: 1.35;
+  margin-bottom: 12px;
+}
+
+.suggest-popup-name { font-size: 13px; font-weight: 700; color: #333; margin-bottom: 2px; }
+.suggest-popup-price { font-size: 15px; font-weight: 800; color: var(--primary-dark); margin-bottom: 18px; }
+
+.suggest-popup-actions { display: flex; gap: 10px; }
+.suggest-popup-btn {
+  flex: 1;
+  padding: 12px 0;
+  border-radius: 14px;
+  border: none;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 0.3px;
+  font-family: 'Inter', sans-serif;
+  transition: transform 0.12s, background 0.2s;
+}
+.suggest-popup-btn:active { transform: scale(0.96); }
+.suggest-popup-btn.ghost { background: rgba(0,0,0,0.06); color: #555; }
+.suggest-popup-btn.primary { background: #111; color: #fff; }
+.suggest-popup-btn.primary.added-flash { background: #28a745; color: #fff; }
 </style>
 
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -399,6 +515,8 @@ const analytics = firebase.analytics();
     <button class="sidebar-toggle-btn" id="sidebar-toggle-btn" onclick="toggleSidebar()" aria-label="Toggle categories">&#9776;</button>
     <h1 id="section-name">Starters</h1>
     <div class="header-actions">
+      <!-- CHANGE 3: cross-page reference button → jumps straight to menu.html -->
+      <button class="hamb-icon-btn" id="cross-page-btn" onclick="window.location.href='menu.html'" aria-label="Go to Full Menu" title="Full Menu">&#x1F37D;&#xFE0F;</button>
       <div class="search-container" style="position:static;">
         <input type="text" id="search-input" placeholder="Search item..." oninput="handleSearch()">
         <button class="search-icon-btn" onclick="toggleSearch()">&#x1F50D;</button>
@@ -508,6 +626,29 @@ const analytics = firebase.analytics();
     </div>
   </div>
 </div>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     CHANGE 1: SARCASTIC SUGGESTION POPUP (recommend.html only)
+     Auto-shown every 30s (and shortly after every add-to-cart) by
+     showSuggestPopup() further below — see the script block for the
+     occasion-themed message bank and the pick/show/close logic.
+     ══════════════════════════════════════════════════════════════════════ -->
+<div id="suggest-popup-overlay" onclick="if(event.target===this) closeSuggestPopup()">
+  <div class="suggest-popup-box" onclick="event.stopPropagation()">
+    <button class="suggest-popup-close" onclick="closeSuggestPopup()" aria-label="Dismiss suggestion">&#x2715;</button>
+    <div class="suggest-popup-tag">&#x2728; Psst&hellip; Just For You</div>
+    <div class="suggest-popup-img-wrap">
+      <img id="suggest-popup-img" src="" alt="">
+    </div>
+    <div class="suggest-popup-msg" id="suggest-popup-msg"></div>
+    <div class="suggest-popup-name" id="suggest-popup-name"></div>
+    <div class="suggest-popup-price" id="suggest-popup-price"></div>
+    <div class="suggest-popup-actions">
+      <button class="suggest-popup-btn ghost" onclick="closeSuggestPopup()">Maybe Later</button>
+      <button class="suggest-popup-btn primary" id="suggest-popup-add-btn" onclick="addFromSuggestPopup()">Add to Cart</button>
+    </div>
+  </div>
+</div>
 <script>
 const comboData = {
   date_night: [
@@ -610,6 +751,148 @@ function applyTheme(themeKey) {
   root.setProperty('--sidebar-bg', t.sidebarBg);
 }
 
+/* ══════════════════════════════════════════════════════════════════════════
+   CHANGE 1: SARCASTIC SUGGESTION POPUP (recommend.html only)
+   Suggests a combo from the currently active occasion every 30 seconds, and
+   again shortly after any add-to-cart — always a different item and a
+   different sarcastic line than the previous popup, themed to whichever
+   occasion (Date Night, Family Dinner, Friends, Solo, Cafe Hop) is active.
+   ══════════════════════════════════════════════════════════════════════════ */
+const sarcasticLines = {
+  date_night: [
+    "Impress her with this. You're welcome.",
+    "Make her heart go kaboom \uD83D\uDC98",
+    'Nothing says "I planned this" like ordering right now',
+    "She's watching. Choose wisely.",
+    "Cupid texted. He says add this.",
+    "Romance runs on good food. Don't let it stall."
+  ],
+  family_dinner: [
+    "Even grandma would approve of this one",
+    "Feed the squad before they start a riot",
+    "Family harmony, one plate at a time",
+    "The kids will go quiet for 5 whole minutes. Maybe.",
+    "Nothing unites a family like extra food on the table",
+    'Add this before someone declares they\'re "not hungry"'
+  ],
+  friends: [
+    "Your friends are judging your order. Fix it.",
+    "FOMO is real. Add this now.",
+    "The squad deserves better than just fries",
+    "This is how legends are made (snack legends)",
+    "Someone has to order the good stuff. Be that someone.",
+    "Group chat will thank you later"
+  ],
+  solo: [
+    "Treat yourself. No one's watching. Okay, we are.",
+    "Self-care, but make it delicious",
+    "No sharing required. We checked twice.",
+    "Solo doesn't mean sad \u2014 this proves it",
+    "You vs. this dish. You win, obviously.",
+    "Zero judgement, extra flavour. Add it."
+  ],
+  cafe: [
+    "Instagram-worthy? We thought so too",
+    "Sip happens. Add this.",
+    "Cafe hopping without this is just walking",
+    "This pairs perfectly with your aesthetic",
+    "Caffeinate responsibly. Or don't. Add this.",
+    "Your camera roll needs this more than you do"
+  ]
+};
+
+let _suggestPopupTimer   = null;
+let _lastSuggestedItemId = null;
+let _lastSuggestedLine   = null;
+
+/* Never stack the suggestion on top of something the user is already
+   doing — the splash screen, item detail, cart, an active order
+   confirmation, the previous-orders panel, or another copy of itself. */
+function isAnyOverlayOpen() {
+  const intro = document.getElementById('intro-wrapper');
+  if (intro && !intro.classList.contains('exit')) return true;
+  const detail = document.getElementById('item-detail-modal');
+  if (detail && detail.classList.contains('open')) return true;
+  const cartPopup = document.getElementById('cart-popup');
+  if (cartPopup && cartPopup.style.display === 'flex') return true;
+  const confirmOverlay = document.getElementById('order-confirm-overlay');
+  if (confirmOverlay && confirmOverlay.classList.contains('visible')) return true;
+  const prevOrders = document.getElementById('prev-orders-panel');
+  if (prevOrders && prevOrders.classList.contains('open')) return true;
+  const suggest = document.getElementById('suggest-popup-overlay');
+  if (suggest && suggest.classList.contains('open')) return true;
+  return false;
+}
+
+/* Prefers a combo from the active occasion that isn't already in the cart
+   and wasn't just shown, falling back gracefully so there's always
+   something to suggest. */
+function pickSuggestionItem() {
+  const pool = comboData[currentSection] || [];
+  let candidates = pool.filter(i => !cart[i.id] && i.id !== _lastSuggestedItemId);
+  if (!candidates.length) candidates = pool.filter(i => !cart[i.id]);
+  if (!candidates.length) candidates = pool.filter(i => i.id !== _lastSuggestedItemId);
+  if (!candidates.length) candidates = pool;
+  if (!candidates.length) return null;
+  return candidates[Math.floor(Math.random() * candidates.length)];
+}
+
+function pickSarcasticLine(section) {
+  const lines = sarcasticLines[section] || sarcasticLines.date_night;
+  let candidates = lines.filter(l => l !== _lastSuggestedLine);
+  if (!candidates.length) candidates = lines;
+  const line = candidates[Math.floor(Math.random() * candidates.length)];
+  _lastSuggestedLine = line;
+  return line;
+}
+
+function showSuggestPopup() {
+  if (isAnyOverlayOpen()) return;
+  const item = pickSuggestionItem();
+  if (!item) return;
+  _lastSuggestedItemId = item.id;
+  document.getElementById('suggest-popup-img').src           = item.img;
+  document.getElementById('suggest-popup-img').alt           = item.name;
+  document.getElementById('suggest-popup-name').textContent  = item.name;
+  document.getElementById('suggest-popup-price').textContent = '₹' + item.price.toFixed(2);
+  document.getElementById('suggest-popup-msg').textContent   = pickSarcasticLine(currentSection);
+  const addBtn = document.getElementById('suggest-popup-add-btn');
+  addBtn.textContent = 'Add to Cart';
+  addBtn.classList.remove('added-flash');
+  addBtn.dataset.section = currentSection;
+  addBtn.dataset.itemId  = item.id;
+  document.getElementById('suggest-popup-overlay').classList.add('open');
+  triggerHaptic();
+}
+
+function closeSuggestPopup() {
+  document.getElementById('suggest-popup-overlay').classList.remove('open');
+}
+
+function addFromSuggestPopup() {
+  const addBtn = document.getElementById('suggest-popup-add-btn');
+  const sec = addBtn.dataset.section;
+  const id  = addBtn.dataset.itemId;
+  if (sec && id) {
+    if (!cart[id]) addToCart(sec, id); else updateQty(id, 1);
+  }
+  addBtn.textContent = 'Added ✓';
+  addBtn.classList.add('added-flash');
+  setTimeout(closeSuggestPopup, 700);
+}
+
+/* Recurring 30s cadence — (re)started fresh whenever an add-to-cart also
+   queues an immediate suggestion below, so the two triggers never collide. */
+function startSuggestPopupCycle() {
+  if (_suggestPopupTimer) clearInterval(_suggestPopupTimer);
+  _suggestPopupTimer = setInterval(showSuggestPopup, 30000);
+}
+
+function triggerSuggestPopupSoon() {
+  setTimeout(showSuggestPopup, 4000);
+  startSuggestPopupCycle();
+}
+
 /* ── STATE ───────────────────────────────────────────────────────────────── */
 /* PERSISTENT CART: shared with menu.html via the same localStorage key, so
    items added on either page survive a reload and a "Resume Session" from
@@ -662,6 +945,7 @@ window.onload = () => {
     document.getElementById('intro-wrapper').classList.add('exit');
     const firstNavItem = document.querySelector('.nav-item');
     showSection('date_night', firstNavItem);
+    startSuggestPopupCycle(); // CHANGE 1: begin the 30s suggestion cadence
   }, 5500);
 };
 
@@ -820,6 +1104,7 @@ function addToCart(sec, id) {
   else { item = (comboData[sec] || []).find(i => i.id === id); }
   if (item && !cart[id]) cart[id] = { ...item, qty: 1 };
   syncCartUI();
+  triggerSuggestPopupSoon(); // CHANGE 1: a fresh suggestion follows every add
 }
 
 function updateQty(id, delta) {
