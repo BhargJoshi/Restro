@@ -334,7 +334,7 @@
     }
 
     /* ══════════════════════════════════════
-       STEPS TIMELINE
+       CHANGE 2: HORIZONTAL STEPS TRACKER
     ══════════════════════════════════════ */
     .steps-wrapper {
       width: 100%;
@@ -346,36 +346,35 @@
       gap: 0;
     }
 
-    .step-row {
+    /* ── Top row: circles + horizontal connectors ── */
+    .steps-circles-row {
       display: flex;
-      gap: 0;
-      align-items: stretch;
-      opacity: 0;
-      transform: translateX(-24px);
-      transition: opacity 0.5s ease, transform 0.5s ease;
+      align-items: flex-start;
+      width: 100%;
+      padding: 8px 4px 0;
     }
-    .step-row.visible { opacity: 1; transform: translateX(0); }
 
-    /* ── timeline column ── */
-    .timeline-col {
+    .step-node {
       display: flex;
       flex-direction: column;
       align-items: center;
-      width: 48px;
       flex-shrink: 0;
-      padding-top: 20px;
+      opacity: 0;
+      transform: translateY(-12px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
     }
+    .step-node.visible { opacity: 1; transform: translateY(0); }
 
     .dot-wrap {
       position: relative;
-      width: 22px;
-      height: 22px;
+      width: 34px;
+      height: 34px;
       flex-shrink: 0;
     }
 
     .dot {
-      width: 22px;
-      height: 22px;
+      width: 34px;
+      height: 34px;
       border-radius: 50%;
       position: relative;
       z-index: 2;
@@ -390,7 +389,7 @@
     /* Active: filled yellow with ripple */
     .dot.active {
       background: var(--primary);
-      box-shadow: 0 0 0 4px rgba(255,204,0,0.22);
+      box-shadow: 0 0 0 5px rgba(255,204,0,0.22);
     }
     /* Pending: soft translucent ring */
     .dot.pending {
@@ -413,10 +412,10 @@
 
     @keyframes ripple {
       0%   { transform: scale(1);   opacity: 0.75; }
-      100% { transform: scale(3.4); opacity: 0; }
+      100% { transform: scale(3.2); opacity: 0; }
     }
 
-    /* Dark tick inside done dot (contrast against yellow) */
+    /* Dark tick inside done dot — larger for 34px circle */
     .dot.done::after {
       content: '';
       position: absolute;
@@ -424,29 +423,47 @@
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2 6l3 3 5-5' stroke='%234A342A' stroke-width='2.2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
       background-repeat: no-repeat;
       background-position: center;
-      background-size: 12px 12px;
+      background-size: 16px 16px;
       animation: none;
       opacity: 1;
       border: none;
     }
 
+    /* Horizontal connector line between circles */
     .connector-line {
-      width: 2.5px;
       flex: 1;
-      min-height: 18px;
+      height: 2.5px;
+      min-width: 8px;
       border-radius: 2px;
-      margin: 4px 0;
+      margin-top: 15.75px; /* aligns to vertical center of 34px dot */
       transition: background 0.5s;
     }
     .connector-line.done    { background: rgba(255,204,0,0.55); }
-    .connector-line.active  { background: linear-gradient(to bottom, rgba(255,204,0,0.55), rgba(255,255,255,0.18)); }
-    .connector-line.pending { background: rgba(255,255,255,0.18); }
+    .connector-line.active  { background: linear-gradient(to right, rgba(255,204,0,0.55), rgba(255,255,255,0.22)); }
+    .connector-line.pending { background: rgba(255,255,255,0.22); }
     .connector-line.hidden  { visibility: hidden; }
 
-    /* ── card column ── */
-    .card-col {
-      flex: 1;
-      padding-bottom: 12px;
+    /* ── Info panel: shows only the active step's card ── */
+    .steps-info-panel {
+      margin-top: 10px;
+      position: relative;
+      min-height: 78px;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+    .steps-info-panel.visible { opacity: 1; }
+
+    /* Hide all cards except the active one */
+    .steps-info-panel .step-card            { display: none !important; }
+    .steps-info-panel .step-card.active     {
+      display: flex !important;
+      transform: none !important;
+      animation: stepCardIn 0.35s cubic-bezier(0.34,1.56,0.64,1) forwards;
+    }
+
+    @keyframes stepCardIn {
+      from { opacity: 0.5; transform: scale(0.97) !important; }
+      to   { opacity: 1;   transform: scale(1)    !important; }
     }
 
     /* ── step card — glassmorphism matching .food-card in menu.txt ── */
@@ -462,7 +479,7 @@
       align-items: center;
       gap: 12px;
       box-shadow: var(--glass-shadow);
-      transition: border-left-color 0.4s, box-shadow 0.4s, transform 0.3s, background 0.3s;
+      transition: border-left-color 0.4s, box-shadow 0.4s, background 0.3s;
       cursor: default;
       position: relative;
       overflow: hidden;
@@ -472,14 +489,13 @@
       border-left-color: var(--primary);
       box-shadow: 0 6px 24px rgba(255,204,0,0.16), inset 0 1px 0 rgba(255,255,255,0.92);
       background: rgba(255,255,255,0.65);
-      transform: translateX(3px);
     }
 
     .step-card.done {
       border-left-color: rgba(255,204,0,0.40);
     }
 
-    /* ── icon container — matches .nav-item + active indicator style ── */
+    /* ── icon container ── */
     .step-icon {
       width: 46px;
       height: 46px;
@@ -525,7 +541,7 @@
     .step-desc.active  { color: var(--espresso); opacity: 0.72; }
     .step-desc.pending { color: rgba(74,52,42,0.32); }
 
-    /* ── status badge — matches .poc-round pill in menu.txt ── */
+    /* ── status badge ── */
     .step-badge {
       font-size: 9px;
       font-weight: 700;
@@ -909,6 +925,204 @@
       color: var(--text-muted);
       padding: 10px 0;
     }
+
+    /* ══════════════════════════════════════
+       CHANGE 1: TABLE AVAILABILITY GRID
+    ══════════════════════════════════════ */
+    .table-grid-wrap {
+      width: 100%;
+      max-width: 480px;
+      padding: 6px 16px 18px;
+      opacity: 0;
+      transform: translateY(10px);
+      animation: fadeUp 0.5s ease 0.55s forwards;
+    }
+
+    .table-grid-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 16px 16px 18px;
+      box-shadow: var(--glass-shadow);
+    }
+
+    .table-grid-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(74,52,42,0.10);
+    }
+
+    .table-grid-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--espresso);
+    }
+
+    .table-grid-legend {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .tg-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 9px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .tg-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+    .tg-dot.free { background: rgba(255,255,255,0.90); border: 1.5px solid rgba(74,52,42,0.22); }
+    .tg-dot.occ  { background: rgba(220,38,38,0.55); }
+    .tg-dot.mine { background: rgba(22,163,74,0.65); }
+
+    .table-boxes {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+    }
+
+    .table-box {
+      aspect-ratio: 1;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 15px;
+      font-weight: 700;
+      border: 2px solid transparent;
+      transition: all 0.35s ease;
+      cursor: default;
+      user-select: none;
+    }
+
+    .table-box.free {
+      background: rgba(255,255,255,0.82);
+      color: rgba(74,52,42,0.45);
+      border-color: rgba(74,52,42,0.12);
+    }
+
+    .table-box.occupied {
+      background: rgba(220,38,38,0.14);
+      color: #b91c1c;
+      border-color: rgba(220,38,38,0.35);
+    }
+
+    .table-box.mine {
+      background: rgba(22,163,74,0.18);
+      color: #166534;
+      border-color: rgba(22,163,74,0.45);
+      animation: tableGlow 2.5s ease-in-out infinite;
+    }
+
+    @keyframes tableGlow {
+      0%, 100% { box-shadow: 0 0 8px rgba(22,163,74,0.20); }
+      50%       { box-shadow: 0 0 18px rgba(22,163,74,0.45), 0 0 0 3px rgba(22,163,74,0.10); }
+    }
+
+    /* Queue info row below table grid */
+    .table-queue-info {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      margin-top: 12px;
+      padding: 10px 14px;
+      background: rgba(255,204,0,0.09);
+      border: 1px solid rgba(255,204,0,0.26);
+      border-radius: 10px;
+    }
+    .table-queue-info.visible { display: flex; }
+
+    .tq-icon { font-size: 16px; flex-shrink: 0; }
+
+    .tq-text {
+      flex: 1;
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--espresso);
+      line-height: 1.45;
+    }
+
+    .tq-pos {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      flex-shrink: 0;
+    }
+
+    /* ══════════════════════════════════════
+       CHANGE 1: CROSS-PAGE TABLE NOTIFICATION
+    ══════════════════════════════════════ */
+    #emerald-table-notif {
+      position: fixed;
+      top: -130px;
+      left: 0;
+      right: 0;
+      z-index: 99999;
+      display: flex;
+      justify-content: center;
+      padding: 10px 14px;
+      pointer-events: none;
+      transition: top 0.45s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    #emerald-table-notif.show {
+      top: 0;
+      pointer-events: all;
+    }
+    .etn-inner {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(20,44,20,0.97);
+      border: 1.5px solid rgba(34,197,94,0.50);
+      border-radius: 14px;
+      padding: 13px 16px 13px 14px;
+      box-shadow: 0 10px 36px rgba(0,0,0,0.35);
+      max-width: 440px;
+      width: 100%;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+    .etn-icon { font-size: 20px; flex-shrink: 0; }
+    .etn-text {
+      flex: 1;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      color: #dcfce7;
+      line-height: 1.4;
+    }
+    .etn-text b { color: #4ade80; font-weight: 800; }
+    .etn-close {
+      background: none;
+      border: none;
+      color: rgba(220,252,231,0.45);
+      font-size: 14px;
+      cursor: pointer;
+      flex-shrink: 0;
+      padding: 3px 5px;
+      line-height: 1;
+      transition: color 0.2s;
+    }
+    .etn-close:hover { color: #dcfce7; }
   </style>
 
   <!-- Firebase SDK -->
@@ -1006,6 +1220,28 @@
         <span>Total</span>
         <span id="order-details-total-price">₹0.00</span>
       </div>
+    </div>
+  </div>
+
+  <!-- ─── CHANGE 1: TABLE AVAILABILITY GRID ─────────────────────────────────
+       Sits below order details. Shows all 10 tables as coloured boxes —
+       white = free, red = occupied by others, green = this customer's table.
+       Updated in real time via Firebase "tables" listener. Dine-in customers
+       without a table yet also see their live FIFO queue position here. ─── -->
+  <div class="table-grid-wrap" id="table-grid-wrap">
+    <div class="table-grid-card">
+      <div class="table-grid-head">
+        <span class="table-grid-title">Table Availability</span>
+        <div class="table-grid-legend">
+          <span class="tg-legend-item"><span class="tg-dot free"></span>Free</span>
+          <span class="tg-legend-item"><span class="tg-dot occ"></span>Taken</span>
+          <span class="tg-legend-item"><span class="tg-dot mine"></span>Yours</span>
+        </div>
+      </div>
+      <div class="table-boxes" id="table-boxes-container">
+        <!-- built by JS -->
+      </div>
+      <div class="table-queue-info" id="table-queue-info"></div>
     </div>
   </div>
 
@@ -1233,7 +1469,132 @@
       ? Object.values(data).sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0))
       : [];
     renderTableBadge();
+    renderTableGrid();
   });
+
+  /* ══════════════════════════════════════════════════════════════════════
+     CHANGE 1: TABLE AVAILABILITY GRID
+     Listens to the "tables" node in real time and repaints all 10 table
+     boxes. White = free, Red = occupied by others, Green = this user's
+     table. Also updates the FIFO queue position widget for waiting
+     dine-in customers.
+     ══════════════════════════════════════════════════════════════════════ */
+  let _latestTablesData = null;
+
+  db.ref("tables").on("value", (snap) => {
+    _latestTablesData = snap.val();
+    renderTableGrid();
+  });
+
+  function renderTableGrid() {
+    const container = document.getElementById('table-boxes-container');
+    const queueInfo = document.getElementById('table-queue-info');
+    if (!container) return;
+
+    const myTableNum = (_latestOrder && _latestOrder.tableNumber)
+      ? parseInt(_latestOrder.tableNumber) : null;
+    const isDineIn = _latestOrder && _latestOrder.orderType === 'dinein';
+
+    /* Build occupied-status map from Firebase tables node */
+    const statusMap = {};
+    if (_latestTablesData) {
+      const entries = Array.isArray(_latestTablesData)
+        ? _latestTablesData
+        : Object.values(_latestTablesData);
+      entries.forEach(t => {
+        if (t && t.number != null) {
+          statusMap[parseInt(t.number)] = t.occupied ? 'occupied' : 'free';
+        }
+      });
+    }
+
+    /* Render 10 table boxes */
+    container.innerHTML = '';
+    for (let i = 1; i <= 10; i++) {
+      const box = document.createElement('div');
+      let cls = statusMap[i] || 'free';
+      if (isDineIn && myTableNum === i) cls = 'mine';
+      box.className = 'table-box ' + cls;
+      box.textContent = i;
+      container.appendChild(box);
+    }
+
+    /* Queue position info — only for dine-in customers still waiting */
+    if (!queueInfo) return;
+    const isWaiting = isDineIn && !myTableNum &&
+      _latestOrder && _latestOrder.status !== 'Cancelled';
+
+    if (isWaiting) {
+      const idx = _latestQueue.findIndex(q => q.orderId === currentOrderId);
+      if (idx !== -1) {
+        const pos   = idx + 1;
+        const ahead = idx;
+        queueInfo.className = 'table-queue-info visible';
+        queueInfo.innerHTML = `
+          <span class="tq-icon">⏳</span>
+          <span class="tq-text">
+            You are in the waiting queue<br>
+            <small style="font-size:10px;opacity:0.68">${ahead > 0 ? ahead + ' customer' + (ahead > 1 ? 's' : '') + ' ahead of you' : 'You\'re next in line!'}</small>
+          </span>
+          <span class="tq-pos">#${pos}</span>`;
+      } else {
+        queueInfo.className = 'table-queue-info';
+      }
+    } else {
+      queueInfo.className = 'table-queue-info';
+    }
+  }
+
+  /* ══════════════════════════════════════════════════════════════════════
+     CHANGE 1: CROSS-PAGE TABLE ASSIGNMENT NOTIFICATION
+     Detects when a queued customer's order gets a tableNumber assigned and
+     fires a green banner notification ("Your table is free. Please proceed
+     to Table X."). Uses localStorage to avoid re-notifying on refresh.
+     ══════════════════════════════════════════════════════════════════════ */
+  (function initTableNotification() {
+    const oid = localStorage.getItem('currentOrderId');
+    if (!oid) return;
+    const shownKey = 'etnShown_' + oid;
+    if (localStorage.getItem(shownKey)) return;
+
+    db.ref('orders/' + oid).once('value', snap => {
+      const o = snap.val();
+      if (!o || o.orderType !== 'dinein') return;
+
+      /* Already has a table when the page loads — mark and skip */
+      if (o.tableNumber) {
+        localStorage.setItem(shownKey, '1');
+        return;
+      }
+
+      /* No table yet — set up a live listener for tableNumber appearing */
+      const notifCb = snap2 => {
+        const o2 = snap2.val();
+        if (!o2) return;
+        if (o2.tableNumber && !localStorage.getItem(shownKey)) {
+          localStorage.setItem(shownKey, '1');
+          fireEmeraldTableNotif(o2.tableNumber);
+          db.ref('orders/' + oid).off('value', notifCb);
+        }
+      };
+      db.ref('orders/' + oid).on('value', notifCb);
+    });
+  })();
+
+  function fireEmeraldTableNotif(tNum) {
+    let el = document.getElementById('emerald-table-notif');
+    if (!el) { el = document.createElement('div'); el.id = 'emerald-table-notif'; document.body.appendChild(el); }
+    el.className = 'show';
+    el.innerHTML = `<div class="etn-inner">
+      <span class="etn-icon">🪑</span>
+      <span class="etn-text">Your table is free. Please proceed to <b>Table ${tNum}</b>.</span>
+      <button class="etn-close" onclick="document.getElementById('emerald-table-notif').className=''">✕</button>
+    </div>`;
+    setTimeout(() => {
+      const e = document.getElementById('emerald-table-notif');
+      if (e && e.className === 'show') e.className = '';
+    }, 10000);
+  }
 
   /* Renders the table badge — shows the assigned table number once seated,
      or this customer's live queue position + estimated wait while they're
@@ -1281,6 +1642,8 @@
         document.getElementById('order-id').textContent        = displayId;
         document.getElementById('success-order-id').textContent = displayId;
         renderOrderDetails(order);
+        _latestOrder = order;
+        renderTableGrid();
       }
     });
 
@@ -1302,6 +1665,7 @@
       // CHANGE 2: keep table badge (seated table # OR waiting position/ETA) in sync
       _latestOrder = order;
       renderTableBadge();
+      renderTableGrid();
 
       if (order.kitchenDone === true && !finished) {
         finished   = true;
@@ -1353,35 +1717,52 @@
     });
   }
 
-  /* ─── BUILD DOM ─── */
+  /* ─── CHANGE 2: BUILD HORIZONTAL STEPPER DOM ─── */
   function buildSteps() {
     const wrapper = document.getElementById('steps-wrapper');
+
+    /* Top row: circles + horizontal connectors */
+    const circRow = document.createElement('div');
+    circRow.className = 'steps-circles-row';
+
     STEPS.forEach((s, i) => {
       const isLast = i === STEPS.length - 1;
-      const row    = document.createElement('div');
-      row.className = 'step-row';
-      row.id        = 'row-' + i;
 
-      row.innerHTML = `
-        <div class="timeline-col">
-          <div class="dot-wrap">
-            <div class="dot pending" id="dot-${i}"></div>
-          </div>
-          <div class="connector-line pending ${isLast ? 'hidden' : ''}" id="line-${i}"></div>
-        </div>
-        <div class="card-col">
-          <div class="step-card" id="card-${i}">
-            <div class="step-icon pending" id="icon-${i}" style="color:rgba(74,52,42,0.28)">${s.icon}</div>
-            <div class="step-info">
-              <div class="step-title pending" id="title-${i}">${s.title}</div>
-              <div class="step-desc  pending" id="desc-${i}">${s.desc}</div>
-            </div>
-            <div class="step-badge" id="badge-${i}"></div>
-          </div>
-        </div>`;
+      const node = document.createElement('div');
+      node.className = 'step-node';
+      node.id = 'row-' + i;
+      node.innerHTML = `<div class="dot-wrap"><div class="dot pending" id="dot-${i}"></div></div>`;
+      circRow.appendChild(node);
 
-      wrapper.appendChild(row);
+      if (!isLast) {
+        const line = document.createElement('div');
+        line.className = 'connector-line pending';
+        line.id = 'line-' + i;
+        circRow.appendChild(line);
+      }
     });
+
+    wrapper.appendChild(circRow);
+
+    /* Info panel: one card per step — only the active one is displayed */
+    const infoPanel = document.createElement('div');
+    infoPanel.className = 'steps-info-panel';
+
+    STEPS.forEach((s, i) => {
+      const card = document.createElement('div');
+      card.className = 'step-card';
+      card.id = 'card-' + i;
+      card.innerHTML = `
+        <div class="step-icon pending" id="icon-${i}" style="color:rgba(74,52,42,0.28)">${s.icon}</div>
+        <div class="step-info">
+          <div class="step-title pending" id="title-${i}">${s.title}</div>
+          <div class="step-desc  pending" id="desc-${i}">${s.desc}</div>
+        </div>
+        <div class="step-badge" id="badge-${i}"></div>`;
+      infoPanel.appendChild(card);
+    });
+
+    wrapper.appendChild(infoPanel);
   }
 
   /* ─── UPDATE VISUALS ─── */
@@ -1458,11 +1839,15 @@
     else el.classList.remove('urgent');
   }
 
-  /* ─── STAGGERED ENTRANCE ─── */
+  /* ─── CHANGE 2: STAGGERED ENTRANCE (horizontal nodes) ─── */
   function animateEntrance() {
-    document.querySelectorAll('.step-row').forEach((row, i) => {
-      setTimeout(() => row.classList.add('visible'), 350 + i * 140);
+    document.querySelectorAll('.step-node').forEach((node, i) => {
+      setTimeout(() => node.classList.add('visible'), 350 + i * 130);
     });
+    setTimeout(() => {
+      const panel = document.querySelector('.steps-info-panel');
+      if (panel) panel.classList.add('visible');
+    }, 350 + STEPS.length * 130);
   }
 
   /* ─── SHOW SUCCESS ─── */
@@ -1553,5 +1938,12 @@
 
   const ticker = setInterval(tick, 1000);
 </script>
+<!-- ══════════════════════════════════════
+     CHANGE 1: CROSS-PAGE TABLE NOTIFICATION
+     Fixed overlay, fires on any page when
+     a queued customer is assigned a table.
+══════════════════════════════════════ -->
+<div id="emerald-table-notif"></div>
+
 </body>
 </html>
